@@ -44,7 +44,7 @@ install.source=function(pkg_vrs,lib,date, force.download=FALSE)
     #Create the folder
     dir.create(lib,showWarnings = F,recursive = T)
     #Install the package
-    install.packages(tarball.path, type="source",lib=lib,  dependencies=FALSE,repos=NULL)
+    install.packages(tarball.path, type="source",lib=lib,  dependencies=FALSE,repos=NULL, INSTALL_opts = "--no-staged-install")
   } #End if success
 
 
