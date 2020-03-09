@@ -1,6 +1,9 @@
 #1. Preliminaries
 #1.1 Set folder for Groundhog R  files
 #[this will be changed]
+chooseCRANmirror(graphics=FALSE, ind=1)
+
+
 groundhogR.folder=paste0(path.expand('~'),"/groundhogR")
 groundhogR.url="http://groundhogR.com"
 
