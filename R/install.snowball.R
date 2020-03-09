@@ -49,7 +49,7 @@ install.snowball=function(pkg,date, include.suggests, force.install=FALSE,force.
       dir.create(lib.k,recursive = T,showWarnings = F)
 
       #3.5 INSTALL K FROM CRAN
-      if (from.k=="CRAN") install.packages(pkg.k,  dependencies=FALSE,lib=lib.k,type="both",quiet=quiet.install, INSTALL_opts = "--no-staged-install")
+      if (from.k=="CRAN") install.packages(pkg.k, dependencies=FALSE,lib=lib.k,repos = "https://cloud.r-project.org", type="both",quiet=quiet.install, INSTALL_opts = "--no-staged-install")
 
       #3.6 INSTALL K FROM MRAN
       if (from.k=="MRAN") {
