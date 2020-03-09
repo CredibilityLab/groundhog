@@ -1,4 +1,5 @@
 #' Load the dataframe listing all CRAN packages, their dependencies and Publication date
+#' @importFrom utils read.csv write.csv
 load.cran.toc=function(update.toc=FALSE)
 {
   #3.0 Ensure directory for groundhogR exists

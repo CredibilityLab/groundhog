@@ -12,6 +12,7 @@ current.packages=data.frame(available.packages())[,c(1,2)]
 current.packages$pkg_vrs=paste0(current.packages$Package,"_",current.packages$Version)
 
 #1.3 base packages
+#' @importFrom utils installed.packages
 ip=data.frame(installed.packages())
 dep.base=as.character(subset(ip,Priority=='base')$Package)
 
@@ -73,6 +74,7 @@ cat2 = function(msg="") {
 
 #2.8 Automatically name elements in list with name of the objects in the list
 #https://stackoverflow.com/questions/16951080/can-lists-be-created-that-name-themselves-based-on-input-object-names
+#' @importFrom stats setNames
 namedList <- function(...) {
   L <- list(...)
   snm <- sapply(substitute(list(...)),deparse)[-1]
@@ -97,6 +99,7 @@ quit.menu= function(date) {
 }#End quit.menu
 
 #2.18 Plot console
+#' @importFrom graphics par plot segments text
 cat1.plot=function(x)
 {
   #Get existing margins to return to them after console use

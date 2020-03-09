@@ -1,4 +1,5 @@
 #8 Function 8 - Install snowball
+#' @importFrom utils install.packages
 install.snowball=function(pkg,date, include.suggests, force.install=FALSE,force.source=FALSE,plot.console=TRUE,quiet.install=TRUE)
 {
   #0 Get the snowball

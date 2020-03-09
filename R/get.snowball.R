@@ -1,4 +1,5 @@
 #Function 7 - Get snowball
+#' @importFrom utils tail
 get.snowball=function(pkg,date,include.suggests=F, force.source=F, current.deps="Rcpp")
 {
 

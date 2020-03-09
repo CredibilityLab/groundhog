@@ -1,5 +1,6 @@
 #' @export
 # 8  Final function:   groundhog.library()
+#' @importFrom utils capture.output
 groundhog.library=function(pkg, date,
                            quiet.install=TRUE,            #Run install.packages() with quiet=TRUE?
                            plot.console=TRUE,             #Should information on installation time left be printed in Plots dialogue whe installing from source>
