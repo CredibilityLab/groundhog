@@ -13,7 +13,7 @@ install.snowball=function(pkg,date, include.suggests, force.install=FALSE,force.
   #1. FORCE INSTALL
   if (force.install==TRUE & sum(snowball$installed)>0) {
     #Subset of packages that are installed
-    snowball.installed=subset(snowball,installed==T)
+    snowball.installed= snowball[snowball$installed, ]
     #Get their path
     snowball.installed$paths=mapply(get.installed_path,snowball.installed$pkg,snowball.installed$vrs)
     #Rename the paths so they are not found and installation takes place

@@ -5,7 +5,7 @@ get.dependencies=function(pkg,date,include.suggests=FALSE)
   #Get version from date
   vrs=get.version(pkg,date)
   #Get dependencies if version exists
-  row=subset(cran.toc,Package==pkg & Version==vrs)[,c("Imports","Depends","Suggests")]   #row in mastertoc
+  row=cran.toc[cran.toc$Package == pkg & cran.toc$Version == vrs,c("Imports","Depends","Suggests")]   #row in mastertoc
   dep=c(row$Imports,row$Depends)                      #merge
   if (include.suggests) dep=paste0(dep,row$Suggests)  #add 'Suggests' dependencies if requested
   dep=unlist(strsplit(dep,","))                      #turn to array

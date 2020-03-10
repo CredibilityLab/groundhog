@@ -11,8 +11,7 @@ current.packages$pkg_vrs=paste0(current.packages$Package,"_",current.packages$Ve
 
 #1.3 base packages
 #' @importFrom utils installed.packages
-ip=data.frame(installed.packages())
-dep.base=as.character(subset(ip,Priority=='base')$Package)
+dep.base = installed.packages(priority = "base")
 
 #2.0.5 Parse pkg_vrs into pkg and vrs
 get.pkg=function(x) substr(x,1,regexpr('_', basename(x))-1)

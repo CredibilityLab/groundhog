@@ -15,7 +15,7 @@ get.date.for.install.binary=function(pkg_vrs)
   R.toc$path=sapply(  strsplit(R.toc$Version,"\\."), `[`, 3)
 
   #Find first and last current major.minor
-  R.same.minor=subset(R.toc,major==r.using.major & minor==r.using.minor )
+  R.same.minor=R.toc[R.toc$major == r.using.major && R.toc$minor == r.using.minor, ]
   k0=match(R.same.minor[1,]$Version,R.toc$Version)
   k1=match(R.same.minor[nrow(R.same.minor),]$Version,R.toc$Version)
 

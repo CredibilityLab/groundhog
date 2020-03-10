@@ -1,8 +1,8 @@
 #' Show table of contents (toc) (package versions and publication dates) for a pkg, sorted chronologically
 toc=function(pkg,dependencies=FALSE) {
   if (!exists("cran.toc")) load.cran.toc(update.toc=FALSE)
-  if ( dependencies)  output=subset(cran.toc,Package==pkg)[,c("Version","Published","Imports","Depends","Suggests")]
-  if (!dependencies)  output=subset(cran.toc,Package==pkg)[,c("Version","Published")]
+  if ( dependencies)  output=cran.toc[cran.toc$Package == pkg,c("Version","Published","Imports","Depends","Suggests")]
+  if (!dependencies)  output=cran.toc[cran.toc$Package == pkg,c("Version","Published")]
 
   if (nrow(output)==0) {
     cat2()

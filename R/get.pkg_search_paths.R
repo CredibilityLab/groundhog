@@ -10,7 +10,9 @@ get.pkg_search_paths=function(pkg,vrs)
 
   #Subset of R.toc for same minor as r.using
   rv=r.version.check("2019-01-01")  #use arbitrary date for we don't use 'r.need', just r.using
-  subset.R.toc=subset(R.toc,minor==rv$r.using.minor & major==rv$r.using.major & Published<=get.rdate())
+  subset.R.toc=R.toc[R.toc$minor == rv$r.using.minor &
+                     R.toc$major==rv$r.using.major &
+                     R.toc$Published<=get.rdate(), ]
 
   #Sort versions from most recent
   subset.R.toc=subset.R.toc[order(subset.R.toc$Published,decreasing=T),]
