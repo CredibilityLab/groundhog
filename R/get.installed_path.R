@@ -11,7 +11,7 @@ get.installed_path=function(pkg,vrs)
   {
     #If directory and file exists, test if package is installed, if file does not exist; it is not installed anyway
     if (file.exists(pathk)) {
-      df.pkg=data.frame(installed.packages(lib=pathk))  #Note: in {groundhogR} each package version gets a 'library' within the R version
+      df.pkg=data.frame(installed.packages(lib.loc = pathk))  #Note: in {groundhogR} each package version gets a 'library' within the R version
       if (nrow(df.pkg) >0) {
         installed_path=pathk
         break
