@@ -28,7 +28,6 @@ as.DateYMD = function(x) as.Date(x, format="%Y-%m-%d")
 get.rdate=function()     {
   r.current=R.version$version.string
   date=paste0(R.version$year,"-",R.version$month,"-",R.version$day)
-  date=(date)
   return(date)
 }
 
