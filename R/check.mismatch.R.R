@@ -10,11 +10,18 @@ check.mismatch.R=function(date)
     #Check if have not warned for the last hour
     now=Sys.time()
 
-    #If there is not previous time, assign it a full year to trigger the warning
-    if (!exists('r.mismatched.last.time')) since.warning=60*365
+    r.mismatched.last.time <- tryCatch(
+      get("r.mismatched.last.time", envir = .mismatch.warning),
+      error = function(e) NULL
+    )
 
-    #Time since last warning.
-    if (exists('r.mismatched.last.time')) since.warning=as.numeric(round(difftime(now, r.mismatched.last.time, units='mins'),0))
+    #If there is not previous time, assign it a full year to trigger the warning
+    if (is.null(r.mismatched.last.time)) {
+      since.warning=60*365
+    } else {
+      #Time since last warning.
+      since.warning=as.numeric(round(difftime(now, r.mismatched.last.time, units='mins'),0))
+    }
 
     #If more than a 60 minute gap give full warning
     if (since.warning>60)
@@ -30,7 +37,7 @@ check.mismatch.R=function(date)
       cat2("\nBottom line")
       cat1(paste0("It's probably worth continuing as-is, and if you get tired of waiting for packages to install,\nor get errors trying to run ",
                   "it, then you try it with the appropriate version of R. \nRunning older R is actually quite easy. To get instructions, execute:\nmsg.R.switch('",date,"') "))
-      r.mismatched.last.time<<-Sys.time()
+      assign("r.mismatched.last.time", Sys.time(), envir = .mismatch.warning)
 
       cat1("\n\nRegardless of your choice, this warning will not appear again within the next hour")
       quit.menu(date=date)
