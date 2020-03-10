@@ -3,9 +3,7 @@
 #[this will be changed]
 chooseCRANmirror(graphics=FALSE, ind=1)
 
-
 groundhogR.folder=paste0(path.expand('~'),"/groundhogR")
-groundhogR.url="http://groundhogR.com"
 
 #1.2 Get available packages to see if each attempted to install is new
 current.packages=data.frame(available.packages())[,c(1,2)]
@@ -51,16 +49,16 @@ colourise <- function(text, fg = "black", bg = NULL) {
 
   col_escape <- function(col) paste0("\033[", col, "m")
 
-  col <- .fg_colours[tolower(fg)]
-  if (!is.null(bg)) col <- paste0(col, .bg_colours[tolower(bg)], sep = ";")
+  fg_colours<-c("black"="0;30","blue"="0;34","green"="0;32","cyan"="0;36","red"="0;31","purple"="0;35","brown"="0;33","lightgray"="0;37","darkgray"="1;30","lightblue"="1;34","lightgreen"="1;32","lightcyan"="1;36","lightred"="1;31","lightpurple"="1;35","yellow"="1;33","white"="1;37")
+  bg_colours<-c("black"="40","red"="41","green"="42","brown"="43","blue"="44","purple"="45","cyan"="46","light gray" = "47")
+
+  col <- fg_colours[tolower(fg)]
+  if (!is.null(bg)) col <- paste0(col, bg_colours[tolower(bg)], sep = ";")
 
   init <- col_escape(col)
   reset <- col_escape("0")
   paste0(init, text, reset)
 }
-
-.fg_colours<-c("black"="0;30","blue"="0;34","green"="0;32","cyan"="0;36","red"="0;31","purple"="0;35","brown"="0;33","lightgray"="0;37","darkgray"="1;30","lightblue"="1;34","lightgreen"="1;32","lightcyan"="1;36","lightred"="1;31","lightpurple"="1;35","yellow"="1;33","white"="1;37")
-.bg_colours<-c("black"="40","red"="41","green"="42","brown"="43","blue"="44","purple"="45","cyan"="46","light gray" = "47")
 
 rcmd_running <- function() {  nchar(Sys.getenv('R_TESTS')) != 0
 }#End colourise
