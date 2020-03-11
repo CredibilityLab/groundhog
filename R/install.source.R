@@ -1,7 +1,7 @@
 #6 Install from source
 #' @importFrom utils download.file install.packages
 
-install.source=function(pkg_vrs,lib,date, force.download=FALSE)
+install.source=function(pkg_vrs,lib,date, force.download=FALSE, quiet = FALSE)
 {
   #6.1 Preliminaries
   pkg=get.pkg(pkg_vrs)
