@@ -46,6 +46,12 @@ install.snowball=function(pkg,date, include.suggests, force.install=FALSE,force.
       from.k=snowball[k,'from']
       mran.date.k=snowball[k,'MRAN.date']
 
+      # FIXME: this is a temporary workaround so that the script doesn't try
+      # to install binaries from MRAN (L64) on Linux
+      if (.Platform$OS.type == "unix") {
+        from.k[from.k=="MRAN"] = "source"
+      }
+
       #3.4 Create directory
       dir.create(lib.k,recursive = T,showWarnings = F)
 
