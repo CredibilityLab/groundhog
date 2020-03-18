@@ -1,4 +1,5 @@
 #' Show toc table with multiple packages
+#' @export
 cross.toc=function(pkgs,date1="1970-1-1",date2=Sys.Date())
 {
 

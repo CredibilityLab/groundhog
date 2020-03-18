@@ -1,4 +1,5 @@
 #1.4 Messages
+#' @export
 msg.R.switch=function(date) {
   rv=r.version.check(date)
   paste0("####################################################################################################\n",
