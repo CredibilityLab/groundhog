@@ -1,53 +1,52 @@
-#Function 8 INstallation feedback
-installation.feedback=function(k,date, snowball, start.time, plot.console=TRUE)
-{
+# Function 8 INstallation feedback
+installation.feedback <- function(k, date, snowball, start.time, plot.console = TRUE) {
 
-  #Get R being used and needed
-  rv=r.version.check(as.DateYMD(date))
+  # Get R being used and needed
+  rv <- r.version.check(as.DateYMD(date))
 
-  #How much time so far in this installation process
-  time.so.far=as.numeric(difftime(Sys.time(),start.time,units="secs"))
+  # How much time so far in this installation process
+  time.so.far <- as.numeric(difftime(Sys.time(), start.time, units = "secs"))
 
-  #Shorter variables
-  N=nrow(snowball)
-  pkg_vrs=snowball[N,"pkg_vrs"]
+  # Shorter variables
+  N <- nrow(snowball)
+  pkg_vrs <- snowball[N, "pkg_vrs"]
 
-  #Estimate of time
-  seconds.left=estimate.seconds.left(k,start.time,snowball)
-  finish.time.estimate=format(Sys.time()+seconds.left,"%H:%M")
-  finish.time.max=format(Sys.time()+seconds.left*3,"%H:%M")
+  # Estimate of time
+  seconds.left <- estimate.seconds.left(k, start.time, snowball)
+  finish.time.estimate <- format(Sys.time() + seconds.left, "%H:%M")
+  finish.time.max <- format(Sys.time() + seconds.left * 3, "%H:%M")
 
-  #If first one being installed, show dots
-  if (k==1 | time.so.far<5 & plot.console==TRUE)
-  {
-    plot(c(.25,.5,.75),c(.5,.5,.5),cex=10,pch=16,col='red',xlim=c(0,1),xaxt='n',xlab='**LOADING**',ylab='',yaxt='n')
+  # If first one being installed, show dots
+  if (k == 1 | time.so.far < 5 & plot.console == TRUE) {
+    plot(c(.25, .5, .75), c(.5, .5, .5), cex = 10, pch = 16, col = "red", xlim = c(0, 1), xaxt = "n", xlab = "**LOADING**", ylab = "", yaxt = "n")
     Sys.sleep(.75)
   }
-  #Show plot.console feedback
-  if (plot.console==TRUE)
-  {
-    msg.plot=paste0("> groundhog.library() is in the process of installing '",pkg_vrs,"'.\n\n",
-                    "> '",pkg_vrs,"' depends on ",N-1," other packages which will be installed if needed as well.\n",
-                    "> We are now installing **",snowball[k,"pkg_vrs"],"**, #",k," out of the ",N, " packages total:\n\n",
-                    "> The time now is ",format(Sys.time(),"%H:%M"),", and we quite roughly estimate the ",
-                    "process to end around ",finish.time.estimate,"\n",
-                    "> It is unlikely to finish after ", finish.time.max,"\n",
-                    "> These estimates will be revised after each package installs, but they will remain noisy estimates.\n\n\n")
+  # Show plot.console feedback
+  if (plot.console == TRUE) {
+    msg.plot <- paste0(
+      "> groundhog.library() is in the process of installing '", pkg_vrs, "'.\n\n",
+      "> '", pkg_vrs, "' depends on ", N - 1, " other packages which will be installed if needed as well.\n",
+      "> We are now installing **", snowball[k, "pkg_vrs"], "**, #", k, " out of the ", N, " packages total:\n\n",
+      "> The time now is ", format(Sys.time(), "%H:%M"), ", and we quite roughly estimate the ",
+      "process to end around ", finish.time.estimate, "\n",
+      "> It is unlikely to finish after ", finish.time.max, "\n",
+      "> These estimates will be revised after each package installs, but they will remain noisy estimates.\n\n\n"
+    )
 
 
-    #Add msg if R mismatch
-    if (rv$r.using.major!=rv$r.need.major | rv$r.using.minor!=rv$r.need.minor) {
-      msg.plot.=paste0("> Installation is slow because you are using R-",get.rversion(),"\n",
-                       "> If you run this script with the R version available on '",date,"', i.e., on R-",get.version("R",date),",\n",
-                       "   the entire installation would take about a minute or two.\n",
-                       "> Instructions for running older version of R:  http://tiny.cc/SwitchR")
+    # Add msg if R mismatch
+    if (rv$r.using.major != rv$r.need.major | rv$r.using.minor != rv$r.need.minor) {
+      msg.plot. <- paste0(
+        "> Installation is slow because you are using R-", get.rversion(), "\n",
+        "> If you run this script with the R version available on '", date, "', i.e., on R-", get.version("R", date), ",\n",
+        "   the entire installation would take about a minute or two.\n",
+        "> Instructions for running older version of R:  http://tiny.cc/SwitchR"
+      )
     }
 
     cat1.plot(msg.plot)
-
-
-  }#ENd if plot.console==T
-  #Show cat 1 feedback
+  } # ENd if plot.console==T
+  # Show cat 1 feedback
   cat2()
-  cat1(paste0("Installing package #",k," out of ",nrow(snowball), " needed.\npacakge:",snowball[k,"pkg_vrs"],"'.\n\n"))
+  cat1(paste0("Installing package #", k, " out of ", nrow(snowball), " needed.\npacakge:", snowball[k, "pkg_vrs"], "'.\n\n"))
 }
