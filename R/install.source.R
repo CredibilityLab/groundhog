@@ -30,28 +30,28 @@ install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet = F
 
 
     # 6.4.3 If downloading fails, try from MRAN on date requested as current, then that date as archive, then first day on MRAN as current, then archive
-    if (class(down.tarball.attempt) == "try-error") {
+    if (inherits(down.tarball.attempt, "try-error")) {
       down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/", date, "/src/contrib/", pkg_vrs, ".tar.gz"), destfile = tarball.path))
     }
-    if (class(down.tarball.attempt) == "try-error") {
+    if (inherits(down.tarball.attempt, "try-error")) {
       down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/", date - 2, "/src/contrib/Archive/", pkg, "/", pkg_vrs, ".tar.gz"), destfile = tarball.path))
     }
-    if (class(down.tarball.attempt) == "try-error") {
+    if (inherits(down.tarball.attempt, "try-error")) {
       down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/", date - 2, "/src/contrib/", pkg_vrs, ".tar.gz"), destfile = tarball.path))
     }
-    if (class(down.tarball.attempt) == "try-error") {
+    if (inherits(down.tarball.attempt, "try-error")) {
       down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/", date + 1, "/src/contrib/Archive/", pkg, "/", pkg_vrs, ".tar.gz"), destfile = tarball.path))
     }
-    if (class(down.tarball.attempt) == "try-error") {
+    if (inherits(down.tarball.attempt, "try-error")) {
       down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/", date + 1, "/src/contrib/", pkg_vrs, ".tar.gz"), destfile = tarball.path))
     }
-    if (class(down.tarball.attempt) == "try-error") {
+    if (inherits(down.tarball.attempt, "try-error")) {
       down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/", date, "/src/contrib/Archive/", pkg, "/", pkg_vrs, ".tar.gz"), destfile = tarball.path))
     }
-    if (class(down.tarball.attempt) == "try-error") {
+    if (inherits(down.tarball.attempt, "try-error")) {
       down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/2014-09-18/src/contrib/", pkg_vrs, ".tar.gz"), destfile = tarball.path))
     }
-    if (class(down.tarball.attempt) == "try-error") {
+    if (inherits(down.tarball.attempt, "try-error")) {
       down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/2014-09-18/src/contrib/Archive/", pkg, "/", pkg_vrs, ".tar.gz"), destfile = tarball.path))
     }
   }

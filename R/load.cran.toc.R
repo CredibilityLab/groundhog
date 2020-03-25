@@ -49,7 +49,7 @@ load.cran.toc <- function(update.toc = FALSE) {
     add.toc <- try(read.csv(paste0(groundhogR.url, "/differential.toc.php?current_date=", max.existing.toc.date))[-1])
 
     # 3.3.5 If sucess loading URL
-    if (class(add.toc) == "data.frame") {
+    if (is.data.frame(add.toc)) {
       # Get pkg_vrs for packages to add
       add.toc.pkg_vrs <- paste0(add.toc$Package, "_", add.toc$Version)
 
@@ -72,7 +72,7 @@ load.cran.toc <- function(update.toc = FALSE) {
 
 
     # 3.3.7 If sucess loading URL
-    if (class(add.times) == "data.frame") {
+    if (is.data.frame(add.times)) {
       # Get pkg_vrs for packages to add
       add.times.pkg_vrs <- paste0(add.times$Package, "_", add.times$Version)
 
@@ -96,13 +96,13 @@ load.cran.toc <- function(update.toc = FALSE) {
       "This computer had a database with a list of all versions available for each CRAN package up to ",
       max.existing.toc.date + 2, " for a total of N=", nrow(existing.toc), " package versions."
     )) # Add back the two days we took out
-    if (class(add.toc) == "data.frame") {
+    if (is.data.frame(add.toc)) {
       cat1(paste0(
         "We checked for additions to CRAN since then, and added ",
         nrow(add.toc.net), " additional entries to the list.\n"
       ))
     }
-    if (class(add.toc) != "data.frame") {
+    if (is.data.frame(add.toc)) {
       cat1(paste0("We tried to update till today but it did not work"))
     }
 
@@ -118,7 +118,7 @@ load.cran.toc <- function(update.toc = FALSE) {
     d2 <- try(download.file(times.url, times.path))
 
     # 3.4.2 if it fails (d1), give bad news
-    if (class(d1) == "try-error") {
+    if (inherits(d1, "try-error")) {
       cat2()
       cat1(paste0(
         "Could not load the database of packages available in CRAN neither locally from this\n",
