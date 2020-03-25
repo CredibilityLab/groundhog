@@ -15,7 +15,7 @@ install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet = F
   dir.create(tarball.dir, showWarnings = FALSE, recursive = TRUE)
 
   # 6.4 Download tarball if needed
-  if (!file.exists(tarball.path) | force.download == TRUE) {
+  if (!file.exists(tarball.path) | force.download) {
     # 6.4.1 Set URL for download
     toc.pkg <- toc(pkg) # get toc() to see if we have the most current version
 

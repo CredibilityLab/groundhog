@@ -17,12 +17,12 @@ installation.feedback <- function(k, date, snowball, start.time, plot.console = 
   finish.time.max <- format(Sys.time() + seconds.left * 3, "%H:%M")
 
   # If first one being installed, show dots
-  if (k == 1 | time.so.far < 5 & plot.console == TRUE) {
+  if (k == 1 | time.so.far < 5 & plot.console) {
     plot(c(.25, .5, .75), c(.5, .5, .5), cex = 10, pch = 16, col = "red", xlim = c(0, 1), xaxt = "n", xlab = "**LOADING**", ylab = "", yaxt = "n")
     Sys.sleep(.75)
   }
   # Show plot.console feedback
-  if (plot.console == TRUE) {
+  if (plot.console) {
     msg.plot <- paste0(
       "> groundhog.library() is in the process of installing '", pkg_vrs, "'.\n\n",
       "> '", pkg_vrs, "' depends on ", N - 1, " other packages which will be installed if needed as well.\n",

@@ -6,16 +6,16 @@ estimate.seconds.left <- function(k, start.time, snowball) {
   time.so.far <- as.numeric(difftime(Sys.time(), start.time, units = "secs"))
 
   # Total time estimate
-  estimated.total.source <- round(sum(snowball[snowball$from == "source" & snowball$installed == FALSE, ]$installation.time), 0) # For source, use estimated install time
-  estimated.total.binary <- time.per.binary * sum(snowball$from != "source" & snowball$installed == FALSE) # For binary, assume 5 seconds per package that is not installed
+  estimated.total.source <- round(sum(snowball[snowball$from == "source" & !snowball$installed, ]$installation.time), 0) # For source, use estimated install time
+  estimated.total.binary <- time.per.binary * sum(snowball$from != "source" & !snowball$installed) # For binary, assume 5 seconds per package that is not installed
   estimated.total <- estimated.total.source + estimated.total.binary
 
   # subset of snowball to pacakges left
   N <- nrow(snowball)
   snowball.left <- snowball[(k + 1):N, ]
 
-  estimated.left.source <- round(sum(snowball.left[snowball.left$from == "source" & snowball.left$installed == FALSE, ]$installation.time), 0)
-  estimated.left.binary <- time.per.binary * sum(snowball.left$from != "source" & snowball.left$installed == FALSE) # For binary, assume 5 seconds per package that is not installed
+  estimated.left.source <- round(sum(snowball.left[snowball.left$from == "source" & !snowball.left$installed, ]$installation.time), 0)
+  estimated.left.binary <- time.per.binary * sum(snowball.left$from != "source" & !snowball.left$installed) # For binary, assume 5 seconds per package that is not installed
   estimated.left <- estimated.left.source + estimated.left.binary
 
   if (k == 1 | time.so.far < 30) {
@@ -24,8 +24,8 @@ estimate.seconds.left <- function(k, start.time, snowball) {
   # If not the first package, adjust estimate
   if (k > 1) {
     actual.past <- round(as.numeric(Sys.time() - start.time, units = "secs"), 0)
-    estimated.past.source <- sum(snowball$installation.time[1:(k - 1)][snowball$from[1:(k - 1)] == "source" & snowball$installed[1:(k - 1)] == FALSE])
-    estimated.past.binary <- time.per.binary * sum(snowball.left$from != "source" & snowball.left$installed == F) # For binary, assume 5 seconds per package that is not installed
+    estimated.past.source <- sum(snowball$installation.time[1:(k - 1)][snowball$from[1:(k - 1)] == "source" & !snowball$installed[1:(k - 1)]])
+    estimated.past.binary <- time.per.binary * sum(snowball.left$from != "source" & !snowball.left$installed) # For binary, assume 5 seconds per package that is not installed
     estimated.past <- estimated.past.source + estimated.past.binary
 
     progress <- estimated.past / estimated.total

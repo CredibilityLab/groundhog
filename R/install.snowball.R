@@ -7,12 +7,12 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
   # 0.1 pkg_vrs for target package
   pkg_vrs <- as.character(snowball[nrow(snowball), "pkg_vrs"])
   # 0.2 determine if we want the plot to show
-  if (sum(snowball$from == "source" & snowball$installed == FALSE) == 0) {
+  if (sum(snowball$from == "source" & !snowball$installed) == 0) {
     plot.console <- FALSE
   }
 
   # 1. FORCE INSTALL
-  if (force.install == TRUE & sum(snowball$installed) > 0) {
+  if (force.install & sum(snowball$installed) > 0) {
     # Subset of packages that are installed
     snowball.installed <- snowball[snowball$installed, ]
     # Get their path
@@ -23,7 +23,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
   } # End #1 force
 
   # 2. FORCE SOURCE
-  if (force.source == TRUE) {
+  if (force.source) {
     # Change values from optimized, to 'source'
     snowball$from <- "source"
   }
@@ -82,7 +82,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
       now.installed <- is.pkg_vrs.installed(pkg.k, vrs.k)
 
       # 3.8.5 If not success, try source again, forcing download of file
-      if (now.installed == FALSE) {
+      if (!now.installed) {
         install.source(pkg_vrs.k, lib.k, date, force.download = TRUE, quiet = quiet.install)
       }
 
@@ -129,7 +129,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
     # Add to libpath, unless it is the one to be installed
     .libPaths(c(lib.k, .libPaths()))
   } # End loop install
-  if (plot.console == TRUE) {
+  if (plot.console) {
     cat1.plot(paste0(
       "> Installation of ", pkg_vrs, " has completed.\n\n\n",
       "You may clear this window executing 'dev.off()'"

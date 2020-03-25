@@ -29,7 +29,7 @@ groundhog.library <- function(pkg, date,
   snowball <- get.snowball(pkg, date, include.suggests)
 
   # 8.6 CHECK FOR CONFLICT SNOWBALL <->ACTIVE PACKAGES
-  if (ignore.package.conflicts == FALSE) {
+  if (!ignore.package.conflicts) {
     check.snowball.conflict(snowball)
   }
 
