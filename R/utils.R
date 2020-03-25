@@ -53,7 +53,9 @@ colourise <- function(text, fg = "black", bg = NULL) {
   bg_colours <- c("black" = "40", "red" = "41", "green" = "42", "brown" = "43", "blue" = "44", "purple" = "45", "cyan" = "46", "light gray" = "47")
 
   col <- fg_colours[tolower(fg)]
-  if (!is.null(bg)) col <- paste0(col, bg_colours[tolower(bg)], sep = ";")
+  if (!is.null(bg)) {
+    col <- paste0(col, bg_colours[tolower(bg)], sep = ";")
+  }
 
   init <- col_escape(col)
   reset <- col_escape("0")
@@ -75,23 +77,28 @@ cat2 <- function(msg = "") {
 namedList <- function(...) {
   L <- list(...)
   snm <- sapply(substitute(list(...)), deparse)[-1]
-  if (is.null(nm <- names(L))) nm <- snm
-  if (any(nonames <- nm == "")) nm[nonames] <- snm[nonames]
+  if (is.null(nm <- names(L))) {
+    nm <- snm
+  }
+  if (any(nonames <- nm == "")) {
+    nm[nonames] <- snm[nonames]
+  }
   setNames(L, nm)
 }
 
 # 2.10 Quit menu
 quit.menu <- function(date) {
-  cat1("Type 'Q' to stop the script\nAnything else to continue")
+  cat1("Type 'Q', 'quit' or 'stop' to stop the script\nAnything else to continue")
   x <- readline("")
-  if (tolower(x) == "q" | tolower(x) == "quit" | tolower(x) == "stop") {
+  if (tolower(x) %in% c("q", "quit", "stop")) {
     cat2()
     cat1(paste0("You typed ", x, " so script stops..."))
     cat1(msg.R.switch(date))
     stop("---")
   } # End if quit
 
-  if (tolower(x) != "q") cat1(paste0("You typed '", x, "' the script continues..."))
+  cat1(paste0("You typed '", x, "' the script continues..."))
+
 } # End quit.menu
 
 # 2.18 Plot console
