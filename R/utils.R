@@ -71,6 +71,29 @@ cat2 <- function(msg = "") {
   cat(colourise(msg, "lightcyan"), "\n") # BOLD
 }
 
+message1 <- function(..., domain = NULL, appendLF = TRUE) {
+
+  if (.pkgenv[["supportsANSI"]]) {
+    message(c("\033[36m", ..., "\033[0m"), domain = domain, appendLF = appendLF)
+  } else {
+    message(..., domain = NULL, appendLF = TRUE)
+  }
+
+}
+message2 <- function(..., domain = NULL, appendLF = TRUE) {
+
+  msg <- list(...)
+  if (length(msg)==0) {
+    msg <- c("groundhog.library() says [using R-", get.rversion(), "]:")
+  }
+
+  if (.pkgenv[["supportsANSI"]]) {
+    message(c("\033[1;36m", msg, "\033[0m"), domain = domain, appendLF = appendLF)
+  } else {
+    message(msg, domain = NULL, appendLF = TRUE)
+  }
+
+}
 # 2.8 Automatically name elements in list with name of the objects in the list
 # https://stackoverflow.com/questions/16951080/can-lists-be-created-that-name-themselves-based-on-input-object-names
 #' @importFrom stats setNames
