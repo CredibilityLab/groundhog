@@ -6,6 +6,9 @@
 \usage{
 update_cran.toc_if.needed(date)
 }
+\arguments{
+\item{date}{In the format "\%Y-\%m-\%d" (ISO 8601 convention)}
+}
 \description{
 update cran.toc() if needed
 }
