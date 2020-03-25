@@ -60,7 +60,7 @@ install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet = F
   # yes--> install
   if (file.exists(tarball.path)) {
     # Create the folder
-    dir.create(lib, showWarnings = F, recursive = T)
+    dir.create(lib, showWarnings = FALSE, recursive = TRUE)
     # Install the package
     install.packages(tarball.path, type = "source", lib = lib, dependencies = FALSE, repos = NULL, INSTALL_opts = "--no-staged-install")
   } # End if success

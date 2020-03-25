@@ -39,7 +39,7 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
 
       # 6.4  If end.date not yet in toc, update toc
       if (max(cran.toc$Published) < end.date) {
-        load.cran.toc(T)
+        load.cran.toc(TRUE)
       }
     } # ENd 6.2 --  if date will be found
   } # End if package came first
@@ -66,7 +66,7 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
 
       # If end.date not yet in toc, update toc
       if (max(cran.toc$Published) < end.date) {
-        load.cran.toc(T)
+        load.cran.toc(TRUE)
       }
     } # There is only 1 version of R within set
   } # R with after

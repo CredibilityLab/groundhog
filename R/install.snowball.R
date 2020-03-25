@@ -55,7 +55,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
       }
 
       # 3.4 Create directory
-      dir.create(lib.k, recursive = T, showWarnings = F)
+      dir.create(lib.k, recursive = TRUE, showWarnings = FALSE)
 
       # 3.5 INSTALL K FROM CRAN
       if (from.k == "CRAN") {

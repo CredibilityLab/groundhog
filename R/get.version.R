@@ -16,7 +16,7 @@ get.version <- function(pkg, date, current.deps = c("Rcpp")) {
     stop("")
   }
   # 2.3 Check if date requested comes before most up to date date
-  last.toc.date <- max(cran.toc$Published, na.rm = T)
+  last.toc.date <- max(cran.toc$Published, na.rm = TRUE)
   if (date > last.toc.date) {
     stop(
       "groundhog.library() index of packages ends on  ", last.toc.date,

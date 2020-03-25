@@ -1,6 +1,6 @@
 # Function 7 - Get snowball
 #' @importFrom utils tail
-get.snowball <- function(pkg, date, include.suggests = F, force.source = F, current.deps = "Rcpp") {
+get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE, current.deps = "Rcpp") {
 
   # 1) Get dependencies
   dep12 <- get.all.dependencies(pkg, date)
@@ -68,7 +68,7 @@ get.snowball <- function(pkg, date, include.suggests = F, force.source = F, curr
     snowball.MRAN.date, # MRAN date, in case MRAN is tried
     snowball.time, # time to install
     snowball.installation.path,
-    stringsAsFactors = F
+    stringsAsFactors = FALSE
   ) # directory to save the binary package to
   # how long will it take
 
