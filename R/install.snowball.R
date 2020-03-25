@@ -7,7 +7,9 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
   # 0.1 pkg_vrs for target package
   pkg_vrs <- as.character(snowball[nrow(snowball), "pkg_vrs"])
   # 0.2 determine if we want the plot to show
-  if (sum(snowball$from == "source" & snowball$installed == FALSE) == 0) plot.console <- FALSE
+  if (sum(snowball$from == "source" & snowball$installed == FALSE) == 0) {
+    plot.console <- FALSE
+  }
 
   # 1. FORCE INSTALL
   if (force.install == TRUE & sum(snowball$installed) > 0) {
@@ -21,13 +23,15 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
   } # End #1 force
 
   # 2. FORCE SOURCE
-  if (force.source == TRUE) snowball$from <- "source" # Change values from optimized, to 'source'
+  if (force.source == TRUE) {
+    # Change values from optimized, to 'source'
+    snowball$from <- "source"
+  }
 
   # 3 INSTALLATION LOOP
 
   start.time <- Sys.time() # When loops starts, to compute actual completion time
-  for (k in 1:nrow(snowball))
-  {
+  for (k in 1:nrow(snowball)) {
     # 3.0 Assign path
     lib.k <- as.character(snowball[k, "installation.path"])
 
@@ -54,7 +58,9 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
       dir.create(lib.k, recursive = T, showWarnings = F)
 
       # 3.5 INSTALL K FROM CRAN
-      if (from.k == "CRAN") install.packages(pkg.k, dependencies = FALSE, lib = lib.k, repos = "https://cloud.r-project.org", type = "both", quiet = quiet.install, INSTALL_opts = "--no-staged-install")
+      if (from.k == "CRAN") {
+        install.packages(pkg.k, dependencies = FALSE, lib = lib.k, repos = "https://cloud.r-project.org", type = "both", quiet = quiet.install, INSTALL_opts = "--no-staged-install")
+      }
 
       # 3.6 INSTALL K FROM MRAN
       if (from.k == "MRAN") {
@@ -68,13 +74,17 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
 
 
       # 3.7 INSTALL K FROM SOURCE IF SUPPOSED TO, OR I STILL NOT INSTALLED
-      if (from.k == "source" | !is.pkg_vrs.installed(pkg.k, vrs.k)) install.source(pkg_vrs.k, lib.k, date)
+      if (from.k == "source" | !is.pkg_vrs.installed(pkg.k, vrs.k)) {
+        install.source(pkg_vrs.k, lib.k, date)
+      }
 
       # 3.8 VERIFY INSTALL
       now.installed <- is.pkg_vrs.installed(pkg.k, vrs.k)
 
       # 3.8.5 If not success, try source again, forcing download of file
-      if (now.installed == FALSE) install.source(pkg_vrs.k, lib.k, date, force.download = TRUE, quiet = quiet.install)
+      if (now.installed == FALSE) {
+        install.source(pkg_vrs.k, lib.k, date, force.download = TRUE, quiet = quiet.install)
+      }
 
       # 3.8.6 Verify install again
       now.installed <- is.pkg_vrs.installed(pkg.k, vrs.k)

@@ -6,7 +6,10 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
   # Get dependencies if version exists
   row <- cran.toc[cran.toc$Package == pkg & cran.toc$Version == vrs, c("Imports", "Depends", "Suggests")] # row in mastertoc
   dep <- c(row$Imports, row$Depends) # merge
-  if (include.suggests) dep <- paste0(dep, row$Suggests) # add 'Suggests' dependencies if requested
+  if (include.suggests) {
+    dep <- paste0(dep, row$Suggests) # add 'Suggests' dependencies if requested
+  }
+
   dep <- unlist(strsplit(dep, ",")) # turn to array
   dep <- dep[dep != ""] # drop empty values
   dep <- dep[dep != "R"] # drop R as a dependency
@@ -24,7 +27,10 @@ get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
 
   # [b] dep12: data.frame with two columns, pkg-left, dependency-right, for snowball loading
   dep12 <- data.frame(pkg = as.character(), dep2 = as.character())
-  if (length(pending > 0)) dep12 <- data.frame(pkg = pkg, dep2 = pending)
+
+  if (length(pending > 0)) {
+    dep12 <- data.frame(pkg = pkg, dep2 = pending)
+  }
 
   # 5.2 Loop over pending, adding to dep12, and both adding and subtracting from pending till it's empty
   k <- 1

@@ -102,7 +102,9 @@ load.cran.toc <- function(update.toc = FALSE) {
         nrow(add.toc.net), " additional entries to the list.\n"
       ))
     }
-    if (class(add.toc) != "data.frame") cat1(paste0("We tried to update till today but it did not work"))
+    if (class(add.toc) != "data.frame") {
+      cat1(paste0("We tried to update till today but it did not work"))
+    }
 
     hr <- "\n-------------------------------"
     cat1(paste0("The file with the list is stored here: ", toc.path, hr))

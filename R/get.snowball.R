@@ -19,7 +19,9 @@ get.snowball <- function(pkg, date, include.suggests = F, force.source = F, curr
     # Drop those rows from both
     dep12 <- dep12[!indep.rows, ]
     # Safety valve in case loop impossible to end
-    if (k == 50000) break
+    if (k == 50000) {
+      break
+    }
   }
 
   # 3) Add pkg at the end

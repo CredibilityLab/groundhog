@@ -24,13 +24,18 @@ get.date.for.install.binary <- function(pkg_vrs) {
   k.others <- k.others[k.others != k.same]
 
   # Loop over them
-  for (k in c(k.same, k.others))
-  {
+  for (k in c(k.same, k.others)) {
     R_vrs <- R.toc[k, 1]
     binary.date <- get.R.pkg.date(pkg_vrs = pkg_vrs, R_vrs = R_vrs)
-    if (binary.date > "1970-01-01") break
+    if (binary.date > "1970-01-01") {
+      break
+    }
   }
+
   # If date if from before MRAN's first day, 2014-09-17, go to 1970
-  if (binary.date < "2014-09-17") binary.date <- as.DateYMD("1970-01-01")
+  if (binary.date < "2014-09-17") {
+    binary.date <- as.DateYMD("1970-01-01")
+  }
+
   return(as.DateYMD(binary.date))
 }

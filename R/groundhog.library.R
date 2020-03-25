@@ -11,7 +11,9 @@ groundhog.library <- function(pkg, date,
                               force.install = FALSE) # Even if package is found for this R-build, it will reinstall it.
 {
   # 8.1 Load cran.toc if not yet loaded
-  if (!exists("cran.toc")) load.cran.toc(update.toc = FALSE)
+  if (!exists("cran.toc")) {
+    load.cran.toc(update.toc = FALSE)
+  }
 
   # 8.2 Update cran.toc() if needed for entered date (#2.12)
   update_cran.toc_if.needed(date)
@@ -27,7 +29,9 @@ groundhog.library <- function(pkg, date,
   snowball <- get.snowball(pkg, date, include.suggests)
 
   # 8.6 CHECK FOR CONFLICT SNOWBALL <->ACTIVE PACKAGES
-  if (ignore.package.conflicts == FALSE) check.snowball.conflict(snowball)
+  if (ignore.package.conflicts == FALSE) {
+    check.snowball.conflict(snowball)
+  }
 
   # 8.7 Install pacakges if needed
   install.snowball(pkg, date, include.suggests, force.install = force.install, force.source = force.source, plot.console = plot.console, quiet.install = quiet.install)
@@ -43,6 +47,10 @@ groundhog.library <- function(pkg, date,
   # Found there?
   pos <- regexpr(pkg_vrs, paste0(active))
   cat2()
-  if (pos > 0) cat1(paste0("Succesfully loaded ", pkg_vrs, " and its ", nrow(snowball) - 1, " dependencies."))
-  if (pos == -1) cat1(paste0("FAILED to load ", pkg_vrs))
+  if (pos > 0) {
+    cat1(paste0("Succesfully loaded ", pkg_vrs, " and its ", nrow(snowball) - 1, " dependencies."))
+  }
+  if (pos == -1) {
+    cat1(paste0("FAILED to load ", pkg_vrs))
+  }
 } # End of groundhog.library()

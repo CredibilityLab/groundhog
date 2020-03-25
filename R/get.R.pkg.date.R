@@ -28,11 +28,19 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
       start.date <- cross1[k.R, ]$Published # start.date: start of period when pkg_vrs binary was avilable for this R-version
 
       # 6.3 If not using the most recent R, the midpoint is towardsthe next one, if most recent, halfway to today
-      if (k.R < nrow(cross1)) end.date <- as.DateYMD(cross1[k.R + 1, ]$Published) - 2 # If already replaced, when it was replaced, minus 2 days for caution
-      if (k.R == nrow(cross1)) end.date <- as.DateYMD(Sys.Date()) - 2 # If not yet replaced, still current with today's MRAN, but use minus two days for caution
+      if (k.R < nrow(cross1)) {
+        # If already replaced, when it was replaced, minus 2 days for caution
+        end.date <- as.DateYMD(cross1[k.R + 1, ]$Published) - 2
+      }
+      if (k.R == nrow(cross1)) {
+        # If not yet replaced, still current with today's MRAN, but use minus two days for caution
+        end.date <- as.DateYMD(Sys.Date()) - 2
+      }
 
       # 6.4  If end.date not yet in toc, update toc
-      if (max(cran.toc$Published) < end.date) load.cran.toc(T)
+      if (max(cran.toc$Published) < end.date) {
+        load.cran.toc(T)
+      }
     } # ENd 6.2 --  if date will be found
   } # End if package came first
 
@@ -47,12 +55,19 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
       # Start date when pkg was available, is when it is released
       start.date <- cross1[k.pkg, ]$Published # start.date: start of period when pkg_vrs binary was avilable for this R-version
       # End date is either when then ext package version is released or the present.
-      if (k.pkg < nrow(cross1)) end.date <- as.DateYMD(cross1[k.pkg + 1, ]$Published) - 2 # If already replaced, when it was replaced, minus 2 days for caution
-      if (k.pkg == nrow(cross1)) end.date <- as.DateYMD(Sys.Date()) - 2 # If not yet replaced, still current with today's MRAN, but use minus two days for caution
-
+      if (k.pkg < nrow(cross1)) {
+        # If already replaced, when it was replaced, minus 2 days for caution
+        end.date <- as.DateYMD(cross1[k.pkg + 1, ]$Published) - 2
+      }
+      if (k.pkg == nrow(cross1)) {
+        # If not yet replaced, still current with today's MRAN, but use minus two days for caution
+        end.date <- as.DateYMD(Sys.Date()) - 2
+      }
 
       # If end.date not yet in toc, update toc
-      if (max(cran.toc$Published) < end.date) load.cran.toc(T)
+      if (max(cran.toc$Published) < end.date) {
+        load.cran.toc(T)
+      }
     } # There is only 1 version of R within set
   } # R with after
 

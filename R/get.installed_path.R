@@ -6,8 +6,7 @@ get.installed_path <- function(pkg, vrs) {
 
   # Search for package till found
   installed_path <- ""
-  for (pathk in pkg_search_paths)
-  {
+  for (pathk in pkg_search_paths) {
     # If directory and file exists, test if package is installed, if file does not exist; it is not installed anyway
     if (file.exists(pathk)) {
       df.pkg <- data.frame(installed.packages(lib.loc = pathk)) # Note: in {groundhogR} each package version gets a 'library' within the R version
