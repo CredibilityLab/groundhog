@@ -91,23 +91,22 @@ load.cran.toc <- function(update.toc = FALSE) {
 
 
     # Feedback to user on existing cran.to
-    cat2()
-    cat1(paste0(
+    message2()
+    message1(
       "This computer had a database with a list of all versions available for each CRAN package up to ",
       max.existing.toc.date + 2, " for a total of N=", nrow(existing.toc), " package versions."
-    )) # Add back the two days we took out
+    ) # Add back the two days we took out
     if (is.data.frame(add.toc)) {
-      cat1(paste0(
+      message1(
         "We checked for additions to CRAN since then, and added ",
         nrow(add.toc.net), " additional entries to the list.\n"
-      ))
+      )
     }
     if (is.data.frame(add.toc)) {
-      cat1(paste0("We tried to update till today but it did not work"))
+      message1("We tried to update till today but it did not work")
     }
 
-    hr <- "\n-------------------------------"
-    cat1(paste0("The file with the list is stored here: ", toc.path, hr))
+    message1("The file with the list is stored here: ", toc.path, "\n-------------------------------")
   } # End if local file exist
 
 
@@ -119,12 +118,12 @@ load.cran.toc <- function(update.toc = FALSE) {
 
     # 3.4.2 if it fails (d1), give bad news
     if (inherits(d1, "try-error")) {
-      cat2()
-      cat1(paste0(
+      message2()
+      message1(
         "Could not load the database of packages available in CRAN neither locally from this\n",
         "computer nor from our server. Unfortunately this means you cannot use groundhog.libray()"
-      ))
-      cat1("This could happen if this is your first time using {groundhogR} and you are off-line.")
+      )
+      message1("This could happen if this is your first time using {groundhogR} and you are off-line.")
       stop("!")
     } # End if download did not work
     # 3.4.3 Load the toc
@@ -139,15 +138,15 @@ load.cran.toc <- function(update.toc = FALSE) {
 
 
     # 3.4.4 tell users
-    cat2()
-    cat1(paste0(
+    message2()
+    message1(
       "GroundhogR requires a database listing all versions of every package ever in CRAN.\n",
       "The database was not found in this computer so it was just downloaded from http://groundhogR.com\n",
       "The database contains N = ", nrow(cran.toc), " entries. The most recent entry is from ", max(cran.toc$Published), ".\n",
       "The database will be automatically updated when the 'date' in groundhog.library('date') so requires.\n",
       "You may also update it by running: load.cran.toc(update.toc=TRUE)."
-    ))
-    hr <- "\n-------------------------------"
-    cat1(paste0("The file is stored locally here:'", toc.path, "'", hr))
+    )
+
+    message1("The file is stored locally here:'", toc.path, "'\n-------------------------------")
   } # End if file does not exist
 } # End of load cran.toc

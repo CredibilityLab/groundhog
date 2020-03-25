@@ -15,11 +15,11 @@ update_cran.toc_if.needed <- function(date) {
 
   # 4 Compare most recent to entered date
   if (max.date < date) {
-    cat2()
-    cat1(paste0(
+    message2()
+    message1(
       "The date you entered, '", date, "', requires updating your database with the list of CRAN package versions, \n",
       " for it goes only until ", max.date, ".The udate is happening as you read this. "
-    ))
+    )
 
     # Stop if date is in the future
     msg.future.date <- paste0(
@@ -28,8 +28,8 @@ update_cran.toc_if.needed <- function(date) {
       "two days ago, (i.e., the most recent date you may use today with groundhogR is:'", Sys.Date() - 2, "')."
     )
     if (date > Sys.Date() - 2) {
-      cat2()
-      cat1(msg.future.date)
+      message2()
+      message1(msg.future.date)
       stop()
     }
     # Update the database

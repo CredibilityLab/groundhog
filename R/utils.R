@@ -37,40 +37,6 @@ get.rversion <- function() {
   return(r.version)
 }
 
-# 2.5 Colored cat()
-# source("https://raw.githubusercontent.com/r-lib/testthat/717b02164def5c1f027d3a20b889dae35428b6d7/R/colour-text.r")
-colourise <- function(text, fg = "black", bg = NULL) {
-  term <- Sys.getenv()["TERM"]
-  colour_terms <- c("xterm-color", "xterm-256color", "screen", "screen-256color")
-
-  if (Sys.getenv("R_TESTS") != "" || !any(term %in% colour_terms, na.rm = TRUE)) {
-    return(text)
-  }
-
-  col_escape <- function(col) paste0("\033[", col, "m")
-
-  fg_colours <- c("black" = "0;30", "blue" = "0;34", "green" = "0;32", "cyan" = "0;36", "red" = "0;31", "purple" = "0;35", "brown" = "0;33", "lightgray" = "0;37", "darkgray" = "1;30", "lightblue" = "1;34", "lightgreen" = "1;32", "lightcyan" = "1;36", "lightred" = "1;31", "lightpurple" = "1;35", "yellow" = "1;33", "white" = "1;37")
-  bg_colours <- c("black" = "40", "red" = "41", "green" = "42", "brown" = "43", "blue" = "44", "purple" = "45", "cyan" = "46", "light gray" = "47")
-
-  col <- fg_colours[tolower(fg)]
-  if (!is.null(bg)) {
-    col <- paste0(col, bg_colours[tolower(bg)], sep = ";")
-  }
-
-  init <- col_escape(col)
-  reset <- col_escape("0")
-  paste0(init, text, reset)
-}
-
-# 2.5.1 Simplified cat functions for just one pre-specified color used throughout groundhogR
-cat1 <- function(msg) cat(colourise(msg, "cyan"), "\n") # normal
-cat2 <- function(msg = "") {
-  if (msg == "") {
-    msg <- paste0("\ngroundhog.library() says [using R-", get.rversion(), "]:")
-  }
-  cat(colourise(msg, "lightcyan"), "\n") # BOLD
-}
-
 message1 <- function(..., domain = NULL, appendLF = TRUE) {
 
   if (.pkgenv[["supportsANSI"]]) {
@@ -111,16 +77,18 @@ namedList <- function(...) {
 
 # 2.10 Quit menu
 quit.menu <- function(date) {
-  cat1("Type 'Q', 'quit' or 'stop' to stop the script\nAnything else to continue")
+  message1(
+    "Type 'Q', 'quit' or 'stop' to stop the script.\nAnything else to continue"
+  )
   x <- readline("")
   if (tolower(x) %in% c("q", "quit", "stop")) {
-    cat2()
-    cat1(paste0("You typed ", x, " so script stops..."))
-    cat1(msg.R.switch(date))
+    message2()
+    message1("You typed ", x, " so script stops...")
+    message1(msg.R.switch(date))
     stop("---")
   } # End if quit
 
-  cat1(paste0("You typed '", x, "' the script continues..."))
+  message1("You typed '", x, "' the script continues...")
 
 } # End quit.menu
 

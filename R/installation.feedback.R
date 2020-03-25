@@ -47,6 +47,9 @@ installation.feedback <- function(k, date, snowball, start.time, plot.console = 
     cat1.plot(msg.plot)
   } # ENd if plot.console==T
   # Show cat 1 feedback
-  cat2()
-  cat1(paste0("Installing package #", k, " out of ", nrow(snowball), " needed.\npacakge:", snowball[k, "pkg_vrs"], "'.\n\n"))
+  message2()
+  message1(
+    "Installing package #", k, " out of ", nrow(snowball), " needed.\npacakge:",
+    snowball[k, "pkg_vrs"], "'.\n\n"
+  )
 }

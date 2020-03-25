@@ -68,10 +68,10 @@ install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet = F
 
   # 6.6 no--> convey bad news
   if (!file.exists(tarball.path)) {
-    cat1(paste0(
+    message1(
       "could not find the tarball file for package ",
       pkg, " version:", vrs, " in CRAN (", file.url, "). \nMaybe you are offline?."
-    ))
+    )
     stop("Installation failed.")
   }
 } # End of install.source

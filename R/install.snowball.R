@@ -95,24 +95,24 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
         # If using different R version, attribute to that:
         rv <- r.version.check(date)
         if ((rv$r.using.minor != rv$r.need.minor) | (rv$r.using.major != rv$r.need.major)) {
-          cat2()
-          cat1(paste0(
+          message2()
+          message1(
             "As mentioned before, there is a discrepancy between the R Version you are using R-", rv$r.using.full,
             "\nand the one that matches the date (", date, ") you entered: R-", rv$r.need.full, ". ",
             "It was worth a try \nbut the install did not work. Follow the instructions below to",
             " try this script in the correct R version."
-          ))
+          )
           cat1.plot(paste0("> The installation of ", pkg_vrs, " failed. Please see console for details."))
 
           # Long instructions written above
-          cat1(msg.R.switch(date))
+          message1(msg.R.switch(date))
         }
 
         # PENDINGrename back the flders taht were renamed
         #
 
         # Stop the script
-        cat2(paste0("\n\n\n--------------------   The package ", pkg_vrs, " did NOT install.-----------------"))
+        message2("\n\n\n--------------------   The package ", pkg_vrs, " did NOT install.-----------------")
         opt <- options(show.error.messages = FALSE)
         on.exit(options(opt))
         stop()
@@ -120,8 +120,8 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
 
       # Installation succeded
       if (now.installed) {
-        cat2()
-        cat1(paste0(pkg_vrs.k, " installed succesfully. Saved to: ", lib.k))
+        message2()
+        message1(pkg_vrs.k, " installed succesfully. Saved to: ", lib.k)
         # delete temporary renamed foler if they were created
       }
     } # End of check for whetehr already installed

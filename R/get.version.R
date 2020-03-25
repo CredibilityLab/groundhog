@@ -5,15 +5,15 @@ get.version <- function(pkg, date, current.deps = c("Rcpp")) {
   # 2 Validate
   # 2.1 Check if Package exists in our records
   if (nrow(dfk) == 0) {
-    cat2()
-    cat1(paste0("groundhog.library() does not have the package ", pkg, " indexed so it cannot install or use it. Note: It only has CRAN packages"))
-    stop("")
+    message2()
+    message1("groundhog.library() does not have the package ", pkg, " indexed so it cannot install or use it. Note: It only has CRAN packages")
+    stop()
   }
   # 2.2 Check if date request comes after first date for that package
   if (dfk$Published[1] > date) {
-    cat2()
-    cat1(paste0("According to our records, the package: '", pkg, "' was not yet available on CRAN on '", date, "'"))
-    stop("")
+    message2()
+    message1("According to our records, the package: '", pkg, "' was not yet available on CRAN on '", date, "'")
+    stop()
   }
   # 2.3 Check if date requested comes before most up to date date
   last.toc.date <- max(cran.toc$Published, na.rm = TRUE)

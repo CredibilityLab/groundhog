@@ -46,11 +46,11 @@ groundhog.library <- function(pkg, date,
   active <- paste0(capture.output(utils::sessionInfo()), collapse = ",")
   # Found there?
   pos <- regexpr(pkg_vrs, paste0(active))
-  cat2()
+  message2()
   if (pos > 0) {
-    cat1(paste0("Succesfully loaded ", pkg_vrs, " and its ", nrow(snowball) - 1, " dependencies."))
+    message1("Succesfully loaded ", pkg_vrs, " and its ", nrow(snowball) - 1, " dependencies.")
   }
   if (pos == -1) {
-    cat1(paste0("FAILED to load ", pkg_vrs))
+    message1("FAILED to load ", pkg_vrs)
   }
 } # End of groundhog.library()

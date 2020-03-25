@@ -24,36 +24,36 @@ check.mismatch.R <- function(date) {
 
     # If more than a 60 minute gap give full warning
     if (since.warning > 60) {
-      cat2()
-      cat1("---------------- R Version check ----------------")
-      cat1(paste0(
+      message2()
+      message1("---------------- R Version check ----------------")
+      message1(
         "You are using  R : '", rv$r.using.full, ", but for the date you entered (", date, "),\n",
         "the current R was: '", rv$r.need.full, "'"
-      ))
-      cat1(paste0(
+      )
+      message1(
         "This version mismatch has two consequences:\n",
         "1) Some of the packages you install, and their dependencies, probably will take longer to install, possibly *minutes* longer.\n",
         "2) There is some chance the original code won't run in the newer R version"
-      ))
+      )
 
-      cat2("\nBottom line")
-      cat1(paste0(
+      message2("\nBottom line")
+      message1(
         "It's probably worth continuing as-is, and if you get tired of waiting for packages to install,\nor get errors trying to run ",
         "it, then you try it with the appropriate version of R. \nRunning older R is actually quite easy. To get instructions, execute:\nmsg.R.switch('", date, "') "
-      ))
+      )
       assign("r.mismatched.last.time", Sys.time(), envir = .mismatch.warning)
 
-      cat1("\n\nRegardless of your choice, this warning will not appear again within the next hour")
+      message1("\n\nRegardless of your choice, this warning will not appear again within the next hour")
       quit.menu(date = date)
     } # End if more than 60 minutes since last warning
 
     # If less than 60 minute, short version
     if (since.warning <= 60) {
-      cat2()
-      cat1(paste0(
+      message2()
+      message1(
         "R Version mismatch. Using: R-", rv$r.using.full, " but the on '", date, "' it was : R-", rv$r.need.full,
         ".\n Full warning shown earlier (scroll up), won't be shown again for the next ", 60 - since.warning, " minutes."
-      ))
+      )
     } # End if recently warned
   } # END warning check
 } # End of function 2.13
