@@ -43,7 +43,7 @@ colourise <- function(text, fg = "black", bg = NULL) {
   term <- Sys.getenv()["TERM"]
   colour_terms <- c("xterm-color", "xterm-256color", "screen", "screen-256color")
 
-  if (rcmd_running() || !any(term %in% colour_terms, na.rm = TRUE)) {
+  if (Sys.getenv("R_TESTS") != "" || !any(term %in% colour_terms, na.rm = TRUE)) {
     return(text)
   }
 
@@ -59,10 +59,6 @@ colourise <- function(text, fg = "black", bg = NULL) {
   reset <- col_escape("0")
   paste0(init, text, reset)
 }
-
-rcmd_running <- function() {
-  nchar(Sys.getenv("R_TESTS")) != 0
-} # End colourise
 
 # 2.5.1 Simplified cat functions for just one pre-specified color used throughout groundhogR
 cat1 <- function(msg) cat(colourise(msg, "cyan"), "\n") # normal
