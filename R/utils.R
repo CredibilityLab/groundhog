@@ -63,8 +63,10 @@ colourise <- function(text, fg = "black", bg = NULL) {
 # 2.5.1 Simplified cat functions for just one pre-specified color used throughout groundhogR
 cat1 <- function(msg) cat(colourise(msg, "cyan"), "\n") # normal
 cat2 <- function(msg = "") {
-  if (msg == "") cat(colourise(paste0("\ngroundhog.library() says [using R-", get.rversion(), "]:"), "lightcyan"), "\n") # BOLD
-  if (msg != "") cat(colourise(msg, "lightcyan"), "\n") # BOLD
+  if (msg == "") {
+    msg <- paste0("\ngroundhog.library() says [using R-", get.rversion(), "]:")
+  }
+  cat(colourise(msg, "lightcyan"), "\n") # BOLD
 }
 
 # 2.8 Automatically name elements in list with name of the objects in the list
