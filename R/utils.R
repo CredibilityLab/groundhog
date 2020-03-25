@@ -97,6 +97,8 @@ quit.menu <- function(date) {
 cat1.plot <- function(x) {
   # Get existing margins to return to them after console use
   old.par <- par(mar = c(.25, .25, .25, .25))
+  # Return margins to defaults on exit
+  on.exit(par(old.par))
 
   # Catch user's attention
   #    plot(c(.25,.5,.75),c(.5,.5,.5),cex=10,pch=16,col='red',xlim=c(0,1))
@@ -108,6 +110,4 @@ cat1.plot <- function(x) {
   segments(x0 = 0, x1 = .4, y1 = .15, y0 = .15, col = "cyan4")
   text(0, .1, font = 1, pos = 4, cex = .75, col = "cyan4", "You can avoid this console by running:\ngroundhog.library(..., plot.console=FALSE)")
 
-  # Return margins to defaults
-  par(old.par)
 }
