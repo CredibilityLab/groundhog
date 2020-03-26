@@ -2,14 +2,15 @@
 #' @importFrom utils read.csv write.csv
 load.cran.toc <- function(update.toc = FALSE) {
   groundhogR.url <- "http://groundhogR.com"
+  groundhogR.folder <- .pkgenv[["groundhogR.folder"]]
 
   # 3.0 Ensure directory for groundhogR exists
   dir.create(groundhogR.folder, showWarnings = FALSE) # Create if inexistent
 
   # 3.1 Paths two databases (toc and times:
   # LOCAL
-  toc.path <- paste0(groundhogR.folder, "/cran.toc.csv.gz")
-  times.path <- paste0(groundhogR.folder, "/cran.times.csv.gz")
+  toc.path <- file.path(groundhogR.folder, "cran.toc.csv.gz")
+  times.path <- file.path(groundhogR.folder, "cran.times.csv.gz")
 
   # URL
   toc.url <- paste0(groundhogR.url, "/cran.toc.csv.gz")

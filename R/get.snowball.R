@@ -58,7 +58,7 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
     if (snowball.from[k] == "source") r.path[k] <- get.rversion()
   }
   # Vector with paths
-  snowball.installation.path <- paste0(groundhogR.folder, "/R-", r.path, "/", snowball.pkg_vrs)
+  snowball.installation.path <- paste0(.pkgenv[["groundhogR.folder"]], "/R-", r.path, "/", snowball.pkg_vrs)
 
 
   # data.frame()

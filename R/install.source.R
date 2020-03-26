@@ -8,8 +8,8 @@ install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet = F
 
   # 6.2 Paths
   tarball.name <- paste0(pkg_vrs, ".tar.gz") # Name of tarball
-  tarball.dir <- paste0(groundhogR.folder, "/_tarballs") # Folder to save it
-  tarball.path <- paste0(tarball.dir, "/", tarball.name) # Path to tarball itself
+  tarball.dir <- file.path(.pkgenv[["groundhogR.folder"]], "_tarballs") # Folder to save it
+  tarball.path <- file.path(tarball.dir, tarball.name) # Path to tarball itself
 
   # 6.3 Ensure folder exists for tarball saving exists
   dir.create(tarball.dir, showWarnings = FALSE, recursive = TRUE)

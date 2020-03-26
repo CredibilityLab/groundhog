@@ -3,8 +3,6 @@
 # [this will be changed]
 chooseCRANmirror(graphics = FALSE, ind = 1)
 
-groundhogR.folder <- paste0(path.expand("~"), "/groundhogR")
-
 # 1.2 Get available packages to see if each attempted to install is new
 current.packages <- data.frame(available.packages())[, c(1, 2)]
 current.packages$pkg_vrs <- paste0(current.packages$Package, "_", current.packages$Version)
