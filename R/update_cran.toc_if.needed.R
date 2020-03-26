@@ -5,9 +5,11 @@ update_cran.toc_if.needed <- function(date) {
   date <- as.DateYMD(date)
 
   # 2 Load cran.toc if not yet loaded
-  if (!exists("cran.toc")) {
+  if (is.null(.pkgenv[["cran.toc"]])) {
     load.cran.toc(update.toc = FALSE)
   }
+
+  cran.toc <- .pkgenv[["cran.toc"]]
 
   # 3 If user wants  a newer date than available, update it.
   cran.toc$Published <- as.DateYMD(cran.toc$Published) # Convert cran.toc $Published, to a date variable

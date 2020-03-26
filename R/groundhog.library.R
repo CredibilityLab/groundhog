@@ -11,9 +11,11 @@ groundhog.library <- function(pkg, date,
                               force.install = FALSE) # Even if package is found for this R-build, it will reinstall it.
 {
   # 8.1 Load cran.toc if not yet loaded
-  if (!exists("cran.toc")) {
+  if (is.null(.pkgenv[["cran.toc"]])) {
     load.cran.toc(update.toc = FALSE)
   }
+
+  cran.toc <- .pkgenv[["cran.toc"]]
 
   # 8.2 Update cran.toc() if needed for entered date (#2.12)
   update_cran.toc_if.needed(date)

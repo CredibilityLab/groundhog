@@ -1,5 +1,7 @@
 # 2.11 FIND BINARY DATE FOR MRAN, given R version being used
 get.R.pkg.date <- function(pkg_vrs, R_vrs) {
+
+  cran.toc <- .pkgenv[["cran.toc"]]
   # 1. Get pkg from pkg_vrs
   pkg <- get.pkg(pkg_vrs)
   vrs <- get.vrs(pkg_vrs)

@@ -2,7 +2,9 @@
 #' @export
 cross.toc <- function(pkgs, date1 = "1970-1-1", date2 = Sys.Date()) {
 
-  if (!exists("cran.toc")) {
+  # TODO: is this really necessary since this function calls toc() which does
+  # the same check?
+  if (is.null(.pkgenv[["cran.toc"]])) {
     load.cran.toc(update.toc = FALSE)
   }
 

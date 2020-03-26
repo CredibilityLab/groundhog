@@ -22,12 +22,14 @@ load.cran.toc <- function(update.toc = FALSE) {
     # TOC
     cran.toc <- read.csv(toc.path, stringsAsFactors = FALSE)[, -1]
     cran.toc$Published <- as.DateYMD(cran.toc$Published)
-    cran.toc <<- cran.toc # Move the cran.toc outside the function space, to global environemnt, later will be package environemnt.
+
+    # Move the cran.toc outside the function space, to global environment
+    .pkgenv[["cran.toc"]] <- cran.toc
 
     # Times
     cran.times <- read.csv(times.path, stringsAsFactors = FALSE)[, -1]
     cran.times$update.date <- as.DateYMD(cran.times$update.date)
-    cran.times <<- cran.times
+    .pkgenv[["cran.times"]] <- cran.times
   } # End 3.2 - no update
 
   # 3.3 UPDATE
@@ -59,8 +61,7 @@ load.cran.toc <- function(update.toc = FALSE) {
 
       # Add net
       cran.toc <- rbind(existing.toc, add.toc.net)
-      cran.toc <<- cran.toc # Save cran.to to environemnt
-
+      .pkgenv[["cran.toc"]] <- cran.toc # Save cran.toc to environemnt
 
       # save to local drive
       write.csv(cran.toc, file = gzfile(toc.path))
@@ -82,14 +83,11 @@ load.cran.toc <- function(update.toc = FALSE) {
 
       # Add net
       cran.times <- rbind(existing.times, add.times.net)
-      cran.times <<- cran.times # Save cran.to to environemnt
-
+      .pkgenv[["cran.times"]] <- cran.times # Save cran.times to environemnt
 
       # save to local drive
       write.csv(cran.times, file = gzfile(times.path))
     } # End 3.3.5 - if succeeded at downloading file from website
-
-
 
     # Feedback to user on existing cran.to
     message2()
@@ -130,13 +128,11 @@ load.cran.toc <- function(update.toc = FALSE) {
     # 3.4.3 Load the toc
     cran.toc <- read.csv(file = gzfile(toc.path), stringsAsFactors = FALSE)[, -1]
     cran.toc$Published <- as.DateYMD(cran.toc$Published)
-    cran.toc <<- cran.toc
+    .pkgenv[["cran.toc"]] <- cran.toc
 
     cran.times <- read.csv(file = gzfile(times.path), stringsAsFactors = FALSE)[, -1]
     cran.times$update.date <- as.DateYMD(cran.times$update.date)
-    cran.times <<- cran.times
-
-
+    .pkgenv[["cran.times"]] <- cran.times
 
     # 3.4.4 tell users
     message2()

@@ -1,6 +1,9 @@
 # 4 Get dependencies for ONE package
 # FROM:pkg_vrs, TO: data.frame(Imports, Depends, Packages)
 get.dependencies <- function(pkg, date, include.suggests = FALSE) {
+
+  cran.toc <- .pkgenv[["cran.toc"]]
+
   # Get version from date
   vrs <- get.version(pkg, date)
   # Get dependencies if version exists

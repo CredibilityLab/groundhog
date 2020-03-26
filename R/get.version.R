@@ -1,7 +1,11 @@
 # 2.3 Get version from date
 get.version <- function(pkg, date, current.deps = c("Rcpp")) {
+
   # 1. Get toc
   dfk <- toc(pkg)
+
+  cran.toc <- .pkgenv[["cran.toc"]]
+
   # 2 Validate
   # 2.1 Check if Package exists in our records
   if (nrow(dfk) == 0) {

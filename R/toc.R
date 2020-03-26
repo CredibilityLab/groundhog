@@ -1,9 +1,11 @@
 #' Show table of contents (toc) (package versions and publication dates) for a pkg, sorted chronologically
 #' @export
 toc <- function(pkg, dependencies = FALSE) {
-  if (!exists("cran.toc")) {
+
+  if (is.null(.pkgenv[["cran.toc"]])) {
     load.cran.toc(update.toc = FALSE)
   }
+  cran.toc <- .pkgenv[["cran.toc"]]
 
   if (dependencies) {
     output <- cran.toc[cran.toc$Package == pkg, c("Version", "Published", "Imports", "Depends", "Suggests")]
