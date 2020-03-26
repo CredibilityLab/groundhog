@@ -6,15 +6,13 @@ cross.toc <- function(pkgs, date1 = "1970-1-1", date2 = Sys.Date()) {
     load.cran.toc(update.toc = FALSE)
   }
 
-  n <- length(pkgs)
-  toc.all <- toc(pkgs[1])
-  toc.all$Package <- pkgs[1]
+  toc.all <- lapply(pkgs, function(pkg) {
+    tock <- toc(pkg)
+    tock$Package <- pkg
+    return(tock)
+  })
 
-  for (k in 2:n) {
-    tock <- toc(pkgs[k])
-    tock$Package <- pkgs[k]
-    toc.all <- rbind(toc.all, tock)
-  }
+  toc.all <- do.call(rbind, toc.all)
 
   # Sort
   toc.all <- toc.all[order(toc.all$Published), ]
