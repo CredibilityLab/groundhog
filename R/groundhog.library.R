@@ -1,15 +1,26 @@
-#' @export
-# 8  Final function:   groundhog.library()
+#' 8  Final function:   groundhog.library()
+#'
+#' @inheritParams install.snowball
+#' @param current.deps Dependencies that will install current version regardless
+#'   of date.
+#' @param ignore.package.conflicts Logical (defaults to `FALSE`). With `TRUE`,
+#'   if an already attached package will be installed, it is detached, but all
+#'   depednecies are left installed. With default, `FALSE`, script stops and
+#'   asks for session restart.
+#'
 #' @importFrom utils capture.output
+#'
+#' @export
+#'
 groundhog.library <- function(
   pkg, date,
-  quiet.install = TRUE, # Run install.packages() with quiet=TRUE?
-  plot.console = TRUE, # Should information on installation time left be printed in Plots dialogue whe installing from source>
-  include.suggests = FALSE, # Should suggested packages be installed?
-  current.deps = c("Rcpp"), # Dependencies that will install current version regardless of gdate
-  ignore.package.conflicts = FALSE, # With TRUE, if an already attached package will be installed,it is detached, but all depednecies are left installed, with default, FALSE, script stops and asks for session restart
-  force.source = FALSE, # TRUE will skip CRAN and MRAN attempts, download tar.gz, and install from it
-  force.install = FALSE) # Even if package is found for this R-build, it will reinstall it.
+  quiet.install = TRUE,
+  plot.console = TRUE,
+  include.suggests = FALSE,
+  current.deps = c("Rcpp"),
+  ignore.package.conflicts = FALSE,
+  force.source = FALSE,
+  force.install = FALSE)
 {
 
   # 8.2 Update cran.toc() if needed for entered date (#2.12)
