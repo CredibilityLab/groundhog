@@ -52,10 +52,7 @@ groundhog.library <- function(
   # 8.9  verify success
   message2()
 
-  # load active packagse
-  active <- paste0(capture.output(utils::sessionInfo()), collapse = ",")
-  # Found there?
-  if (grepl(pkg_vrs, active)) {
+  if (pkg_vrs %in% get.active()$pkg_vrs) {
     message1("Succesfully loaded ", pkg_vrs, " and its ", nrow(snowball) - 1,
              " dependencies.")
   } else {
