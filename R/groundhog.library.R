@@ -1,14 +1,15 @@
 #' @export
 # 8  Final function:   groundhog.library()
 #' @importFrom utils capture.output
-groundhog.library <- function(pkg, date,
-                              quiet.install = TRUE, # Run install.packages() with quiet=TRUE?
-                              plot.console = TRUE, # Should information on installation time left be printed in Plots dialogue whe installing from source>
-                              include.suggests = FALSE, # Should suggested packages be installed?
-                              current.deps = c("Rcpp"), # Dependencies that will install current version regardless of gdate
-                              ignore.package.conflicts = FALSE, # With TRUE, if an already attached package will be installed,it is detached, but all depednecies are left installed, with default, FALSE, script stops and asks for session restart
-                              force.source = FALSE, # TRUE will skip CRAN and MRAN attempts, download tar.gz, and install from it
-                              force.install = FALSE) # Even if package is found for this R-build, it will reinstall it.
+groundhog.library <- function(
+  pkg, date,
+  quiet.install = TRUE, # Run install.packages() with quiet=TRUE?
+  plot.console = TRUE, # Should information on installation time left be printed in Plots dialogue whe installing from source>
+  include.suggests = FALSE, # Should suggested packages be installed?
+  current.deps = c("Rcpp"), # Dependencies that will install current version regardless of gdate
+  ignore.package.conflicts = FALSE, # With TRUE, if an already attached package will be installed,it is detached, but all depednecies are left installed, with default, FALSE, script stops and asks for session restart
+  force.source = FALSE, # TRUE will skip CRAN and MRAN attempts, download tar.gz, and install from it
+  force.install = FALSE) # Even if package is found for this R-build, it will reinstall it.
 {
 
   # 8.2 Update cran.toc() if needed for entered date (#2.12)
@@ -30,7 +31,9 @@ groundhog.library <- function(pkg, date,
   }
 
   # 8.7 Install pacakges if needed
-  install.snowball(pkg, date, include.suggests, force.install = force.install, force.source = force.source, plot.console = plot.console, quiet.install = quiet.install)
+  install.snowball(pkg, date, include.suggests, force.install = force.install,
+                   force.source = force.source, plot.console = plot.console,
+                   quiet.install = quiet.install)
 
   # 8.8 Do library() call for pkg_vrs
   library(pkg, character.only = TRUE)
@@ -42,7 +45,8 @@ groundhog.library <- function(pkg, date,
   active <- paste0(capture.output(utils::sessionInfo()), collapse = ",")
   # Found there?
   if (grepl(pkg_vrs, active)) {
-    message1("Succesfully loaded ", pkg_vrs, " and its ", nrow(snowball) - 1, " dependencies.")
+    message1("Succesfully loaded ", pkg_vrs, " and its ", nrow(snowball) - 1,
+             " dependencies.")
   } else {
     message1("FAILED to load ", pkg_vrs)
   }
