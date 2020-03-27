@@ -42,9 +42,6 @@ groundhog.library <- function(pkg, date,
   library(pkg, character.only = TRUE)
 
   # 8.9  verify success
-  # pkg_vrs we wanted to load
-  pkg_vrs <- paste0(pkg, "_", vrs)
-
   message2()
 
   # load active packagse
