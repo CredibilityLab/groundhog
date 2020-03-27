@@ -50,13 +50,15 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
 
   # Installation path
   # Only r.path portion differs across where the package is obtained
-  r.path <- c()
-  for (k in 1:length(snowball.pkg))
-  {
-    if (snowball.from[k] == "MRAN") r.path[k] <- get.version("R", snowball.MRAN.date[k])
-    if (snowball.from[k] == "CRAN") r.path[k] <- max(toc("R")$Version)
-    if (snowball.from[k] == "source") r.path[k] <- get.rversion()
-  }
+  r.path <- vapply(seq_along(snowball.pkg), function(k) {
+    switch(
+      snowball.from[k],
+      "MRAN" = get.version("R", snowball.MRAN.date[k]),
+      "CRAN" = max(toc("R")$Version),
+      "source" = get.rversion()
+    )
+  }, character(length(snowball.pkg)))
+
   # Vector with paths
   snowball.installation.path <- paste0(.pkgenv[["groundhogR.folder"]], "/R-", r.path, "/", snowball.pkg_vrs)
 
