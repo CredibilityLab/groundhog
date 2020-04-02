@@ -119,9 +119,9 @@ load.cran.toc <- function(update.toc = FALSE) {
       message2()
       message1(
         "Could not load the database of packages available in CRAN neither locally from this\n",
-        "computer nor from our server. Unfortunately this means you cannot use groundhog.libray()"
+        "computer nor from our server. Unfortunately this means you cannot use groundhog.libray()\n",
+        "This could happen if this is your first time using {groundhogR} and you are off-line."
       )
-      message1("This could happen if this is your first time using {groundhogR} and you are off-line.")
       stop("!")
     } # End if download did not work
     # 3.4.3 Load the toc
