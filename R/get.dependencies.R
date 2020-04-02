@@ -48,9 +48,11 @@ get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
     pending <- pending[-match(depk, pending)]
 
     # 5.6 if pendingk not empty, update pending and dep12
-    if (paste0(pendingk, collapse = "") != "") {
+    if (length(pendingk) > 0) {
       # [a] Process pendingk prior to adding to pending()
       # drop empty
+      # FIXME: this line should not be necessary since there should be not
+      # context where an empty element is returned
       pendingk <- pendingk[pendingk != ""]
       # Already processed dropped
       already.processed <- pendingk %in% dep12[, 1] # identify in pending those already processed
@@ -64,7 +66,6 @@ get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
         dep12 <- rbind(dep12, dep12k)
       }
     } # End 5.5 if some new dependencies to add
-    pending
 
     k <- k + 1
     if (k > 50000) break # In case the loop does not converge to a stable dataframe
