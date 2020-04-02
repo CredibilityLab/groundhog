@@ -1,4 +1,6 @@
-# 2.3 Get version from date
+#' Get version from date
+#' @inheritParams get.snowball
+#'
 get.version <- function(pkg, date, current.deps = c("Rcpp")) {
 
   # 1. Get toc
