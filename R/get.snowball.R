@@ -1,8 +1,6 @@
 #' Get snowball
 #'
-#' @param pkg
-#' @param date
-#' @param include.suggests Logical. Should suggested packages be installed?
+#' @inheritParams get.all.dependencies
 #' @param force.install Logical (defaults to `FALSE`). If `TRUE`, even if
 #'   package is found for this R-build, it will reinstall it.
 #' @param force.source Logical (defaults to `FALSE`). If `TRUE`,` will skip CRAN

@@ -1,5 +1,8 @@
-# 4 Get dependencies for ONE package
+#' Get dependencies for ONE package
 # FROM:pkg_vrs, TO: data.frame(Imports, Depends, Packages)
+#' @param pkg
+#' @param date
+#' @param include.suggests Logical. Should suggested packages be installed?
 get.dependencies <- function(pkg, date, include.suggests = FALSE) {
 
   cran.toc <- .pkgenv[["cran.toc"]]
@@ -20,9 +23,8 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
   return(dep)
 } # End get.dependencies()
 
-
-
-# 5 Get dependencies for dependencies, infinite levels downs
+#' Get dependencies for dependencies, infinite levels downs
+#' @inheritParams get.dependencies
 get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
   # 5.1. Populate the starting point with this package and its dependencies
   # [a] Vector with pending deps, for looping install
