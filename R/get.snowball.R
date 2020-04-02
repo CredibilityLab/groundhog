@@ -1,4 +1,4 @@
-#' Get snowball
+#' Figure out in which order dependencies should be installed to avoid conflicts
 #'
 #' @inheritParams get.all.dependencies
 #' @param force.install Logical (defaults to `FALSE`). If `TRUE`, even if

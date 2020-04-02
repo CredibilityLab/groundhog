@@ -2,7 +2,7 @@
 % Please edit documentation in R/get.snowball.R
 \name{get.snowball}
 \alias{get.snowball}
-\title{Get snowball}
+\title{Figure out in which order dependencies should be installed to avoid conflicts}
 \usage{
 get.snowball(
   pkg,
@@ -25,5 +25,5 @@ of date.}
 package is found for this R-build, it will reinstall it.}
 }
 \description{
-Get snowball
+Figure out in which order dependencies should be installed to avoid conflicts
 }
