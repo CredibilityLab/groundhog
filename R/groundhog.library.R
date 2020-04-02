@@ -1,8 +1,6 @@
 #' 8  Final function:   groundhog.library()
 #'
 #' @inheritParams install.snowball
-#' @param current.deps Dependencies that will install current version regardless
-#'   of date.
 #' @param ignore.package.conflicts Logical (defaults to `FALSE`). With `TRUE`,
 #'   if an already attached package will be installed, it is detached, but all
 #'   depednecies are left installed. With default, `FALSE`, script stops and
@@ -17,7 +15,7 @@ groundhog.library <- function(
   quiet.install = TRUE,
   plot.console = TRUE,
   include.suggests = FALSE,
-  current.deps = c("Rcpp"),
+  current.deps = "Rcpp",
   ignore.package.conflicts = FALSE,
   force.source = FALSE,
   force.install = FALSE)
@@ -44,7 +42,7 @@ groundhog.library <- function(
   # 8.7 Install pacakges if needed
   install.snowball(pkg, date, include.suggests, force.install = force.install,
                    force.source = force.source, plot.console = plot.console,
-                   quiet.install = quiet.install)
+                   quiet.install = quiet.install, current.deps = current.deps)
 
   # 8.8 Do library() call for pkg_vrs
   library(pkg, character.only = TRUE)

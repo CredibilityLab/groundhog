@@ -10,7 +10,7 @@ groundhog.library(
   quiet.install = TRUE,
   plot.console = TRUE,
   include.suggests = FALSE,
-  current.deps = c("Rcpp"),
+  current.deps = "Rcpp",
   ignore.package.conflicts = FALSE,
   force.source = FALSE,
   force.install = FALSE

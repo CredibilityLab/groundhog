@@ -11,7 +11,8 @@ install.snowball(
   force.install = FALSE,
   force.source = FALSE,
   plot.console = TRUE,
-  quiet.install = TRUE
+  quiet.install = TRUE,
+  current.deps = "Rcpp"
 )
 }
 \arguments{
@@ -29,6 +30,9 @@ source.}
 
 \item{quiet.install}{Logical (defaults to \code{TRUE}).Run \code{\link[=install.packages]{install.packages()}}
 with \code{quiet = TRUE}?}
+
+\item{current.deps}{Dependencies that will install current version regardless
+of date.}
 }
 \description{
 8 Function 8 - Install snowball

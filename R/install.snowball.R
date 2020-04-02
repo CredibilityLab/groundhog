@@ -1,11 +1,6 @@
 #' 8 Function 8 - Install snowball
-#' @param pkg
-#' @param date
-#' @param include.suggests Logical. Should suggested packages be installed?
-#' @param force.install Logical (defaults to `FALSE`). If `TRUE`, even if
-#'   package is found for this R-build, it will reinstall it.
-#' @param force.source Logical (defaults to `FALSE`). If `TRUE`,` will skip CRAN
-#'   and MRAN attempts, download tar.gz, and install from it.
+#'
+#' @inheritParams get.snowball
 #' @param plot.console Logical (defaults to `TRUE`). Should information on
 #'   installation time left be printed in plots dialogue when installing from
 #'   source.
@@ -15,9 +10,9 @@
 #' @importFrom utils install.packages
 install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
                              force.source = FALSE, plot.console = TRUE,
-                             quiet.install = TRUE) {
+                             quiet.install = TRUE, current.deps = "Rcpp") {
   # 0 Get the snowball
-  snowball <- get.snowball(pkg, date, include.suggests, force.install, current.deps = "Rcpp")
+  snowball <- get.snowball(pkg, date, include.suggests, force.install, current.deps)
 
   # 0.1 pkg_vrs for target package
   pkg_vrs <- as.character(snowball[nrow(snowball), "pkg_vrs"])
