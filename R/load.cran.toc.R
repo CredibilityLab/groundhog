@@ -20,14 +20,14 @@ load.cran.toc <- function(update.toc = FALSE) {
   if (file.exists(toc.path) & file.exists(times.path) & !update.toc) {
 
     # TOC
-    cran.toc <- read.csv(toc.path, stringsAsFactors = FALSE)[, -1]
+    cran.toc <- read.csv(toc.path, stringsAsFactors = FALSE)
     cran.toc$Published <- as.DateYMD(cran.toc$Published)
 
     # Move the cran.toc outside the function space, to global environment
     .pkgenv[["cran.toc"]] <- cran.toc
 
     # Times
-    cran.times <- read.csv(times.path, stringsAsFactors = FALSE)[, -1]
+    cran.times <- read.csv(times.path, stringsAsFactors = FALSE)
     cran.times$update.date <- as.DateYMD(cran.times$update.date)
     .pkgenv[["cran.times"]] <- cran.times
   } # End 3.2 - no update
@@ -36,8 +36,8 @@ load.cran.toc <- function(update.toc = FALSE) {
   if (file.exists(toc.path) & file.exists(times.path) & update.toc) {
 
     # 3.3.1 load databases
-    existing.toc <- read.csv(toc.path, stringsAsFactors = FALSE)[, -1]
-    existing.times <- read.csv(times.path, stringsAsFactors = FALSE)[, -1]
+    existing.toc <- read.csv(toc.path, stringsAsFactors = FALSE)
+    existing.times <- read.csv(times.path, stringsAsFactors = FALSE)
 
     # 3.3.2 create pkg_vrs for unique identifyier of packages
     existing.toc.pkg_vrs <- paste0(existing.toc$Package, "_", existing.toc$Version)
@@ -126,11 +126,11 @@ load.cran.toc <- function(update.toc = FALSE) {
       stop("!")
     } # End if download did not work
     # 3.4.3 Load the toc
-    cran.toc <- read.csv(file = gzfile(toc.path), stringsAsFactors = FALSE)[, -1]
+    cran.toc <- read.csv(file = gzfile(toc.path), stringsAsFactors = FALSE)
     cran.toc$Published <- as.DateYMD(cran.toc$Published)
     .pkgenv[["cran.toc"]] <- cran.toc
 
-    cran.times <- read.csv(file = gzfile(times.path), stringsAsFactors = FALSE)[, -1]
+    cran.times <- read.csv(file = gzfile(times.path), stringsAsFactors = FALSE)
     cran.times$update.date <- as.DateYMD(cran.times$update.date)
     .pkgenv[["cran.times"]] <- cran.times
 
