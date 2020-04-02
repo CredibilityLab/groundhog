@@ -17,7 +17,7 @@ load.cran.toc <- function(update.toc = FALSE) {
   times.url <- paste0(groundhogR.url, "/cran.times.csv.gz")
 
   # 3.2 JUST LOAD
-  if (file.exists(toc.path) & file.exists(times.path) & !update.toc) {
+  if (file.exists(toc.path, times.path) && !update.toc) {
 
     # TOC
     cran.toc <- read.csv(toc.path, stringsAsFactors = FALSE)
@@ -33,7 +33,7 @@ load.cran.toc <- function(update.toc = FALSE) {
   } # End 3.2 - no update
 
   # 3.3 UPDATE
-  if (file.exists(toc.path) & file.exists(times.path) & update.toc) {
+  else if (file.exists(toc.path, times.path) && update.toc) {
 
     # 3.3.1 load databases
     existing.toc <- read.csv(toc.path, stringsAsFactors = FALSE)
@@ -110,7 +110,7 @@ load.cran.toc <- function(update.toc = FALSE) {
 
 
   # 3.4 if either cran.toc does not exist, download the entire up to date copy
-  if (!file.exists(toc.path) | !file.exists(times.path)) {
+  else {
     # 3.4.1 Attempt download
     d1 <- try(download.file(toc.url, toc.path))
     d2 <- try(download.file(times.url, times.path))
