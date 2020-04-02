@@ -100,8 +100,7 @@ load.cran.toc <- function(update.toc = FALSE) {
         "We checked for additions to CRAN since then, and added ",
         nrow(add.toc.net), " additional entries to the list.\n"
       )
-    }
-    if (is.data.frame(add.toc)) {
+    } else {
       message1("We tried to update till today but it did not work")
     }
 
