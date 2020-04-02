@@ -138,7 +138,7 @@ load.cran.toc <- function(update.toc = FALSE) {
     message1(
       "GroundhogR requires a database listing all versions of every package ever in CRAN.\n",
       "The database was not found in this computer so it was just downloaded from http://groundhogR.com\n",
-      "The database contains N = ", nrow(cran.toc), " entries. The most recent entry is from ", max(cran.toc$Published), ".\n",
+      "The database contains N = ", nrow(cran.toc), " entries. The most recent entry is from ", format.Date(max(cran.toc$Published)), ".\n",
       "The database will be automatically updated when the 'date' in groundhog.library('date') so requires.\n",
       "You may also update it by running: load.cran.toc(update.toc=TRUE)."
     )
