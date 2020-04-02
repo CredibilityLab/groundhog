@@ -34,12 +34,11 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
   }
 
   # 3) Add pkg at the end
-  indep <- c(indep, pkg)
+  snowball.pkg <- c(indep, pkg)
 
   # 4) Get the version of each package
-  snowball.pkg <- as.character(indep)
-  snowball.vrs <- vapply(indep, get.version, date, current.deps, FUN.VALUE = character(1)) # current.deps replaces the version of those dep with the version that's current when installing
-  snowball.pkg_vrs <- paste0(indep, "_", snowball.vrs)
+  snowball.vrs <- vapply(snowball.pkg, get.version, date, current.deps, FUN.VALUE = character(1)) # current.deps replaces the version of those dep with the version that's current when installing
+  snowball.pkg_vrs <- paste0(snowball.pkg, "_", snowball.vrs)
 
   # 5 Snowball table, with installed | CRAN | MRAN | TARBALL | INSTALLATION TIME
   snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs) # 5.1 Installed?  TRUE/FALSE
