@@ -39,6 +39,12 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
     snowball$from <- "source"
   }
 
+  # FIXME: this is a temporary workaround so that the script doesn't try
+  # to install binaries from MRAN on Linux
+  if (.Platform$OS.type == "unix") {
+    snowball[snowball[, "from"] == "MRAN", "from"] <- "source"
+  }
+
   # 3 INSTALLATION LOOP
 
   start.time <- Sys.time() # When loops starts, to compute actual completion time
@@ -58,12 +64,6 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
       pkg_vrs.k <- snowball[k, "pkg_vrs"]
       from.k <- snowball[k, "from"]
       mran.date.k <- snowball[k, "MRAN.date"]
-
-      # FIXME: this is a temporary workaround so that the script doesn't try
-      # to install binaries from MRAN (L64) on Linux
-      if (.Platform$OS.type == "unix") {
-        from.k[from.k == "MRAN"] <- "source"
-      }
 
       # 3.4 Create directory
       dir.create(lib.k, recursive = TRUE, showWarnings = FALSE)
