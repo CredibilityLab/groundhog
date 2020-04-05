@@ -10,14 +10,14 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
   cross1 <- cross.toc(c(pkg, "R"))
 
   # 3, Which row have pkg_vrs vs R_vrs
-  k.pkg <- match(pkg_vrs, paste0(cross1$Package, "_", cross1$Version))
-  k.R <- match(paste0("R_", R_vrs), paste0(cross1$Package, "_", cross1$Version))
+  k.pkg <- which(pkg_vrs == paste0(cross1$Package, "_", cross1$Version))
+  k.R <- which(paste0("R_", R_vrs) == paste0(cross1$Package, "_", cross1$Version))
 
-  # 4. Both ks in vector
+  # Line indices that contain either pkg_vrs or R_vrs
   ks <- c(k.pkg, k.R)
 
   # 5. From one to the other (cross2: subset from cross1 where  pkg_vrs to R_vrs or vice versa)
-  cross2 <- cross1[min(ks):max(ks), ]
+  cross2 <- cross1[range(ks), ]
 
   # 6. If the package came first:
   if (k.pkg < k.R) {
