@@ -1,4 +1,5 @@
-# 6 Install from source
+#' Install package from source
+#' @inheritParams utils::install.packages
 #' @importFrom utils download.file install.packages
 
 install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet = FALSE) {
@@ -62,7 +63,7 @@ install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet = F
     # Create the folder
     dir.create(lib, showWarnings = FALSE, recursive = TRUE)
     # Install the package
-    install.packages(tarball.path, type = "source", lib = lib, dependencies = FALSE, repos = NULL, INSTALL_opts = "--no-staged-install")
+    install.packages(tarball.path, type = "source", lib = lib, quiet = quiet, dependencies = FALSE, repos = NULL, INSTALL_opts = "--no-staged-install")
   } # End if success
 
 
