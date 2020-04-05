@@ -16,13 +16,14 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
 
   # 0.1 pkg_vrs for target package
   pkg_vrs <- as.character(snowball[nrow(snowball), "pkg_vrs"])
-  # 0.2 determine if we want the plot to show
-  if (sum(snowball$from == "source" & !snowball$installed) == 0) {
+
+  # Don't display progress if no package is missing or installs from source
+  if (!any(!snowball$installed & snowball$from == "source")) {
     plot.console <- FALSE
   }
 
   # 1. FORCE INSTALL
-  if (force.install & sum(snowball$installed) > 0) {
+  if (any(snowball$installed) & force.install) {
     # Subset of packages that are installed
     snowball.installed <- snowball[snowball$installed, ]
     # Get their path
