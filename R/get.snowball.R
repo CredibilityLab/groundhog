@@ -41,6 +41,11 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
   snowball.pkg_vrs <- paste0(snowball.pkg, "_", snowball.vrs)
 
   # 5 Snowball table, with installed | CRAN | MRAN | TARBALL | INSTALLATION TIME
+
+  # - Install from CRAN if possible
+  # - else, install from MRAN if possible
+  # - else, install from source
+
   snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs) # 5.1 Installed?  TRUE/FALSE
   snowball.CRAN <- snowball.pkg_vrs %in% current.packages$pkg_vrs & max(toc("R")$Version) == get.rversion() # 5.2 Binary in CRAN and using most recent R TRUE/FALSE
   snowball.MRAN.date <- as.Date(sapply(snowball.pkg_vrs, get.date.for.install.binary), origin = "1970-01-01") # 5.3 Binary date in MRAN?
