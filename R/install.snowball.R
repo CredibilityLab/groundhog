@@ -78,9 +78,13 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
         # Try MRAN 1
         install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k, "/"), dependencies = FALSE, quiet = quiet.install, INSTALL_opts = "--no-staged-install")
         # Try MRAN 2: If still not installed, try day after (some MRAN days are missing)
-        if (!is.pkg_vrs.installed(pkg.k, vrs.k)) install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k + 1, "/"), dependencies = FALSE, quiet = quiet.install, INSTALL_opts = "--no-staged-install")
+        if (!is.pkg_vrs.installed(pkg.k, vrs.k)) {
+          install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k + 1, "/"), dependencies = FALSE, quiet = quiet.install, INSTALL_opts = "--no-staged-install")
+        }
         # Try MRAN 3: If still not installed, try 2 days earlier
-        if (!is.pkg_vrs.installed(pkg.k, vrs.k)) install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k - 2, "/"), dependencies = FALSE, quiet = quiet.install, INSTALL_opts = "--no-staged-install")
+        if (!is.pkg_vrs.installed(pkg.k, vrs.k)) {
+          install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k - 2, "/"), dependencies = FALSE, quiet = quiet.install, INSTALL_opts = "--no-staged-install")
+        }
       } # end MRAN
 
 
