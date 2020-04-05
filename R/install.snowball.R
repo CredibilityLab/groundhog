@@ -42,7 +42,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
   # FIXME: this is a temporary workaround so that the script doesn't try
   # to install binaries from MRAN on Linux
   if (.Platform$OS.type == "unix") {
-    snowball[snowball[, "from"] == "MRAN", "from"] <- "source"
+    snowball[, "from"] <- "source"
   }
 
   # 3 INSTALLATION LOOP
