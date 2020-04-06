@@ -1,4 +1,21 @@
-#' Load the dataframe listing all CRAN packages, their dependencies and Publication date
+#' Load `cran.toc`
+#'
+#' Load a `data.frame`` listing all CRAN packages, with their dependencies and
+#' publication date.
+#'
+#' @param update.toc logical (defaults to `FALSE`). Should `cran.toc` be updated
+#'   from the server if it already exists locally.
+#'
+# FIXME: add @return
+# @return
+#'
+#' @seealso [update_cran.toc_if.needed]
+#'
+#' @examples
+#' \dontrun{
+#' load.cran.toc()
+#' }
+#'
 #' @importFrom utils read.csv write.csv
 load.cran.toc <- function(update.toc = FALSE) {
   groundhogR.url <- "http://groundhogR.com"

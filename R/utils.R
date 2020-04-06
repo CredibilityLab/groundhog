@@ -15,10 +15,17 @@ dep.base <- installed.packages(priority = "base")
 get.pkg <- function(x) substr(x, 1, regexpr("_", basename(x)) - 1)
 get.vrs <- function(x) substr(x, regexpr("_", basename(x)) + 1, nchar(x))
 
-# 2.16 Is pkg_vrs installed (within same R-minor version)
-is.pkg_vrs.installed <- function(pkg, vrs) (get.installed_path(pkg, vrs) %in% get.pkg_search_paths(pkg, vrs))
+#' Is pkg_vrs installed (within same R-minor version)?
+#'
+#' @inheritParams get.installed_path
+is.pkg_vrs.installed <- function(pkg, vrs) {
+  (get.installed_path(pkg, vrs) %in% get.pkg_search_paths(pkg, vrs))
+}
 
-#' Formamt Y-M-D as date
+#' Format Y-M-D as date
+#'
+#' @param x character string containing the date in the format "%Y-%m-%d"
+#'
 as.DateYMD <- function(x) as.Date(x, format = "%Y-%m-%d")
 
 # 2.2  R Being used

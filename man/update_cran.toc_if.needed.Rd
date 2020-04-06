@@ -2,13 +2,24 @@
 % Please edit documentation in R/update_cran.toc_if.needed.R
 \name{update_cran.toc_if.needed}
 \alias{update_cran.toc_if.needed}
-\title{Update \code{cran.toc} if it's not recent enough to include the required date.}
+\title{Update \code{cran.toc} if needed}
 \usage{
 update_cran.toc_if.needed(date)
 }
 \arguments{
 \item{date}{required date, in the format "\%Y-\%m-\%d" (ISO 8601 convention)}
 }
+\value{
+\code{TRUE} or \code{FALSE} depending on whether \code{cran.toc} was updated or not.
+}
 \description{
 Update \code{cran.toc} if it's not recent enough to include the required date.
+}
+\examples{
+\donttest{
+update_cran.toc_if.needed("2020-03-01")
+}
+}
+\seealso{
+\code{\link[=load.cran.toc]{load.cran.toc()}}
 }

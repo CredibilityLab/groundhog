@@ -6,6 +6,17 @@
 \usage{
 estimate.seconds.left(k, start.time, snowball)
 }
+\arguments{
+\item{k}{numeric. Current step in the snowball process.}
+
+\item{start.time}{the result of \code{\link[=Sys.time]{Sys.time()}} when the installation process
+started}
+
+\item{snowball}{the result of \code{\link[=get.snowball]{get.snowball()}}.}
+}
+\value{
+the remaining time left in seconds
+}
 \description{
 Estimate seconds left in install
 }

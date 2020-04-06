@@ -6,6 +6,22 @@
 \usage{
 get.installation.time(pkg, vrs)
 }
+\arguments{
+\item{pkg}{character. Name of the package to install}
+
+\item{vrs}{character. Version of the package to install.}
+}
+\value{
+the required time (in seconds) to install the \code{pkg} with the specific
+\code{vrs}.
+}
 \description{
-Get installation time
+Get installation time for a given \code{pkg} and \code{vrs}. This is estimated from
+CRAN data about installation time on their build servers.
+}
+\examples{
+\donttest{
+get.installation.time("magrittr", "1.5")
+}
+
 }

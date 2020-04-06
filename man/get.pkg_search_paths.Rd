@@ -2,10 +2,26 @@
 % Please edit documentation in R/get.pkg_search_paths.R
 \name{get.pkg_search_paths}
 \alias{get.pkg_search_paths}
-\title{Determine R Paths to search for an already installed package (versions of same minor, in reverse chronological order)}
+\title{Get package search path}
 \usage{
 get.pkg_search_paths(pkg, vrs)
 }
+\arguments{
+\item{pkg}{character. Name of the package to install}
+
+\item{vrs}{character. Version of the package to install.}
+}
+\value{
+the path where the package from a specific version is/will be
+installed.
+}
 \description{
-Determine R Paths to search for an already installed package (versions of same minor, in reverse chronological order)
+Determine paths to search for an already installed package (versions of same
+minor, in reverse chronological order).
+}
+\examples{
+\donttest{
+get.pkg_search_paths("magrittr", "1.0.1")
+}
+
 }

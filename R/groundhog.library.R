@@ -6,6 +6,13 @@
 #'   depednecies are left installed. With default, `FALSE`, script stops and
 #'   asks for session restart.
 #'
+# FIXME: add @return
+#'
+#' @examples
+#' \donttest{
+#' groundhog.library(magrittr, "2018-02-12")
+#' }
+#'
 #' @importFrom utils capture.output
 #'
 #' @export

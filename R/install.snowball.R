@@ -1,13 +1,26 @@
-#' 8 Function 8 - Install snowball
+#' Install snowball
+#'
+#' Install given `pkg` with the version from `date`, making sure the order in
+#' which dependencies are installed doesn't generate conflicts.
 #'
 #' @inheritParams get.snowball
-#' @param plot.console Logical (defaults to `TRUE`). Should information on
-#'   installation time left be printed in plots dialogue when installing from
-#'   source.
+#' @inheritParams installation.feedback
+#' @param force.install Logical (defaults to `FALSE`). If `TRUE`, even if
+#'   package is found for this R-build, it will reinstall it.
 #' @param quiet.install Logical (defaults to `TRUE`).Run [install.packages()]
 #'   with `quiet = TRUE`?
 #'
+# FIXME: add @return
+#'
+#' @examples
+#' \donttest{
+#' install.snowball("magrittr", "2018-02-12")
+#' }
+#'
+#' @seealso [get.snowball()] to determine in which order packages are installed
+#'
 #' @importFrom utils install.packages
+#'
 install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
                              force.source = FALSE, plot.console = TRUE,
                              quiet.install = TRUE, current.deps = "Rcpp") {

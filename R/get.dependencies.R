@@ -1,8 +1,23 @@
-#' Get dependencies for ONE package
-# FROM:pkg_vrs, TO: data.frame(Imports, Depends, Packages)
-#' @param pkg
-#' @param date
-#' @param include.suggests Logical. Should suggested packages be installed?
+#' Get dependencies for one package
+#'
+#' Get direct dependencies for one package `pkg`, for the version on CRAN at the
+#' given `date`.
+#'
+#' @param pkg character. Name of the package to install
+#' @param date date (in the format "%Y-%m-%d"), Required date for the package.
+#' @param include.suggests Logical (defaults to `FALSE`. Should suggested
+#'   packages be installed?
+#'
+#' @return A character vector containing the package dependencies for `pkg`, for
+#'   the version on CRAN at `date.`
+#'
+#' @examples
+#' \donttest{
+#' get.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
+#' }
+#'
+#' @seealso [get.all.dependencies()] for recursive (=indirect) dependencies
+#'
 get.dependencies <- function(pkg, date, include.suggests = FALSE) {
 
   cran.toc <- .pkgenv[["cran.toc"]]
@@ -23,8 +38,24 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
   return(dep)
 } # End get.dependencies()
 
-#' Get dependencies for dependencies, infinite levels downs
+#' Get recursive dependencies
+#'
+#' Get all recursive (=indirect) dependencies for one package `pkg`, for the
+#' version on CRAN at the given `date`.
+#'
 #' @inheritParams get.dependencies
+#'
+#' @return a `data.frame` where the first column (`pkg`) contains non-terminal
+#'   dependencies and the second column (`dep2` contains a dependencies of the
+#'   package in column `pkg`.
+#'
+#' @examples
+#' \donttest{
+#' get.all.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
+#' }
+#'
+#' @seealso [get.dependencies()] for direct dependencies only
+#'
 get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
   # 5.1. Populate the starting point with this package and its dependencies
   # [a] Vector with pending deps, for looping install

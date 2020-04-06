@@ -1,5 +1,17 @@
 #' Show toc table with multiple packages
+#'
+#' @param pkgs character vector containing the package names.
+#' @param date1,date2 date range to consider (in the format "%Y-%m-%d").
+#'
+#' @seealso [toc()] for the same function for a single package.
+#'
+#' @examples
+#' \donttest{
+#' cross.toc(c("magrittr", "rlang"), date1 = "2012-02-01", date2 = "2020-02-01")
+#' }
+#'
 #' @export
+#'
 cross.toc <- function(pkgs, date1 = "1970-1-1", date2 = Sys.Date()) {
 
   # TODO: is this really necessary since this function calls toc() which does

@@ -13,17 +13,25 @@ get.snowball(
 )
 }
 \arguments{
-\item{include.suggests}{Logical. Should suggested packages be installed?}
+\item{pkg}{character. Name of the package to install}
+
+\item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
+
+\item{include.suggests}{Logical (defaults to \code{FALSE}. Should suggested
+packages be installed?}
 
 \item{force.source}{Logical (defaults to \code{FALSE}). If \code{TRUE},` will skip CRAN
 and MRAN attempts, download tar.gz, and install from it.}
 
 \item{current.deps}{Dependencies that will install current version regardless
 of date.}
-
-\item{force.install}{Logical (defaults to \code{FALSE}). If \code{TRUE}, even if
-package is found for this R-build, it will reinstall it.}
 }
 \description{
 Figure out in which order dependencies should be installed to avoid conflicts
+}
+\examples{
+\donttest{
+get.snowball("magrittr", "2018-02-12")
+}
+
 }

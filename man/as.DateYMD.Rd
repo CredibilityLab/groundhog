@@ -2,10 +2,13 @@
 % Please edit documentation in R/utils.R
 \name{as.DateYMD}
 \alias{as.DateYMD}
-\title{Formamt Y-M-D as date}
+\title{Format Y-M-D as date}
 \usage{
 as.DateYMD(x)
 }
+\arguments{
+\item{x}{character string containing the date in the format "\%Y-\%m-\%d"}
+}
 \description{
-Formamt Y-M-D as date
+Format Y-M-D as date
 }
