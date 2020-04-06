@@ -62,6 +62,7 @@ groundhog.library("dplyr", date = "2016-06-22")
 ```
 
 ```{r, include = FALSE, echo = FALSE, plot = FALSE}
+library(groundhogR)
 groundhog.library("dplyr", date = "2016-06-22", ignore.package.conflicts = TRUE)
 ```
 
