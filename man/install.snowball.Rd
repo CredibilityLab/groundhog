@@ -2,7 +2,7 @@
 % Please edit documentation in R/install.snowball.R
 \name{install.snowball}
 \alias{install.snowball}
-\title{8 Function 8 - Install snowball}
+\title{Install snowball}
 \usage{
 install.snowball(
   pkg,
@@ -16,7 +16,12 @@ install.snowball(
 )
 }
 \arguments{
-\item{include.suggests}{Logical. Should suggested packages be installed?}
+\item{pkg}{character. Name of the package to install}
+
+\item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
+
+\item{include.suggests}{Logical (defaults to \code{FALSE}. Should suggested
+packages be installed?}
 
 \item{force.install}{Logical (defaults to \code{FALSE}). If \code{TRUE}, even if
 package is found for this R-build, it will reinstall it.}
@@ -24,9 +29,8 @@ package is found for this R-build, it will reinstall it.}
 \item{force.source}{Logical (defaults to \code{FALSE}). If \code{TRUE},` will skip CRAN
 and MRAN attempts, download tar.gz, and install from it.}
 
-\item{plot.console}{Logical (defaults to \code{TRUE}). Should information on
-installation time left be printed in plots dialogue when installing from
-source.}
+\item{plot.console}{logical (defaults to \code{TRUE}). Should detailed feedback
+about the installation process be printed in the plot console.}
 
 \item{quiet.install}{Logical (defaults to \code{TRUE}).Run \code{\link[=install.packages]{install.packages()}}
 with \code{quiet = TRUE}?}
@@ -35,5 +39,15 @@ with \code{quiet = TRUE}?}
 of date.}
 }
 \description{
-8 Function 8 - Install snowball
+Install given \code{pkg} with the version from \code{date}, making sure the order in
+which dependencies are installed doesn't generate conflicts.
+}
+\examples{
+\donttest{
+install.snowball("magrittr", "2018-02-12")
+}
+
+}
+\seealso{
+\code{\link[=get.snowball]{get.snowball()}} to determine in which order packages are installed
 }

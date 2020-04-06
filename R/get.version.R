@@ -1,5 +1,16 @@
 #' Get version from date
+#'
 #' @inheritParams get.snowball
+#'
+# FIXME: add @return
+#'
+#' @seealso [get.R.pkg.date()] for the opposite operation: determining date
+#'   for a given version.
+#'
+#' @examples
+#' \donttest{
+#' get.version("magrittr", "2018-02-12")
+#' }
 #'
 get.version <- function(pkg, date, current.deps = c("Rcpp")) {
 

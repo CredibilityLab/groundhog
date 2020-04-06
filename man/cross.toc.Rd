@@ -6,6 +6,20 @@
 \usage{
 cross.toc(pkgs, date1 = "1970-1-1", date2 = Sys.Date())
 }
+\arguments{
+\item{pkgs}{character vector containing the package names.}
+
+\item{date1, date2}{date range to consider (in the format "\%Y-\%m-\%d").}
+}
 \description{
 Show toc table with multiple packages
+}
+\examples{
+\donttest{
+cross.toc(c("magrittr", "rlang"), date1 = "2012-02-01", date2 = "2020-02-01")
+}
+
+}
+\seealso{
+\code{\link[=toc]{toc()}} for the same function for a single package.
 }

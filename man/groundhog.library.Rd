@@ -17,14 +17,18 @@ groundhog.library(
 )
 }
 \arguments{
+\item{pkg}{character. Name of the package to install}
+
+\item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
+
 \item{quiet.install}{Logical (defaults to \code{TRUE}).Run \code{\link[=install.packages]{install.packages()}}
 with \code{quiet = TRUE}?}
 
-\item{plot.console}{Logical (defaults to \code{TRUE}). Should information on
-installation time left be printed in plots dialogue when installing from
-source.}
+\item{plot.console}{logical (defaults to \code{TRUE}). Should detailed feedback
+about the installation process be printed in the plot console.}
 
-\item{include.suggests}{Logical. Should suggested packages be installed?}
+\item{include.suggests}{Logical (defaults to \code{FALSE}. Should suggested
+packages be installed?}
 
 \item{current.deps}{Dependencies that will install current version regardless
 of date.}
@@ -42,4 +46,10 @@ package is found for this R-build, it will reinstall it.}
 }
 \description{
 8  Final function:   groundhog.library()
+}
+\examples{
+\donttest{
+groundhog.library(magrittr, "2018-02-12")
+}
+
 }

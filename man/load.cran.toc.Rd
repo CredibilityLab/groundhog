@@ -2,10 +2,24 @@
 % Please edit documentation in R/load.cran.toc.R
 \name{load.cran.toc}
 \alias{load.cran.toc}
-\title{Load the dataframe listing all CRAN packages, their dependencies and Publication date}
+\title{Load \code{cran.toc}}
 \usage{
 load.cran.toc(update.toc = FALSE)
 }
+\arguments{
+\item{update.toc}{logical (defaults to \code{FALSE}). Should \code{cran.toc} be updated
+from the server if it already exists locally.}
+}
 \description{
-Load the dataframe listing all CRAN packages, their dependencies and Publication date
+Load a `data.frame`` listing all CRAN packages, with their dependencies and
+publication date.
+}
+\examples{
+\dontrun{
+load.cran.toc()
+}
+
+}
+\seealso{
+\link{update_cran.toc_if.needed}
 }

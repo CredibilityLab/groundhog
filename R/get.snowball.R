@@ -1,14 +1,16 @@
 #' Figure out in which order dependencies should be installed to avoid conflicts
 #'
 #' @inheritParams get.all.dependencies
-#' @param force.install Logical (defaults to `FALSE`). If `TRUE`, even if
-#'   package is found for this R-build, it will reinstall it.
 #' @param force.source Logical (defaults to `FALSE`). If `TRUE`,` will skip CRAN
 #'   and MRAN attempts, download tar.gz, and install from it.
 #' @param current.deps Dependencies that will install current version regardless
 #'   of date.
 #'
-#' @importFrom utils tail
+#' @examples
+#' \donttest{
+#' get.snowball("magrittr", "2018-02-12")
+#' }
+#'
 get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE, current.deps = "Rcpp") {
 
   # 1) Get dependencies

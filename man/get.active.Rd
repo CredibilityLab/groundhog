@@ -2,13 +2,24 @@
 % Please edit documentation in R/get.active.R
 \name{get.active}
 \alias{get.active}
-\title{Get Active packages as data.frame()}
+\title{Get active packages}
 \usage{
 get.active()
 }
 \value{
-$pkg has the pkg name, $pkg_vrs the pkg_vrs
+a \code{data.frame} with two columns:
+\describe{
+\item{pkg}{the package name}
+\item{pkg_vrs}{the package name and its version, separated by an
+underscore}
+}
 }
 \description{
-Get Active packages as data.frame()
+Get currently active (=loaded) packages in the session, with their version
+}
+\examples{
+\donttest{
+get.active()
+}
+
 }

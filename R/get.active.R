@@ -1,6 +1,18 @@
-#' Get Active packages as data.frame()
+#' Get active packages
 #'
-#' @return  $pkg has the pkg name, $pkg_vrs the pkg_vrs
+#' Get currently active (=loaded) packages in the session, with their version
+#'
+#' @return a `data.frame` with two columns:
+#' \describe{
+#'   \item{pkg}{the package name}
+#'   \item{pkg_vrs}{the package name and its version, separated by an
+#'   underscore}
+#' }
+#'
+#' @examples
+#' \donttest{
+#' get.active()
+#' }
 #'
 get.active <- function() {
   loaded.list <- utils::sessionInfo()$loadedOnly # pkgs in name space

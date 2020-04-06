@@ -7,11 +7,16 @@
 install.source(pkg_vrs, lib, date, force.download = FALSE, quiet = FALSE)
 }
 \arguments{
-\item{lib}{
-    character vector giving the library directories where to
-    install the packages.  Recycled as needed.  If missing, defaults to
-    the first element of \code{\link{.libPaths}()}.
-  }
+\item{pkg_vrs}{character. The required package and its version separated by
+an underscore.}
+
+\item{lib}{character. Path where to install the package.}
+
+\item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
+
+\item{force.download}{logical (defaults to \code{FALSE}). If the tarball
+containing the package source code already exists locally, should it be
+downloaded again?}
 
 \item{quiet}{
     logical: if true, reduce the amount of output.

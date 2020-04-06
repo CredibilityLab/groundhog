@@ -1,4 +1,16 @@
 #' Show table of contents (toc) (package versions and publication dates) for a pkg, sorted chronologically
+#'
+#' @param pkg (required) package name
+#' @param dependencies logical (defaults to `FALSE`). Should the output contain
+#'    package dependencies (`Imports`, `Depends` and `Suggests`) for `pkg`.
+#'
+#' @return a `data.frame` where each row corresponds to one version of `pkg`.
+#'
+#' @examples
+#' \donttest{
+#' toc("magrittr")
+#' }
+#'
 #' @export
 toc <- function(pkg, dependencies = FALSE) {
 

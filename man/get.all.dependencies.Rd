@@ -2,13 +2,33 @@
 % Please edit documentation in R/get.dependencies.R
 \name{get.all.dependencies}
 \alias{get.all.dependencies}
-\title{Get dependencies for dependencies, infinite levels downs}
+\title{Get recursive dependencies}
 \usage{
 get.all.dependencies(pkg, date, include.suggests = FALSE)
 }
 \arguments{
-\item{include.suggests}{Logical. Should suggested packages be installed?}
+\item{pkg}{character. Name of the package to install}
+
+\item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
+
+\item{include.suggests}{Logical (defaults to \code{FALSE}. Should suggested
+packages be installed?}
+}
+\value{
+a \code{data.frame} where the first column (\code{pkg}) contains non-terminal
+dependencies and the second column (\code{dep2} contains a dependencies of the
+package in column \code{pkg}.
 }
 \description{
-Get dependencies for dependencies, infinite levels downs
+Get all recursive (=indirect) dependencies for one package \code{pkg}, for the
+version on CRAN at the given \code{date}.
+}
+\examples{
+\donttest{
+get.all.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
+}
+
+}
+\seealso{
+\code{\link[=get.dependencies]{get.dependencies()}} for direct dependencies only
 }

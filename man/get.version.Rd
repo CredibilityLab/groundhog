@@ -7,9 +7,23 @@
 get.version(pkg, date, current.deps = c("Rcpp"))
 }
 \arguments{
+\item{pkg}{character. Name of the package to install}
+
+\item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
+
 \item{current.deps}{Dependencies that will install current version regardless
 of date.}
 }
 \description{
 Get version from date
+}
+\examples{
+\donttest{
+get.version("magrittr", "2018-02-12")
+}
+
+}
+\seealso{
+\code{\link[=get.R.pkg.date]{get.R.pkg.date()}} for the opposite operation: determining date
+for a given version.
 }

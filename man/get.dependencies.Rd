@@ -2,13 +2,32 @@
 % Please edit documentation in R/get.dependencies.R
 \name{get.dependencies}
 \alias{get.dependencies}
-\title{Get dependencies for ONE package}
+\title{Get dependencies for one package}
 \usage{
 get.dependencies(pkg, date, include.suggests = FALSE)
 }
 \arguments{
-\item{include.suggests}{Logical. Should suggested packages be installed?}
+\item{pkg}{character. Name of the package to install}
+
+\item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
+
+\item{include.suggests}{Logical (defaults to \code{FALSE}. Should suggested
+packages be installed?}
+}
+\value{
+A character vector containing the package dependencies for \code{pkg}, for
+the version on CRAN at \code{date.}
 }
 \description{
-Get dependencies for ONE package
+Get direct dependencies for one package \code{pkg}, for the version on CRAN at the
+given \code{date}.
+}
+\examples{
+\donttest{
+get.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
+}
+
+}
+\seealso{
+\code{\link[=get.all.dependencies]{get.all.dependencies()}} for recursive (=indirect) dependencies
 }

@@ -1,3 +1,19 @@
+#' Get date of binary package from MRAN
+#'
+#' Get date of binary package from MRAN
+#'
+#' @inheritParams get.R.pkg.date
+#'
+#' @seealso [get.version()] for the opposite operation: determining the package
+#'   version from a given date.
+#'
+#' @inherit get.R.pkg.date return
+#'
+#' @examples
+#' \donttest{
+#' get.date.for.install.binary("magrittr_1.0.1")
+#' }
+#'
 get.date.for.install.binary <- function(pkg_vrs) {
   binary.date <- as.DateYMD("1970-01-01")
   # R being used
