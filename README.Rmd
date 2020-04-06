@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 groundhogR has not yet been released on CRAN and must be installed from GitHub:
 
-```{r, eval = FALSE}
+```{r}
 # install.packages("remotes")
 remotes::install_github("bisaloo/groundhogR")
 ```
