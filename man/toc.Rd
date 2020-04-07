@@ -19,8 +19,6 @@ a \code{data.frame} where each row corresponds to one version of \code{pkg}.
 Show table of contents (toc) (package versions and publication dates) for a pkg, sorted chronologically
 }
 \examples{
-\donttest{
 toc("magrittr")
-}
 
 }
