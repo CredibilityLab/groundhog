@@ -1,6 +1,4 @@
 # 1. Preliminaries
-# 1.1 Set folder for Groundhog R  files
-# [this will be changed]
 chooseCRANmirror(graphics = FALSE, ind = 1)
 
 # 1.2 Get available packages to see if each attempted to install is new
