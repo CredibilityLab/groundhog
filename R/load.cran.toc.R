@@ -19,7 +19,7 @@
 #' @importFrom utils read.csv write.csv
 load.cran.toc <- function(update.toc = FALSE) {
   groundhogR.url <- "http://groundhogR.com"
-  groundhogR.folder <- .pkgenv[["groundhogR.folder"]]
+  groundhogR.folder <- get.groundhogr.folder()
 
   # 3.0 Ensure directory for groundhogR exists
   dir.create(groundhogR.folder, showWarnings = FALSE) # Create if inexistent
