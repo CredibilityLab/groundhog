@@ -48,6 +48,8 @@ package is found for this R-build, it will reinstall it.}
 8  Final function:   groundhog.library()
 }
 \examples{
+\donttest{
 groundhog.library(magrittr, "2018-02-12")
+}
 
 }

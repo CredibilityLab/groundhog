@@ -12,7 +12,9 @@
 #' @seealso [update_cran.toc_if.needed]
 #'
 #' @examples
+#' \dontrun{
 #' load.cran.toc()
+#' }
 #'
 #' @importFrom utils read.csv write.csv
 load.cran.toc <- function(update.toc = FALSE) {

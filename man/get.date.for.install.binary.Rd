@@ -18,7 +18,9 @@ the date of the binary the download from MRAN, in the format
 Get date of binary package from MRAN
 }
 \examples{
+\donttest{
 get.date.for.install.binary("magrittr_1.0.1")
+}
 
 }
 \seealso{
