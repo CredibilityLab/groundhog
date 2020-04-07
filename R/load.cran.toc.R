@@ -26,12 +26,12 @@ load.cran.toc <- function(update.toc = FALSE) {
 
   # 3.1 Paths two databases (toc and times:
   # LOCAL
-  toc.path <- file.path(groundhogR.folder, "cran.toc.csv.gz")
-  times.path <- file.path(groundhogR.folder, "cran.times.csv.gz")
+  toc.path <- file.path(groundhogR.folder, "cran.toc.csv.xz")
+  times.path <- file.path(groundhogR.folder, "cran.times.csv.xz")
 
   # URL
-  toc.url <- paste0(groundhogR.url, "/cran.toc.csv.gz")
-  times.url <- paste0(groundhogR.url, "/cran.times.csv.gz")
+  toc.url <- paste0(groundhogR.url, "/cran.toc.csv.xz")
+  times.url <- paste0(groundhogR.url, "/cran.times.csv.xz")
 
   # 3.2 JUST LOAD
   if (file.exists(toc.path, times.path) && !update.toc) {
@@ -81,7 +81,7 @@ load.cran.toc <- function(update.toc = FALSE) {
       .pkgenv[["cran.toc"]] <- cran.toc # Save cran.toc to environemnt
 
       # save to local drive
-      write.csv(cran.toc, file = gzfile(toc.path))
+      write.csv(cran.toc, file = xzfile(toc.path))
     } # End 3.3.5 - if succeeded at downloading file from website
 
 
@@ -103,7 +103,7 @@ load.cran.toc <- function(update.toc = FALSE) {
       .pkgenv[["cran.times"]] <- cran.times # Save cran.times to environemnt
 
       # save to local drive
-      write.csv(cran.times, file = gzfile(times.path))
+      write.csv(cran.times, file = xzfile(times.path))
     } # End 3.3.5 - if succeeded at downloading file from website
 
     # Feedback to user on existing cran.to
@@ -142,11 +142,11 @@ load.cran.toc <- function(update.toc = FALSE) {
       stop("!")
     } # End if download did not work
     # 3.4.3 Load the toc
-    cran.toc <- read.csv(file = gzfile(toc.path), stringsAsFactors = FALSE)
+    cran.toc <- read.csv(file = xzfile(toc.path), stringsAsFactors = FALSE)
     cran.toc$Published <- as.DateYMD(cran.toc$Published)
     .pkgenv[["cran.toc"]] <- cran.toc
 
-    cran.times <- read.csv(file = gzfile(times.path), stringsAsFactors = FALSE)
+    cran.times <- read.csv(file = xzfile(times.path), stringsAsFactors = FALSE)
     cran.times$update.date <- as.DateYMD(cran.times$update.date)
     .pkgenv[["cran.times"]] <- cran.times
 
