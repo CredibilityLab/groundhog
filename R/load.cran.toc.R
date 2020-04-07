@@ -66,7 +66,7 @@ load.cran.toc <- function(update.toc = FALSE) {
 
     # UPDATE TOC
     # 3.3.4 Try updating toc by downloading additional rows from groundhogR server
-    add.toc <- try(read.csv(paste0(groundhogR.url, "/differential.toc.php?current_date=", max.existing.toc.date))[-1])
+    add.toc <- try(read.csv(paste0(groundhogR.url, "/differential.toc.php?current_date=", max.existing.toc.date)))
 
     # 3.3.5 If sucess loading URL
     if (is.data.frame(add.toc)) {
@@ -87,7 +87,7 @@ load.cran.toc <- function(update.toc = FALSE) {
 
     # UPDATE TIMES
     # 3.3.6 Try updating times by downloading additional rows from groundhogR server
-    add.times <- try(read.csv(paste0(groundhogR.url, "/differential.times.php?current_date=", max.existing.times.date))[-1])
+    add.times <- try(read.csv(paste0(groundhogR.url, "/differential.times.php?current_date=", max.existing.times.date)))
 
 
     # 3.3.7 If sucess loading URL
