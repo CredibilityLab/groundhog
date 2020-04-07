@@ -20,7 +20,8 @@ the date of the binary the download from MRAN, in the format
 Get date of binary package from MRAN, given R version being used
 }
 \examples{
- get.R.pkg.date("magrittr_1.0.1", "3.6.0")
+\donttest{
+}
 
 }
 \seealso{

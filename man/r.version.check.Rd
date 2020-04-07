@@ -26,6 +26,8 @@ a named \code{list} with the following elements:
 Compare the current R version to the R version at a given \code{date}.`
 }
 \examples{
+\donttest{
 r.version.check("2018-02-12")
+}
 
 }

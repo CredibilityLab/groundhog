@@ -15,6 +15,7 @@ get.installed_path(pkg, vrs)
 Check if package version is installed for current or past R versions,
 }
 \examples{
+\donttest{
 get.installed_path("magrittr", "1.5")
-
+}
 }

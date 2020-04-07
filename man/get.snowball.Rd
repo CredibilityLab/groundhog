@@ -30,6 +30,8 @@ of date.}
 Figure out in which order dependencies should be installed to avoid conflicts
 }
 \examples{
+\donttest{
 get.snowball("magrittr", "2018-02-12")
+}
 
 }

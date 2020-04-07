@@ -15,7 +15,9 @@ cross.toc(pkgs, date1 = "1970-1-1", date2 = Sys.Date())
 Show toc table with multiple packages
 }
 \examples{
+\donttest{
 cross.toc(c("magrittr", "rlang"), date1 = "2012-02-01", date2 = "2020-02-01")
+}
 
 }
 \seealso{

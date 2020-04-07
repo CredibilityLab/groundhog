@@ -7,7 +7,9 @@
 #' @return a `data.frame` where each row corresponds to one version of `pkg`.
 #'
 #' @examples
+#' \donttest{
 #' toc("magrittr")
+#' }
 #'
 #' @export
 toc <- function(pkg, dependencies = FALSE) {

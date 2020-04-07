@@ -23,7 +23,9 @@ Get direct dependencies for one package \code{pkg}, for the version on CRAN at t
 given \code{date}.
 }
 \examples{
+\donttest{
 get.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
+}
 
 }
 \seealso{

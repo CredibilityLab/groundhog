@@ -9,7 +9,9 @@
 #'   `vrs`.
 #'
 #' @examples
+#' \donttest{
 #' get.installation.time("magrittr", "1.5")
+#' }
 #'
 get.installation.time <- function(pkg, vrs) {
 
