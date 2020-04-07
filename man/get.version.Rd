@@ -18,9 +18,7 @@ of date.}
 Get version from date
 }
 \examples{
-\donttest{
 get.version("magrittr", "2018-02-12")
-}
 
 }
 \seealso{

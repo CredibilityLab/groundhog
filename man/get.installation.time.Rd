@@ -20,8 +20,6 @@ Get installation time for a given \code{pkg} and \code{vrs}. This is estimated f
 CRAN data about installation time on their build servers.
 }
 \examples{
-\donttest{
 get.installation.time("magrittr", "1.5")
-}
 
 }

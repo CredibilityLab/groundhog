@@ -15,9 +15,7 @@ Load a `data.frame`` listing all CRAN packages, with their dependencies and
 publication date.
 }
 \examples{
-\dontrun{
 load.cran.toc()
-}
 
 }
 \seealso{

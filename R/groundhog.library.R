@@ -9,9 +9,7 @@
 # FIXME: add @return
 #'
 #' @examples
-#' \donttest{
 #' groundhog.library(magrittr, "2018-02-12")
-#' }
 #'
 #' @importFrom utils capture.output
 #'

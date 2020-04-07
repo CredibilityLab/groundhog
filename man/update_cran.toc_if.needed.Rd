@@ -16,9 +16,8 @@ update_cran.toc_if.needed(date)
 Update \code{cran.toc} if it's not recent enough to include the required date.
 }
 \examples{
-\donttest{
 update_cran.toc_if.needed("2020-03-01")
-}
+
 }
 \seealso{
 \code{\link[=load.cran.toc]{load.cran.toc()}}
