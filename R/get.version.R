@@ -8,9 +8,7 @@
 #'   for a given version.
 #'
 #' @examples
-#' \donttest{
 #' get.version("magrittr", "2018-02-12")
-#' }
 #'
 get.version <- function(pkg, date, current.deps = c("Rcpp")) {
 

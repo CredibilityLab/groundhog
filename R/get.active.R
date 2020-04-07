@@ -10,9 +10,7 @@
 #' }
 #'
 #' @examples
-#' \donttest{
 #' get.active()
-#' }
 #'
 get.active <- function() {
   loaded.list <- utils::sessionInfo()$loadedOnly # pkgs in name space

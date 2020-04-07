@@ -13,9 +13,7 @@
 # FIXME: add @return
 #'
 #' @examples
-#' \donttest{
 #' install.snowball("magrittr", "2018-02-12")
-#' }
 #'
 #' @seealso [get.snowball()] to determine in which order packages are installed
 #'

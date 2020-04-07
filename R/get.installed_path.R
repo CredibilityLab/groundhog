@@ -5,9 +5,8 @@
 # FIXME: add @return
 #'
 #' @examples
-#' \donttest{
 #' get.installed_path("magrittr", "1.5")
-#' }
+#'
 get.installed_path <- function(pkg, vrs) {
   # Get full paths
   pkg_search_paths <- get.pkg_search_paths(pkg, vrs)
