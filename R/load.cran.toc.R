@@ -29,32 +29,50 @@ load.cran.toc <- function(update.toc = FALSE) {
   toc.path <- file.path(groundhogR.folder, "cran.toc.csv.xz")
   times.path <- file.path(groundhogR.folder, "cran.times.csv.xz")
 
-  # URL
-  toc.url <- paste0(groundhogR.url, "/cran.toc.csv.xz")
-  times.url <- paste0(groundhogR.url, "/cran.times.csv.xz")
-
   # 3.2 JUST LOAD
-  if (file.exists(toc.path, times.path) && !update.toc) {
+  if (!update.toc) {
 
     # TOC
-    cran.toc <- read.csv(toc.path, stringsAsFactors = FALSE)
+    if (file.exists(toc.path)) {
+      cran.toc <- read.csv(toc.path, stringsAsFactors = FALSE)
+    } else {
+      cran.toc <- read.csv(system.file("cran.toc.csv.xz", package = "groundhogR"),
+                           stringsAsFactors = FALSE)
+    }
+
     cran.toc$Published <- as.DateYMD(cran.toc$Published)
 
     # Move the cran.toc outside the function space, to global environment
     .pkgenv[["cran.toc"]] <- cran.toc
 
     # Times
-    cran.times <- read.csv(times.path, stringsAsFactors = FALSE)
+    if (file.exists(times.path)) {
+      cran.times <- read.csv(times.path, stringsAsFactors = FALSE)
+    } else {
+      cran.times <- read.csv(system.file("cran.times.csv.xz", package = "groundhogR"),
+                             stringsAsFactors = FALSE)
+    }
+
     cran.times$update.date <- as.DateYMD(cran.times$update.date)
     .pkgenv[["cran.times"]] <- cran.times
   } # End 3.2 - no update
 
   # 3.3 UPDATE
-  else if (file.exists(toc.path, times.path) && update.toc) {
+  else {
+    if (file.exists(toc.path)) {
+      existing.toc <- read.csv(toc.path, stringsAsFactors = FALSE)
+    } else {
+      # Fallback on versions bundled with the package on CRAN
+      existing.toc <- read.csv(system.file("cran.toc.csv.xz", package = "groundhogR"),
+                               stringsAsFactors = FALSE)
+    }
 
-    # 3.3.1 load databases
-    existing.toc <- read.csv(toc.path, stringsAsFactors = FALSE)
-    existing.times <- read.csv(times.path, stringsAsFactors = FALSE)
+    if (file.exists(times.path)) {
+      existing.times <- read.csv(times.path, stringsAsFactors = FALSE)
+    } else {
+      existing.times <- read.csv(system.file("cran.times.csv.xz", package = "groundhogR"),
+                                 stringsAsFactors = FALSE)
+    }
 
     # 3.3.2 create pkg_vrs for unique identifyier of packages
     existing.toc.pkg_vrs <- paste0(existing.toc$Package, "_", existing.toc$Version)
@@ -106,7 +124,7 @@ load.cran.toc <- function(update.toc = FALSE) {
       write.csv(cran.times, file = xzfile(times.path), row.names = FALSE)
     } # End 3.3.5 - if succeeded at downloading file from website
 
-    # Feedback to user on existing cran.to
+    # Feedback to user on existing cran.toc
     message2()
     message1(
       "This computer had a database with a list of all versions available for each CRAN package up to ",
@@ -122,44 +140,6 @@ load.cran.toc <- function(update.toc = FALSE) {
     }
 
     message1("The file with the list is stored here: ", toc.path, "\n-------------------------------")
-  } # End if local file exist
+  }
 
-
-  # 3.4 if either cran.toc does not exist, download the entire up to date copy
-  else {
-    # 3.4.1 Attempt download
-    d1 <- try(download.file(toc.url, toc.path))
-    d2 <- try(download.file(times.url, times.path))
-
-    # 3.4.2 if it fails (d1), give bad news
-    if (inherits(d1, "try-error")) {
-      message2()
-      message1(
-        "Could not load the database of packages available in CRAN neither locally from this\n",
-        "computer nor from our server. Unfortunately this means you cannot use groundhog.libray()\n",
-        "This could happen if this is your first time using {groundhogR} and you are off-line."
-      )
-      stop("!")
-    } # End if download did not work
-    # 3.4.3 Load the toc
-    cran.toc <- read.csv(file = xzfile(toc.path), stringsAsFactors = FALSE)
-    cran.toc$Published <- as.DateYMD(cran.toc$Published)
-    .pkgenv[["cran.toc"]] <- cran.toc
-
-    cran.times <- read.csv(file = xzfile(times.path), stringsAsFactors = FALSE)
-    cran.times$update.date <- as.DateYMD(cran.times$update.date)
-    .pkgenv[["cran.times"]] <- cran.times
-
-    # 3.4.4 tell users
-    message2()
-    message1(
-      "GroundhogR requires a database listing all versions of every package ever in CRAN.\n",
-      "The database was not found in this computer so it was just downloaded from http://groundhogR.com\n",
-      "The database contains N = ", nrow(cran.toc), " entries. The most recent entry is from ", format.Date(max(cran.toc$Published)), ".\n",
-      "The database will be automatically updated when the 'date' in groundhog.library('date') so requires.\n",
-      "You may also update it by running: load.cran.toc(update.toc=TRUE)."
-    )
-
-    message1("The file is stored locally here:'", toc.path, "'\n-------------------------------")
-  } # End if file does not exist
-} # End of load cran.toc
+}
