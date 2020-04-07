@@ -81,7 +81,7 @@ load.cran.toc <- function(update.toc = FALSE) {
       .pkgenv[["cran.toc"]] <- cran.toc # Save cran.toc to environemnt
 
       # save to local drive
-      write.csv(cran.toc, file = xzfile(toc.path))
+      write.csv(cran.toc, file = xzfile(toc.path), row.names = FALSE)
     } # End 3.3.5 - if succeeded at downloading file from website
 
 
@@ -103,7 +103,7 @@ load.cran.toc <- function(update.toc = FALSE) {
       .pkgenv[["cran.times"]] <- cran.times # Save cran.times to environemnt
 
       # save to local drive
-      write.csv(cran.times, file = xzfile(times.path))
+      write.csv(cran.times, file = xzfile(times.path), row.names = FALSE)
     } # End 3.3.5 - if succeeded at downloading file from website
 
     # Feedback to user on existing cran.to
