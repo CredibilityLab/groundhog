@@ -28,7 +28,7 @@ function worked, leading to dropped variables:
 Say you have data with repeat values of `x`:
 
 ``` r
-df1 = data.frame(
+df1 <- data.frame(
   x1 = c(1, 1, 2),
   x2 = c("a", "b", "c")
 )
