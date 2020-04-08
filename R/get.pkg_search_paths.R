@@ -17,9 +17,12 @@
 get.pkg_search_paths <- function(pkg, vrs) {
   # R versions
   R.toc <- toc("R")
-  R.toc$major <- sapply(strsplit(R.toc$Version, "\\."), `[`, 1)
-  R.toc$minor <- sapply(strsplit(R.toc$Version, "\\."), `[`, 2)
-  R.toc$path <- sapply(strsplit(R.toc$Version, "\\."), `[`, 3)
+
+  R_vrs <- do.call(rbind.data.frame, strsplit(R.toc$Version, ".", fixed = TRUE))
+  names(R_vrs) <- c("major", "minor", "patch")
+
+  R.toc <- cbind(R.toc, R_vrs)
+
   R.toc$Published <- as.DateYMD(R.toc$Published)
 
   # Subset of R.toc for same minor as r.using
