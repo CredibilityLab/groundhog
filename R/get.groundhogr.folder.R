@@ -12,7 +12,7 @@ get.groundhogr.folder <- function() {
     )
     answer <- readline(paste0(
       "Would you like to use '~/groundhogR' to save files? If so, type 'yes' ",
-      "or just press 'Enter'"
+      "or just press 'Enter': "
     ))
 
     if (tolower(answer) %in% c("", "yes")) {
@@ -24,4 +24,6 @@ get.groundhogr.folder <- function() {
            'Sys.setenv(GROUNDHOGR_FOLDER = "path").', call. = FALSE)
     }
   }
+
+  return(groundhogR.folder)
 }
