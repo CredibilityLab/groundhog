@@ -16,7 +16,8 @@
 #' load.cran.toc()
 #' }
 #'
-#' @importFrom utils read.csv write.csv
+#' @importFrom utils read.csv
+#'
 load.cran.toc <- function(update.toc = FALSE) {
   groundhogR.url <- "http://groundhogR.com"
   groundhogR.folder <- get.groundhogr.folder()
@@ -26,18 +27,17 @@ load.cran.toc <- function(update.toc = FALSE) {
 
   # 3.1 Paths two databases (toc and times:
   # LOCAL
-  toc.path <- file.path(groundhogR.folder, "cran.toc.csv.xz")
-  times.path <- file.path(groundhogR.folder, "cran.times.csv.xz")
+  toc.path <- file.path(groundhogR.folder, "cran.toc.rds")
+  times.path <- file.path(groundhogR.folder, "cran.times.rds")
 
   # 3.2 JUST LOAD
   if (!update.toc) {
 
     # TOC
     if (file.exists(toc.path)) {
-      cran.toc <- read.csv(toc.path, stringsAsFactors = FALSE)
+      cran.toc <- readRDS(toc.path)
     } else {
-      cran.toc <- read.csv(system.file("cran.toc.csv.xz", package = "groundhogR"),
-                           stringsAsFactors = FALSE)
+      cran.toc <- readRDS(system.file("cran.toc.rds", package = "groundhogR"))
     }
 
     cran.toc$Published <- as.DateYMD(cran.toc$Published)
@@ -47,10 +47,9 @@ load.cran.toc <- function(update.toc = FALSE) {
 
     # Times
     if (file.exists(times.path)) {
-      cran.times <- read.csv(times.path, stringsAsFactors = FALSE)
+      cran.times <- readRDS(times.path)
     } else {
-      cran.times <- read.csv(system.file("cran.times.csv.xz", package = "groundhogR"),
-                             stringsAsFactors = FALSE)
+      cran.times <- readRDS(system.file("cran.times.rds", package = "groundhogR"))
     }
 
     cran.times$update.date <- as.DateYMD(cran.times$update.date)
@@ -60,18 +59,16 @@ load.cran.toc <- function(update.toc = FALSE) {
   # 3.3 UPDATE
   else {
     if (file.exists(toc.path)) {
-      existing.toc <- read.csv(toc.path, stringsAsFactors = FALSE)
+      existing.toc <- readRDS(toc.path)
     } else {
       # Fallback on versions bundled with the package on CRAN
-      existing.toc <- read.csv(system.file("cran.toc.csv.xz", package = "groundhogR"),
-                               stringsAsFactors = FALSE)
+      existing.toc <- readRDS(system.file("cran.toc.rds", package = "groundhogR"))
     }
 
     if (file.exists(times.path)) {
-      existing.times <- read.csv(times.path, stringsAsFactors = FALSE)
+      existing.times <- readRDS(times.path)
     } else {
-      existing.times <- read.csv(system.file("cran.times.csv.xz", package = "groundhogR"),
-                                 stringsAsFactors = FALSE)
+      existing.times <- readRDS(system.file("cran.times.rds", package = "groundhogR"))
     }
 
     # 3.3.2 create pkg_vrs for unique identifyier of packages
@@ -99,7 +96,7 @@ load.cran.toc <- function(update.toc = FALSE) {
       .pkgenv[["cran.toc"]] <- cran.toc # Save cran.toc to environemnt
 
       # save to local drive
-      write.csv(cran.toc, file = xzfile(toc.path), row.names = FALSE)
+      saveRDS(cran.toc, file = toc.path, version = 2, compress = "xz")
     } # End 3.3.5 - if succeeded at downloading file from website
 
 
@@ -121,7 +118,7 @@ load.cran.toc <- function(update.toc = FALSE) {
       .pkgenv[["cran.times"]] <- cran.times # Save cran.times to environemnt
 
       # save to local drive
-      write.csv(cran.times, file = xzfile(times.path), row.names = FALSE)
+      saveRDS(cran.times, file = times.path, version = 2, compress = "xz")
     } # End 3.3.5 - if succeeded at downloading file from website
 
     # Feedback to user on existing cran.toc
