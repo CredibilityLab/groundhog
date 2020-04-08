@@ -6,9 +6,11 @@ get.groundhogr.folder <- function() {
 
   if (groundhogR.folder == "") {
 
-    answer <- readline(paste0(
+    message(
       "groundhogR needs to save files on your computer to run.\n",
-      "It looks you haven't specified a folder for groundhogR yet.\n",
+      "It looks you haven't specified a folder for groundhogR yet."
+    )
+    answer <- readline(paste0(
       "Would you like to use '~/groundhogR' to save files? If so, type 'yes' ",
       "or just press 'Enter'"
     ))
