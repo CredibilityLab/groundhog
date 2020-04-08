@@ -21,7 +21,7 @@ Get date of binary package from MRAN, given R version being used
 }
 \examples{
 \donttest{
- get.R.pkg.date("magrittr_1.0.1", "3.6.0")
+get.R.pkg.date("magrittr_1.0.1", "3.6.0")
 }
 
 }
