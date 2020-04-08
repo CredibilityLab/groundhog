@@ -69,7 +69,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
     if (!snowball[k, "installed"]) {
 
       # 3.2 Feedback to user on time and pogresss
-      installation.feedback(k, date, snowball, start.time, plot.console = TRUE)
+      installation.feedback(k, date, snowball, start.time, plot.console = plot.console)
 
       # 3.3 Shorter variable names
       pkg.k <- snowball[k, "pkg"]
