@@ -27,7 +27,7 @@ get.active <- function() {
   active.vrs <- active.vrs[!active.in.base]
   active.pkg_vrs <- active.pkg_vrs[!active.in.base]
 
-  df <- data.frame(active.pkg, active.pkg_vrs)
+  df <- data.frame(active.pkg, active.pkg_vrs, stringsAsFactors = FALSE)
   names(df) <- c("pkg", "pkg_vrs")
   df
 }
