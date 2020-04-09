@@ -1,3 +1,13 @@
+#' Get groundhogR folder location
+#'
+#' @return the path to the groundhogR folder where groundhogR files will be
+#'   stored and where packages loaded with [groundhog.library()] will be
+#'   installed.
+#'
+#' @note you can change the location of this folder by editing the environment
+#'   variable GROUNDHOG_FOLDER. In R, you can do this with the command
+#'   `Sys.setenv(GROUNDHOG_FOLDER = "path")`.
+#'
 #' @export
 #'
 get.groundhogr.folder <- function() {
