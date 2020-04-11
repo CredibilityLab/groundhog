@@ -7,6 +7,8 @@
 
 [![R build
 status](https://github.com/bisaloo/groundhogR/workflows/R-CMD-check/badge.svg)](https://github.com/bisaloo/groundhogR/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/Bisaloo/groundhogR/branch/master/graph/badge.svg)](https://codecov.io/gh/Bisaloo/groundhogR?branch=master)
 <!-- badges: end -->
 
 ## Installation
