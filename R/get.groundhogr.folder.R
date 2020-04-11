@@ -12,7 +12,7 @@
 #'
 get.groundhogr.folder <- function() {
 
-  groundhogR.folder <- Sys.getenv("GROUNHOGR_FOLDER")
+  groundhogR.folder <- path.expand(Sys.getenv("GROUNHOGR_FOLDER"))
 
   if (groundhogR.folder == "") {
 
