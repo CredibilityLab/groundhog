@@ -1,0 +1,67 @@
+test_that("load.cran.toc()", {
+
+  load.cran.toc()
+
+  cran.toc <- .pkgenv[["cran.toc"]]
+
+  expect_is(cran.toc, "data.frame")
+  expect_named(cran.toc, c("Package", "Version", "Imports", "Depends", "Suggests", "Published"))
+  expect_is(cran.toc$Published, "Date")
+  expect_identical(cran.toc$Published, sort(cran.toc$Published))
+
+  cran.times <- .pkgenv[["cran.times"]]
+
+  expect_is(cran.times, "data.frame")
+  expect_named(cran.times, c("pkg_vrs", "installation.time", "update.date"))
+  expect_true(min(cran.times$installation.time, na.rm = TRUE) > 0)
+  expect_is(cran.times$update.date, "Date")
+
+})
+
+test_that("update_cran.toc_if.needed()", {
+
+  expect_error(
+    expect_message(update_cran.toc_if.needed("9999-01-01"), "most recent date")
+  )
+
+  expect_false(update_cran.toc_if.needed("2020-01-01"))
+
+})
+
+test_that("toc()", {
+
+  # I'm using lightr here because I know it will on CRAN for the foreseeable
+  # future and it's lightweight but this line can be edited
+  test_pkg <- "lightr"
+
+  toc_pkg <- toc(test_pkg)
+
+  expect_is(toc_pkg, "data.frame")
+  expect_named(toc_pkg, c("Version", "Published"))
+  expect_is(toc_pkg$Published, "Date")
+  expect_identical(toc_pkg$Published, sort(toc_pkg$Published))
+
+  toc_pkg_deps <- toc(test_pkg, dependencies = TRUE)
+
+  expect_named(toc_pkg_deps, c("Version", "Published", "Imports", "Depends", "Suggests"))
+  expect_identical(toc_pkg, toc_pkg_deps[, 1:2])
+
+  expect_error(
+    expect_message(toc(""), "no package")
+  )
+
+})
+
+test_that("cross.toc()", {
+
+  test_pkgs <- c("lightr", "pavo")
+
+  crosstoc_pkgs <- cross.toc(test_pkgs, date2 = "2020-01-01")
+
+  expect_is(crosstoc_pkgs, "data.frame")
+  expect_named(crosstoc_pkgs, c("Version", "Published", "Package"))
+  expect_is(crosstoc_pkgs$Published, "Date")
+  expect_identical(crosstoc_pkgs$Published, sort(crosstoc_pkgs$Published))
+  expect_setequal(crosstoc_pkgs$Package, test_pkgs)
+
+})
