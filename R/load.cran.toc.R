@@ -40,8 +40,6 @@ load.cran.toc <- function(update.toc = FALSE) {
       cran.toc <- readRDS(system.file("cran.toc.rds", package = "groundhogR"))
     }
 
-    cran.toc$Published <- as.DateYMD(cran.toc$Published)
-
     # Move the cran.toc outside the function space, to global environment
     .pkgenv[["cran.toc"]] <- cran.toc
 
@@ -52,7 +50,6 @@ load.cran.toc <- function(update.toc = FALSE) {
       cran.times <- readRDS(system.file("cran.times.rds", package = "groundhogR"))
     }
 
-    cran.times$update.date <- as.DateYMD(cran.times$update.date)
     .pkgenv[["cran.times"]] <- cran.times
   } # End 3.2 - no update
 
@@ -63,10 +60,7 @@ load.cran.toc <- function(update.toc = FALSE) {
     dl_toc <- try(download.file(paste0(groundhogR.url, "cran.toc.rds"), toc.path))
 
     cran.times <- readRDS(times.path)
-    cran.times$update.date <- as.DateYMD(cran.times$update.date)
-
     cran.toc <- readRDS(toc.path)
-    cran.toc$Published <- as.DateYMD(cran.toc$Published)
 
     .pkgenv[["cran.times"]] <- cran.times
     .pkgenv[["cran.toc"]] <- cran.toc
