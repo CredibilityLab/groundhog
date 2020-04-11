@@ -87,7 +87,7 @@ quit.menu <- function(date) {
   if (tolower(x) %in% c("q", "quit", "stop")) {
     message2()
     message1("You typed ", x, " so script stops...")
-    message1(msg.R.switch(date))
+    msg.R.switch(date)
     stop("---")
   } # End if quit
 

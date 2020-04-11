@@ -133,7 +133,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
           cat1.plot(paste0("> The installation of ", pkg_vrs, " failed. Please see console for details."))
 
           # Long instructions written above
-          message1(msg.R.switch(date))
+          msg.R.switch(date)
         }
 
         # PENDINGrename back the flders taht were renamed
