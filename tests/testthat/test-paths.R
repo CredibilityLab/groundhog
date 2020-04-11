@@ -15,12 +15,6 @@ test_that("get.pkg_search_paths()", {
 
 test_that("get.installed_path()", {
 
-  expect_is(get.installed_path("magrittr", "1.5"), "charater")
-
-})
-
-
-
-
+  expect_is(get.installed_path("magrittr", "1.5"), "character")
 
 })
