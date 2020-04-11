@@ -7,7 +7,6 @@ test_that("load.cran.toc()", {
   expect_is(cran.toc, "data.frame")
   expect_named(cran.toc, c("Package", "Version", "Imports", "Depends", "Suggests", "Published"))
   expect_is(cran.toc$Published, "Date")
-  expect_identical(cran.toc$Published, sort(cran.toc$Published))
 
   cran.times <- .pkgenv[["cran.times"]]
 
