@@ -3,3 +3,4 @@
 ^LICENSE\.md$
 ^\.Rproj\.user$
 ^\.github$
+^codecov\.yml$
