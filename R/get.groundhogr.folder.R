@@ -12,7 +12,7 @@
 #'
 get.groundhogr.folder <- function() {
 
-  groundhogR.folder <- path.expand(Sys.getenv("GROUNHOGR_FOLDER"))
+  groundhogR.folder <- path.expand(Sys.getenv("GROUNDHOGR_FOLDER"))
 
   if (groundhogR.folder == "") {
 
@@ -27,7 +27,7 @@ get.groundhogr.folder <- function() {
 
     if (tolower(answer) %in% c("", "yes")) {
       groundhogR.folder <- path.expand(file.path("~", "groundhogR"))
-      Sys.setenv(GROUNHOGR_FOLDER = groundhogR.folder)
+      Sys.setenv(GROUNDHOGR_FOLDER = groundhogR.folder)
     } else {
       stop('Interactive specification of custom paths is not yet implemented. ',
            'Please set the desired location for groundhogR.folder by running ',
