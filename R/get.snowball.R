@@ -14,7 +14,7 @@
 get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE, current.deps = "Rcpp") {
 
   # 1) Get dependencies
-  dep12 <- get.all.dependencies(pkg, date)
+  dep12 <- get.all.dependencies(pkg, date, include.suggests = include.suggests)
 
   # 2) process dep12  (topographical sort) to get order of installation
   k <- 0 # counter of iterations attempting to sort
