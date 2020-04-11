@@ -19,6 +19,10 @@
 #'
 get.R.pkg.date <- function(pkg_vrs, R_vrs) {
 
+  if (is.null(.pkgenv[["cran.toc"]])) {
+    load.cran.toc()
+  }
+
   cran.toc <- .pkgenv[["cran.toc"]]
   # 1. Get pkg from pkg_vrs
   pkg <- get.pkg(pkg_vrs)
