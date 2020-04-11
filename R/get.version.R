@@ -19,13 +19,6 @@ get.version <- function(pkg, date, current.deps = c("Rcpp")) {
 
   cran.toc <- .pkgenv[["cran.toc"]]
 
-  # 2 Validate
-  # 2.1 Check if Package exists in our records
-  if (nrow(dfk) == 0) {
-    message2()
-    message1("groundhog.library() does not have the package ", pkg, " indexed so it cannot install or use it. Note: It only has CRAN packages")
-    stop()
-  }
   # 2.2 Check if date request comes after first date for that package
   if (dfk$Published[1] > date) {
     message2()
