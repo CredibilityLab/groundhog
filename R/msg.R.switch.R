@@ -12,7 +12,7 @@
 #' @export
 msg.R.switch <- function(date) {
   rv <- r.version.check(date)
-  paste0(
+  message1(
     "####################################################################################################\n",
     "INSTRUCTIONS TO RUN OLDER R VERSIONS IN R STUDIO:\n(copy-paste somewhere to have available when you close this window)\n\n",
     "WINDOWS:\n",
