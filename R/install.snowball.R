@@ -23,6 +23,11 @@
 install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
                              force.source = FALSE, plot.console = TRUE,
                              quiet.install = TRUE, current.deps = "Rcpp") {
+
+  # Search paths are reinitialized everytime, to allow the co-existence of
+  # multiple versions.
+  .pkgenv[["libPaths"]] <- .libPaths()
+
   # 0 Get the snowball
   snowball <- get.snowball(pkg, date, include.suggests, force.install, current.deps)
 
