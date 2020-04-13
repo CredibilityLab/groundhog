@@ -30,4 +30,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 Suggests: 
     covr,
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
