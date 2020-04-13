@@ -24,7 +24,7 @@ update_cran.toc_if.needed <- function(date) {
       " reproducibility of your script, given time zone differences and ",
       "delays in updating different CRAN mirrors, don't use a date more ",
       "recent than two days ago, (i.e., the most recent date you may use ",
-      "today with groundhogR is:'", Sys.Date() - 2, "')."
+      "today with groundhogR is:'", format(Sys.Date() - 2), "')."
     )
     stop()
   }
