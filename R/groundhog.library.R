@@ -33,7 +33,7 @@ groundhog.library <- function(
   check.mismatch.R(date)
 
   # 8.4 Get vrs
-  vrs <- get.version(pkg, date)
+  vrs <- get.version(pkg, date, current.deps = current.deps)
   pkg_vrs <- paste0(pkg, "_", vrs)
 
   # 8.5 GET SNOWBALL (#6)
