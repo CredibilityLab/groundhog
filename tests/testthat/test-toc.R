@@ -64,3 +64,16 @@ test_that("cross.toc()", {
   expect_setequal(crosstoc_pkgs$Package, test_pkgs)
 
 })
+
+test_that("update_cran.toc_if.needed()", {
+
+  expect_error(
+    expect_message(update_cran.toc_if.needed("9999-12-31"),
+                   "most recent")
+  )
+
+  expect_false(
+    update_cran.toc_if.needed("1970-01-01")
+  )
+
+})
