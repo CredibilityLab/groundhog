@@ -50,7 +50,7 @@ groundhog.library <- function(
                    quiet.install = quiet.install, current.deps = current.deps)
 
   # 8.8 Do library() call for pkg_vrs
-  library(pkg, character.only = TRUE)
+  library(pkg, character.only = TRUE, lib.loc = .pkgenv[["libPaths"]])
 
   # 8.9  verify success
   message2()

@@ -155,7 +155,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
     } # End of check for whetehr already installed
 
     # Add to libpath, unless it is the one to be installed
-    .libPaths(c(lib.k, .libPaths()))
+    .pkgenv[["libPaths"]] <- c(lib.k, .pkgenv[["libPaths"]])
   } # End loop install
   if (plot.console) {
     cat1.plot(paste0(
