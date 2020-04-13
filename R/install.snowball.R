@@ -4,11 +4,10 @@
 #' which dependencies are installed doesn't generate conflicts.
 #'
 #' @inheritParams get.snowball
+#' @inheritParams install.source
 #' @inheritParams installation.feedback
 #' @param force.install Logical (defaults to `FALSE`). If `TRUE`, even if
 #'   package is found for this R-build, it will reinstall it.
-#' @param quiet.install Logical (defaults to `TRUE`).Run [install.packages()]
-#'   with `quiet = TRUE`?
 #'
 # FIXME: add @return
 #'

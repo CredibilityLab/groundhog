@@ -4,7 +4,13 @@
 \alias{install.source}
 \title{Install package from source}
 \usage{
-install.source(pkg_vrs, lib, date, force.download = FALSE, quiet = FALSE)
+install.source(
+  pkg_vrs,
+  lib,
+  date,
+  force.download = FALSE,
+  quiet.install = FALSE
+)
 }
 \arguments{
 \item{pkg_vrs}{character. The required package and its version separated by
@@ -18,9 +24,8 @@ an underscore.}
 containing the package source code already exists locally, should it be
 downloaded again?}
 
-\item{quiet}{
-    logical: if true, reduce the amount of output.
-  }
+\item{quiet.install}{Logical (defaults to \code{TRUE}).Run \code{\link[=install.packages]{install.packages()}}
+with \code{quiet = TRUE}?}
 }
 \description{
 Install package from source

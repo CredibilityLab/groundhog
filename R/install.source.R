@@ -1,8 +1,9 @@
 #' Install package from source
 #'
-#' @inheritParams utils::install.packages
 #' @inheritParams get.R.pkg.date
 #' @inheritParams get.dependencies
+#' @param quiet.install Logical (defaults to `TRUE`).Run [install.packages()]
+#'   with `quiet = TRUE`?
 #' @param lib character. Path where to install the package.
 #' @param force.download logical (defaults to `FALSE`). If the tarball
 #'   containing the package source code already exists locally, should it be
@@ -12,7 +13,7 @@
 #'
 #' @importFrom utils download.file install.packages
 #'
-install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet = FALSE) {
+install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet.install = FALSE) {
   # 6.1 Preliminaries
   pkg <- get.pkg(pkg_vrs)
   vrs <- get.vrs(pkg_vrs)
@@ -73,7 +74,7 @@ install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet = F
     # Create the folder
     dir.create(lib, showWarnings = FALSE, recursive = TRUE)
     # Install the package
-    install.packages(tarball.path, type = "source", lib = lib, quiet = quiet, dependencies = FALSE, repos = NULL, INSTALL_opts = "--no-staged-install")
+    install.packages(tarball.path, type = "source", lib = lib, quiet = quiet.install, dependencies = FALSE, repos = NULL, INSTALL_opts = "--no-staged-install")
   } # End if success
 
 
