@@ -51,7 +51,7 @@ installation.feedback <- function(k, date, snowball, start.time, plot.console = 
         "> Installation is slow because you are using R-", get.rversion(), "\n",
         "> If you run this script with the R version available on '", date, "', i.e., on R-", get.version("R", date), ",\n",
         "   the entire installation would take about a minute or two.\n",
-        "> Instructions for running older version of R:  http://tiny.cc/SwitchR"
+        "> Instructions for running older version of R:  https://tiny.cc/SwitchR"
       )
     }
 

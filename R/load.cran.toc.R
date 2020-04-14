@@ -19,7 +19,7 @@
 #' @importFrom utils read.csv
 #'
 load.cran.toc <- function(update.toc = FALSE) {
-  groundhogR.url <- "http://groundhogR.com/"
+  groundhogR.url <- "https://groundhogR.com/"
   groundhogR.folder <- get.groundhogr.folder()
 
   # 3.0 Ensure directory for groundhogR exists
