@@ -17,5 +17,12 @@ Get groundhogR folder location
 \note{
 you can change the location of this folder by editing the environment
 variable GROUNDHOG_FOLDER. In R, you can do this with the command
-\code{Sys.setenv(GROUNDHOG_FOLDER = "path")}.
+\code{set.groundhogr.folder("path")}.
+}
+\examples{
+get.groundhogr.folder()
+
+}
+\seealso{
+\code{\link[=set.groundhogr.folder]{set.groundhogr.folder()}}
 }
