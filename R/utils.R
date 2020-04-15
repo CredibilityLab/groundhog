@@ -5,10 +5,6 @@ chooseCRANmirror(graphics = FALSE, ind = 1)
 current.packages <- data.frame(available.packages())[, c(1, 2)]
 current.packages$pkg_vrs <- paste0(current.packages$Package, "_", current.packages$Version)
 
-# 1.3 base packages
-#' @importFrom utils installed.packages
-dep.base <- installed.packages(priority = "base")
-
 # 2.0.5 Parse pkg_vrs into pkg and vrs
 get.pkg <- function(x) substr(x, 1, regexpr("_", basename(x)) - 1)
 get.vrs <- function(x) substr(x, regexpr("_", basename(x)) + 1, nchar(x))
