@@ -55,10 +55,15 @@ groundhog.library <- function(
   # 8.9  verify success
   message2()
 
-  if (pkg_vrs %in% get.active()$pkg_vrs) {
+  loaded_pkg_vrs <- get.active()$pkg_vrs
+
+  if (pkg_vrs %in% loaded_pkg_vrs) {
     message1("Succesfully loaded ", pkg_vrs, " and its ", nrow(snowball) - 1,
              " dependencies.")
   } else {
     message1("FAILED to load ", pkg_vrs)
   }
+
+  invisible(return(loaded_pkg_vrs))
+
 }
