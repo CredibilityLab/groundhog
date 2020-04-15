@@ -27,6 +27,9 @@ downloaded again?}
 \item{quiet.install}{Logical (defaults to \code{TRUE}).Run \code{\link[=install.packages]{install.packages()}}
 with \code{quiet = TRUE}?}
 }
+\value{
+Invisible \code{NULL}.
+}
 \description{
 Install package from source
 }

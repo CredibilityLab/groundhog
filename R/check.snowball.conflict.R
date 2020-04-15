@@ -2,8 +2,6 @@
 #'
 #' @inheritParams estimate.seconds.left
 #'
-# FIXME: add @return
-#'
 check.snowball.conflict <- function(snowball) {
 
   # Load active packages (function 2.14)

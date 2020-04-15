@@ -2,12 +2,15 @@
 #'
 #' @inheritParams get.pkg_search_paths
 #'
-# FIXME: add @return
+#' @return If the package with the specific version number is installed, the
+#'   installation path is returned. Otherwise, an empty string (`""`) is
+#'   returned.
 #'
 #' @examples
 #' \donttest{
 #' get.installed_path("magrittr", "1.5")
 #' }
+#'
 get.installed_path <- function(pkg, vrs) {
   # Get full paths
   pkg_search_paths <- get.pkg_search_paths(pkg, vrs)

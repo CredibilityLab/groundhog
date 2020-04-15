@@ -38,13 +38,16 @@ with \code{quiet = TRUE}?}
 \item{current.deps}{Dependencies that will install current version regardless
 of date.}
 }
+\value{
+Invisible \code{NULL}.
+}
 \description{
 Install given \code{pkg} with the version from \code{date}, making sure the order in
 which dependencies are installed doesn't generate conflicts.
 }
 \examples{
 \donttest{
-install.snowball("magrittr", "2018-02-12")
+install.snowball("magrittr", "2018-02-12", include.suggests = FALSE)
 }
 
 }

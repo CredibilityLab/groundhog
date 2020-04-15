@@ -6,8 +6,8 @@
 #' @param update.toc logical (defaults to `FALSE`). Should `cran.toc` be updated
 #'   from the server if it already exists locally.
 #'
-# FIXME: add @return
-# @return
+#' @return (invisibly) `TRUE`/`FALSE` depending on the success/failure of this
+#'   operation.
 #'
 #' @seealso [update_cran.toc_if.needed]
 #'
@@ -81,6 +81,10 @@ load.cran.toc <- function(update.toc = FALSE) {
   #   }
   #
   #   message1("The file with the list is stored here: ", toc.path, "\n-------------------------------")
+    if (any(inherits(dl_times, "try-error"), inherits(dl_toc, "try-error"))) {
+      return(invisible(FALSE))
+    }
   }
 
+  invisible(TRUE)
 }

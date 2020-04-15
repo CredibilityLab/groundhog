@@ -11,6 +11,9 @@ set.groundhogr.folder(path)
 files will be stored and where packages loaded with \code{\link[=groundhog.library]{groundhog.library()}}
 will be installed.}
 }
+\value{
+(invisibly) \code{TRUE} upon success.
+}
 \description{
 Set groundhogR folder location
 }
@@ -22,7 +25,7 @@ project.
 }
 \examples{
 \dontrun{
-set.groundhogr.folder()
+set.groundhogr.folder("~/.groundhogR")
 }
 
 }

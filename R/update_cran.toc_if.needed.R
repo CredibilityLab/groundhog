@@ -48,8 +48,7 @@ update_cran.toc_if.needed <- function(date) {
       " for it goes only until ", max.date, ".The udate is happening as you read this. "
     )
     # Update the database
-    load.cran.toc(TRUE)
-    return(TRUE)
+    return(load.cran.toc(TRUE))
   } else {
     return(FALSE)
   }

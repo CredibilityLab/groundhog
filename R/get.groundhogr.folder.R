@@ -56,8 +56,10 @@ get.groundhogr.folder <- function() {
 #'
 #' @examples
 #' \dontrun{
-#' set.groundhogr.folder()
+#' set.groundhogr.folder("~/.groundhogR")
 #' }
+#'
+#' @return (invisibly) `TRUE` upon success.
 #'
 #' @export
 #'
