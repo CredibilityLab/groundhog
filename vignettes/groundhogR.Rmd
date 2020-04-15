@@ -26,7 +26,7 @@ In contrast to `library()`, with `groundhog.library()`
 - The version of the package available on that day, is automatically installed if needed
 - All dependencies for that package are installed as available that day.
  
-GroundhogR allows having multiple (possibly all) versions of a package
+groundhogR allows having multiple (possibly all) versions of a package
 available, and loading whichever one is wanted. For an older project you work
 with an older version of a package to ensure reproducibility, while for a new
 project you work with a newer version.
@@ -225,15 +225,15 @@ This section discusses feature of checkpoint that were deemed undesirable and wh
     therefore so would the 500+ packages that depend on it, or those that depend on
     those packages, etc.).
   
-    {groundhogR} tells users which R version is needed to run igraph 0.7 (or any
+    groundhogR tells users which R version is needed to run igraph 0.7 (or any
     package that fails to install), and gives instructions for installing and
     running older R.
 
 2. Multiple identical installations
 
-    Checkpoint starts an empty package library for every project, leading to new
+    checkpoint starts an empty package library for every project, leading to new
     installations of every package needed for every project. If the same package is
-    used for 20 scripts, it is installed 20 times by Checkpoint, and 20 copies are
+    used for 20 scripts, it is installed 20 times byccheckpoint, and 20 copies are
     permanently stored.
   
     groundhogR uses a single comprehensive library that has no duplicate package
