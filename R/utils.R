@@ -25,7 +25,6 @@ as.DateYMD <- function(x) as.Date(x, format = "%Y-%m-%d")
 # 2.2  R Being used
 # 2.2.1 R Date
 get.rdate <- function() {
-  r.current <- R.version$version.string
   date <- paste0(R.version$year, "-", R.version$month, "-", R.version$day)
   return(as.DateYMD(date))
 }
