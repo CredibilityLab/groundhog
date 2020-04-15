@@ -107,7 +107,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
 
       # 3.7 INSTALL K FROM SOURCE IF SUPPOSED TO, OR I STILL NOT INSTALLED
       if (from.k == "source" | !is.pkg_vrs.installed(pkg.k, vrs.k)) {
-        install.source(pkg_vrs.k, lib.k, date)
+        install.source(pkg_vrs.k, lib.k, date, quiet.install = quiet.install)
       }
 
       # 3.8 VERIFY INSTALL
@@ -115,7 +115,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
 
       # 3.8.5 If not success, try source again, forcing download of file
       if (!now.installed) {
-        install.source(pkg_vrs.k, lib.k, date, force.download = TRUE, quiet = quiet.install)
+        install.source(pkg_vrs.k, lib.k, date, force.download = TRUE, quiet.install = quiet.install)
       }
 
       # 3.8.6 Verify install again
