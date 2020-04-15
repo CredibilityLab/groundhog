@@ -67,6 +67,10 @@ set.groundhogr.folder <- function(path) {
 
   renviron_path <- Sys.getenv("R_ENVIRON", "~/.Renviron")
 
+  if (!file.exists(renviron_path)) {
+    file.create(renviron_path)
+  }
+
   env_vars <- readLines(renviron_path)
 
   new_setting <-paste0("GROUNDHOGR_FOLDER=", path)
