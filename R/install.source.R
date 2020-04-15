@@ -9,7 +9,7 @@
 #'   containing the package source code already exists locally, should it be
 #'   downloaded again?
 #'
-# FIXME: add @return
+#' @inherit utils::install.packages return
 #'
 #' @importFrom utils download.file install.packages
 #'
@@ -68,22 +68,17 @@ install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet.ins
     }
   }
 
-  # 6.5 Success downloading?
-  # yes--> install
-  if (file.exists(tarball.path)) {
-    # Create the folder
-    dir.create(lib, showWarnings = FALSE, recursive = TRUE)
-    # Install the package
-    install.packages(tarball.path, type = "source", lib = lib, quiet = quiet.install, dependencies = FALSE, repos = NULL, INSTALL_opts = "--no-staged-install")
-  } # End if success
-
-
-  # 6.6 no--> convey bad news
   if (!file.exists(tarball.path)) {
     message1(
       "could not find the tarball file for package ",
       pkg, " version:", vrs, " in CRAN (", file.url, "). \nMaybe you are offline?."
     )
     stop("Installation failed.")
-  }
+  } else {
+    # Create the folder
+    dir.create(lib, showWarnings = FALSE, recursive = TRUE)
+    # Install the package
+    install.packages(tarball.path, type = "source", lib = lib, quiet = quiet.install, dependencies = FALSE, repos = NULL, INSTALL_opts = "--no-staged-install")
+  } # End if success
+
 } # End of install.source

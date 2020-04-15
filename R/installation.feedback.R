@@ -8,8 +8,6 @@
 #' @param plot.console logical (defaults to `TRUE`). Should detailed feedback
 #'   about the installation process be printed in the plot console.
 #'
-# FIXME: add @return
-#'
 installation.feedback <- function(k, date, snowball, start.time, plot.console = TRUE) {
 
   # Get R being used and needed

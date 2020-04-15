@@ -6,7 +6,8 @@
 #'   depednecies are left installed. With default, `FALSE`, script stops and
 #'   asks for session restart.
 #'
-# FIXME: add @return
+#' @return a character vector containing all active packages for the session,
+#'   with their version number, under the format `pkg_vrs`.
 #'
 #' @examples
 #' groundhog.library("magrittr", "2018-02-12")
@@ -64,6 +65,6 @@ groundhog.library <- function(
     message1("FAILED to load ", pkg_vrs)
   }
 
-  invisible(return(loaded_pkg_vrs))
+  invisible(loaded_pkg_vrs)
 
 }

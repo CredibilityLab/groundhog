@@ -44,6 +44,10 @@ and MRAN attempts, download tar.gz, and install from it.}
 \item{force.install}{Logical (defaults to \code{FALSE}). If \code{TRUE}, even if
 package is found for this R-build, it will reinstall it.}
 }
+\value{
+a character vector containing all active packages for the session,
+with their version number, under the format \code{pkg_vrs}.
+}
 \description{
 8  Final function:   groundhog.library()
 }

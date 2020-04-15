@@ -3,6 +3,13 @@
 #' @param pkgs character vector containing the package names.
 #' @param date1,date2 date range to consider (in the format "%Y-%m-%d").
 #'
+#' @return A `data.frame` with 3 columns:
+#' \describe{
+#'   \item{Version}{The package version number}
+#'   \item{Published}{The date at which the specific version was published}
+#'   \item{Package}{The package name}
+#' }
+#'
 #' @seealso [toc()] for the same function for a single package.
 #'
 #' @examples
@@ -11,12 +18,6 @@
 #' @export
 #'
 cross.toc <- function(pkgs, date1 = "1970-1-1", date2 = Sys.Date()) {
-
-  # TODO: is this really necessary since this function calls toc() which does
-  # the same check?
-  if (is.null(.pkgenv[["cran.toc"]])) {
-    load.cran.toc(update.toc = FALSE)
-  }
 
   toc.all <- lapply(pkgs, function(pkg) {
     tock <- toc(pkg)

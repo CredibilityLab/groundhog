@@ -10,6 +10,10 @@ load.cran.toc(update.toc = FALSE)
 \item{update.toc}{logical (defaults to \code{FALSE}). Should \code{cran.toc} be updated
 from the server if it already exists locally.}
 }
+\value{
+(invisibly) \code{TRUE}/\code{FALSE} depending on the success/failure of this
+operation.
+}
 \description{
 Load a `data.frame`` listing all CRAN packages, with their dependencies and
 publication date.

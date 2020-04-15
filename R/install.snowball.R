@@ -9,11 +9,11 @@
 #' @param force.install Logical (defaults to `FALSE`). If `TRUE`, even if
 #'   package is found for this R-build, it will reinstall it.
 #'
-# FIXME: add @return
+#' @inherit install.source return
 #'
 #' @examples
 #' \donttest{
-#' install.snowball("magrittr", "2018-02-12")
+#' install.snowball("magrittr", "2018-02-12", include.suggests = FALSE)
 #' }
 #'
 #' @seealso [get.snowball()] to determine in which order packages are installed
@@ -167,4 +167,6 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
       "You may clear this window executing 'dev.off()'"
     ))
   }
+
+  invisible(NULL)
 } # End install.snowball()

@@ -11,6 +11,11 @@ get.installed_path(pkg, vrs)
 
 \item{vrs}{character. Version of the package to install.}
 }
+\value{
+If the package with the specific version number is installed, the
+installation path is returned. Otherwise, an empty string (\code{""}) is
+returned.
+}
 \description{
 Check if package version is installed for current or past R versions,
 }
@@ -18,4 +23,5 @@ Check if package version is installed for current or past R versions,
 \donttest{
 get.installed_path("magrittr", "1.5")
 }
+
 }
