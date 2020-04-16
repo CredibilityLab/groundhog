@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 # Front-end overview
 
-The function `groundhog.library()` replaces the functions: `library()` and
+The function `groundhog.library()` substitutes the functions: `library()` and
 `install.packages()`.
   
 In contrast to `library()`, with `groundhog.library()`
