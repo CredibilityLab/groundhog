@@ -42,10 +42,9 @@ installation.feedback <- function(k, date, snowball, start.time, plot.console = 
       "> These estimates will be revised after each package installs, but they will remain noisy estimates.\n\n\n"
     )
 
-
     # Add msg if R mismatch
     if (rv$r.using.major != rv$r.need.major | rv$r.using.minor != rv$r.need.minor) {
-      msg.plot. <- paste0(
+      msg.plot <- paste0(msg.plot,
         "> Installation is slow because you are using R-", get.rversion(), "\n",
         "> If you run this script with the R version available on '", date, "', i.e., on R-", get.version("R", date), ",\n",
         "   the entire installation would take about a minute or two.\n",
