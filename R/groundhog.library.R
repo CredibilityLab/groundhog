@@ -33,6 +33,9 @@ groundhog.library <- function(
   # 8.3 Check for r.mismatch (#2.13)
   check.mismatch.R(date)
 
+  # If package name was given using non-standard evaluation (i.e., unquoted)
+  pkg <- as.character(substitute(pkg))
+
   # 8.4 Get vrs
   vrs <- get.version(pkg, date, current.deps = current.deps)
   pkg_vrs <- paste0(pkg, "_", vrs)
