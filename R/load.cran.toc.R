@@ -12,7 +12,9 @@
 #' @seealso [update_cran.toc_if.needed]
 #'
 #' @examples
+#' \donttest{
 #' load.cran.toc()
+#' }
 #'
 #' @importFrom utils read.csv
 #'
