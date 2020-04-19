@@ -15,26 +15,26 @@ reference:
     - get.groundhogr.folder
     - set.groundhogr.folder
   - title: Internal functions
-    - subtitle: Package/version listing
-    - contents:
-      - load.cran.toc
-      - update_cran.toc_if.needed
-      - get.R.pkg.date
-      - get.date.for.install.binary
-      - get.version
-    - subtitle: Install functions
-    - contents:
-      - install.snowball
-      - install.source
-    - subtitle: Dependency solving
-    - contents:
-      - get.dependencies
-      - get.all.dependencies
-      - get.snowball
-      - check.snowball.conflict
-    - subtitle: Feedback functions
-    - contents:
-      - get.installation.time
-      - estimate.seconds.left
-      - installation.feedback
+  - subtitle: Package/version listing
+  - contents:
+    - load.cran.toc
+    - update_cran.toc_if.needed
+    - get.R.pkg.date
+    - get.date.for.install.binary
+    - get.version
+  - subtitle: Install functions
+  - contents:
+    - install.snowball
+    - install.source
+  - subtitle: Dependency solving
+  - contents:
+    - get.dependencies
+    - get.all.dependencies
+    - get.snowball
+    - check.snowball.conflict
+  - subtitle: Feedback functions
+  - contents:
+    - get.installation.time
+    - estimate.seconds.left
+    - installation.feedback
 
