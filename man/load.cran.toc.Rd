@@ -19,7 +19,9 @@ Load a \code{data.frame} listing all CRAN packages, with their dependencies and
 publication date.
 }
 \examples{
+\donttest{
 load.cran.toc()
+}
 
 }
 \seealso{
