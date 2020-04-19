@@ -44,8 +44,8 @@ update_cran.toc_if.needed <- function(date) {
   if (max.date < date) {
     message2()
     message1(
-      "The date you entered, '", date, "', requires updating your database with the list of CRAN package versions, \n",
-      " for it goes only until ", max.date, ".The udate is happening as you read this. "
+      "The date you entered, '", format(date), "', requires updating your database with the list of CRAN package versions, \n",
+      " for it goes only until ", format(max.date), ".The udate is happening as you read this. "
     )
     # Update the database
     return(load.cran.toc(TRUE))
