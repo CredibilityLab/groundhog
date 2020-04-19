@@ -15,13 +15,11 @@ from the server if it already exists locally.}
 operation.
 }
 \description{
-Load a `data.frame`` listing all CRAN packages, with their dependencies and
+Load a \code{data.frame} listing all CRAN packages, with their dependencies and
 publication date.
 }
 \examples{
-\dontrun{
 load.cran.toc()
-}
 
 }
 \seealso{

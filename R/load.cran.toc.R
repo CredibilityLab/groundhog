@@ -1,6 +1,6 @@
 #' Load `cran.toc`
 #'
-#' Load a `data.frame`` listing all CRAN packages, with their dependencies and
+#' Load a `data.frame` listing all CRAN packages, with their dependencies and
 #' publication date.
 #'
 #' @param update.toc logical (defaults to `FALSE`). Should `cran.toc` be updated
@@ -49,10 +49,8 @@ load.cran.toc <- function(update.toc = FALSE) {
     }
 
     .pkgenv[["cran.times"]] <- cran.times
-  } # End 3.2 - no update
 
-  # 3.3 UPDATE
-  else {
+  } else {
 
     dl_times <- try(download.file(paste0(groundhogR.url, "cran.times.rds"), times.path))
     dl_toc <- try(download.file(paste0(groundhogR.url, "cran.toc.rds"), toc.path))
