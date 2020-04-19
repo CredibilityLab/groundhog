@@ -9,7 +9,10 @@ test_that("groundhog.library()", {
 
   Sys.setenv("GROUNDHOGR_FOLDER" = tmp_gdir)
 
-  res <- groundhog.library("stringr", "2020-01-01")
+  res <- expect_message(
+    groundhog.library("stringr", "2020-01-01"),
+    "Successfully"
+  )
 
   expect_true("stringr_1.4.0" %in% res)
 
