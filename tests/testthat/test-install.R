@@ -1,20 +1,20 @@
 test_that("groundhog.library()", {
 
   tmp_gdir <- file.path(tempdir(), "groundhogR")
-  dir.create(tmp_gdir)
+  dir.create(file.path(tmp_gdir, "_tarballs"))
 
-  file.copy("../../_tarballs/",
-            file.path(tmp_gdir),
+  file.copy(list.files("../../_tarballs/", full.names = TRUE),
+            file.path(tmp_gdir, "_tarballs"),
             recursive = TRUE)
 
   Sys.setenv("GROUNDHOGR_FOLDER" = tmp_gdir)
 
   res <- expect_message(
-    groundhog.library("stringr", "2020-01-01"),
+    groundhog.library("magrittr", "2020-01-01"),
     "Successfully"
   )
 
-  expect_true("stringr_1.4.0" %in% res)
+  expect_true("magrittr_1.5" %in% res)
 
   Sys.unsetenv("GROUNDHOGR_FOLDER")
 
