@@ -24,10 +24,6 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
                              force.source = FALSE, plot.console = TRUE,
                              quiet.install = TRUE, current.deps = "Rcpp") {
 
-  # Search paths are reinitialized everytime, to allow the co-existence of
-  # multiple versions.
-  .pkgenv[["libPaths"]] <- .libPaths()
-
   # 0 Get the snowball
   snowball <- get.snowball(pkg, date, include.suggests, force.install, current.deps)
 
@@ -66,6 +62,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
 
   start.time <- Sys.time() # When loops starts, to compute actual completion time
   for (k in seq_len(nrow(snowball))) {
+    print(.pkgenv[["libPaths"]])
     # 3.0 Assign path
     lib.k <- as.character(snowball[k, "installation.path"])
 
