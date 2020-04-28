@@ -45,7 +45,7 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
   ks <- c(k.pkg, k.R)
 
   # 5. From one to the other (cross2: subset from cross1 where  pkg_vrs to R_vrs or vice versa)
-  cross2 <- cross1[range(ks), ]
+  cross2 <- cross1[min(ks):max(ks), ]
 
   # 6. If the package came first:
   if (k.pkg < k.R) {
