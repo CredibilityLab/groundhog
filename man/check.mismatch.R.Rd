@@ -2,7 +2,7 @@
 % Please edit documentation in R/check.mismatch.R.R
 \name{check.mismatch.R}
 \alias{check.mismatch.R}
-\title{Check mismatch between R versions}
+\title{Check mismatch between \R versions}
 \usage{
 check.mismatch.R(date)
 }
@@ -10,9 +10,9 @@ check.mismatch.R(date)
 \item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
 }
 \description{
-Warn if there is a mismatch between the current and required R version
+Warn if there is a mismatch between the current and required \R version
 }
 \seealso{
 \code{\link[=r.version.check]{r.version.check()}} to get a named list containing the version
-numbers of the R version currently in use and required.
+numbers of the \R version currently in use and required.
 }

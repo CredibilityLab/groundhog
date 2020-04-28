@@ -10,14 +10,14 @@ get.R.pkg.date(pkg_vrs, R_vrs)
 \item{pkg_vrs}{character. The required package and its version separated by
 an underscore.}
 
-\item{R_vrs}{character. The required R version.}
+\item{R_vrs}{character. The required \R version.}
 }
 \value{
 the date of the binary the download from MRAN, in the format
 "\%Y-\%m-\%d".
 }
 \description{
-Get date of binary package from MRAN, given R version being used
+Get date of binary package from MRAN, given \R version being used
 }
 \examples{
 \donttest{

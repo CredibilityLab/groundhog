@@ -2,7 +2,7 @@
 % Please edit documentation in R/r.version.check.R
 \name{r.version.check}
 \alias{r.version.check}
-\title{Compare R versions}
+\title{Compare \R versions}
 \usage{
 r.version.check(date)
 }
@@ -12,18 +12,18 @@ r.version.check(date)
 \value{
 a named \code{list} with the following elements:
 \describe{
-\item{r.using.full}{R version currently in use}
-\item{r.using.major}{Major version number of the R version currently in use}
-\item{r.using.minor}{Minor version number of the R version currently in use}
-\item{r.using.patch}{Patch version number of the R version currently in use}
-\item{r.need.full}{R version currently in use at \code{date}}
-\item{r.need.major}{Major version number of the R version in use at \code{date}}
-\item{r.need.minor}{Minor version number of the R version in use at \code{date}}
-\item{r.need.patch}{Patch version number of the R version in use at \code{date}}
+\item{r.using.full}{\R version currently in use}
+\item{r.using.major}{Major version number of the \R version currently in use}
+\item{r.using.minor}{Minor version number of the \R version currently in use}
+\item{r.using.patch}{Patch version number of the \R version currently in use}
+\item{r.need.full}{\R version currently in use at \code{date}}
+\item{r.need.major}{Major version number of the \R version in use at \code{date}}
+\item{r.need.minor}{Minor version number of the \R version in use at \code{date}}
+\item{r.need.patch}{Patch version number of the \R version in use at \code{date}}
 }
 }
 \description{
-Compare the current R version to the R version at a given \code{date}.`
+Compare the current R version to the \R version at a given \code{date}.`
 }
 \examples{
 \donttest{

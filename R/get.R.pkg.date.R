@@ -1,10 +1,10 @@
 #' Get date of binary package from MRAN
 #'
-#' Get date of binary package from MRAN, given R version being used
+#' Get date of binary package from MRAN, given \R version being used
 #'
 #' @param pkg_vrs character. The required package and its version separated by
 #'   an underscore.
-#' @param R_vrs character. The required R version.
+#' @param R_vrs character. The required \R version.
 #'
 #' @return the date of the binary the download from MRAN, in the format
 #'   "%Y-%m-%d".
