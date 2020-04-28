@@ -51,7 +51,7 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
   if (k.pkg < k.R) {
     # 6.1. If there is another version of the package in the subset, it means it changed before arriving at the desired R, so return ""
     if (sum(cross2$Package == pkg) > 1) {
-      return("1970-01-01")
+      return(as.DateYMD("1970-01-01"))
     }
     # 6.2 If there is only one package in the set, then starting with last row, the desired package is available for that R, take midpoint till next
     if (sum(cross2$Package == pkg) == 1) {
@@ -78,7 +78,7 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
   if (k.pkg > k.R) {
     # 7.1. If there is another version of R, different minor, it changed
     if (sum(cross2$Package == "R") > 1) {
-      return("1970-01-01")
+      return(as.DateYMD("1970-01-01"))
     }
     # 7.2 If there is only one version of R in the set,
     if (sum(cross2$Package == "R") == 1) {
