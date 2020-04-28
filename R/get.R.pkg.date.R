@@ -97,9 +97,8 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
 
   start.date <- as.DateYMD(start.date)
   end.date <- as.DateYMD(end.date)
-  as.numeric(end.date - start.date)
-  mid.date <- as.numeric((end.date - start.date)) / 2 + start.date
 
+  mid.date <- as.numeric((end.date - start.date)) / 2 + start.date
 
   return(mid.date)
 } # End.function 2.11
