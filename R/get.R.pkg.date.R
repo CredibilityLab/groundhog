@@ -35,12 +35,6 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
   k.pkg <- which(pkg_vrs == paste0(cross1$Package, "_", cross1$Version))
   k.R <- which(paste0("R_", R_vrs) == paste0(cross1$Package, "_", cross1$Version))
 
-  # Work around the case where user is on R-devel (which won't be included in
-  # the toc since it's not out yet)
-  if (R_vrs > max(cross1[cross1$Package == "R", "Version"])) {
-    k.R <- nrow(cross1)
-  }
-
   # Line indices that contain either pkg_vrs or R_vrs
   ks <- c(k.pkg, k.R)
 
