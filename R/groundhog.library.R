@@ -27,6 +27,8 @@ groundhog.library <- function(
   force.install = FALSE)
 {
 
+  .pkgenv[["libPaths"]] <- NULL
+
   # 8.2 Update cran.toc() if needed for entered date (#2.12)
   update_cran.toc_if.needed(date)
 
