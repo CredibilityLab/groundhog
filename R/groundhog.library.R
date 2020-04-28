@@ -26,8 +26,8 @@ groundhog.library <- function(
   force.source = FALSE,
   force.install = FALSE)
 {
-
-  .pkgenv[["libPaths"]] <- NULL
+  orig_lib_paths <- .libPaths()
+  on.exit(.libPaths(orig_lib_paths))
 
   # 8.2 Update cran.toc() if needed for entered date (#2.12)
   update_cran.toc_if.needed(date)
@@ -56,7 +56,7 @@ groundhog.library <- function(
                    quiet.install = quiet.install, current.deps = current.deps)
 
   # 8.8 Do library() call for pkg_vrs
-  library(pkg, character.only = TRUE, lib.loc = .pkgenv[["libPaths"]])
+  library(pkg, character.only = TRUE)
 
   # 8.9  verify success
   message2()
