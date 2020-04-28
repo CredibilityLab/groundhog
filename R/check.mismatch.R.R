@@ -1,11 +1,11 @@
-#' Check mismatch between R versions
+#' Check mismatch between \R versions
 #'
-#' Warn if there is a mismatch between the current and required R version
+#' Warn if there is a mismatch between the current and required \R version
 #'
 #' @inheritParams r.version.check
 #'
 #' @seealso [r.version.check()] to get a named list containing the version
-#'   numbers of the R version currently in use and required.
+#'   numbers of the \R version currently in use and required.
 #'
 check.mismatch.R <- function(date) {
   # Get versions of R being used a needed

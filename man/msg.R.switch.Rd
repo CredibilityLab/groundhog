@@ -2,7 +2,7 @@
 % Please edit documentation in R/msg.R.switch.R
 \name{msg.R.switch}
 \alias{msg.R.switch}
-\title{Message about R version swith}
+\title{Message about \R version swith}
 \usage{
 msg.R.switch(date)
 }
@@ -10,11 +10,11 @@ msg.R.switch(date)
 \item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
 }
 \value{
-(invisibly) the full R version in use at \code{date}.
+(invisibly) the full \R version in use at \code{date}.
 }
 \description{
-This message is printed when the R version you currently use does not match
-the R version in use at \code{date}.
+This message is printed when the \R version you currently use does not match
+the \R version in use at \code{date}.
 }
 \seealso{
 \code{\link[=r.version.check]{r.version.check()}}

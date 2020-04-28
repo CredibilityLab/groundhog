@@ -1,11 +1,11 @@
-#' Message about R version swith
+#' Message about \R version swith
 #'
-#' This message is printed when the R version you currently use does not match
-#' the R version in use at `date`.
+#' This message is printed when the \R version you currently use does not match
+#' the \R version in use at `date`.
 #'
 #' @inheritParams r.version.check
 #'
-#' @return (invisibly) the full R version in use at `date`.
+#' @return (invisibly) the full \R version in use at `date`.
 #'
 #' @seealso [r.version.check()]
 #'
