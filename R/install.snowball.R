@@ -62,7 +62,6 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
 
   start.time <- Sys.time() # When loops starts, to compute actual completion time
   for (k in seq_len(nrow(snowball))) {
-    print(.pkgenv[["libPaths"]])
     # 3.0 Assign path
     lib.k <- as.character(snowball[k, "installation.path"])
 
