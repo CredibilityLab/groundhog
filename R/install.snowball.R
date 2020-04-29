@@ -47,15 +47,10 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
   } # End #1 force
 
   # 2. FORCE SOURCE
-  if (force.source) {
-    # Change values from optimized, to 'source'
+  if (force.source || .Platform$pkgType == "source") {
+    # If the user chooses it or we the platform doesn't support binary packages,
+    # we get it from source
     snowball$from <- "source"
-  }
-
-  # FIXME: this is a temporary workaround so that the script doesn't try
-  # to install binaries from MRAN on Linux
-  if (.Platform$OS.type == "unix") {
-    snowball[, "from"] <- "source"
   }
 
   # 3 INSTALLATION LOOP
