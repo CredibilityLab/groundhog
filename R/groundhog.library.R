@@ -29,6 +29,9 @@ groundhog.library <- function(
   orig_lib_paths <- .libPaths()
   on.exit(.libPaths(orig_lib_paths))
 
+  # Empty log folder
+  unlink(list.files(file.path(get.groundhogr.folder(), "logs/")))
+
   # 8.2 Update cran.toc() if needed for entered date (#2.12)
   update_cran.toc_if.needed(date)
 
