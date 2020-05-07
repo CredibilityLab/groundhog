@@ -20,7 +20,7 @@
 #'
 load.cran.toc <- function(update.toc = FALSE) {
   groundhogR.url <- "https://groundhogR.com/"
-  groundhogR.folder <- get.groundhogr.folder()
+  groundhogR.folder <- get.groundhog.folder()
 
   # 3.0 Ensure directory for groundhogR exists
   dir.create(groundhogR.folder, showWarnings = FALSE) # Create if inexistent

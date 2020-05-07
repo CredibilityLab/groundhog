@@ -35,7 +35,7 @@ get.pkg_search_paths <- function(pkg, vrs) {
   subset.R.toc <- subset.R.toc[order(subset.R.toc$Published, decreasing = TRUE), ]
 
   # paths
-  pkg_search_paths <- paste0(get.groundhogr.folder(), "/R-", subset.R.toc$Version, "/", pkg, "_", vrs)
+  pkg_search_paths <- paste0(get.groundhog.folder(), "/R-", subset.R.toc$Version, "/", pkg, "_", vrs)
 
   # Ensure directories exist
   return(pkg_search_paths)
