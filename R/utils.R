@@ -81,22 +81,3 @@ quit.menu <- function(date) {
 
   message1("You typed '", x, "' the script continues...")
 } # End quit.menu
-
-# 2.18 Plot console
-#' @importFrom graphics par plot segments text
-cat1.plot <- function(x) {
-  # Get existing margins to return to them after console use
-  old.par <- par(mar = c(.25, .25, .25, .25))
-  # Return margins to defaults on exit
-  on.exit(par(old.par))
-
-  # Catch user's attention
-  #    plot(c(.25,.5,.75),c(.5,.5,.5),cex=10,pch=16,col='red',xlim=c(0,1))
-  # Sys.sleep(.75)
-  # Set no margins
-  plot(1, 1, col = "white", xaxt = "n", yaxt = "n", xlab = "", ylab = "", xlim = c(0, 1), ylim = c(0, 1))
-  text(.5, 1, "groundhogR's Console", font = 2, col = "cyan4")
-  text(0, .85, adj = c(0, 1), x, font = 1, cex = .9, col = "cyan4")
-  segments(x0 = 0, x1 = .4, y1 = .15, y0 = .15, col = "cyan4")
-  text(0, .1, font = 1, pos = 4, cex = .75, col = "cyan4", "You can avoid this console by running:\ngroundhog.library(..., plot.console=FALSE)")
-}
