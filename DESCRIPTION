@@ -21,7 +21,7 @@ Description: grounghogR seeks to make R scripts that rely on packages
     library(), and including a date in the call. The date is used to call on
     the same version of the package every time (the most recent version
     available on CRAN at that date).
-URL: http://groundhogr.com, https://github.com/bisaloo/groundhogR
+URL: https://groundhogr.com, https://github.com/bisaloo/groundhogR
 BugReports: https://groundhogR.com/bugs
 License: GPL-3
 Encoding: UTF-8
