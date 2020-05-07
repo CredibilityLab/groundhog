@@ -35,6 +35,7 @@ toc <- function(pkg, dependencies = FALSE) {
     stop()
   }
 
+  
   output <- output[order(output$Published), ]
   return(output)
 }

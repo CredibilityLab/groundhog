@@ -1,4 +1,4 @@
-#' Figure out in which order dependencies should be installed to avoid conflicts
+#' Generates dataframe with all dependencies needed to install a package, with version and source of installation
 #'
 #' @inheritParams get.all.dependencies
 #' @param force.source Logical (defaults to `FALSE`). If `TRUE`,` will skip CRAN
