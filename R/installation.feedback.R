@@ -5,7 +5,6 @@
 #'
 #' @inheritParams r.version.check
 #' @inheritParams estimate.seconds.left
-#'   about the installation process be printed in the plot console.
 #'
 installation.feedback <- function(k, date, snowball, start.time) {
 

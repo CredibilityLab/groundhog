@@ -10,7 +10,6 @@ install.snowball(
   include.suggests,
   force.install = FALSE,
   force.source = FALSE,
-  plot.console = TRUE,
   quiet.install = TRUE,
   current.deps = "Rcpp"
 )
@@ -28,9 +27,6 @@ package is found for this R-build, it will reinstall it.}
 
 \item{force.source}{Logical (defaults to \code{FALSE}). If \code{TRUE},` will skip CRAN
 and MRAN attempts, download tar.gz, and install from it.}
-
-\item{plot.console}{logical (defaults to \code{TRUE}). Should detailed feedback
-about the installation process be printed in the plot console.}
 
 \item{quiet.install}{Logical (defaults to \code{TRUE}).Run \code{\link[=install.packages]{install.packages()}}
 with \code{quiet = TRUE}?}

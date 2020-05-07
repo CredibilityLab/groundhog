@@ -2,7 +2,7 @@
 % Please edit documentation in R/get.snowball.R
 \name{get.snowball}
 \alias{get.snowball}
-\title{Figure out in which order dependencies should be installed to avoid conflicts}
+\title{Generates dataframe with all dependencies needed to install a package, with version and source of installation}
 \usage{
 get.snowball(
   pkg,
@@ -27,7 +27,7 @@ and MRAN attempts, download tar.gz, and install from it.}
 of date.}
 }
 \description{
-Figure out in which order dependencies should be installed to avoid conflicts
+Generates dataframe with all dependencies needed to install a package, with version and source of installation
 }
 \examples{
 \donttest{

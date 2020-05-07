@@ -20,5 +20,4 @@ Show table of contents (toc) (package versions and publication dates) for a pkg,
 }
 \examples{
 toc("magrittr")
-
 }
