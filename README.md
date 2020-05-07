@@ -6,9 +6,9 @@
 <!-- badges: start -->
 
 [![R build
-status](https://github.com/groundhogR/groundhogR/workflows/R-CMD-check/badge.svg)](https://github.com/bisaloo/groundhogR/actions)
+status](https://github.com/groundhogR/groundhogR/workflows/R-CMD-check/badge.svg)](https://github.com/groundhogR/groundhogR/actions)
 [![Codecov test
-coverage](https://codecov.io/gh/groundhogR/groundhogR/branch/master/graph/badge.svg)](https://codecov.io/gh/Bisaloo/groundhogR?branch=master)
+coverage](https://codecov.io/gh/groundhogR/groundhogR/branch/master/graph/badge.svg)](https://codecov.io/gh/groundhogR/groundhogR?branch=master)
 <!-- badges: end -->
 
 ## Installation
