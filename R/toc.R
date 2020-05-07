@@ -8,10 +8,8 @@
 #'
 #' @examples
 #' toc("magrittr")
-#'
 #' @export
 toc <- function(pkg, dependencies = FALSE) {
-
   if (is.null(.pkgenv[["cran.toc"]])) {
     load.cran.toc(update.toc = FALSE)
   }
@@ -19,7 +17,7 @@ toc <- function(pkg, dependencies = FALSE) {
 
   if (dependencies) {
     output <- cran.toc[cran.toc$Package == pkg, c("Version", "Published", "Imports", "Depends", "Suggests")]
-  } else{
+  } else {
     output <- cran.toc[cran.toc$Package == pkg, c("Version", "Published")]
   }
 
@@ -35,7 +33,7 @@ toc <- function(pkg, dependencies = FALSE) {
     stop()
   }
 
-  
+
   output <- output[order(output$Published), ]
   return(output)
 }

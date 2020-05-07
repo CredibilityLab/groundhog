@@ -33,18 +33,15 @@ get.rversion <- function() {
 }
 
 message1 <- function(..., domain = NULL, appendLF = TRUE) {
-
   if (.pkgenv[["supportsANSI"]]) {
     message(c("\033[36m", ..., "\033[0m"), domain = domain, appendLF = appendLF)
   } else {
     message(..., domain = NULL, appendLF = TRUE)
   }
-
 }
 message2 <- function(..., domain = NULL, appendLF = TRUE) {
-
   msg <- list(...)
-  if (length(msg)==0) {
+  if (length(msg) == 0) {
     msg <- c("groundhog.library() says [using R-", get.rversion(), "]:")
   }
 
@@ -53,7 +50,6 @@ message2 <- function(..., domain = NULL, appendLF = TRUE) {
   } else {
     message(msg, domain = NULL, appendLF = TRUE)
   }
-
 }
 # 2.8 Automatically name elements in list with name of the objects in the list
 # https://stackoverflow.com/questions/16951080/can-lists-be-created-that-name-themselves-based-on-input-object-names
@@ -84,7 +80,6 @@ quit.menu <- function(date) {
   } # End if quit
 
   message1("You typed '", x, "' the script continues...")
-
 } # End quit.menu
 
 # 2.18 Plot console
@@ -104,6 +99,4 @@ cat1.plot <- function(x) {
   text(0, .85, adj = c(0, 1), x, font = 1, cex = .9, col = "cyan4")
   segments(x0 = 0, x1 = .4, y1 = .15, y0 = .15, col = "cyan4")
   text(0, .1, font = 1, pos = 4, cex = .75, col = "cyan4", "You can avoid this console by running:\ngroundhog.library(..., plot.console=FALSE)")
-
 }
-

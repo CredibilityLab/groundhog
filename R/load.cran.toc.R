@@ -51,9 +51,7 @@ load.cran.toc <- function(update.toc = FALSE) {
     }
 
     .pkgenv[["cran.times"]] <- cran.times
-
   } else {
-
     dl_times <- try(download.file(paste0(groundhogR.url, "cran.times.rds"), times.path))
     dl_toc <- try(download.file(paste0(groundhogR.url, "cran.toc.rds"), toc.path))
 
@@ -63,22 +61,22 @@ load.cran.toc <- function(update.toc = FALSE) {
     .pkgenv[["cran.times"]] <- cran.times
     .pkgenv[["cran.toc"]] <- cran.toc
 
-  #   # Feedback to user on existing cran.toc
-  #   message2()
-  #   message1(
-  #     "This computer had a database with a list of all versions available for each CRAN package up to ",
-  #     max.existing.toc.date + 2, " for a total of N=", nrow(existing.toc), " package versions."
-  #   ) # Add back the two days we took out
-  #   if (is.data.frame(add.toc)) {
-  #     message1(
-  #       "We checked for additions to CRAN since then, and added ",
-  #       nrow(add.toc.net), " additional entries to the list.\n"
-  #     )
-  #   } else {
-  #     message1("We tried to update till today but it did not work")
-  #   }
-  #
-  #   message1("The file with the list is stored here: ", toc.path, "\n-------------------------------")
+    #   # Feedback to user on existing cran.toc
+    #   message2()
+    #   message1(
+    #     "This computer had a database with a list of all versions available for each CRAN package up to ",
+    #     max.existing.toc.date + 2, " for a total of N=", nrow(existing.toc), " package versions."
+    #   ) # Add back the two days we took out
+    #   if (is.data.frame(add.toc)) {
+    #     message1(
+    #       "We checked for additions to CRAN since then, and added ",
+    #       nrow(add.toc.net), " additional entries to the list.\n"
+    #     )
+    #   } else {
+    #     message1("We tried to update till today but it did not work")
+    #   }
+    #
+    #   message1("The file with the list is stored here: ", toc.path, "\n-------------------------------")
     if (any(inherits(dl_times, "try-error"), inherits(dl_toc, "try-error"))) {
       return(invisible(FALSE))
     }
