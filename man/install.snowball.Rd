@@ -43,7 +43,7 @@ which dependencies are installed doesn't generate conflicts.
 }
 \examples{
 \donttest{
-install.snowball("magrittr", "2018-02-12", include.suggests = FALSE)
+groundhogR:::install.snowball("magrittr", "2018-02-12", include.suggests = FALSE)
 }
 
 }

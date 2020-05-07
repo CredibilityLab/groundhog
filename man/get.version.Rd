@@ -19,7 +19,7 @@ Get version from date
 }
 \examples{
 \donttest{
-get.version("magrittr", "2018-02-12")
+groundhogR:::get.version("magrittr", "2018-02-12")
 }
 
 }

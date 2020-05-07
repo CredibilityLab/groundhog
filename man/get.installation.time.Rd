@@ -21,7 +21,7 @@ CRAN data about installation time on their build servers.
 }
 \examples{
 \donttest{
-get.installation.time("magrittr", "1.5")
+groundhogR:::get.installation.time("magrittr", "1.5")
 }
 
 }

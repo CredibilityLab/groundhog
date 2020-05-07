@@ -24,7 +24,7 @@ given \code{date}.
 }
 \examples{
 \donttest{
-get.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
+groundhogR:::get.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
 }
 
 }

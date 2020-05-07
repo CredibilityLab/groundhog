@@ -31,7 +31,7 @@ Generates dataframe with all dependencies needed to install a package, with vers
 }
 \examples{
 \donttest{
-get.snowball("magrittr", "2018-02-12")
+groundhogR:::get.snowball("magrittr", "2018-02-12")
 }
 
 }

@@ -11,7 +11,7 @@
 #'
 #' @examples
 #' \donttest{
-#' get.pkg_search_paths("magrittr", "1.0.1")
+#' groundhogR:::get.pkg_search_paths("magrittr", "1.0.1")
 #' }
 #'
 get.pkg_search_paths <- function(pkg, vrs) {

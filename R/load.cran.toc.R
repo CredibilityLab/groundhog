@@ -13,7 +13,7 @@
 #'
 #' @examples
 #' \donttest{
-#' load.cran.toc()
+#' groundhogR:::load.cran.toc()
 #' }
 #'
 #' @importFrom utils read.csv

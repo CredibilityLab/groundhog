@@ -10,7 +10,7 @@
 #'
 #' @examples
 #' \donttest{
-#' update_cran.toc_if.needed("2020-03-01")
+#' groundhogR:::update_cran.toc_if.needed("2020-03-01")
 #' }
 update_cran.toc_if.needed <- function(date) {
   # 1 Format entered date by user
