@@ -31,7 +31,7 @@ get.date.for.install.binary <- function(pkg_vrs) {
   R_vrs <- rev(R_vrs)
 
   # And put the currently used version first
-  R_vrs <- c(r.using.full, R_vrs[R_vrs!=r.using.full])
+  R_vrs <- c(r.using.full, R_vrs[R_vrs != r.using.full])
 
   for (v in R_vrs) {
     binary.date <- get.R.pkg.date(pkg_vrs, v)

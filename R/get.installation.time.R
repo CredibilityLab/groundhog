@@ -14,7 +14,6 @@
 #' }
 #'
 get.installation.time <- function(pkg, vrs) {
-
   if (is.null(.pkgenv[["cran.times"]])) {
     load.cran.toc()
   }

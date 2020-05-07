@@ -14,11 +14,9 @@
 #'
 #' @examples
 #' cross.toc(c("magrittr", "rlang"), date1 = "2012-02-01", date2 = "2020-02-01")
-#'
 #' @export
 #'
 cross.toc <- function(pkgs, date1 = "1970-1-1", date2 = Sys.Date()) {
-
   toc.all <- lapply(pkgs, function(pkg) {
     tock <- toc(pkg)
     tock$Package <- pkg

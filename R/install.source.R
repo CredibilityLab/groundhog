@@ -77,5 +77,4 @@ install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet.ins
     # Install the package
     install.packages(tarball.path, type = "source", lib = lib, quiet = quiet.install, dependencies = FALSE, repos = NULL, INSTALL_opts = "--no-staged-install")
   } # End if success
-
 } # End of install.source

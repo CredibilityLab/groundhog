@@ -1,4 +1,4 @@
-#' Figure out in which order dependencies should be installed to avoid conflicts
+#' Generates dataframe with all dependencies needed to install a package, with version and source of installation
 #'
 #' @inheritParams get.all.dependencies
 #' @param force.source Logical (defaults to `FALSE`). If `TRUE`,` will skip CRAN
@@ -53,9 +53,9 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
   snowball.MRAN.date <- as.Date(sapply(snowball.pkg_vrs, get.date.for.install.binary), origin = "1970-01-01") # 5.3 Binary date in MRAN?
   snowball.MRAN.date <- as.DateYMD(snowball.MRAN.date)
 
-  #IF force.source==TRUE then all packages will come from source, else, figure out where from
+  # IF force.source==TRUE then all packages will come from source, else, figure out where from
   if (force.source) {
-    snowball.from <- rep_len("source",length(snowball.pkg))
+    snowball.from <- rep_len("source", length(snowball.pkg))
   } else {
     snowball.MRAN <- snowball.MRAN.date != "1970-01-01"
     snowball.from <- ifelse(snowball.MRAN, "MRAN", "source") # MRAN if available, if not source
