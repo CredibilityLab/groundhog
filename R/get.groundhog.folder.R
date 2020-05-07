@@ -1,37 +1,36 @@
-#' Get groundhogR folder location
+#' Get groundhog folder location
 #'
-#' @return the path to the groundhogR folder where groundhogR files will be
+#' @return the path to the groundhog folder where groundhogR files will be
 #'   stored and where packages loaded with [groundhog.library()] will be
 #'   installed.
 #'
 #' @note you can change the location of this folder by editing the environment
 #'   variable GROUNDHOG_FOLDER. In R, you can do this with the command
-#'   `set.groundhogr.folder("path")`.
+#'   `set.groundhog.folder("path")`.
 #'
 #' @examples
-#' get.groundhogr.folder()
+#' get.groundhog.folder()
 #' @export
 #'
-#' @seealso [set.groundhogr.folder()]
-#'
-#'
+#' @seealso [set.groundhog.folder()]
 #'
 
 # Function that gets the groundhogR folder, or prompts user to create it.
-get.groundhogr.folder <- function() {
-  groundhogR.folder <- path.expand(Sys.getenv("GROUNDHOGR_FOLDER"))
+get.groundhog.folder <- function() {
 
+  groundhog.folder <- path.expand(Sys.getenv("GROUNDHOG_FOLDER"))
 
   # If a folder for has not been set, prompt user
-  if (groundhogR.folder == "") {
+  if (groundhog.folder == "") {
     # 1. Put the default folder into a variable to show user
     default.folder <- paste0(path.expand("~"), "/groundhogR/")
 
-
     # a=function() {
     # 2. Show message asking for the desired folder
-    message2("*****************  GroundhogR's directory *********************************************************\n")
-    message2("<PRESS ENTER> to accept the default directory ('", default.folder, "') for saving packages")
+    message2(
+      "*****************  Groundhog's directory *********************************************************\n",
+      "<PRESS ENTER> to accept the default directory ('", default.folder, "') for saving packages"
+    )
     message1(
       "groundhogR needs a directory to use as a library for saving downloaded and installed packages.\n",
       "<PRESS ENTER> to use the default for this computer ('", default.folder, "').\n",
@@ -46,9 +45,13 @@ get.groundhogr.folder <- function() {
 
     # 3 Quite process if asked to, or asnswer is too short or no slashes
     # Looks like 'quit'
-    if (tolower(answer) %in% c("quit", "q", "qui", "qit")) stop("OK folder setting process was stopped.")
+    if (tolower(answer) %in% c("quit", "q", "qui", "qit")) {
+      stop("OK folder setting process was stopped.")
+    }
     # too short
-    if (nchar(answer) < 4 & nchar(answer) > 0) stop(paste0("The folder name '", answer, "' seems too short to be a folder."))
+    if (nchar(answer) < 4 & nchar(answer) > 0) {
+      stop(paste0("The folder name '", answer, "' seems too short to be a folder."))
+    }
 
     # no slashes
     slash.count <- regexpr("/", answer)[1] + regexpr("\\\\", answer)[1]
@@ -57,28 +60,32 @@ get.groundhogr.folder <- function() {
     } # End if no slashes
 
     # 4 If different folder was entered, create it as  means to check for possible error
-    if (file.exists(answer) == FALSE & nchar(answer) > 0) {
-      folder.create <- dir.create(answer, recursive = T, showWarnings = F)
-      if (folder.create == FALSE) stop("The folder you entered is invalid, maybe it has symbols like {,'}]]?")
+    if (!file.exists(answer) & nchar(answer) > 0) {
+      folder.create <- dir.create(answer, recursive = TRUE, showWarnings = FALSE)
+      if (!folder.create) {
+        stop("The folder you entered is invalid, maybe it has symbols like {,'}]]?")
+      }
     } # End if file dodsn't exist
 
-    # 5. Assign groundghogr folder to default or answer
+    # 5. Assign groundghog folder to default or answer
     if (nchar(answer) == 0) {
-      groundhogR.folder <- path.expand(file.path("~", "groundhogR"))
+      groundhog.folder <- path.expand(file.path("~", "groundhogR"))
     } # End if default answer
     if (nchar(answer) > 0) {
-      groundhogR.folder <- answer
+      groundhog.folder <- answer
     } # End if entered answer
 
     # 6   Set it
-    set.groundhogr.folder(groundhogR.folder) # see function below
+    set.groundhog.folder(groundhog.folder) # see function below
 
     # 7  Tell user, wait 7 seconds.
-    message1("The folder was succesfully set to: '", groundhogR.folder, "'")
-    message1("You can undo this selection by running: set.groundhogr.folder('')\n\n\n\n")
+    message1(
+      "The folder was succesfully set to: '", groundhog.folder, "'\n",
+      "You can undo this selection by running: set.groundhog.folder('')\n\n\n\n"
+    )
     Sys.sleep(7)
   } # End if no groundhogR folder
-  return(groundhogR.folder)
+  return(groundhog.folder)
 }
 
 #' Set groundhogR folder location
@@ -94,16 +101,16 @@ get.groundhogr.folder <- function() {
 #'
 #' @examples
 #' \dontrun{
-#' set.groundhogr.folder("~/.groundhogR")
+#' set.groundhog.folder("~/.groundhogR")
 #' }
 #'
 #' @return (invisibly) `TRUE` upon success.
 #'
 #' @export
 #'
-#' @seealso [get.groundhogr.folder()]
+#' @seealso [get.groundhog.folder()]
 #'
-set.groundhogr.folder <- function(path) {
+set.groundhog.folder <- function(path) {
   renviron_path <- Sys.getenv("R_ENVIRON", "~/.Renviron")
 
   if (!file.exists(renviron_path)) {
@@ -112,8 +119,8 @@ set.groundhogr.folder <- function(path) {
 
   env_vars <- readLines(renviron_path)
 
-  new_setting <- paste0("GROUNDHOGR_FOLDER=", path)
-  setting_line <- grep("GROUNDHOGR_FOLDER", env_vars)
+  new_setting <- paste0("GROUNDHOG_FOLDER=", path)
+  setting_line <- grep("GROUNDHOG_FOLDER", env_vars)
 
   if (length(setting_line) > 0) {
     env_vars[setting_line] <- new_setting
@@ -122,5 +129,5 @@ set.groundhogr.folder <- function(path) {
     write(new_setting, renviron_path, sep = "\n", append = TRUE)
   }
 
-  Sys.setenv(GROUNDHOGR_FOLDER = path)
+  Sys.setenv(GROUNDHOG_FOLDER = path)
 }
