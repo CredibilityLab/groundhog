@@ -11,7 +11,7 @@
 #'
 #' @examples
 #' \donttest{
-#' get.date.for.install.binary("magrittr_1.0.1")
+#' groundhogR:::get.date.for.install.binary("magrittr_1.0.1")
 #' }
 #'
 get.date.for.install.binary <- function(pkg_vrs) {

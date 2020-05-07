@@ -21,7 +21,7 @@ minor, in reverse chronological order).
 }
 \examples{
 \donttest{
-get.pkg_search_paths("magrittr", "1.0.1")
+groundhogR:::get.pkg_search_paths("magrittr", "1.0.1")
 }
 
 }

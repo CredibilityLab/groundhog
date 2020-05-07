@@ -8,7 +8,7 @@
 #'
 #' @examples
 #' \donttest{
-#' get.installed_path("magrittr", "1.5")
+#' groundhogR:::get.installed_path("magrittr", "1.5")
 #' }
 #'
 get.installed_path <- function(pkg, vrs) {

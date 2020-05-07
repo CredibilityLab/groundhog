@@ -13,7 +13,7 @@
 #'
 #' @examples
 #' \donttest{
-#' get.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
+#' groundhogR:::get.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
 #' }
 #'
 #' @seealso [get.all.dependencies()] for recursive (=indirect) dependencies
@@ -55,7 +55,7 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
 #'
 #' @examples
 #' \donttest{
-#' get.all.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
+#' groundhogR:::get.all.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
 #' }
 #'
 #' @seealso [get.dependencies()] for direct dependencies only
