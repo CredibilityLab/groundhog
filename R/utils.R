@@ -106,3 +106,4 @@ cat1.plot <- function(x) {
   text(0, .1, font = 1, pos = 4, cex = .75, col = "cyan4", "You can avoid this console by running:\ngroundhog.library(..., plot.console=FALSE)")
 
 }
+
