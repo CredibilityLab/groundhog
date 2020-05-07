@@ -102,7 +102,9 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
 
   # Check desired versio is being delivered, otherwise change date to 1/1/1970
   mran.version <- get.mran.version(pkg, mid.date)
-  if (mran.version != vrs) {
+
+  # this test can return logical(0) so isTRUE is necessary
+  if (!isTRUE(mran.version == vrs)) {
     message1("version mismatch, date set to 1970")
     return(as.DateYMD("1970-01-01"))
   }
