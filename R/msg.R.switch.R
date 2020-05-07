@@ -26,7 +26,7 @@ msg.R.switch <- function(date) {
     "     https://cran.r-project.org/bin/macosx/el-capitan/base/   [since R-3.4.0]\n\n",
 
     "  2) Switch which R you use with a utility called 'R Switch'\navailable from: https://mac.r-project.org/RSwitch-1.2.dmg).\n\n\n",
-    "LINUX and more details for Windows and Mac: http://groundhogR.com/olderR\n",
+    "LINUX and more details for Windows and Mac: https://groundhogR.com/olderR\n",
     " ####################################################################################################\n"
   )
   return(invisible(rv$r.need.full))
