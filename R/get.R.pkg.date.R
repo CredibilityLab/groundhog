@@ -18,7 +18,6 @@
 #' }
 #'
 get.R.pkg.date <- function(pkg_vrs, R_vrs) {
-
   if (is.null(.pkgenv[["cran.toc"]])) {
     load.cran.toc()
   }
@@ -98,30 +97,28 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
   start.date <- as.DateYMD(start.date)
   end.date <- as.DateYMD(end.date)
 
-  #Use day before end-date
-    mid.date <- as.DateYMD((end.date - 1))
-  
-  #Check desired versio is being delivered, otherwise change date to 1/1/1970
-    mran.version=get.mran.version(pkg,mid.date)
-    if (mran.version!=vrs) {
-      message1("version mismatch, date set to 1970")
-      return(as.DateYMD("1970-01-01"))
-    }
-    
-    
-  
+  # Use day before end-date
+  mid.date <- as.DateYMD((end.date - 1))
+
+  # Check desired versio is being delivered, otherwise change date to 1/1/1970
+  mran.version <- get.mran.version(pkg, mid.date)
+  if (mran.version != vrs) {
+    message1("version mismatch, date set to 1970")
+    return(as.DateYMD("1970-01-01"))
+  }
+
+
+
   return(mid.date)
 } # End.function 2.11
 
 
 
-#Function addded on 2020 05 06
-get.mran.version=function(pkg,date) {
-  repok<-paste0("https://mran.microsoft.com/snapshot/",date)
-  ap<-data.frame(available.packages(repos=repok,type='binary'))
-  row<-subset(ap,Package==pkg)
-  version<-as.character(row$Version)
+# Function addded on 2020 05 06
+get.mran.version <- function(pkg, date) {
+  repok <- paste0("https://mran.microsoft.com/snapshot/", date)
+  ap <- data.frame(available.packages(repos = repok, type = "binary"))
+  row <- subset(ap, Package == pkg)
+  version <- as.character(row$Version)
   return(version)
 }
-
-

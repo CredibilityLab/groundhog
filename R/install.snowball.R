@@ -30,9 +30,9 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
   pkg_vrs <- as.character(snowball[nrow(snowball), "pkg_vrs"])
 
   # Don't display progress if no package is missing or installs from source
-  #if (!any(!snowball$installed & snowball$from == "source")) {
-    #plot.console <- FALSE
-  #}
+  # if (!any(!snowball$installed & snowball$from == "source")) {
+  # plot.console <- FALSE
+  # }
 
   # 1. FORCE INSTALL
   if (any(snowball$installed) & force.install) {
@@ -89,18 +89,17 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
       # 3.6 INSTALL K FROM MRAN
       if (from.k == "MRAN") {
         # Try MRAN 1
-           install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k, "/"), dependencies = FALSE, quiet = quiet.install, INSTALL_opts = "--no-staged-install")
-            message1("Attempt #1 to install binary from from MRAN")
+        install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k, "/"), dependencies = FALSE, quiet = quiet.install, INSTALL_opts = "--no-staged-install")
+        message1("Attempt #1 to install binary from from MRAN")
         # Try MRAN 2: If still not installed, try day after (some MRAN days are missing)
-          if (!is.pkg_vrs.installed(pkg.k, vrs.k)) {
+        if (!is.pkg_vrs.installed(pkg.k, vrs.k)) {
           install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k + 1, "/"), dependencies = FALSE, quiet = quiet.install, INSTALL_opts = "--no-staged-install")
           message1("Attempt #2 to install binary from from MRAN")
         }
         # Try MRAN 3: If still not installed, try 2 days earlier
-          if (!is.pkg_vrs.installed(pkg.k, vrs.k)) {
+        if (!is.pkg_vrs.installed(pkg.k, vrs.k)) {
           install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k - 2, "/"), dependencies = FALSE, quiet = quiet.install, INSTALL_opts = "--no-staged-install")
           message1("Attempt #3 to install binary from from MRAN")
-
         }
       } # end MRAN
 
@@ -109,7 +108,6 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
       if (from.k == "source" | !is.pkg_vrs.installed(pkg.k, vrs.k)) {
         install.source(pkg_vrs.k, lib.k, date, quiet.install = quiet.install)
         message1("Attempting to install from source")
-
       }
 
       # 3.8 VERIFY INSTALL
@@ -136,7 +134,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
             "It was worth a try \nbut the install did not work. Follow the instructions below to",
             " try this script in the correct R version."
           )
-          
+
 
           # Long instructions written above
           msg.R.switch(date)
@@ -154,7 +152,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
 
       # Installation succeded
       if (now.installed) {
-        #message2()
+        # message2()
         message1(pkg_vrs.k, " installed succesfully. Saved to: ", lib.k)
         # delete temporary renamed foler if they were created
       }
@@ -163,7 +161,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
     # Add to libpath, unless it is the one to be installed
     .libPaths(c(lib.k, .libPaths()))
   } # End loop install
- 
+
 
   invisible(NULL)
 } # End install.snowball()
