@@ -72,23 +72,23 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
 
       # 3.5 INSTALL K FROM CRAN
       if (from.k == "CRAN") {
-        install.packages(pkg.k, dependencies = FALSE, lib = lib.k, repos = "https://cloud.r-project.org", type = "both", quiet = quiet.install, INSTALL_opts = "--no-staged-install", keep_outputs = file.path(get.groundhogr.folder(), "logs/"))
+        install.packages(pkg.k, dependencies = FALSE, lib = lib.k, repos = "https://cloud.r-project.org", type = "both", quiet = quiet.install, INSTALL_opts = "--no-staged-install", keep_outputs = file.path(get.groundhog.folder(), "logs/"))
         message1("Installing Binary from CRAN")
       }
 
       # 3.6 INSTALL K FROM MRAN
       if (from.k == "MRAN") {
         # Try MRAN 1
-        install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k, "/"), dependencies = FALSE, quiet = quiet.install, INSTALL_opts = "--no-staged-install", keep_outputs = file.path(get.groundhogr.folder(), "logs/"))
+        install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k, "/"), dependencies = FALSE, quiet = quiet.install, INSTALL_opts = "--no-staged-install", keep_outputs = file.path(get.groundhog.folder(), "logs/"))
         message1("Attempt #1 to install binary from from MRAN")
         # Try MRAN 2: If still not installed, try day after (some MRAN days are missing)
         if (!is.pkg_vrs.installed(pkg.k, vrs.k)) {
-          install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k + 1, "/"), dependencies = FALSE, quiet = quiet.install, INSTALL_opts = "--no-staged-install", keep_outputs = file.path(get.groundhogr.folder(), "logs/"))
+          install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k + 1, "/"), dependencies = FALSE, quiet = quiet.install, INSTALL_opts = "--no-staged-install", keep_outputs = file.path(get.groundhog.folder(), "logs/"))
           message1("Attempt #2 to install binary from from MRAN")
         }
         # Try MRAN 3: If still not installed, try 2 days earlier
         if (!is.pkg_vrs.installed(pkg.k, vrs.k)) {
-          install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k - 2, "/"), dependencies = FALSE, quiet = quiet.install, INSTALL_opts = "--no-staged-install", keep_outputs = file.path(get.groundhogr.folder(), "logs/"))
+          install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k - 2, "/"), dependencies = FALSE, quiet = quiet.install, INSTALL_opts = "--no-staged-install", keep_outputs = file.path(get.groundhog.folder(), "logs/"))
           message1("Attempt #3 to install binary from from MRAN")
         }
       } # end MRAN
