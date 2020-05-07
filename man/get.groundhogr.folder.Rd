@@ -21,7 +21,6 @@ variable GROUNDHOG_FOLDER. In R, you can do this with the command
 }
 \examples{
 get.groundhogr.folder()
-
 }
 \seealso{
 \code{\link[=set.groundhogr.folder]{set.groundhogr.folder()}}

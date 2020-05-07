@@ -8,7 +8,6 @@ groundhog.library(
   pkg,
   date,
   quiet.install = TRUE,
-  plot.console = TRUE,
   include.suggests = FALSE,
   current.deps = "Rcpp",
   ignore.package.conflicts = FALSE,
@@ -23,9 +22,6 @@ groundhog.library(
 
 \item{quiet.install}{Logical (defaults to \code{TRUE}).Run \code{\link[=install.packages]{install.packages()}}
 with \code{quiet = TRUE}?}
-
-\item{plot.console}{logical (defaults to \code{TRUE}). Should detailed feedback
-about the installation process be printed in the plot console.}
 
 \item{include.suggests}{Logical (defaults to \code{FALSE}. Should suggested
 packages be installed?}
@@ -53,5 +49,4 @@ with their version number, under the format \code{pkg_vrs}.
 }
 \examples{
 groundhog.library("magrittr", "2018-02-12")
-
 }

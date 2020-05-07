@@ -4,7 +4,7 @@
 \alias{installation.feedback}
 \title{Installation feedback}
 \usage{
-installation.feedback(k, date, snowball, start.time, plot.console = TRUE)
+installation.feedback(k, date, snowball, start.time)
 }
 \arguments{
 \item{k}{numeric. Current step in the snowball process.}
@@ -15,9 +15,6 @@ installation.feedback(k, date, snowball, start.time, plot.console = TRUE)
 
 \item{start.time}{the result of \code{\link[=Sys.time]{Sys.time()}} when the installation process
 started}
-
-\item{plot.console}{logical (defaults to \code{TRUE}). Should detailed feedback
-about the installation process be printed in the plot console.}
 }
 \description{
 Print progress about the package installation process (number of packages
