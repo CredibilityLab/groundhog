@@ -117,10 +117,10 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
 
 
 # Function addded on 2020 05 06
-#' @importFrom utils available.packages
+#' @importFrom utils available.packages contrib.url
 get.mran.version <- function(pkg, date) {
   repok <- paste0("https://mran.microsoft.com/snapshot/", date)
-  ap <- as.data.frame(available.packages(repos = repok, type = "binary"))
+  ap <- as.data.frame(available.packages(contrib.url(repos = repok), type = "binary"))
   version <- as.character(ap$Version[ap$Package == pkg])
   return(version)
 }

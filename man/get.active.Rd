@@ -19,7 +19,7 @@ Get currently active (=loaded) packages in the session, with their version
 }
 \examples{
 \donttest{
-get.active()
+groundhogR:::get.active()
 }
 
 }

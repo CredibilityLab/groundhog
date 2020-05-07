@@ -11,7 +11,7 @@
 #'
 #' @examples
 #' \donttest{
-#' get.active()
+#' groundhogR:::get.active()
 #' }
 #'
 #' @importFrom utils installed.packages
