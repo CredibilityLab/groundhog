@@ -53,10 +53,10 @@ update_cran.toc_if.needed <- function(date) {
 
   # 5 Also update if the  version of R being used is newer than that in cran.toc.rds
   # Get verison of R being used
-  R.using <- paste0(R.version$major, ".", R.version$minor)
+  R.using <- get.rversion()
   tocR <- toc("R")
   # If not in cran.toc, update
-  if (R.using %in% tocR$Version == FALSE) {
+  if (!R.using %in% tocR$Version) {
     message2()
     message1(
       "The file cran.toc.rds,  with the list of CRAN package-versions, is older than the version of R you ",
