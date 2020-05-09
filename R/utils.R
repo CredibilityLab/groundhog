@@ -1,7 +1,3 @@
-# 1.2 Get available packages to see if each attempted to install is new
-current.packages <- data.frame(available.packages(contriburl = contrib.url(repos = "https://cran.r-project.org/")))[, c(1, 2)]
-current.packages$pkg_vrs <- paste0(current.packages$Package, "_", current.packages$Version)
-
 # 2.0.5 Parse pkg_vrs into pkg and vrs
 get.pkg <- function(x) substr(x, 1, regexpr("_", basename(x)) - 1)
 get.vrs <- function(x) substr(x, regexpr("_", basename(x)) + 1, nchar(x))

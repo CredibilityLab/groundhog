@@ -29,7 +29,7 @@ install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet.ins
   # 6.4 Download tarball if needed
   if (!file.exists(tarball.path) | force.download) {
     # 6.4.2 Find tarball in CRAN, based on whether it is current or not current
-    if (pkg_vrs %in% current.packages$pkg_vrs) {
+    if (pkg_vrs %in% .pkgenv[["current.packages"]]$pkg_vrs) {
       file.url <- paste0("https://cran.r-project.org/src/contrib/", pkg_vrs, ".tar.gz")
     } else {
       file.url <- paste0("https://cran.r-project.org/src/contrib/Archive/", pkg, "/", pkg_vrs, ".tar.gz")
