@@ -18,7 +18,9 @@
 
   groundhog_cran <- current.packages$Version[current.packages$Package == "groundhogR"]
 
-  if (package_version(groundhog_cran) > packageVersion("groundhogR")) {
+  # isTRUE() is necessary here because this will return logical(0) is the pkg
+  # is not on CRAN
+  if (isTRUE(package_version(groundhog_cran) > packageVersion("groundhogR"))) {
     packageStartupMessage(
       "A more recent version of groundhogR is available. Please install it by ",
       'running install.packages("groundhogR") and then restart your R session.'
