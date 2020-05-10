@@ -16,7 +16,9 @@
 
   .pkgenv[["current.packages"]] <- current.packages
 
-  if (any(package_version(current.packages$Version) > packageVersion("groundhogR"))) {
+  groundhog_cran <- current.packages$Version[current.packages$Package == "groundhogR"]
+
+  if (package_version(groundhog_cran) > packageVersion("groundhogR")) {
     packageStartupMessage(
       "A more recent version of groundhogR is available. Please install it by ",
       'running install.packages("groundhogR") and then restart your R session.'
