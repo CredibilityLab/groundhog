@@ -17,18 +17,17 @@
 #' @export
 #'
 cross.toc <- function(pkgs, date1 = "1970-1-1", date2 = Sys.Date()) {
-  toc.all <- lapply(pkgs, function(pkg) {
-    tock <- toc(pkg)
-    tock$Package <- pkg
-    return(tock)
-  })
 
-  toc.all <- do.call(rbind, toc.all)
+  if (is.null(.pkgenv[["cran.toc"]])) {
+    load.cran.toc(update.toc = FALSE)
+  }
+  cran.toc <- .pkgenv[["cran.toc"]]
 
-  # Sort
+  toc.all <- cran.toc[cran.toc$Package %in% pkgs, c("Version", "Published", "Package")]
   toc.all <- toc.all[order(toc.all$Published), ]
+  # date subset
   toc.all <- toc.all[toc.all$Published > date1 & toc.all$Published < date2, ]
   rownames(toc.all) <- NULL
-  # date subset
+
   return(toc.all)
 }
