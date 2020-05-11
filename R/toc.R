@@ -35,5 +35,7 @@ toc <- function(pkg, dependencies = FALSE) {
 
 
   output <- output[order(output$Published), ]
+  rownames(output) <- NULL
+
   return(output)
 }
