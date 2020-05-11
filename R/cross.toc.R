@@ -27,6 +27,8 @@ cross.toc <- function(pkgs, date1 = "1970-1-1", date2 = Sys.Date()) {
 
   # Sort
   toc.all <- toc.all[order(toc.all$Published), ]
+  toc.all <- toc.all[toc.all$Published > date1 & toc.all$Published < date2, ]
+  rownames(toc.all) <- NULL
   # date subset
-  return(toc.all[toc.all$Published > date1 & toc.all$Published < date2, ])
+  return(toc.all)
 }
