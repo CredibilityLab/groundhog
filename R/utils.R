@@ -28,12 +28,18 @@ get.rversion <- function() {
   return(r.version)
 }
 
+# message1() are messages that are coloured if the terminal supports it and
+# that have a special "groundhog-msg" class that makes it possible to disable
+# them selectively using suppressMessages(     , class = "groundhog-msg")
 message1 <- function(..., domain = NULL, appendLF = TRUE) {
   if (.pkgenv[["supportsANSI"]]) {
-    message(c("\033[36m", ..., "\033[0m"), domain = domain, appendLF = appendLF)
+    msg <- .makeMessage("\033[36m", ..., "\033[0m", domain = domain, appendLF = appendLF)
   } else {
-    message(..., domain = NULL, appendLF = TRUE)
+    msg <- .makeMessage(..., domain = domain, appendLF = appendLF)
   }
+  msg <- simpleMessage(msg)
+  msg <- structure(msg, class = c("groundhog-msg", class(msg)))
+  message(msg)
 }
 message2 <- function(..., domain = NULL, appendLF = TRUE) {
   msg <- list(...)
@@ -42,10 +48,13 @@ message2 <- function(..., domain = NULL, appendLF = TRUE) {
   }
 
   if (.pkgenv[["supportsANSI"]]) {
-    message(c("\033[1;36m", msg, "\033[0m"), domain = domain, appendLF = appendLF)
+    msg <- .makeMessage("\033[1;36m", msg, "\033[0m", domain = domain, appendLF = appendLF)
   } else {
-    message(msg, domain = NULL, appendLF = TRUE)
+    msg <- .makeMessage(msg, domain = domain, appendLF = appendLF)
   }
+  msg <- simpleMessage(msg)
+  msg <- structure(msg, class = c("groundhog-msg", class(msg)))
+  message(msg)
 }
 # 2.8 Automatically name elements in list with name of the objects in the list
 # https://stackoverflow.com/questions/16951080/can-lists-be-created-that-name-themselves-based-on-input-object-names
