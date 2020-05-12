@@ -50,7 +50,7 @@ test_that("toc()", {
 
   toc_pkg_deps <- toc(test_pkg, dependencies = TRUE)
 
-  expect_named(toc_pkg_deps, c("Version", "Published", "Imports", "Depends", "Suggests"))
+  expect_named(toc_pkg_deps, c("Version", "Published", "Imports", "Depends", "Suggests", "LinkingTo"))
   expect_identical(toc_pkg, toc_pkg_deps[, 1:2])
 
   expect_error(
