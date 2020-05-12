@@ -2,7 +2,6 @@
 
 .pkgenv <- new.env(parent = emptyenv())
 
-#' @importFrom utils packageVersion
 #'
 .onLoad <- function(libname, pkgname) {
   .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
@@ -16,6 +15,13 @@
 
   .pkgenv[["current.packages"]] <- current.packages
 
+}
+
+#' @importFrom utils packageVersion
+.onAttach <- function(libname, pkgname) {
+
+  current.packages <- .pkgenv[["current.packages"]]
+
   groundhog_cran <- current.packages$Version[current.packages$Package == "groundhogR"]
 
   # isTRUE() is necessary here because this will return logical(0) is the pkg
@@ -26,4 +32,5 @@
       'running install.packages("groundhogR") and then restart your R session.'
     )
   }
+
 }
