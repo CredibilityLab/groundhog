@@ -8,12 +8,20 @@ test_that("load.cran.toc()", {
   expect_named(cran.toc, c("Package", "Version", "Imports", "Depends", "Suggests", "LinkingTo", "Published"))
   expect_is(cran.toc$Published, "Date")
 
+  skip_if_not(getRversion() >= "3.2.0", {
+    expect_false(anyNA(cran.toc$Published))
+  })
+
   cran.times <- .pkgenv[["cran.times"]]
 
   expect_is(cran.times, "data.frame")
   expect_named(cran.times, c("pkg_vrs", "installation.time", "update.date"))
   expect_true(min(cran.times$installation.time, na.rm = TRUE) > 0)
   expect_is(cran.times$update.date, "Date")
+
+  skip_if_not(getRversion() >= "3.2.0", {
+    expect_false(anyNA(cran.times$update.date))
+  })
 
 })
 
