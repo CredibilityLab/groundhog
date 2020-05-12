@@ -16,7 +16,7 @@ toc <- function(pkg, dependencies = FALSE) {
   cran.toc <- .pkgenv[["cran.toc"]]
 
   if (dependencies) {
-    output <- cran.toc[cran.toc$Package == pkg, c("Version", "Published", "Imports", "Depends", "Suggests")]
+    output <- cran.toc[cran.toc$Package == pkg, c("Version", "Published", "Imports", "Depends", "Suggests", "LinkingTo")]
   } else {
     output <- cran.toc[cran.toc$Package == pkg, c("Version", "Published")]
   }
