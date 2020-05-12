@@ -30,7 +30,7 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
   vrs <- get.version(pkg, date)
   # Get dependencies if version exists
   row <- cran.toc[cran.toc$Package == pkg & cran.toc$Version == vrs, c("Imports", "Depends", "Suggests","LinkingTo")] # row in mastertoc
-  dep <- c(row$Imports, row$Depends) # merge
+  dep <- c(row$Imports, row$Depends, row$LinkingTo) # merge
   if (include.suggests) {
     dep <- c(dep, row$Suggests) # add 'Suggests' dependencies if requested
   }
