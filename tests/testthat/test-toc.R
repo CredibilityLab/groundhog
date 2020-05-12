@@ -5,7 +5,7 @@ test_that("load.cran.toc()", {
   cran.toc <- .pkgenv[["cran.toc"]]
 
   expect_is(cran.toc, "data.frame")
-  expect_named(cran.toc, c("Package", "Version", "Imports", "Depends", "Suggests", "Published"))
+  expect_named(cran.toc, c("Package", "Version", "Imports", "Depends", "Suggests", "LinkingTo", "Published"))
   expect_is(cran.toc$Published, "Date")
 
   cran.times <- .pkgenv[["cran.times"]]
