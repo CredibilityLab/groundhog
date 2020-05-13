@@ -31,7 +31,10 @@ get.rversion <- function() {
 # message1() are messages that are coloured if the terminal supports it and
 # that have a special "groundhog-msg" class that makes it possible to disable
 # them selectively using suppressMessages(     , class = "groundhog-msg")
-message1 <- function(..., domain = NULL, appendLF = TRUE) {
+message1 <- function(..., domain = NULL, appendLF = TRUE, quiet = getOption("quiet.groundhog", default = FALSE)) {
+  if (quiet) {
+    return(invisible())
+  }
   if (.pkgenv[["supportsANSI"]]) {
     msg <- .makeMessage("\033[36m", ..., "\033[0m", domain = domain, appendLF = appendLF)
   } else {
@@ -41,7 +44,11 @@ message1 <- function(..., domain = NULL, appendLF = TRUE) {
   msg <- structure(msg, class = c("groundhog-msg", class(msg)))
   message(msg)
 }
-message2 <- function(..., domain = NULL, appendLF = TRUE) {
+
+message2 <- function(..., domain = NULL, appendLF = TRUE, quiet = getOption("quiet.groundhog", default = FALSE)) {
+  if (quiet) {
+    return(invisible())
+  }
   msg <- list(...)
   if (length(msg) == 0) {
     msg <- c("groundhog.library() says [using R-", get.rversion(), "]:")
