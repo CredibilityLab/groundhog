@@ -79,7 +79,10 @@ namedList <- function(...) {
 }
 
 # 2.10 Quit menu
-quit.menu <- function(date) {
+quit.menu <- function(date, quiet = getOption("quiet.groundhog", default = FALSE)) {
+  if (quiet) {
+    return(invisible())
+  }
   message1(
     "Type 'Q', 'quit' or 'stop' to stop the script.\nAnything else to continue"
   )
