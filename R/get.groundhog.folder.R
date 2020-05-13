@@ -40,7 +40,7 @@ get.groundhog.folder <- function() {
     )
 
     message2("************************************************************************************************")
-    answer <- readline(prompt = "Please enter your reponse:")
+    answer <- readline(prompt = "Please enter your a path for your groundhog folder")
 
 
     # 3 Quite process if asked to, or asnswer is too short or no slashes
