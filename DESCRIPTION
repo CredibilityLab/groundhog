@@ -1,6 +1,7 @@
 Package: groundhogR
 Title: Reproducible R Scripts Via Version-Specific CRAN-Package Storing and Loading 
 Version: 1.0.0
+Date: 2018-01-01
 Authors@R: c(
     person(given = "Uri",
            family = "Simonsohn",
@@ -13,14 +14,13 @@ Authors@R: c(
            email = "hugo.gruson+R@normalesup.org",
            comment = c(ORCID = "0000-0002-4094-1476"))
     )
-Description: grounghogR seeks to make R scripts that rely on packages
-    reproducible by ensuring that every time a given script is run, the same
-    version of the used pacakges are loaded (instead of whichever version the
-    user running the script happens to have installed). This is achieved by
-    using the new command groundhog.library() instead of the base command
-    library(), and including a date in the call. The date is used to call on
-    the same version of the package every time (the most recent version
-    available on CRAN at that date).
+Description: Make R scripts that rely on packages reproducible by ensuring that
+    every time a given script is run, the same version of the used packages are
+    loaded (instead of whichever version the user running the script happens to
+    have installed). This is achieved by using the new command
+    groundhog.library() instead of the base command library(), and including a
+    date in the call. The date is used to call on the same version of the
+    package every time (the most recent version available on CRAN at that date).
 URL: https://groundhogr.com, https://github.com/groundhogR/groundhogR
 BugReports: https://groundhogR.com/bugs
 License: GPL-3
