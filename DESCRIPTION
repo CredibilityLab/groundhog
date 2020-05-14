@@ -1,5 +1,5 @@
 Package: groundhogR
-Title: Reproducible R Scripts Via Version-Specific CRAN-Package Storing and Loading 
+Title: Reproducible R Scripts via Version-Specific CRAN-Package Storing and Loading 
 Version: 1.0.0
 Date: 2018-01-01
 Authors@R: c(
