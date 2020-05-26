@@ -25,24 +25,38 @@ installation.feedback <- function(k, date, snowball, start.time) {
 
 
   # Show feedback
-  msg.header <- paste0("\n\n\ngroundhog.library() says: Installing '", snowball[k, "pkg_vrs"], "', package #", k, " out of ", N, " needed for '", pkg_vrs, "'")
+  msg.header <- paste0("\n\n\ngroundhog.library(), says [using R-", get.rversion(), "]: Installing '", snowball[k, "pkg_vrs"], "', package #", k, " out of ", N, " needed for '", pkg_vrs, "'")
   msg <- paste0(
-    "> The time now is ", format(Sys.time(), "%H:%M"), ", and we quite roughly estimate the ",
-    "process to end around ", finish.time.estimate, "\n",
+    "> The time now is ", format(Sys.time(), "%H:%M"), ", and we quite roughly estimate the",
+    "  process to end around ", finish.time.estimate, "\n",
     "> It is unlikely to finish after ", finish.time.max, "\n",
-    "> These estimates will be revised after each package installs, but they will remain noisy estimates.\n"
+    "> These estimates will be revised after each package installs,\n",
+    "  but they will remain noisy estimates."
   )
 
-  # Add msg if R mismatch
-  if (rv$r.using.major != rv$r.need.major | rv$r.using.minor != rv$r.need.minor) {
+  # Add msg if R mismatch and recent enough for groundhog
+  if ((rv$r.using.major != rv$r.need.major | rv$r.using.minor != rv$r.need.minor) & date>"2014-09-18") {
     msg <- paste0(
       msg,
       "> Installation is slow because you are using R-", get.rversion(), "\n",
       "> If you run this script with the R version available on the date you entered: '", date, "', i.e., R-", get.version("R", date), ",\n",
-      "   the entire installation would take about a minute or two.\n",
-      "> Instructions for running older version of R:  https://grondhogR.com/olderR"
+      "  the entire installation would take about a minute or two.\n",
+      "> Instructions for running older version of R:  http://groundhogR.com/olderR"
     )
-  }
+	} #End if R mismach
+  
+  #Add message if installing from source taht output has been supressed
+  if (snowball[k,"from"]=="source") {
+	msg <- paste0(
+		msg,
+		"\n\n> When installing a package from source, abundant and fast-speed output is generated \n",
+		" flooding the console where these messages are printed. Thus, groundhog.library() supresses\n",
+		" such output. You may run groundhog.library() with the option 'quiet=FALSE' to display all output."
+	  ) #End of message
+	  } #End of if source file
+	
+		
+  
   message2(msg.header)
   message1(msg)
 }

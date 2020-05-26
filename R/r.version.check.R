@@ -32,7 +32,9 @@ r.version.check <- function(date) {
   r.need.split <- strsplit(r.need.full, "\\.")[[1]]
   r.need.major <- as.numeric(r.need.split[1])
   r.need.minor <- as.numeric(r.need.split[2])
-  r.need.patch <- as.numeric(r.need.split[3])
+  #r.need.patch <- as.numeric(r.need.split[3])
+   r.need.patch <- r.need.split[3]   #version 2.15.1-w generates NA by coercion
+ 
   return(namedList(
     r.using.full, r.using.major, r.using.minor, r.using.patch,
     r.need.full, r.need.major, r.need.minor, r.need.patch

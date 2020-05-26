@@ -27,8 +27,9 @@ load.cran.toc <- function(update.toc = FALSE) {
 
   # 3.1 Paths two databases (toc and times:
   # LOCAL
-  toc.path <- file.path(groundhogR.folder, "cran.toc.rds")
+  toc.path <- file.path(groundhogR.folder,   "cran.toc.rds")
   times.path <- file.path(groundhogR.folder, "cran.times.rds")
+  mran.path <-file.path(groundhogR.folder,   "missing.mran.dates.rds")
 
   # 3.2 JUST LOAD
   if (!update.toc) {
@@ -51,32 +52,32 @@ load.cran.toc <- function(update.toc = FALSE) {
     }
 
     .pkgenv[["cran.times"]] <- cran.times
+    
+    
+    # MRAN missing dates
+      if (file.exists(mran.path)) {
+        missing.mran.dates <- readRDS(mran.path)
+      } else {
+        missing.mran.dates <- readRDS(system.file("missing.mran.dates.rds", package = "groundhogR"))
+      }
+  
+      .pkgenv[["missing.mran.dates"]] <- missing.mran.dates
+    
+      
+    
   } else {
     dl_times <- try(download.file(paste0(groundhogR.url, "cran.times.rds"), times.path))
     dl_toc <- try(download.file(paste0(groundhogR.url, "cran.toc.rds"), toc.path))
+    dl_mran <- try(download.file(paste0(groundhogR.url, "missing.mran.dates.rds"), mran.path))
 
     cran.times <- readRDS(times.path)
     cran.toc <- readRDS(toc.path)
+    missing.mran.dates <- readRDS(mran.path)
 
     .pkgenv[["cran.times"]] <- cran.times
     .pkgenv[["cran.toc"]] <- cran.toc
+    .pkgenv[["missing.mran.dates"]] <- missing.mran.dates
 
-    #   # Feedback to user on existing cran.toc
-    #   message2()
-    #   message1(
-    #     "This computer had a database with a list of all versions available for each CRAN package up to ",
-    #     max.existing.toc.date + 2, " for a total of N=", nrow(existing.toc), " package versions."
-    #   ) # Add back the two days we took out
-    #   if (is.data.frame(add.toc)) {
-    #     message1(
-    #       "We checked for additions to CRAN since then, and added ",
-    #       nrow(add.toc.net), " additional entries to the list.\n"
-    #     )
-    #   } else {
-    #     message1("We tried to update till today but it did not work")
-    #   }
-    #
-    #   message1("The file with the list is stored here: ", toc.path, "\n-------------------------------")
     if (any(inherits(dl_times, "try-error"), inherits(dl_toc, "try-error"))) {
       return(invisible(FALSE))
     }
