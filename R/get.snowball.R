@@ -11,7 +11,7 @@
 #' groundhogR:::get.snowball("magrittr", "2018-02-12")
 #' }
 #'
-get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE, current.deps = "Rcpp") {
+get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE, current.deps ) {
 
   # 1) Get dependencies
   dep12 <- get.all.dependencies(pkg, date, include.suggests = include.suggests)
@@ -39,7 +39,7 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
   snowball.pkg <- c(indep, pkg)
 
   # 4) Get the version of each package
-  snowball.vrs <- vapply(snowball.pkg, get.version, date, current.deps, FUN.VALUE = character(1)) # current.deps replaces the version of those dep with the version that's current when installing
+  snowball.vrs <- vapply(snowball.pkg, get.version, date, current.deps=current.deps, FUN.VALUE = character(1)) # current.deps replaces the version of those dep with the version that's current when installing
   snowball.pkg_vrs <- paste0(snowball.pkg, "_", snowball.vrs)
 
   # 5 Snowball table, with installed | CRAN | MRAN | TARBALL | INSTALLATION TIME

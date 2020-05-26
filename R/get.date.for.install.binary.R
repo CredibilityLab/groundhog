@@ -1,11 +1,8 @@
-#' Get date of binary package from MRAN
-#'
-#' Get date of binary package from MRAN
+#' Get date of binary package-version availability for current R version, on  MRAN
 #'
 #' @inheritParams get.R.pkg.date
 #'
-#' @seealso [get.version()] for the opposite operation: determining the package
-#'   version from a given date.
+#' @seealso [get.version()] for obtaining a package version from a given date
 #'
 #' @inherit get.R.pkg.date return
 #'
