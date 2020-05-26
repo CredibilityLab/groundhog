@@ -17,7 +17,6 @@
 #' @export
 #'
 cross.toc <- function(pkgs, date1 = "1970-1-1", date2 = Sys.Date()) {
-
   if (is.null(.pkgenv[["cran.toc"]])) {
     load.cran.toc(update.toc = FALSE)
   }

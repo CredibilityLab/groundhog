@@ -17,7 +17,6 @@
 
 # Function that gets the groundhogR folder, or prompts user to create it.
 get.groundhog.folder <- function() {
-
   groundhog.folder <- path.expand(Sys.getenv("GROUNDHOG_FOLDER"))
 
   # If a folder for has not been set, prompt user
