@@ -97,29 +97,29 @@ quit.menu <- function(date, quiet = getOption("quiet.groundhog", default = FALSE
   message1("You typed '", x, "' the script continues...")
 } # End quit.menu
 
-#Stop message which does not say error
-stop2 <-function(msg='') {
-		message(msg)
-		opt <- options(show.error.messages=FALSE)
-        on.exit(options(opt))
-        stop()
-		}
-		
-		
-		
+# Stop message which does not say error
+stop2 <- function(msg = "") {
+  message(msg)
+  opt <- options(show.error.messages = FALSE)
+  on.exit(options(opt))
+  stop()
+}
+
+
+
 # Function added on 2020 05 18
-get.available.mran.date <- function(date0, date1)
-    {
-    missing.mran.dates <- .pkgenv[["missing.mran.dates"]]
+get.available.mran.date <- function(date0, date1) {
+  missing.mran.dates <- .pkgenv[["missing.mran.dates"]]
 
-    all.dates=date0:date1                                           #All dates in range
-    available.dates=all.dates[!all.dates %in% missing.mran.dates]       #Those that are not missing
-    if (length(available.dates)==0) return(as.Date("1970-01-01"))   #If none remain, end
-          
-    #Report mid value
-        n.dates=length(available.dates)
-        mid.date.k=round(n.dates/2,0)
-        mid.date=available.dates[mid.date.k]
-        return(as.Date(mid.date,origin="1970-01-01"))
-  }#End of function
+  all.dates <- date0:date1 # All dates in range
+  available.dates <- all.dates[!all.dates %in% missing.mran.dates] # Those that are not missing
+  if (length(available.dates) == 0) {
+    return(as.Date("1970-01-01"))
+  } # If none remain, end
 
+  # Report mid value
+  n.dates <- length(available.dates)
+  mid.date.k <- round(n.dates / 2, 0)
+  mid.date <- available.dates[mid.date.k]
+  return(as.Date(mid.date, origin = "1970-01-01"))
+} # End of function

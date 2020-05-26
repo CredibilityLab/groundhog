@@ -22,21 +22,21 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
 
   cran.toc <- .pkgenv[["cran.toc"]]
   # 1. Get pkg from pkg_vrs
-    pkg <- get.pkg(pkg_vrs)
-    vrs <- get.vrs(pkg_vrs)
+  pkg <- get.pkg(pkg_vrs)
+  vrs <- get.vrs(pkg_vrs)
 
   # 2. cross.toc with R - all available pkg versions and R
-    cross1 <- cross.toc(c(pkg, "R"))
+  cross1 <- cross.toc(c(pkg, "R"))
 
   # 3, Which row have pkg_vrs vs R_vrs
-    k.pkg <- which(pkg_vrs == paste0(cross1$Package, "_", cross1$Version))
-    k.R <- which(paste0("R_", R_vrs) == paste0(cross1$Package, "_", cross1$Version))
+  k.pkg <- which(pkg_vrs == paste0(cross1$Package, "_", cross1$Version))
+  k.R <- which(paste0("R_", R_vrs) == paste0(cross1$Package, "_", cross1$Version))
 
   # Line indices that contain either pkg_vrs or R_vrs
-    ks <- c(k.pkg, k.R)
+  ks <- c(k.pkg, k.R)
 
   # 5. From one to the other (cross2: subset from cross1 where  pkg_vrs to R_vrs or vice versa)
-    cross2 <- cross1[min(ks):max(ks), ]
+  cross2 <- cross1[min(ks):max(ks), ]
 
   # 6. If the package came first:
   if (k.pkg < k.R) {
@@ -92,13 +92,13 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
     } # There is only 1 version of R within set
   } # R with after
 
-    start.date <- as.DateYMD(start.date)
-    end.date <- as.DateYMD(end.date)
+  start.date <- as.DateYMD(start.date)
+  end.date <- as.DateYMD(end.date)
 
   # Return mid-date among available dates
-    mid.date<-get.available.mran.date(start.date, end.date)  #Function below
-    return(mid.date)
-  }
+  mid.date <- get.available.mran.date(start.date, end.date) # Function below
+  return(mid.date)
+}
 
 
 
@@ -110,5 +110,3 @@ get.mran.version <- function(pkg, date) {
   version <- as.character(ap$Version[ap$Package == pkg])
   return(version)
 }
-
-

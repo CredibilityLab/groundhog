@@ -27,9 +27,9 @@ load.cran.toc <- function(update.toc = FALSE) {
 
   # 3.1 Paths two databases (toc and times:
   # LOCAL
-  toc.path <- file.path(groundhogR.folder,   "cran.toc.rds")
+  toc.path <- file.path(groundhogR.folder, "cran.toc.rds")
   times.path <- file.path(groundhogR.folder, "cran.times.rds")
-  mran.path <-file.path(groundhogR.folder,   "missing.mran.dates.rds")
+  mran.path <- file.path(groundhogR.folder, "missing.mran.dates.rds")
 
   # 3.2 JUST LOAD
   if (!update.toc) {
@@ -52,19 +52,16 @@ load.cran.toc <- function(update.toc = FALSE) {
     }
 
     .pkgenv[["cran.times"]] <- cran.times
-    
-    
+
+
     # MRAN missing dates
-      if (file.exists(mran.path)) {
-        missing.mran.dates <- readRDS(mran.path)
-      } else {
-        missing.mran.dates <- readRDS(system.file("missing.mran.dates.rds", package = "groundhogR"))
-      }
-  
-      .pkgenv[["missing.mran.dates"]] <- missing.mran.dates
-    
-      
-    
+    if (file.exists(mran.path)) {
+      missing.mran.dates <- readRDS(mran.path)
+    } else {
+      missing.mran.dates <- readRDS(system.file("missing.mran.dates.rds", package = "groundhogR"))
+    }
+
+    .pkgenv[["missing.mran.dates"]] <- missing.mran.dates
   } else {
     dl_times <- try(download.file(paste0(groundhogR.url, "cran.times.rds"), times.path))
     dl_toc <- try(download.file(paste0(groundhogR.url, "cran.toc.rds"), toc.path))

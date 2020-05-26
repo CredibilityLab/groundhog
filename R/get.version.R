@@ -12,7 +12,7 @@
 #' groundhogR:::get.version("magrittr", "2018-02-12")
 #' }
 #'
-get.version <- function(pkg, date, current.deps = c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders", "RcppParallel","RcppProgress")) {
+get.version <- function(pkg, date, current.deps = c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders", "RcppParallel", "RcppProgress")) {
 
   # 1. Get toc
   dfk <- toc(pkg)
@@ -31,7 +31,7 @@ get.version <- function(pkg, date, current.deps = c("Rcpp", "RcppArmadillo", "BH
     stop2(paste0(
       "groundhog.library() index of packages ends on  ", last.toc.date,
       " which is before the date you entered:", date, ".\nThe index updates automatically "
-	  ))
+    ))
   }
   # 3 If pkg is in current.deps, deliver version for current version of R
   if (pkg %in% current.deps) {
