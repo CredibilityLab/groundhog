@@ -40,7 +40,8 @@ check.mismatch.R <- function(date) {
       )
       message1(
         "This version mismatch has two consequences:\n",
-        "1) Some of the packages you install, and their dependencies, probably will take longer to install, possibly *minutes* longer.\n",
+        "1) Some of the packages you install, and their dependencies, probably will take longer to install,\n",
+		"possibly *minutes* longer.\n",
         "2) There is some chance the original code won't run in the newer R version"
       )
 
@@ -59,7 +60,7 @@ check.mismatch.R <- function(date) {
     if (since.warning <= 60) {
       message2()
       message1(
-        "R Version mismatch. Using: R-", rv$r.using.full, " but the on '", date, "' it was : R-", rv$r.need.full,
+        "R Version mismatch. Using: R-", rv$r.using.full, " but on '", date, "' it was : R-", rv$r.need.full,
         ".\n Full warning shown earlier (scroll up), won't be shown again for the next ", 60 - since.warning, " minutes."
       )
     } # End if recently warned

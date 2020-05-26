@@ -30,7 +30,7 @@ toc <- function(pkg, dependencies = FALSE) {
       "    2. The package name needs to be in quotes: e.g., toc('groundhogR') \n",
       "    3. Only CRAN packages can be loaded via groundhogR"
     )
-    stop()
+    stop2()
   }
 
 

@@ -12,7 +12,7 @@
 #' groundhogR:::get.version("magrittr", "2018-02-12")
 #' }
 #'
-get.version <- function(pkg, date, current.deps = c("Rcpp")) {
+get.version <- function(pkg, date, current.deps = c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders", "RcppParallel","RcppProgress")) {
 
   # 1. Get toc
   dfk <- toc(pkg)
@@ -23,16 +23,15 @@ get.version <- function(pkg, date, current.deps = c("Rcpp")) {
   if (dfk$Published[1] > date) {
     message2()
     message1("According to our records, the package: '", pkg, "' was not yet available on CRAN on '", date, "'")
-    stop()
+    stop2()
   }
   # 2.3 Check if date requested comes before most up to date date
   last.toc.date <- max(cran.toc$Published, na.rm = TRUE)
   if (date > last.toc.date) {
-    stop(
+    stop2(paste0(
       "groundhog.library() index of packages ends on  ", last.toc.date,
-      " which is before the date you entered:", date, ".\nThe index updates automatically ",
-      "every time you call groundhog.library()"
-    )
+      " which is before the date you entered:", date, ".\nThe index updates automatically "
+	  ))
   }
   # 3 If pkg is in current.deps, deliver version for current version of R
   if (pkg %in% current.deps) {
