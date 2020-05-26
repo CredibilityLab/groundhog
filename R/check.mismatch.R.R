@@ -41,7 +41,7 @@ check.mismatch.R <- function(date) {
       message1(
         "This version mismatch has two consequences:\n",
         "1) Some of the packages you install, and their dependencies, probably will take longer to install,\n",
-		"possibly *minutes* longer.\n",
+        "possibly *minutes* longer.\n",
         "2) There is some chance the original code won't run in the newer R version"
       )
 
