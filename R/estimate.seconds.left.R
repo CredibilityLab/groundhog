@@ -18,7 +18,7 @@ estimate.seconds.left <- function(k, start.time, snowball) {
   estimated.total.binary <- time.per.binary * sum(snowball$from != "source" & !snowball$installed) # For binary, assume 5 seconds per package that is not installed
   estimated.total <- estimated.total.source + estimated.total.binary
 
-  # subset of snowball  pacakges left
+  # subset of snowball packages left
   N <- nrow(snowball)
   snowball.left <- snowball[k:N, ]
 

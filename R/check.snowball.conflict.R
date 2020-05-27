@@ -9,7 +9,7 @@ check.snowball.conflict <- function(snowball, force.install) {
   active <- get.active()
 
   # Check if any package that needs to be installed are loaded; separte check from below because even SAME version created conflict
-  if (force.install == TRUE) {
+  if (force.install) {
     conflict.pkg <- snowball$pkg %in% active$pkg
     if (sum(conflict.pkg) > 0) {
       message2()
