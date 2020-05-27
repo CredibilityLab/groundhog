@@ -25,7 +25,7 @@ groundhog.library <- function(
                               force.install = FALSE) {
 
   # 1 Initial check, if pacakge already attached stop package is already attached
-  if (pkg %in% names(utils::sessionInfo()$otherPkgs) == TRUE) {
+  if (pkg %in% names(utils::sessionInfo()$otherPkgs)) {
     message1("A version of the package '", pkg, "' is already loaded.")
     stop2()
     invisible(get.active()$pkg_vrs)
@@ -123,7 +123,7 @@ groundhog.library <- function(
 
   # 9 Show messages
   # 9.1 Show message2() only if nothing was installed (otherwise the header is already there from the installation lines)
-  if (sum(snowball$installed == FALSE) == 0) {
+  if (all(!snowball$installed)) {
     message2()
   }
 
