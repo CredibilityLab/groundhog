@@ -21,11 +21,11 @@ get.installed_path <- function(pkg, vrs) {
     # If directory and file exists, test if package is installed, if file does not exist; it is not installed anyway
     if (file.exists(pathk)) {
       # See if there isa  package there
-      df.pkg <- data.frame(installed.packages(lib.loc = pathk)) # Note: in {groundhogR} each package version gets a 'library' within the R version
+      df.pkg <- as.data.frame(installed.packages(lib.loc = pathk)) # Note: in {groundhogR} each package version gets a 'library' within the R version
       if (nrow(df.pkg) > 0) {
         # If there is, check its version (is unlikely but possible for wrong version to get installed (e.g., wrong Published.date in DESCRIPTION
         # Get installed version
-        installed_version <- subset(df.pkg, Package == pkg)$Version
+        installed_version <- df.pkg$Version[df.pkg$Package == pkg]
         # If different from desired, delete folder
         if (installed_version != vrs) {
           unlink(pathk, recursive = TRUE)
