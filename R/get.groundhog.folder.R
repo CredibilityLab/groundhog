@@ -49,13 +49,13 @@ get.groundhog.folder <- function() {
     }
     # too short
     if (nchar(answer) < 4 & nchar(answer) > 0) {
-      exit(paste0("The folder name '", answer, "' seems too short to be a folder."))
+      exit("The folder name '", answer, "' seems too short to be a folder.")
     }
 
     # no slashes
     slash.count <- regexpr("/", answer)[1] + regexpr("\\\\", answer)[1]
     if (slash.count < 0 & nchar(answer) > 0) {
-      exit(paste0("The directory name '", answer, "' is missing slashes. It does not seem like a proper directory."))
+      exit("The directory name '", answer, "' is missing slashes. It does not seem like a proper directory.")
     } # End if no slashes
 
     # 4 If different folder was entered, create it as  means to check for possible error
