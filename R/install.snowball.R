@@ -147,15 +147,6 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
       # 3.8 VERIFY INSTALL
       now.installed <- is.pkg_vrs.installed(pkg.k, vrs.k)
 
-      # 3.8.5 If not success, try source again, forcing download of file
-      # if (!now.installed) {
-      #  install.source(pkg_vrs.k, lib.k, date, force.download = TRUE, quiet.install = quiet.install)
-      # }
-      # 2020 05 14 Commented out as it makes failure too slow, and unlikely that tarball is incorrectly downloaded.
-
-      # 3.8.6 Verify install again
-      # now.installed <- is.pkg_vrs.installed(pkg.k, vrs.k)
-
       # 3.9 Installation failed
       if (!now.installed) {
 
@@ -191,9 +182,6 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
           message1(msg)
         } # End of if make==""
 
-
-
-
         # Stop the script
         message("\n\n\n----------------   The package ", pkg_vrs, " did NOT install.  Read above for details  -----------------")
         exit()
@@ -203,7 +191,6 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
       if (now.installed) {
         # message2()
         message1(pkg_vrs.k, " installed succesfully. Saved to: ", lib.k)
-        # delete temporary renamed foler if they were created
       }
     } # End of check for whetehr already installed
 
