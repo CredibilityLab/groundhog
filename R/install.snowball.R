@@ -196,9 +196,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
 
         # Stop the script
         message("\n\n\n----------------   The package ", pkg_vrs, " did NOT install.  Read above for details  -----------------")
-        opt <- options(show.error.messages = FALSE)
-        on.exit(options(opt))
-        stop()
+        exit()
       }
 
       # Installation succeded
