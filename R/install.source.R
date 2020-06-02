@@ -78,7 +78,7 @@ install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet.ins
       "could not find the tarball file for package ",
       pkg, " version:", vrs, " in CRAN (", file.url, "). \nMaybe you are offline?."
     )
-    stop2("Installation failed.")
+    exit("Installation failed.")
   } else {
     # Create the folder
     dir.create(lib, showWarnings = FALSE, recursive = TRUE)

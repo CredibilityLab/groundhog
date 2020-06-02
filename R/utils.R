@@ -91,21 +91,17 @@ quit.menu <- function(date, quiet = getOption("quiet.groundhog", default = FALSE
     message2()
     message1("You typed ", x, " so script stops...")
     msg.R.switch(date)
-    stop2("---")
+    exit("---")
   } # End if quit
 
   message1("You typed '", x, "' the script continues...")
 } # End quit.menu
 
 # Stop message which does not say error
-stop2 <- function(msg = "") {
-  message(msg)
-  opt <- options(show.error.messages = FALSE)
-  on.exit(options(opt))
-  stop()
+exit <- function(...) {
+  message1(...)
+  invokeRestart("abort")
 }
-
-
 
 # Function added on 2020 05 18
 get.available.mran.date <- function(date0, date1) {
