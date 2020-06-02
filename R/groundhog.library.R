@@ -27,7 +27,7 @@ groundhog.library <- function(
   # 1 Initial check, if pacakge already attached stop package is already attached
   if (pkg %in% names(utils::sessionInfo()$otherPkgs)) {
     message1("A version of the package '", pkg, "' is already loaded.")
-    stop2()
+    exit()
     invisible(get.active()$pkg_vrs)
   }
 
@@ -50,7 +50,7 @@ groundhog.library <- function(
       "that is as least\nas recent as the entered date (i.e., R>=", rv$r.need.full, ")\n",
       "\n\n   ----------------- Package '", pkg, "' NOT LOADED ----------------"
     )
-    stop2()
+    exit()
   }
 
 
