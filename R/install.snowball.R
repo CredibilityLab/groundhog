@@ -171,15 +171,12 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
         # R TOOLS CHECK
         # WINDOWS and missing R Tools
         if (.Platform$OS.type == "windows" & Sys.which("make") == "") {
-          # Draft message
-          msg <- paste0(
+          message1(
             "\n***RTOOLS ALERT***\nYou need 'R Tools' to install packages from source (e.g., when installing\n",
             "older versions of a package in newer versions of R). R Tools was not found (note that different\n",
             "version of R Tools are needed for different versions of R. You may dowload R Tools from:\n",
             "https://cran.r-project.org/bin/windows/Rtools/ \n\n "
           )
-          # print it
-          message1(msg)
         } # End of if make==""
 
         # Stop the script
