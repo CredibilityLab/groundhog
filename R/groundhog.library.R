@@ -109,7 +109,7 @@ groundhog.library <- function(
   # 8.9.1 If succesfull
   if (pkg_vrs %in% loaded_pkg_vrs) {
     # Success on package
-    msg <- paste0(">Successfully loaded ", pkg_vrs)
+    msg <- c(">Successfully loaded ", pkg_vrs)
     # Add dependencies, if any
     # if (nrow(snowball) > 1) {
     # msg <- paste0(msg, " and its ", nrow(snowball) - 1, " dependencies.")
@@ -118,7 +118,7 @@ groundhog.library <- function(
 
   # 8.9.2 If failure
   if (!pkg_vrs %in% loaded_pkg_vrs) {
-    msg <- paste0("FAILED to load ", pkg_vrs)
+    msg <-c("FAILED to load ", pkg_vrs)
   }
 
   # 9 Show messages
