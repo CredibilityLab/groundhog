@@ -26,7 +26,7 @@ update_cran.toc_if.needed <- function(date) {
       "recent than two days ago, (i.e., the most recent date you may use ",
       "today with groundhogR is:'", format(Sys.Date() - 2), "')."
     )
-    stop2("################### invalid date ##########################")
+    exit("################### invalid date ##########################")
   }
 
   # 2 Load cran.toc if not yet loaded
