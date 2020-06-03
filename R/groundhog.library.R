@@ -27,11 +27,8 @@ groundhog.library <- function(
   # 1 Initial check, if pacakge already attached stop package is already attached
   if (pkg %in% names(utils::sessionInfo()$otherPkgs)) {
     message1("A version of the package '", pkg, "' is already loaded.")
-    exit()
-    invisible(get.active()$pkg_vrs)
+    return(invisible(get.active()$pkg_vrs))
   }
-
-
 
   # Check if using R that's from a version PRIOR to that current for the desired date (prior to current release)
   # e.g., using R-3.3.3 for "2020-01-05"
