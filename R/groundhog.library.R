@@ -103,18 +103,11 @@ groundhog.library <- function(
   # look at loaded packages
   loaded_pkg_vrs <- get.active()$pkg_vrs
 
-  # 8.9.1 If succesfull
+  # 8.9.1 If successful
   if (pkg_vrs %in% loaded_pkg_vrs) {
     # Success on package
     msg <- c(">Successfully loaded ", pkg_vrs)
-    # Add dependencies, if any
-    # if (nrow(snowball) > 1) {
-    # msg <- paste0(msg, " and its ", nrow(snowball) - 1, " dependencies.")
-    # } # End if it has dependencies
-  } # ENd if succesfull
-
-  # 8.9.2 If failure
-  if (!pkg_vrs %in% loaded_pkg_vrs) {
+  } else {
     msg <-c("FAILED to load ", pkg_vrs)
   }
 
