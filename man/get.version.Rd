@@ -16,8 +16,9 @@ get.version(
 
 \item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
 
-\item{current.deps}{Dependencies that will install current version regardless
-of date.}
+\item{current.deps}{Character or character vector listing all packages for
+which the installed version will be the latest version available when your
+\R version came out, regardless of the value for \code{date}.}
 }
 \description{
 Get version from date
