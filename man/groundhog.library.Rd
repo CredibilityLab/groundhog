@@ -50,5 +50,8 @@ with their version number, under the format \code{pkg_vrs}.
 8  Final function:   groundhog.library()
 }
 \examples{
+\dontrun{
 groundhog.library("magrittr", "2018-02-12")
+}
+
 }
