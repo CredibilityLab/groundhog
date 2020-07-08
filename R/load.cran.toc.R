@@ -75,7 +75,7 @@ load.cran.toc <- function(update.toc = FALSE) {
     .pkgenv[["cran.toc"]] <- cran.toc
     .pkgenv[["missing.mran.dates"]] <- missing.mran.dates
 
-    if (any(inherits(dl_times, "try-error"), inherits(dl_toc, "try-error"))) {
+    if (any(inherits(dl_times, "try-error"), inherits(dl_toc, "try-error"), inherits(dl_mran, "try-error"))) {
       return(invisible(FALSE))
     }
   }
