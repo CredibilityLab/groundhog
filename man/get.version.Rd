@@ -4,7 +4,12 @@
 \alias{get.version}
 \title{Get version from date}
 \usage{
-get.version(pkg, date, current.deps = c("Rcpp"))
+get.version(
+  pkg,
+  date,
+  current.deps = c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders",
+    "RcppParallel", "RcppProgress")
+)
 }
 \arguments{
 \item{pkg}{character. Name of the package to install}

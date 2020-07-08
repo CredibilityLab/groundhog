@@ -9,7 +9,7 @@ get.snowball(
   date,
   include.suggests = FALSE,
   force.source = FALSE,
-  current.deps = "Rcpp"
+  current.deps
 )
 }
 \arguments{
