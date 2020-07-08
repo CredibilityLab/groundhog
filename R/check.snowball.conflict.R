@@ -11,7 +11,7 @@ check.snowball.conflict <- function(snowball, force.install) {
   # Check if any package that needs to be installed are loaded; separte check from below because even SAME version created conflict
   if (force.install) {
     conflict.pkg <- snowball$pkg %in% active$pkg
-    if (sum(conflict.pkg) > 0) {
+    if (any(conflict.pkg)) {
       message2()
       message(
         "You selected 'force.install=TRUE' but the following packages that would be installed\n",
