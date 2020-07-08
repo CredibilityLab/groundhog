@@ -10,7 +10,10 @@
 #'   with their version number, under the format `pkg_vrs`.
 #'
 #' @examples
+#' \dontrun{
 #' groundhog.library("magrittr", "2018-02-12")
+#' }
+#'
 #' @importFrom utils capture.output
 #'
 #' @export
