@@ -3,7 +3,7 @@
 #' @inheritParams install.snowball
 #' @param ignore.package.conflicts Logical (defaults to `FALSE`). With `TRUE`,
 #'   if an already attached package will be installed, it is detached, but all
-#'   depednecies are left installed. With default, `FALSE`, script stops and
+#'   dependencies are left installed. With default, `FALSE`, script stops and
 #'   asks for session restart.
 #'
 #' @return a character vector containing all active packages for the session,
@@ -24,7 +24,7 @@ groundhog.library <- function(
                               force.source = FALSE,
                               force.install = FALSE) {
 
-  # 1 Initial check, if pacakge already attached stop package is already attached
+  # 1 Initial check, if package already attached stop package is already attached
   if (pkg %in% names(utils::sessionInfo()$otherPkgs)) {
     message1("A version of the package '", pkg, "' is already loaded.")
     return(invisible(get.active()$pkg_vrs))
