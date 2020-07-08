@@ -11,7 +11,8 @@ install.snowball(
   force.install = FALSE,
   force.source = FALSE,
   quiet.install = TRUE,
-  current.deps = "Rcpp"
+  current.deps = c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders",
+    "RcppParallel", "RcppProgress")
 )
 }
 \arguments{

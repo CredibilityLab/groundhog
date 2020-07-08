@@ -2,7 +2,7 @@
 % Please edit documentation in R/get.R.pkg.date.R
 \name{get.R.pkg.date}
 \alias{get.R.pkg.date}
-\title{Get date of binary package from MRAN}
+\title{Get date of binary package from MRAN, given \R version being used}
 \usage{
 get.R.pkg.date(pkg_vrs, R_vrs)
 }

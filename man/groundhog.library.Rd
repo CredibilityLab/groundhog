@@ -9,7 +9,8 @@ groundhog.library(
   date,
   quiet.install = TRUE,
   include.suggests = FALSE,
-  current.deps = "Rcpp",
+  current.deps = c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders",
+    "RcppParallel", "RcppProgress"),
   ignore.package.conflicts = FALSE,
   force.source = FALSE,
   force.install = FALSE

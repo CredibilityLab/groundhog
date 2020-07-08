@@ -2,7 +2,7 @@
 % Please edit documentation in R/get.date.for.install.binary.R
 \name{get.date.for.install.binary}
 \alias{get.date.for.install.binary}
-\title{Get date of binary package from MRAN}
+\title{Get date of binary package-version availability for current R version, on  MRAN}
 \usage{
 get.date.for.install.binary(pkg_vrs)
 }
@@ -15,7 +15,7 @@ the date of the binary the download from MRAN, in the format
 "\%Y-\%m-\%d".
 }
 \description{
-Get date of binary package from MRAN
+Get date of binary package-version availability for current R version, on  MRAN
 }
 \examples{
 \donttest{
@@ -24,6 +24,5 @@ groundhogR:::get.date.for.install.binary("magrittr_1.0.1")
 
 }
 \seealso{
-\code{\link[=get.version]{get.version()}} for the opposite operation: determining the package
-version from a given date.
+\code{\link[=get.version]{get.version()}} for obtaining a package version from a given date
 }
