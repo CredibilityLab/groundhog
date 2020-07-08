@@ -8,6 +8,9 @@ check.snowball.conflict(snowball, force.install)
 }
 \arguments{
 \item{snowball}{the result of \code{\link[=get.snowball]{get.snowball()}}.}
+
+\item{force.install}{Logical (defaults to \code{FALSE}). If \code{TRUE}, even if
+package is found for this R-build, it will reinstall it.}
 }
 \description{
 Check snowball conflict
