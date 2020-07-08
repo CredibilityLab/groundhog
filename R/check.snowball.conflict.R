@@ -1,6 +1,7 @@
 #' Check snowball conflict
 #'
 #' @inheritParams estimate.seconds.left
+#' @inheritParams install.snowball
 #'
 check.snowball.conflict <- function(snowball, force.install) {
   # short name for package being installed/loaded
