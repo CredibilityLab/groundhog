@@ -3,8 +3,9 @@
 #' @inheritParams get.all.dependencies
 #' @param force.source Logical (defaults to `FALSE`). If `TRUE`,` will skip CRAN
 #'   and MRAN attempts, download tar.gz, and install from it.
-#' @param current.deps Dependencies that will install current version regardless
-#'   of date.
+#' @param current.deps Character or character vector listing all packages for
+#'   which the installed version will be the latest version available when your
+#'   \R version came out, regardless of the value for `date`.
 #'
 #' @examples
 #' \donttest{

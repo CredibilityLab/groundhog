@@ -27,8 +27,9 @@ with \code{quiet = TRUE}?}
 \item{include.suggests}{Logical (defaults to \code{FALSE}. Should suggested
 packages be installed?}
 
-\item{current.deps}{Dependencies that will install current version regardless
-of date.}
+\item{current.deps}{Character or character vector listing all packages for
+which the installed version will be the latest version available when your
+\R version came out, regardless of the value for \code{date}.}
 
 \item{ignore.package.conflicts}{Logical (defaults to \code{FALSE}). With \code{TRUE},
 if an already attached package will be installed, it is detached, but all

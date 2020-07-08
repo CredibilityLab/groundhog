@@ -23,8 +23,9 @@ packages be installed?}
 \item{force.source}{Logical (defaults to \code{FALSE}). If \code{TRUE},` will skip CRAN
 and MRAN attempts, download tar.gz, and install from it.}
 
-\item{current.deps}{Dependencies that will install current version regardless
-of date.}
+\item{current.deps}{Character or character vector listing all packages for
+which the installed version will be the latest version available when your
+\R version came out, regardless of the value for \code{date}.}
 }
 \description{
 Generates dataframe with all dependencies needed to install a package, with version and source of installation
