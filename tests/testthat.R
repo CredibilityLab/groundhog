@@ -1,4 +1,7 @@
 library(testthat)
 library(groundhogR)
 
-test_check("groundhogR")
+if (R.version$status == "") {
+  test_check("groundhogR")
+}
+
