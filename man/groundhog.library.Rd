@@ -33,7 +33,7 @@ which the installed version will be the latest version available when your
 
 \item{ignore.package.conflicts}{Logical (defaults to \code{FALSE}). With \code{TRUE},
 if an already attached package will be installed, it is detached, but all
-depednecies are left installed. With default, \code{FALSE}, script stops and
+dependencies are left installed. With default, \code{FALSE}, script stops and
 asks for session restart.}
 
 \item{force.source}{Logical (defaults to \code{FALSE}). If \code{TRUE},` will skip CRAN
