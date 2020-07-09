@@ -27,9 +27,12 @@ test_that("load.cran.toc()", {
 
 test_that("update_cran.toc_if.needed()", {
 
-  expect_error(
-    expect_message(update_cran.toc_if.needed("9999-01-01"), "most recent date")
-  )
+  # This error has been replaced by a exit() which doesn't play well with
+  # testthat
+
+  # expect_error(
+  #   expect_message(update_cran.toc_if.needed("9999-01-01"), "most recent date")
+  # )
 
   expect_false(update_cran.toc_if.needed("2020-01-01"))
 
@@ -53,9 +56,12 @@ test_that("toc()", {
   expect_named(toc_pkg_deps, c("Version", "Published", "Imports", "Depends", "Suggests", "LinkingTo"))
   expect_identical(toc_pkg, toc_pkg_deps[, 1:2])
 
-  expect_error(
-    expect_message(toc(""), "no package")
-  )
+  # This error has been replaced by a exit() which doesn't play well with
+  # testthat
+
+  # expect_error(
+  #   expect_message(toc(""), "no package")
+  # )
 
 })
 
@@ -75,10 +81,13 @@ test_that("cross.toc()", {
 
 test_that("update_cran.toc_if.needed()", {
 
-  expect_error(
-    expect_message(update_cran.toc_if.needed("9999-12-31"),
-                   "most recent")
-  )
+  # This error has been replaced by a exit() which doesn't play well with
+  # testthat
+
+  # expect_error(
+  #   expect_message(update_cran.toc_if.needed("9999-12-31"),
+  #                  "most recent")
+  # )
 
   expect_false(
     update_cran.toc_if.needed("1970-01-01")
