@@ -124,8 +124,8 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
         if (!is.pkg_vrs.installed(pkg.k, vrs.k)) # if still not installed
           {
             # Set date for mran, midpoint of available dates around requested date  +-10 days,
-            toc.pkg <- toc(pkg)
-            date.Published <- toc.pkg$Published[toc.pkg$Version == vrs] + 2
+            toc.pkg <- toc(pkg.k)
+            date.Published <- toc.pkg$Published[toc.pkg$Version == vrs.k] + 2
             max.date.published <- min(Sys.Date() - 2, date.Published + 20) # Use as highest possible mran published date, 2 days ago
             mran.published.date <- get.available.mran.date(date.Published, max.date.published) # Function get.available.mran.date() in utils.R
             # Treat as current
