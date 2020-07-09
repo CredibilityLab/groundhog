@@ -9,7 +9,7 @@
 #'
 #' @examples
 #' \donttest{
-#' groundhogR:::get.snowball("magrittr", "2018-02-12")
+#' groundhogR:::get.snowball("magrittr", "2018-02-12", current.deps = NULL)
 #' }
 #'
 get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE, current.deps) {
