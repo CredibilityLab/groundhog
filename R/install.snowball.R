@@ -53,6 +53,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
   for (k in seq_len(nrow(snowball))) {
     # 3.0 Assign path
     lib.k <- as.character(snowball[k, "installation.path"])
+    pkg.k <- snowball[k, "pkg"]
 
     # 3.1 Install if needed
     if (!snowball[k, "installed"]) {
@@ -61,7 +62,6 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
       installation.feedback(k, date, snowball, start.time)
 
       # 3.3 Shorter variable names
-      pkg.k <- snowball[k, "pkg"]
       vrs.k <- snowball[k, "vrs"]
       pkg_vrs.k <- snowball[k, "pkg_vrs"]
       from.k <- snowball[k, "from"]
@@ -191,8 +191,14 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
       }
     } # End of check for whetehr already installed
 
-    # Add to libpath, unless it is the one to be installed
-    .libPaths(c(lib.k, .libPaths()))
+    # Force load package
+    loadNamespace(pkg.k, lib.loc = lib.k)
+
+    # If it's the focal package, we also want to attach it
+    if (pkg.k == pkg) {
+      attachNamespace(pkg.k)
+    }
+
   } # End loop install
 
 
