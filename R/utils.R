@@ -115,7 +115,14 @@ get.available.mran.date <- function(date0, date1) {
 
   # Report mid value
   n.dates <- length(available.dates)
-  mid.date.k <- round(n.dates / 2, 0)
+
+  if (n.dates == 0) {
+    message1("You required a package version that was not archived on MRAN")
+    exit()
+  }
+
+  # ceiling() rather than floor() or round() to work when n.dates <- 1
+  mid.date.k <- ceiling(n.dates / 2)
   mid.date <- available.dates[mid.date.k]
   return(as.Date(mid.date, origin = "1970-01-01"))
 } # End of function
