@@ -14,7 +14,7 @@ test_that("estimate.seconds.left()", {
   test_pkg <- "lightr"
   date <- "2020-02-01"
 
-  sb <- get.snowball(test_pkg, date)
+  sb <- get.snowball(test_pkg, date, current.deps = NULL)
 
   expect_silent(
     time_left <- estimate.seconds.left(1, Sys.time() - 180, sb)
