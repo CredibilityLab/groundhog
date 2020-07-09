@@ -32,6 +32,17 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
   k.pkg <- which(pkg_vrs == paste0(cross1$Package, "_", cross1$Version))
   k.R <- which(paste0("R_", R_vrs) == paste0(cross1$Package, "_", cross1$Version))
 
+  # It's possible that cran.toc is outdated and doesn't include the required
+  # version
+  if (length(k.R) == 0 | length(k.pkg) == 0) {
+    load.cran.toc(update.toc = TRUE)
+
+    cross1 <- cross.toc(c(pkg, "R"))
+
+    k.pkg <- which(pkg_vrs == paste0(cross1$Package, "_", cross1$Version))
+    k.R <- which(paste0("R_", R_vrs) == paste0(cross1$Package, "_", cross1$Version))
+  }
+
   # Line indices that contain either pkg_vrs or R_vrs
   ks <- c(k.pkg, k.R)
 
