@@ -55,8 +55,11 @@ test_that("get.version()", {
 
   test_before <- "2010-01-01"
 
-  expect_error(
-    expect_message(get.version(test_pkg, test_before), "not yet available")
-  )
+  # This error has been replaced by a exit() which doesn't play well with
+  # testthat
+
+  # expect_error(
+  #   expect_message(get.version(test_pkg, test_before), "not yet available")
+  # )
 
 })
