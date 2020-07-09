@@ -53,11 +53,6 @@ groundhog.library <- function(
     exit()
   }
 
-
-  # Grab .libpaths()
-  orig_lib_paths <- .libPaths()
-  on.exit(.libPaths(orig_lib_paths))
-
   # 8.2 Update cran.toc() if needed for entered date (#2.12)
   update_cran.toc_if.needed(date)
 
@@ -68,18 +63,13 @@ groundhog.library <- function(
   vrs <- get.version(pkg, date, current.deps = current.deps)
   pkg_vrs <- paste0(pkg, "_", vrs)
 
-
   # 8.5 GET SNOWBALL
   snowball <- get.snowball(pkg, date, include.suggests, current.deps = current.deps)
-
-
-
 
   # 8.6.4 CHECK FOR CONFLICT SNOWBALL <->ACTIVE PACKAGES
   if (!ignore.package.conflicts) {
     check.snowball.conflict(snowball, force.install)
   }
-
 
   # 8.6.5 message if installation will be necessary
   need.to.install.total <- sum(!snowball$installed)
@@ -90,7 +80,7 @@ groundhog.library <- function(
       need.to.install.total, " will need to be installed."
     )
   }
-  # 8.7 Install pacakges if needed
+  # 8.7 Install packages if needed
   install.snowball(pkg, date, include.suggests,
     force.install = force.install,
     force.source = force.source,
@@ -98,11 +88,7 @@ groundhog.library <- function(
     current.deps = current.deps
   )
 
-  # 8.8 Do library() call for pkg_vrs
-  library(pkg, character.only = TRUE, lib.loc = .libPaths()[!.libPaths() %in% orig_lib_paths]) # Exclude from search the default library
-
-
-  # 8.9  Draft success/failure messags
+  # 8.9  Draft success/failure messages
   # look at loaded packages
   loaded_pkg_vrs <- get.active()$pkg_vrs
 
@@ -122,7 +108,6 @@ groundhog.library <- function(
 
   # Show message
   message1(msg)
-
 
   # 10 output
   invisible(loaded_pkg_vrs)
