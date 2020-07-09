@@ -1,7 +1,7 @@
 test_that("groundhog.library()", {
 
   tmp_gdir <- file.path(tempdir(), "groundhogR")
-  dir.create(file.path(tmp_gdir, "_tarballs"))
+  dir.create(file.path(tmp_gdir, "_tarballs"), recursive = TRUE)
 
   file.copy(list.files("../../_tarballs/", full.names = TRUE),
             file.path(tmp_gdir, "_tarballs"),
