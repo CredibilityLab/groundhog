@@ -137,7 +137,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
         if (!is.pkg_vrs.installed(pkg.k, vrs.k)) # if still not installed
           {
             # If fails try archive
-            url6 <- paste0("https://cran.microsoft.com/snapshot/", mran.published.date, "/src/contrib/", pkg_vrs.k, ".tar.gz")
+            url6 <- paste0("https://cran.microsoft.com/snapshot/", mran.published.date, "/src/contrib/Archive/", pkg_vrs.k, ".tar.gz")
             install.packages(url6, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
           }
       }
