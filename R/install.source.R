@@ -48,10 +48,10 @@ install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet.ins
 
     # Attempt source on mran.date
     if (inherits(down.tarball.attempt, "try-error")) {
-      down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/", mran.date, "/src/contrib/", pkg_vrs, ".tar.gz"), destfile = tarball.path))
+      down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/", mran.date, "/src/contrib/", pkg_vrs, ".tar.gz"), destfile = tarball.path, mode = "wb"))
     }
     if (inherits(down.tarball.attempt, "try-error")) {
-      down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/", mran.date, "/src/contrib/Archive/", pkg, "/", pkg_vrs, ".tar.gz"), destfile = tarball.path))
+      down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/", mran.date, "/src/contrib/Archive/", pkg, "/", pkg_vrs, ".tar.gz"), destfile = tarball.path, mode = "wb"))
     }
 
 
@@ -65,10 +65,10 @@ install.source <- function(pkg_vrs, lib, date, force.download = FALSE, quiet.ins
 
       # Attempt source on first day on MRAN
       if (inherits(down.tarball.attempt, "try-error")) {
-        down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/", mran.published.date, "/src/contrib/Archive/", pkg, "/", pkg_vrs, ".tar.gz"), destfile = tarball.path))
+        down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/", mran.published.date, "/src/contrib/Archive/", pkg, "/", pkg_vrs, ".tar.gz"), destfile = tarball.path, mode = "wb"))
       }
       if (inherits(down.tarball.attempt, "try-error")) {
-        down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/", mran.published.date, "/src/contrib/", pkg_vrs, ".tar.gz"), destfile = tarball.path))
+        down.tarball.attempt <- try(download.file(paste0("https://cran.microsoft.com/snapshot/", mran.published.date, "/src/contrib/", pkg_vrs, ".tar.gz"), destfile = tarball.path, mode = "wb"))
       }
     } # End if it was published more than 2 days ago
   }
