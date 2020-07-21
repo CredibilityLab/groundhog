@@ -199,6 +199,9 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
       attachNamespace(pkg.k)
     }
 
+    # We need this because .libPaths() is where available.packages() will check
+    .libPaths(c(lib.k, .libPaths()))
+
   } # End loop install
 
 

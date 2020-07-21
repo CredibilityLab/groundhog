@@ -53,6 +53,10 @@ groundhog.library <- function(
     exit()
   }
 
+  # Grab .libpaths()
+  orig_lib_paths <- .libPaths()
+  on.exit(.libPaths(orig_lib_paths))
+
   # 8.2 Update cran.toc() if needed for entered date (#2.12)
   update_cran.toc_if.needed(date)
 
