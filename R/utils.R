@@ -117,7 +117,10 @@ get.available.mran.date <- function(date0, date1) {
   n.dates <- length(available.dates)
 
   if (n.dates == 0) {
-    message1("You required a package version that was not archived on MRAN")
+    message1(
+      "We looked for the version of the package you need in MRAN ",
+      "but it was not found there"
+    )
     exit()
   }
 
