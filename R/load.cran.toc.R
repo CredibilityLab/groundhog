@@ -19,7 +19,7 @@
 #' @importFrom utils read.csv
 #'
 load.cran.toc <- function(update.toc = FALSE) {
-  groundhogR.url <- "https://groundhogR.com/"
+  groundhogR.url <- "http://groundhogR.com/"
   groundhogR.folder <- get.groundhog.folder()
 
   # 3.0 Ensure directory for groundhogR exists
@@ -63,9 +63,9 @@ load.cran.toc <- function(update.toc = FALSE) {
 
     .pkgenv[["missing.mran.dates"]] <- missing.mran.dates
   } else {
-    dl_times <- try(download.file(paste0(groundhogR.url, "cran.times.rds"), times.path, mode = "wb"))
-    dl_toc <- try(download.file(paste0(groundhogR.url, "cran.toc.rds"), toc.path, mode = "wb"))
-    dl_mran <- try(download.file(paste0(groundhogR.url, "missing.mran.dates.rds"), mran.path, mode = "wb"))
+    dl_times <- try(download.file(paste0(groundhogR.url, "cran.times.rds"), times.path, mode = "wb", method = "internal"))
+    dl_toc <- try(download.file(paste0(groundhogR.url, "cran.toc.rds"), toc.path, mode = "wb", method = "internal"))
+    dl_mran <- try(download.file(paste0(groundhogR.url, "missing.mran.dates.rds"), mran.path, mode = "wb", method = "internal"))
 
     cran.times <- readRDS(times.path)
     cran.toc <- readRDS(toc.path)
