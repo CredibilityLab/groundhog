@@ -41,30 +41,9 @@ get.groundhog.folder <- function() {
     message2("************************************************************************************************")
     answer <- readline(prompt = "Please enter a path for your groundhog folder: >")
 
-
-    # 3 Quite process if asked to, or asnswer is too short or no slashes
-    # Looks like 'quit'
-    if (tolower(answer) %in% c("quit", "q", "qui", "qit")) {
+    if (tolower(answer) == "quit") {
       exit("OK folder setting process was stopped.")
     }
-    # too short
-    if (nchar(answer) < 4 & nchar(answer) > 0) {
-      exit("The folder name '", answer, "' seems too short to be a folder.")
-    }
-
-    # no slashes
-    slash.count <- regexpr("/", answer)[1] + regexpr("\\\\", answer)[1]
-    if (slash.count < 0 & nchar(answer) > 0) {
-      exit("The directory name '", answer, "' is missing slashes. It does not seem like a proper directory.")
-    } # End if no slashes
-
-    # 4 If different folder was entered, create it as  means to check for possible error
-    if (!file.exists(answer) & nchar(answer) > 0) {
-      folder.create <- dir.create(answer, recursive = TRUE, showWarnings = FALSE)
-      if (!folder.create) {
-        exit("The folder you entered is invalid, maybe it has symbols like {,'}]]?")
-      }
-    } # End if file dodsn't exist
 
     # 5. Assign groundghog folder to default or answer
     if (nchar(answer) == 0) {
