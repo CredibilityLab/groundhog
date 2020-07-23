@@ -10,7 +10,7 @@ test_that("groundhog.library()", {
   Sys.setenv("GROUNDHOGR_FOLDER" = tmp_gdir)
 
   res <- expect_message(
-    groundhog.library("magrittr", "2020-01-01"),
+    groundhog.library("magrittr", "2015-01-01"),
     "Successfully"
   )
 
