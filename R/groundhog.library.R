@@ -27,6 +27,9 @@ groundhog.library <- function(
                               force.source = FALSE,
                               force.install = FALSE) {
 
+  # If package name was given using non-standard evaluation (i.e., unquoted)
+  pkg <- as.character(substitute(pkg))
+
   # 1 Initial check, if package already attached stop package is already attached
   if (pkg %in% names(utils::sessionInfo()$otherPkgs)) {
     message1("A version of the package '", pkg, "' is already loaded.")
@@ -59,9 +62,6 @@ groundhog.library <- function(
 
   # 8.2 Update cran.toc() if needed for entered date (#2.12)
   update_cran.toc_if.needed(date)
-
-  # If package name was given using non-standard evaluation (i.e., unquoted)
-  pkg <- as.character(substitute(pkg))
 
   # 8.4 Get vrs
   vrs <- get.version(pkg, date, current.deps = current.deps)
