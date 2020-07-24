@@ -19,10 +19,8 @@ test_that("groundhog.library()", {
   # Test non-standard evaluation
   res <- expect_message(
     groundhog.library(magrittr, "2015-01-01"),
-    "Successfully"
+    "already loaded"
   )
-
-  expect_true("magrittr_1.5" %in% res)
 
   Sys.unsetenv("GROUNDHOGR_FOLDER")
 
