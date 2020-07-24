@@ -38,5 +38,3 @@ test_that("check.snowball.conflict()", {
   expect_silent(check.snowball.conflict(sb, force.install = FALSE))
 
 })
-
-test_that("install.snowball()", {})
