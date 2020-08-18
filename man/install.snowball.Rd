@@ -44,7 +44,7 @@ Install given \code{pkg} with the version from \code{date}, making sure the orde
 which dependencies are installed doesn't generate conflicts.
 }
 \examples{
-\donttest{
+\dontrun{
 groundhogR:::install.snowball("magrittr", "2018-02-12", include.suggests = FALSE)
 }
 

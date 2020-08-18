@@ -12,7 +12,7 @@
 #' @inherit install.source return
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' groundhogR:::install.snowball("magrittr", "2018-02-12", include.suggests = FALSE)
 #' }
 #'
