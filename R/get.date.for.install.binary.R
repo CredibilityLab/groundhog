@@ -7,7 +7,7 @@
 #' @inherit get.R.pkg.date return
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' groundhogR:::get.date.for.install.binary("magrittr_1.0.1")
 #' }
 #'

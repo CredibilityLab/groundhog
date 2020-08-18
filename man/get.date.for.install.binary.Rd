@@ -18,7 +18,7 @@ the date of the binary the download from MRAN, in the format
 Get date of binary package-version availability for current R version, on  MRAN
 }
 \examples{
-\donttest{
+\dontrun{
 groundhogR:::get.date.for.install.binary("magrittr_1.0.1")
 }
 
