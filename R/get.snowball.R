@@ -8,7 +8,7 @@
 #'   released, rather than the value of `date`.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' groundhogR:::get.snowball("magrittr", "2018-02-12", current.deps = NULL)
 #' }
 #'
