@@ -8,7 +8,7 @@
 #'
 #' @examples
 #' \donttest{
-#' groundhogR:::get.installed_path("magrittr", "1.5")
+#' groundhog:::get.installed_path("magrittr", "1.5")
 #' }
 #'
 get.installed_path <- function(pkg, vrs) {
@@ -21,7 +21,7 @@ get.installed_path <- function(pkg, vrs) {
     # If directory and file exists, test if package is installed, if file does not exist; it is not installed anyway
     if (file.exists(pathk)) {
       # See if there isa  package there
-      df.pkg <- as.data.frame(installed.packages(lib.loc = pathk)) # Note: in {groundhogR} each package version gets a 'library' within the R version
+      df.pkg <- as.data.frame(installed.packages(lib.loc = pathk)) # Note: in {groundhog} each package version gets a 'library' within the R version
       if (nrow(df.pkg) > 0) {
         # If there is, check its version (is unlikely but possible for wrong version to get installed (e.g., wrong Published.date in DESCRIPTION
         # Get installed version

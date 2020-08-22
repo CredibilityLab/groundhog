@@ -10,7 +10,7 @@
 #'
 #' @examples
 #' \donttest{
-#' groundhogR:::update_cran.toc_if.needed("2020-03-01")
+#' groundhog:::update_cran.toc_if.needed("2020-03-01")
 #' }
 update_cran.toc_if.needed <- function(date) {
   # 1 Format entered date by user
@@ -20,11 +20,11 @@ update_cran.toc_if.needed <- function(date) {
   if (date > Sys.Date() - 2) {
     message2()
     message1(
-      "GroundhogR's database is updated multiple times a day, but, to ensure",
+      "Groundhog's database is updated multiple times a day, but, to ensure",
       " reproducibility of your script, given time zone differences and ",
       "delays in updating different CRAN mirrors, don't use a date more ",
       "recent than two days ago, (i.e., the most recent date you may use ",
-      "today with groundhogR is:'", format(Sys.Date() - 2), "')."
+      "today with groundhog is:'", format(Sys.Date() - 2), "')."
     )
     exit("################### invalid date ##########################")
   }

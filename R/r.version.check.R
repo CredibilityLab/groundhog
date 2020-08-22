@@ -18,7 +18,7 @@
 #'
 #' @examples
 #' \donttest{
-#' groundhogR:::r.version.check("2018-02-12")
+#' groundhog:::r.version.check("2018-02-12")
 #' }
 #'
 r.version.check <- function(date) {

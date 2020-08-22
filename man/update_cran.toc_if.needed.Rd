@@ -17,7 +17,7 @@ Update \code{cran.toc} if it's not recent enough to include the required date.
 }
 \examples{
 \donttest{
-groundhogR:::update_cran.toc_if.needed("2020-03-01")
+groundhog:::update_cran.toc_if.needed("2020-03-01")
 }
 }
 \seealso{

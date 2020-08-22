@@ -18,7 +18,7 @@ GitHub:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("bisaloo/groundhogR")
+remotes::install_github("groundhogR/groundhog")
 ```
 
 ## Example 1 - Recovering broken code with backwards incompatible change in dplyr
@@ -53,7 +53,7 @@ With groundhogR the script tells us which version of dplyr to use
 keeping the same results:
 
 ``` r
-library(groundhogR)
+library(groundhog)
 # if before the change, then both variables are kept
 groundhog.library("dplyr", date = "2016-06-22")
 ```

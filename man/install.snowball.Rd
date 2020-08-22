@@ -45,7 +45,7 @@ which dependencies are installed doesn't generate conflicts.
 }
 \examples{
 \dontrun{
-groundhogR:::install.snowball("magrittr", "2018-02-12", include.suggests = FALSE)
+groundhog:::install.snowball("magrittr", "2018-02-12", include.suggests = FALSE)
 }
 
 }

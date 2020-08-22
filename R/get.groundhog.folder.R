@@ -1,6 +1,6 @@
 #' Get groundhog folder location
 #'
-#' @return the path to the groundhog folder where groundhogR files will be
+#' @return the path to the groundhog folder where groundhog files will be
 #'   stored and where packages loaded with [groundhog.library()] will be
 #'   installed.
 #'
@@ -15,14 +15,14 @@
 #' @seealso [set.groundhog.folder()]
 #'
 
-# Function that gets the groundhogR folder, or prompts user to create it.
+# Function that gets the groundhog folder, or prompts user to create it.
 get.groundhog.folder <- function() {
   groundhog.folder <- path.expand(Sys.getenv("GROUNDHOG_FOLDER"))
 
   # If a folder for has not been set, prompt user
   if (groundhog.folder == "") {
     # 1. Put the default folder into a variable to show user
-    default.folder <- paste0(path.expand("~"), "/groundhogR/")
+    default.folder <- paste0(path.expand("~"), "/groundhog/")
 
     # a=function() {
     # 2. Show message asking for the desired folder
@@ -31,9 +31,9 @@ get.groundhog.folder <- function() {
       "<PRESS ENTER> to accept the default directory ('", default.folder, "') for saving packages"
     )
     message1(
-      "groundhogR needs a directory to use as a library for saving downloaded and installed packages.\n",
+      "groundhog needs a directory to use as a library for saving downloaded and installed packages.\n",
       "<PRESS ENTER> to use the default for this computer ('", default.folder, "').\n",
-      "Or, type in the folder you would like to use instead (e.g, 'c:/dropbox/groundhogR'). Do not include quotes.\n",
+      "Or, type in the folder you would like to use instead (e.g, 'c:/dropbox/groundhog'). Do not include quotes.\n",
       "If the folder does not already exists, it will be created.\n",
       "Type 'quit' to not choose a directory at this time"
     )
@@ -47,7 +47,7 @@ get.groundhog.folder <- function() {
 
     # 5. Assign groundghog folder to default or answer
     if (nchar(answer) == 0) {
-      groundhog.folder <- path.expand(file.path("~", "groundhogR"))
+      groundhog.folder <- path.expand(file.path("~", "groundhog"))
     } # End if default answer
     if (nchar(answer) > 0) {
       groundhog.folder <- answer
@@ -62,13 +62,13 @@ get.groundhog.folder <- function() {
       "You can undo this selection by running: set.groundhog.folder('')\n\n\n\n"
     )
     Sys.sleep(7)
-  } # End if no groundhogR folder
+  } # End if no groundhog folder
   return(groundhog.folder)
 }
 
-#' Set groundhogR folder location
+#' Set groundhog folder location
 #'
-#' @param path Character. The path to the groundhogR folder where groundhogR
+#' @param path Character. The path to the groundhog folder where groundhog
 #'   files will be stored and where packages loaded with [groundhog.library()]
 #'   will be installed.
 #'
@@ -79,7 +79,7 @@ get.groundhog.folder <- function() {
 #'
 #' @examples
 #' \dontrun{
-#' set.groundhog.folder("~/.groundhogR")
+#' set.groundhog.folder("~/.groundhog")
 #' }
 #'
 #' @return (invisibly) `TRUE` upon success.

@@ -27,7 +27,7 @@ Compare the current R version to the \R version at a given \code{date}.`
 }
 \examples{
 \donttest{
-groundhogR:::r.version.check("2018-02-12")
+groundhog:::r.version.check("2018-02-12")
 }
 
 }
