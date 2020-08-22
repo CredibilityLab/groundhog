@@ -25,7 +25,7 @@ version on CRAN at the given \code{date}.
 }
 \examples{
 \donttest{
-groundhogR:::get.all.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
+groundhog:::get.all.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
 }
 
 }

@@ -20,14 +20,14 @@
 .onAttach <- function(libname, pkgname) {
   current.packages <- .pkgenv[["current.packages"]]
 
-  groundhog_cran <- current.packages$Version[current.packages$Package == "groundhogR"]
+  groundhog_cran <- current.packages$Version[current.packages$Package == "groundhog"]
 
   # isTRUE() is necessary here because this will return logical(0) is the pkg
   # is not on CRAN
-  if (isTRUE(package_version(groundhog_cran) > packageVersion("groundhogR"))) {
+  if (isTRUE(package_version(groundhog_cran) > packageVersion("groundhog"))) {
     packageStartupMessage(
-      "A more recent version of groundhogR is available. Please install it by ",
-      'running install.packages("groundhogR") and then restart your R session.'
+      "A more recent version of groundhog is available. Please install it by ",
+      'running install.packages("groundhog") and then restart your R session.'
     )
   }
 }

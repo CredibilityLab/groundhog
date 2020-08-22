@@ -54,7 +54,7 @@ check.snowball.conflict <- function(snowball, force.install) {
       "The package versions currently loaded:\n", conflict.active, "\n\n",
       "To solve this conflict you have two options.\n\n",
       "Option 1.*RECOMMENDED* Restart R session (in R Studio press: CTRL/CMD-SHIFT-F10) to unload all packages. Then:\n",
-      "library(groundhogR)\ngroundhog.library(pkg,date)\n\n",
+      "library(groundhog)\ngroundhog.library(pkg,date)\n\n",
       "Option 2. Run groundhog.library() with option: 'ignore.package.conflicts=TRUE'\n",
       "This option will keep the loaded versions of the conflicting packages, possibly causing errors or unexpected behaviors.\n",
       "You may want to use this option to run multiple groundhog.library() commands, with different dates, within the same script.\n\n"

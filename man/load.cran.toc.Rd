@@ -20,7 +20,7 @@ publication date.
 }
 \examples{
 \donttest{
-groundhogR:::load.cran.toc()
+groundhog:::load.cran.toc()
 }
 
 }

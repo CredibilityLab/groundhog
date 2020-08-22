@@ -13,23 +13,23 @@
 #'
 #' @examples
 #' \donttest{
-#' groundhogR:::load.cran.toc()
+#' groundhog:::load.cran.toc()
 #' }
 #'
 #' @importFrom utils read.csv
 #'
 load.cran.toc <- function(update.toc = FALSE) {
   groundhogR.url <- "http://groundhogR.com/"
-  groundhogR.folder <- get.groundhog.folder()
+  groundhog.folder <- get.groundhog.folder()
 
-  # 3.0 Ensure directory for groundhogR exists
-  dir.create(groundhogR.folder, showWarnings = FALSE) # Create if inexistent
+  # 3.0 Ensure directory for groundhog exists
+  dir.create(groundhog.folder, showWarnings = FALSE) # Create if inexistent
 
   # 3.1 Paths two databases (toc and times:
   # LOCAL
-  toc.path <- file.path(groundhogR.folder, "cran.toc.rds")
-  times.path <- file.path(groundhogR.folder, "cran.times.rds")
-  mran.path <- file.path(groundhogR.folder, "missing.mran.dates.rds")
+  toc.path <- file.path(groundhog.folder, "cran.toc.rds")
+  times.path <- file.path(groundhog.folder, "cran.times.rds")
+  mran.path <- file.path(groundhog.folder, "missing.mran.dates.rds")
 
   # 3.2 JUST LOAD
   if (!update.toc) {
@@ -38,7 +38,7 @@ load.cran.toc <- function(update.toc = FALSE) {
     if (file.exists(toc.path)) {
       cran.toc <- readRDS(toc.path)
     } else {
-      cran.toc <- readRDS(system.file("cran.toc.rds", package = "groundhogR"))
+      cran.toc <- readRDS(system.file("cran.toc.rds", package = "groundhog"))
     }
 
     # Move the cran.toc outside the function space, to global environment
@@ -48,7 +48,7 @@ load.cran.toc <- function(update.toc = FALSE) {
     if (file.exists(times.path)) {
       cran.times <- readRDS(times.path)
     } else {
-      cran.times <- readRDS(system.file("cran.times.rds", package = "groundhogR"))
+      cran.times <- readRDS(system.file("cran.times.rds", package = "groundhog"))
     }
 
     .pkgenv[["cran.times"]] <- cran.times
@@ -58,7 +58,7 @@ load.cran.toc <- function(update.toc = FALSE) {
     if (file.exists(mran.path)) {
       missing.mran.dates <- readRDS(mran.path)
     } else {
-      missing.mran.dates <- readRDS(system.file("missing.mran.dates.rds", package = "groundhogR"))
+      missing.mran.dates <- readRDS(system.file("missing.mran.dates.rds", package = "groundhog"))
     }
 
     .pkgenv[["missing.mran.dates"]] <- missing.mran.dates

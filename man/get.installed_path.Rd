@@ -21,7 +21,7 @@ Check if package version is installed for current or past R versions,
 }
 \examples{
 \donttest{
-groundhogR:::get.installed_path("magrittr", "1.5")
+groundhog:::get.installed_path("magrittr", "1.5")
 }
 
 }

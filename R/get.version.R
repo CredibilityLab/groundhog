@@ -9,7 +9,7 @@
 #'
 #' @examples
 #' \donttest{
-#' groundhogR:::get.version("magrittr", "2018-02-12")
+#' groundhog:::get.version("magrittr", "2018-02-12")
 #' }
 #'
 get.version <- function(pkg, date, current.deps = c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders", "RcppParallel", "RcppProgress")) {

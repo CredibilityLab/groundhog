@@ -7,7 +7,7 @@
 get.groundhog.folder()
 }
 \value{
-the path to the groundhog folder where groundhogR files will be
+the path to the groundhog folder where groundhog files will be
 stored and where packages loaded with \code{\link[=groundhog.library]{groundhog.library()}} will be
 installed.
 }

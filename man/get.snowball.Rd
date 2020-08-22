@@ -32,7 +32,7 @@ Generates dataframe with all dependencies needed to install a package, with vers
 }
 \examples{
 \dontrun{
-groundhogR:::get.snowball("magrittr", "2018-02-12", current.deps = NULL)
+groundhog:::get.snowball("magrittr", "2018-02-12", current.deps = NULL)
 }
 
 }

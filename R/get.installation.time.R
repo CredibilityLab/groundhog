@@ -10,7 +10,7 @@
 #'
 #' @examples
 #' \donttest{
-#' groundhogR:::get.installation.time("magrittr", "1.5")
+#' groundhog:::get.installation.time("magrittr", "1.5")
 #' }
 #'
 get.installation.time <- function(pkg, vrs) {

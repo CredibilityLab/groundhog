@@ -12,7 +12,7 @@
 #'
 #' @examples
 #' \donttest{
-#' groundhogR:::get.R.pkg.date("magrittr_1.0.1", "3.6.0")
+#' groundhog:::get.R.pkg.date("magrittr_1.0.1", "3.6.0")
 #' }
 #'
 get.R.pkg.date <- function(pkg_vrs, R_vrs) {

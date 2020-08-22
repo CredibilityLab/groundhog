@@ -2,12 +2,12 @@
 % Please edit documentation in R/get.groundhog.folder.R
 \name{set.groundhog.folder}
 \alias{set.groundhog.folder}
-\title{Set groundhogR folder location}
+\title{Set groundhog folder location}
 \usage{
 set.groundhog.folder(path)
 }
 \arguments{
-\item{path}{Character. The path to the groundhogR folder where groundhogR
+\item{path}{Character. The path to the groundhog folder where groundhog
 files will be stored and where packages loaded with \code{\link[=groundhog.library]{groundhog.library()}}
 will be installed.}
 }
@@ -15,7 +15,7 @@ will be installed.}
 (invisibly) \code{TRUE} upon success.
 }
 \description{
-Set groundhogR folder location
+Set groundhog folder location
 }
 \note{
 This setting can also be achieved by manually editing the \code{.Renviron}
@@ -25,7 +25,7 @@ project.
 }
 \examples{
 \dontrun{
-set.groundhog.folder("~/.groundhogR")
+set.groundhog.folder("~/.groundhog")
 }
 
 }
