@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# groundhogR
+# groundhog
 
 <!-- badges: start -->
 
@@ -46,10 +46,9 @@ The problem is that in June 2016, the function
 [`dplyr::distinct()`](https://dplyr.tidyverse.org/reference/distinct.html)
 was modified in a non backwards-compatible way. Up to that date it would
 keep all variables but, afterward the SAME function drops all other
-variables, The same line of code, run in the same computer, on the same
-date, has one effect before june 2016 vs after.
+variables, The same line of code, run in the same computer, has one effect before updating {dplyr} vs after.
 
-With groundhogR the script tells us which version of dplyr to use
+With groundhog the script tells us which version of dplyr to use
 keeping the same results:
 
 ``` r
