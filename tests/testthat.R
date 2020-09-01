@@ -2,6 +2,6 @@ library(testthat)
 library(groundhog)
 
 if (R.version$status == "") {
-  test_check("groundhogR")
+  test_check("groundhog")
 }
 
