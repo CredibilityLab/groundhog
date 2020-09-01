@@ -1,7 +1,7 @@
 test_that("get.groundhog.folder()", {
 
   Sys.unsetenv("GROUNDHOG_FOLDER")
-  expect_identical(get.groundhog.folder(), path.expand(file.path("~", "groundhogR")))
+  expect_identical(get.groundhog.folder(), path.expand(file.path("~", "groundhog")))
 
   Sys.setenv("GROUNDHOG_FOLDER" = "~/groundhogR_test")
   expect_identical(get.groundhog.folder(), path.expand(file.path("~", "groundhogR_test")))
