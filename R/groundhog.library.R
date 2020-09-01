@@ -1,4 +1,4 @@
-#' 8  Final function:   groundhog.library()
+#' Install packages as available on set date -  groundhog.library()
 #'
 #' @inheritParams install.snowball
 #' @param ignore.package.conflicts Logical (defaults to `FALSE`). With `TRUE`,
