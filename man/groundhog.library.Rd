@@ -2,7 +2,7 @@
 % Please edit documentation in R/groundhog.library.R
 \name{groundhog.library}
 \alias{groundhog.library}
-\title{8  Final function:   groundhog.library()}
+\title{Install packages as available on set date -  groundhog.library()}
 \usage{
 groundhog.library(
   pkg,
@@ -47,7 +47,7 @@ a character vector containing all active packages for the session,
 with their version number, under the format \code{pkg_vrs}.
 }
 \description{
-8  Final function:   groundhog.library()
+Install packages as available on set date -  groundhog.library()
 }
 \examples{
 \dontrun{

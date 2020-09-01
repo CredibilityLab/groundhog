@@ -1,4 +1,4 @@
-#' Get groundhog folder location
+  #' Get groundhog folder location
 #'
 #' @return the path to the groundhog folder where groundhog files will be
 #'   stored and where packages loaded with [groundhog.library()] will be
@@ -27,14 +27,17 @@ get.groundhog.folder <- function() {
     # a=function() {
     # 2. Show message asking for the desired folder
     message2(
-      "*****************  Groundhog's directory *********************************************************\n",
-      "<PRESS ENTER> to accept the default directory ('", default.folder, "') for saving packages"
-    )
+      "*****************  Setting a directory for groundhog   ***********************\n\n",
+      "         <PRESS ENTER> to accept the default directory:\n",
+      "         '",default.folder, "'\n"
+    )#End of message 2
+    
     message1(
-      "groundhog needs a directory to use as a library for saving downloaded and installed packages.\n",
-      "<PRESS ENTER> to use the default for this computer ('", default.folder, "').\n",
-      "Or, type in the folder you would like to use instead (e.g, 'c:/dropbox/groundhog'). Do not include quotes.\n",
-      "If the folder does not already exists, it will be created.\n",
+      "You need to set a directory save all packages installed by groundhog.\n",
+      "You may <PRESS ENTER> to use the default for this computer ('", default.folder, "').\n",
+      "Or, type in the folder you would like to use instead (e.g, 'c:/dropbox/groundhog').\n",
+      "Do not include quotes.\n",
+      "If the folder does not already exists, it will be created.\n\n",
       "Type 'quit' to not choose a directory at this time"
     )
 
