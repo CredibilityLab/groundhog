@@ -14,6 +14,10 @@
 #'
 get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE, current.deps) {
 
+  if (is.null(.pkgenv[["current.packages"]])) {
+    get.current.packages()
+  }
+
   # 1) Get dependencies
   dep12 <- get.all.dependencies(pkg, date, include.suggests = include.suggests)
 
