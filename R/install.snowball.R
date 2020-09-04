@@ -89,7 +89,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
 
         # 1) Try CRAN
         # If current version
-        if (pkg_vrs.k %in% .pkgenv[["current.packages"]]$pkg_vrs) {
+        if (pkg_vrs.k %in% get.current.packages("source")$pkg_vrs) {
           url1 <- paste0("https://cran.r-project.org/src/contrib/", pkg_vrs.k, ".tar.gz")
           install.packages(url1, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
         }

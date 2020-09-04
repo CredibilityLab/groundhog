@@ -14,10 +14,6 @@
 #'
 get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE, current.deps) {
 
-  if (is.null(.pkgenv[["current.packages"]])) {
-    get.current.packages()
-  }
-
   # 1) Get dependencies
   dep12 <- get.all.dependencies(pkg, date, include.suggests = include.suggests)
 
@@ -54,7 +50,12 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
   # - else, install from source
 
   snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs) # 5.1 Installed?  TRUE/FALSE
-  snowball.CRAN <- snowball.pkg_vrs %in% .pkgenv[["current.packages"]]$pkg_vrs & max(toc("R")$Version) == get.rversion() # 5.2 Binary in CRAN and using most recent R TRUE/FALSE
+
+  if (max(toc("R")$Version) == get.rversion()) {
+    snowball.CRAN <- snowball.pkg_vrs %in% get.current.packages("binary")$pkg_vrs
+  } else {
+    snowball.CRAN <- rep_len(FALSE, length(snowball.pkg_vrs))
+  }
   snowball.MRAN.date <- as.Date(sapply(snowball.pkg_vrs, get.date.for.install.binary), origin = "1970-01-01") # 5.3 Binary date in MRAN?
   snowball.MRAN.date <- as.DateYMD(snowball.MRAN.date)
 
