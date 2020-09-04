@@ -6,13 +6,12 @@
 .onLoad <- function(libname, pkgname) {
   .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
 
-  try(get.current.packages(), silent = TRUE)
-
 }
 
 #' @importFrom utils packageVersion
 .onAttach <- function(libname, pkgname) {
-  current.packages <- .pkgenv[["current.packages"]]
+
+  current.packages <- try(get.current.packages("source"), silent = TRUE)
 
   groundhog_cran <- current.packages$Version[current.packages$Package == "groundhog"]
 
