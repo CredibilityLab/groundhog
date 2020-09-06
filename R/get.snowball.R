@@ -51,6 +51,24 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
 
   snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs) # 5.1 Installed?  TRUE/FALSE
 
+  # No need to find the locations if everything is already installed. This also
+  # allows us to run offline in easy cases
+  if (all(snowball.installed)) {
+    return(
+      data.frame(
+        "pkg" = snowball.pkg,
+        "vrs" = snowball.vrs,
+        "pkg_vrs" = snowball.pkg_vrs, # Identify pkg
+        "installed" = TRUE, # Installed?
+        "from" =  NA_character_, # Where to install from
+        "MRAN.date" = NA_character_, # MRAN date, in case MRAN is tried
+        "installation.time" = NA_real_, # time to install
+        "installation.path" = NA_character_,
+        stringsAsFactors = FALSE
+      )
+    )
+  }
+
   if (max(toc("R")$Version) == get.rversion()) {
     snowball.CRAN <- snowball.pkg_vrs %in% get.current.packages("binary")$pkg_vrs
   } else {
@@ -89,20 +107,18 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
   # Vector with paths
   snowball.installation.path <- paste0(get.groundhog.folder(), "/R-", r.path, "/", snowball.pkg_vrs)
 
-
   # data.frame()
-  snowball <- data.frame(snowball.pkg, snowball.vrs, snowball.pkg_vrs, # Identify pkg
-    snowball.installed, # Installed?
-    snowball.from, # Where to install from
-    snowball.MRAN.date, # MRAN date, in case MRAN is tried
-    snowball.time, # time to install
-    snowball.installation.path,
+  snowball <- data.frame(
+    "pkg" = snowball.pkg,
+    "vrs" = snowball.vrs,
+    "pkg_vrs" = snowball.pkg_vrs, # Identify pkg
+    "installed" = snowball.installed, # Installed?
+    "from" = snowball.from, # Where to install from
+    "MRAN.date" = snowball.MRAN.date, # MRAN date, in case MRAN is tried
+    "installation.time" = snowball.time, # time to install
+    "installation.path" = snowball.installation.path,
     stringsAsFactors = FALSE
-  ) # directory to save the binary package to
-  # how long will it take
-
-  names(snowball) <- c("pkg", "vrs", "pkg_vrs", "installed", "from", "MRAN.date", "installation.time", "installation.path")
-
+  )
 
   return(snowball)
 }
