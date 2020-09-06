@@ -11,7 +11,11 @@
 #' @importFrom utils packageVersion
 .onAttach <- function(libname, pkgname) {
 
-  current.packages <- try(get.current.packages(getOption("pkgType")), silent = TRUE)
+  current.packages <- tryCatch(
+    get.current.packages(getOption("pkgType")),
+    warning = function(w) NULL,
+    error = function(e) NULL
+  )
 
   groundhog_cran <- current.packages$Version[current.packages$Package == "groundhog"]
 
