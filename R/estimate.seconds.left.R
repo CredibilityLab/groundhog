@@ -9,13 +9,13 @@
 #'
 estimate.seconds.left <- function(k, start.time, snowball) {
   # Time assigned to binary installs
-  time.per.binary <- 5 # assumed 5 seconds per binary
+  time.per.binary <- 25 # assumed 25 seconds per binary
   # Time so far
   time.so.far <- as.numeric(difftime(Sys.time(), start.time, units = "secs"))
 
   # Total time estimate
   estimated.total.source <- round(sum(snowball[snowball$from == "source" & !snowball$installed, ]$installation.time), 0) # For source, use estimated install time
-  estimated.total.binary <- time.per.binary * sum(snowball$from != "source" & !snowball$installed) # For binary, assume 5 seconds per package that is not installed
+  estimated.total.binary <- time.per.binary * sum(snowball$from != "source" & !snowball$installed) # For binary, assume 25 seconds per package that is not installed
   estimated.total <- estimated.total.source + estimated.total.binary
 
   # subset of snowball packages left
