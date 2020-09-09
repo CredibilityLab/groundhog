@@ -32,7 +32,10 @@ test_that("set.groundhog.folder", {
 
 test_that("get.pkg_search_paths()", {
 
-  expect_is(get.pkg_search_paths("magrittr", "1.0.1"), "character")
+  p <- get.pkg_search_paths("magrittr", "1.0.1")
+
+  expect_type(p, "character")
+  exepct_length(p, 1)
 
 })
 

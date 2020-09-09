@@ -15,27 +15,14 @@
 #' }
 #'
 get.pkg_search_paths <- function(pkg, vrs) {
-  # R versions
-  R.toc <- toc("R")
 
-  R_vrs <- do.call(rbind.data.frame, strsplit(R.toc$Version, ".", fixed = TRUE))
-  names(R_vrs) <- c("major", "minor", "patch")
+  rv <- as.character(getRversion())
 
-  R.toc <- cbind(R.toc, R_vrs)
-
-  R.toc$Published <- as.DateYMD(R.toc$Published)
-
-  # Subset of R.toc for same minor as r.using
-  rv <- r.version.check("2019-01-01") # use arbitrary date for we don't use 'r.need', just r.using
-  subset.R.toc <- R.toc[R.toc$minor == rv$r.using.minor &
-    R.toc$major == rv$r.using.major &
-    R.toc$Published <= get.rdate(), ]
-
-  # Sort versions from most recent
-  subset.R.toc <- subset.R.toc[order(subset.R.toc$Published, decreasing = TRUE), ]
+  # Get rid of patch version number
+  rv <- gsub("\\.\\d+(-w)?$", "", rv)
 
   # paths
-  pkg_search_paths <- paste0(get.groundhog.folder(), "/R-", subset.R.toc$Version, "/", pkg, "_", vrs)
+  pkg_search_paths <- paste0(get.groundhog.folder(), "/R-", rv, "/", pkg, "_", vrs)
 
   # Ensure directories exist
   return(pkg_search_paths)
