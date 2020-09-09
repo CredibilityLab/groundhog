@@ -51,6 +51,9 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
 
   snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs) # 5.1 Installed?  TRUE/FALSE
 
+  # Vector with paths
+  snowball.installation.path <- mapply(get.pkg_search_paths, snowball.pkg, snowball.vrs)
+
   # No need to find the locations if everything is already installed. This also
   # allows us to run offline in easy cases
   if (all(snowball.installed)) {
@@ -63,7 +66,7 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
         "from" =  NA_character_, # Where to install from
         "MRAN.date" = NA_character_, # MRAN date, in case MRAN is tried
         "installation.time" = NA_real_, # time to install
-        "installation.path" = NA_character_,
+        "installation.path" = snowball.installation.path,
         stringsAsFactors = FALSE
       )
     )
@@ -92,20 +95,6 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
   # Adjust installation time
   adjustment <- 2.5 # install times in CRAN's page are systematically too long, this is an initial adjustment factor
   snowball.time <- pmax(round(snowball.time / adjustment, 0), 1)
-
-  # Installation path
-  # Only r.path portion differs across where the package is obtained
-  r.path <- vapply(seq_along(snowball.pkg), function(k) {
-    switch(
-      snowball.from[k],
-      "MRAN" = get.version("R", snowball.MRAN.date[k]),
-      "CRAN" = max(toc("R")$Version),
-      "source" = get.rversion()
-    )
-  }, character(1))
-
-  # Vector with paths
-  snowball.installation.path <- paste0(get.groundhog.folder(), "/R-", r.path, "/", snowball.pkg_vrs)
 
   # data.frame()
   snowball <- data.frame(
