@@ -62,7 +62,6 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
       installation.feedback(k, date, snowball, start.time)
 
       # 3.3 Shorter variable names
-      pkg.k <- snowball[k, "pkg"]
       vrs.k <- snowball[k, "vrs"]
       pkg_vrs.k <- snowball[k, "pkg_vrs"]
       from.k <- snowball[k, "from"]
