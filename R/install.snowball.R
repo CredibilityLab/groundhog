@@ -62,6 +62,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
       installation.feedback(k, date, snowball, start.time)
 
       # 3.3 Shorter variable names
+      pkg.k <- snowball[k, "pkg"]
       vrs.k <- snowball[k, "vrs"]
       pkg_vrs.k <- snowball[k, "pkg_vrs"]
       from.k <- snowball[k, "from"]
@@ -88,20 +89,12 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
         message1("\n>Attempting to install from source")
 
         # 1) Try CRAN
-        # If current version
-        if (pkg_vrs.k %in% get.current.packages("source")$pkg_vrs) {
-          url1 <- paste0("https://cran.r-project.org/src/contrib/", pkg_vrs.k, ".tar.gz")
-          install.packages(url1, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
-        }
-
-        # If archive version
-        else {
-          url2 <- paste0("https://cran.r-project.org/src/contrib/Archive/", pkg.k, "/", pkg_vrs.k, ".tar.gz")
-          install.packages(url2, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
-        }
+        # This canonical URL works for both current and archived versions/packages
+        url1 <- paste0("https://cran.r-project.org/package=", pkg.k, "&version=", vrs.k)
+        install.packages(url1, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
 
         # 2) Try MRAN
-        # Attempt 3 overall, MRAN around selected date, current tarballs path
+        # Attempt 2 overall, MRAN around selected date, current tarballs path
         if (!is.pkg_vrs.installed(pkg.k, vrs.k)) # if still not installed
           {
             # Set date for mran, midpoint of available dates around requested date  +-10 days,
@@ -110,13 +103,13 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
             mran.date <- get.available.mran.date(date - 10, max.date) # Function get.available.mran.date() in utils.R
 
             # Try path for current packages
-            url3 <- paste0("https://cran.microsoft.com/snapshot/", mran.date, "/src/contrib/", pkg_vrs.k, ".tar.gz")
+            url2 <- paste0("https://cran.microsoft.com/snapshot/", mran.date, "/src/contrib/", pkg_vrs.k, ".tar.gz")
             install.packages(url3, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
           }
         # Attempt 4 overall, MRAN around selected date, Archive tarballs path
         if (!is.pkg_vrs.installed(pkg.k, vrs.k)) # if still not installed
           {
-            url4 <- paste0("https://cran.microsoft.com/snapshot/", mran.date, "/src/contrib/Archive/", pkg.k, "/", pkg_vrs.k, ".tar.gz")
+            url3 <- paste0("https://cran.microsoft.com/snapshot/", mran.date, "/src/contrib/Archive/", pkg.k, "/", pkg_vrs.k, ".tar.gz")
             install.packages(url4, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
           }
 
@@ -129,7 +122,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
             max.date.published <- min(Sys.Date() - 2, date.Published + 20) # Use as highest possible mran published date, 2 days ago
             mran.published.date <- get.available.mran.date(date.Published, max.date.published) # Function get.available.mran.date() in utils.R
             # Treat as current
-            url5 <- paste0("https://cran.microsoft.com/snapshot/", mran.published.date, "/src/contrib/", pkg_vrs.k, ".tar.gz")
+            url4 <- paste0("https://cran.microsoft.com/snapshot/", mran.published.date, "/src/contrib/", pkg_vrs.k, ".tar.gz")
             install.packages(url5, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
           }
 
@@ -137,7 +130,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
         if (!is.pkg_vrs.installed(pkg.k, vrs.k)) # if still not installed
           {
             # If fails try archive
-            url6 <- paste0("https://cran.microsoft.com/snapshot/", mran.published.date, "/src/contrib/Archive/", pkg_vrs.k, ".tar.gz")
+            url5 <- paste0("https://cran.microsoft.com/snapshot/", mran.published.date, "/src/contrib/Archive/", pkg_vrs.k, ".tar.gz")
             install.packages(url6, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
           }
       }
