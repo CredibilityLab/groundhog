@@ -35,7 +35,7 @@ test_that("get.pkg_search_paths()", {
   p <- get.pkg_search_paths("magrittr", "1.0.1")
 
   expect_type(p, "character")
-  exepct_length(p, 1)
+  expect_length(p, 1L)
 
 })
 
