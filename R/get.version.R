@@ -29,8 +29,9 @@ get.version <- function(pkg, date, current.deps = c("Rcpp", "RcppArmadillo", "BH
   last.toc.date <- max(cran.toc$Published, na.rm = TRUE)
   if (date > last.toc.date) {
     exit(
-      "groundhog.library() index of packages ends on  ", last.toc.date,
-      " which is before the date you entered:", date, ".\nThe index updates automatically "
+      "groundhog.library() index of packages ends on ", last.toc.date,
+      " which is before the date you entered: ", date, ".\n",
+      "The index updates automatically "
     )
   }
   # 3 If pkg is in current.deps, deliver version for current version of R
