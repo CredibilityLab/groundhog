@@ -39,9 +39,9 @@ installation.feedback <- function(k, date, snowball, start.time) {
     msg <- c(
       msg,
       "\n> Installation is slow because you are using R-", get.rversion(), "\n",
-      "> If you run this script with the R version available on the date you entered: '", date, "', i.e., R-", get.version("R", date), ",\n",
-      "  the entire installation would take about a minute or two.\n",
-      "> Instructions for running older version of R:  https://groundhogR.com/olderR"
+      "> If you run this script with the R version current for the date you entered: '", date, "', i.e., R-", get.version("R", date), ",\n",
+      "  the entire installation would take about a few minutes at most.\n",
+      "> Instructions for running other versions of R on demand:  https://groundhogR.com/many"
     )
   } # End if R mismach
 
