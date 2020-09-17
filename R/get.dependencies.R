@@ -21,10 +21,8 @@
 #' @importFrom utils installed.packages
 #'
 get.dependencies <- function(pkg, date, include.suggests = FALSE) {
-  if (is.null(.pkgenv[["cran.toc"]])) {
-    update_cran.toc_if.needed(date = date)
-  }
-  cran.toc <- .pkgenv[["cran.toc"]]
+
+  update_cran.toc_if.needed(date = date)
 
   # Get version from date
   vrs <- get.version(pkg, date)
