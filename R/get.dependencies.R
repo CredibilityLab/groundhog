@@ -22,7 +22,7 @@
 #'
 get.dependencies <- function(pkg, date, include.suggests = FALSE) {
   if (is.null(.pkgenv[["cran.toc"]])) {
-    load.cran.toc(update.toc = FALSE)
+    update_cran.toc_if.needed(date = date)
   }
   cran.toc <- .pkgenv[["cran.toc"]]
 
