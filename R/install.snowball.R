@@ -103,13 +103,13 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
 
             # Try path for current packages
             url2 <- paste0("https://cran.microsoft.com/snapshot/", mran.date, "/src/contrib/", pkg_vrs.k, ".tar.gz")
-            install.packages(url3, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
+            install.packages(url2, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
           }
         # Attempt 4 overall, MRAN around selected date, Archive tarballs path
         if (!is.pkg_vrs.installed(pkg.k, vrs.k)) # if still not installed
           {
             url3 <- paste0("https://cran.microsoft.com/snapshot/", mran.date, "/src/contrib/Archive/", pkg.k, "/", pkg_vrs.k, ".tar.gz")
-            install.packages(url4, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
+            install.packages(url3, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
           }
 
         # Attempt 5, MRAN around Publish date, current path
@@ -122,7 +122,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
             mran.published.date <- get.available.mran.date(date.Published, max.date.published) # Function get.available.mran.date() in utils.R
             # Treat as current
             url4 <- paste0("https://cran.microsoft.com/snapshot/", mran.published.date, "/src/contrib/", pkg_vrs.k, ".tar.gz")
-            install.packages(url5, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
+            install.packages(url4, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
           }
 
         # Attempt 6, MRAN around Publish date, Archive path
@@ -130,7 +130,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
           {
             # If fails try archive
             url5 <- paste0("https://cran.microsoft.com/snapshot/", mran.published.date, "/src/contrib/Archive/", pkg_vrs.k, ".tar.gz")
-            install.packages(url6, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
+            install.packages(url5, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
           }
       }
       # install.source(pkg_vrs.k, lib.k, date, quiet.install = quiet.install)  #used to call an external function
