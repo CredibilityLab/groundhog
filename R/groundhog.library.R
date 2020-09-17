@@ -39,6 +39,8 @@ groundhog.library <- function(
   # Check if using R that's from a version PRIOR to that current for the desired date (prior to current release)
   # e.g., using R-3.3.3 for "2020-01-05"
 
+  update_cran.toc_if.needed(date = date)
+
   rv <- r.version.check(date) # Get version of r being used and needed
   r.toc <- toc("R") # Get all versions of R
   r.using.k <- match(rv$r.using.full, r.toc$Version) # Which
