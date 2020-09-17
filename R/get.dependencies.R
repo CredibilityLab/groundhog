@@ -23,6 +23,7 @@
 get.dependencies <- function(pkg, date, include.suggests = FALSE) {
 
   update_cran.toc_if.needed(date = date)
+  cran.toc <- .pkgenv[["cran.toc"]]
 
   # Get version from date
   vrs <- get.version(pkg, date)
