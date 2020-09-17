@@ -18,7 +18,7 @@ test_that("message1()", {
 test_that("msg.R.switch()", {
 
   expect_identical(
-    expect_invisible(expect_message(msg.R.switch("2020-01-01"), "INSTRUCTIONS")),
+    expect_invisible(expect_message(msg.R.switch("2020-01-01"), "Instructions")),
     "3.6.2"
   )
 
