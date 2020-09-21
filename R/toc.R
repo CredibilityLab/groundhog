@@ -10,6 +10,7 @@
 #' toc("magrittr")
 #' @export
 toc <- function(pkg, dependencies = FALSE) {
+
   if (is.null(.pkgenv[["cran.toc"]])) {
     load.cran.toc(update.toc = FALSE)
   }

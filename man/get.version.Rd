@@ -8,7 +8,8 @@ get.version(
   pkg,
   date,
   current.deps = c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders",
-    "RcppParallel", "RcppProgress")
+    "RcppParallel", "RcppProgress"),
+  patch = c("current", "max")
 )
 }
 \arguments{
@@ -19,6 +20,10 @@ get.version(
 \item{current.deps}{Character or character vector listing packages that will
 be loaded/installed based on the date when the version of \R being used was
 released, rather than the value of \code{date}.}
+
+\item{patch}{Either \code{"current"} for the exact current version of the \code{pkg}
+at the specified date, or \code{"max"} for the version with the same major and
+minor but maximal patch version numbers.}
 }
 \description{
 Get version from date

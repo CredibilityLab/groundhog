@@ -2,7 +2,7 @@
 % Please edit documentation in R/msg.R.switch.R
 \name{msg.R.switch}
 \alias{msg.R.switch}
-\title{Message about \R version swith}
+\title{Message about \R version switch}
 \usage{
 msg.R.switch(date)
 }

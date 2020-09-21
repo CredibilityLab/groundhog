@@ -1,6 +1,9 @@
 #' Get version from date
 #'
 #' @inheritParams get.snowball
+#' @param patch Either `"current"` for the exact current version of the `pkg`
+#'   at the specified date, or `"max"` for the version with the same major and
+#'   minor but maximal patch version numbers.
 #'
 # FIXME: add @return
 #'
@@ -12,7 +15,9 @@
 #' groundhog:::get.version("magrittr", "2018-02-12")
 #' }
 #'
-get.version <- function(pkg, date, current.deps = c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders", "RcppParallel", "RcppProgress")) {
+get.version <- function(pkg, date, current.deps = c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders", "RcppParallel", "RcppProgress"), patch = c("current", "max")) {
+
+  patch <- match.arg(patch)
 
   # 1. Get toc
   dfk <- toc(pkg)
@@ -45,5 +50,12 @@ get.version <- function(pkg, date, current.deps = c("Rcpp", "RcppArmadillo", "BH
 
   # 4 Get version
   version.k <- max(which(dfk$Published < date)) # Position of last package available before the date
-  return(dfk$Version[version.k]) # Return that kth element
+  current.version <- dfk$Version[version.k]
+
+  if (patch == "current") {
+    return(current.version)
+  } else if (patch == "max") {
+    nopatch <- gsub("(\\d+)\\.(\\d+).*", "\\1.\\2", current.version)
+    return(dfk$Version[max(which(startsWith(dfk$Version, nopatch)))])
+  }
 }
