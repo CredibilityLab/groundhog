@@ -55,7 +55,7 @@ get.version <- function(pkg, date, current.deps = c("Rcpp", "RcppArmadillo", "BH
   if (patch == "current") {
     return(current.version)
   } else if (patch == "max") {
-    nopatch <- gsub("(\\d+)\\.(\\d+).*", "\\1.\\2", current.version)
-    return(dfk$Version[max(which(startsWith(dfk$Version, nopatch)))])
+    nopatch <- gsub("^(\\d+)\\.(\\d+).*", "\\1.\\2", current.version)
+    return(dfk$Version[max(which(gsub("^(\\d+)\\.(\\d+).*", "\\1.\\2", dfk$Version)==nopatch))])
   }
 }
