@@ -13,7 +13,8 @@
 #'   \item{r.need.full}{\R version currently in use at `date`}
 #'   \item{r.need.major}{Major version number of the \R version in use at `date`}
 #'   \item{r.need.minor}{Minor version number of the \R version in use at `date`}
-#'   \item{r.need.patch}{Patch version number of the \R version in use at `date`}
+#'   \item{r.need.patch}{Version number of the \R version in use at `date`, with
+#'   the maximum patch version available today.}
 #' }
 #'
 #' @examples
@@ -28,7 +29,7 @@ r.version.check <- function(date) {
   r.using.patch <- as.numeric(strsplit(R.version$minor, "\\.")[[1]][2])
   r.using.full <- paste0(r.using.major, ".", r.using.minor, ".", r.using.patch)
   # need
-  r.need.full <- get.version("R", date)
+  r.need.full <- get.version("R", date, patch = "max")
   r.need.split <- strsplit(r.need.full, "\\.")[[1]]
   r.need.major <- as.numeric(r.need.split[1])
   r.need.minor <- as.numeric(r.need.split[2])

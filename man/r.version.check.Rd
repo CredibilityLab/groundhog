@@ -19,7 +19,8 @@ a named \code{list} with the following elements:
 \item{r.need.full}{\R version currently in use at \code{date}}
 \item{r.need.major}{Major version number of the \R version in use at \code{date}}
 \item{r.need.minor}{Minor version number of the \R version in use at \code{date}}
-\item{r.need.patch}{Patch version number of the \R version in use at \code{date}}
+\item{r.need.patch}{Version number of the \R version in use at \code{date}, with
+the maximum patch version available today.}
 }
 }
 \description{
