@@ -1,7 +1,6 @@
 Package: groundhog
 Title: Reproducible R Scripts via Version-Specific CRAN-Package Storing and Loading 
 Version: 1.0.0
-Date: 2018-01-01
 Authors@R: c(
     person(given = "Uri",
            family = "Simonsohn",
