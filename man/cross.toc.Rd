@@ -23,7 +23,10 @@ A \code{data.frame} with 3 columns:
 Show toc table with multiple packages
 }
 \examples{
+\donttest{
 cross.toc(c("magrittr", "rlang"), date1 = "2012-02-01", date2 = "2020-02-01")
+}
+
 }
 \seealso{
 \code{\link[=toc]{toc()}} for the same function for a single package.

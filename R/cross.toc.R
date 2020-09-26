@@ -13,7 +13,10 @@
 #' @seealso [toc()] for the same function for a single package.
 #'
 #' @examples
+#' \donttest{
 #' cross.toc(c("magrittr", "rlang"), date1 = "2012-02-01", date2 = "2020-02-01")
+#' }
+#'
 #' @export
 #'
 cross.toc <- function(pkgs, date1 = "1970-1-1", date2 = Sys.Date()) {
