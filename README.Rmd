@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 ## Installation
 
-groundhogR has not yet been released on CRAN and must be installed from GitHub:
+groundhog has not yet been released on CRAN and must be installed from GitHub:
 
 ```{r}
 # install.packages("remotes")
