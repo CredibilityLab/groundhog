@@ -17,8 +17,8 @@ knitr::opts_chunk$set(
 # groundhogR
 
 <!-- badges: start -->
-[![R build status](https://github.com/groundhogR/groundhog/workflows/R-CMD-check/badge.svg)](https://github.com/groundhogR/groundhog/actions)
-[![Codecov test coverage](https://codecov.io/gh/groundhogR/groundhog/branch/master/graph/badge.svg)](https://codecov.io/gh/groundhogR/groundhog?branch=master)
+[![R build status](https://github.com/CredibilityLab/groundhog/workflows/R-CMD-check/badge.svg)](https://github.com/CredibilityLab/groundhog/actions)
+[![Codecov test coverage](https://codecov.io/gh/CredibilityLab/groundhog/branch/master/graph/badge.svg)](https://codecov.io/gh/CredibilityLab/groundhog?branch=master)
 <!-- badges: end -->
 
 ## Installation
@@ -27,7 +27,7 @@ groundhog has not yet been released on CRAN and must be installed from GitHub:
 
 ```{r}
 # install.packages("remotes")
-remotes::install_github("groundhogR/groundhog")
+remotes::install_github("CredibilityLab/groundhog")
 ```
 
 ## Example 1 - Recovering broken code with backwards incompatible change in dplyr
