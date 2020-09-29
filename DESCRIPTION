@@ -20,7 +20,7 @@ Description: Make R scripts that rely on packages reproducible by ensuring that
     groundhog.library() instead of the base command library(), and including a
     date in the call. The date is used to call on the same version of the
     package every time (the most recent version available on CRAN at that date).
-URL: https://groundhogr.com, https://github.com/CredibilityLab/groundhog
+URL: https://groundhogr.com/, https://github.com/CredibilityLab/groundhog
 BugReports: https://github.com/CredibilityLab/groundhog/issues
 License: GPL-3
 Encoding: UTF-8
