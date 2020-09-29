@@ -31,7 +31,7 @@ get.groundhog.folder <- function() {
       "         <PRESS ENTER> to accept the default directory:\n",
       "         '",default.folder, "'\n"
     )#End of message 2
-    
+
     message1(
       "You need to set a directory save all packages installed by groundhog.\n",
       "You may <PRESS ENTER> to use the default for this computer ('", default.folder, "').\n",
@@ -64,7 +64,6 @@ get.groundhog.folder <- function() {
       "The folder was succesfully set to: '", groundhog.folder, "'\n",
       "You can undo this selection by running: set.groundhog.folder('')\n\n\n\n"
     )
-    Sys.sleep(7)
   } # End if no groundhog folder
   return(groundhog.folder)
 }
