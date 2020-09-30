@@ -20,7 +20,10 @@ variable GROUNDHOG_FOLDER. In R, you can do this with the command
 \code{set.groundhog.folder("path")}.
 }
 \examples{
+\dontrun{
 get.groundhog.folder()
+}
+
 }
 \seealso{
 \code{\link[=set.groundhog.folder]{set.groundhog.folder()}}
