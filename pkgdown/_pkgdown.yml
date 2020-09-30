@@ -27,7 +27,7 @@ reference:
     - check.mismatch.R
     - get.active
     - get.installed_path
-    - get.pkg_search_path
+    - get.pkg_search_paths
   - subtitle: Install functions
   - contents:
     - install.snowball
