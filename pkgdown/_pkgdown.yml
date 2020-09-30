@@ -44,5 +44,6 @@ reference:
     - estimate.seconds.left
     - installation.feedback
   - subtitle: Other utility functions
+  - contents:
     - as.DateYMD
 
