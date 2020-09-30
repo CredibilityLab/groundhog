@@ -9,7 +9,10 @@
 #'   `set.groundhog.folder("path")`.
 #'
 #' @examples
+#' \dontrun{
 #' get.groundhog.folder()
+#' }
+#'
 #' @export
 #'
 #' @seealso [set.groundhog.folder()]
