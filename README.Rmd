@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# groundhogR
+# groundhog
 
 <!-- badges: start -->
 [![R build status](https://github.com/CredibilityLab/groundhog/workflows/R-CMD-check/badge.svg)](https://github.com/CredibilityLab/groundhog/actions)
