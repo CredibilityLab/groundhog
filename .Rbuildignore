@@ -6,3 +6,4 @@
 ^codecov\.yml$
 ^_tarballs/
 ^pkgdown$
+^cran-comments\.md$
