@@ -6,19 +6,19 @@
 <!-- badges: start -->
 
 [![R build
-status](https://github.com/groundhogR/groundhog/workflows/R-CMD-check/badge.svg)](https://github.com/groundhogR/groundhog/actions)
+status](https://github.com/CredibilityLab/groundhog/workflows/R-CMD-check/badge.svg)](https://github.com/CredibilityLab/groundhog/actions)
 [![Codecov test
-coverage](https://codecov.io/gh/groundhogR/groundhog/branch/master/graph/badge.svg)](https://codecov.io/gh/groundhogR/groundhog?branch=master)
+coverage](https://codecov.io/gh/CredibilityLab/groundhog/branch/master/graph/badge.svg)](https://codecov.io/gh/CredibilityLab/groundhog?branch=master)
 <!-- badges: end -->
 
 ## Installation
 
-groundhogR has not yet been released on CRAN and must be installed from
+groundhog has not yet been released on CRAN and must be installed from
 GitHub:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("groundhogR/groundhog")
+remotes::install_github("CredibilityLab/groundhog")
 ```
 
 ## Example 1 - Recovering broken code with backwards incompatible change in dplyr
@@ -46,9 +46,10 @@ The problem is that in June 2016, the function
 [`dplyr::distinct()`](https://dplyr.tidyverse.org/reference/distinct.html)
 was modified in a non backwards-compatible way. Up to that date it would
 keep all variables but, afterward the SAME function drops all other
-variables, The same line of code, run in the same computer, has one effect before updating {dplyr} vs after.
+variables, The same line of code, run in the same computer, on the same
+date, has one effect before june 2016 vs after.
 
-With groundhog the script tells us which version of dplyr to use
+With groundhogR the script tells us which version of dplyr to use
 keeping the same results:
 
 ``` r
