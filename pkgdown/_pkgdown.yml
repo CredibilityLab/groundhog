@@ -22,6 +22,12 @@ reference:
     - get.R.pkg.date
     - get.date.for.install.binary
     - get.version
+    - is.pkg_vrs.installed
+    - r.version.check
+    - check.mismatch.R
+    - get.active
+    - get.installed_path
+    - get.pkg_search_path
   - subtitle: Install functions
   - contents:
     - install.snowball
@@ -37,4 +43,6 @@ reference:
     - get.installation.time
     - estimate.seconds.left
     - installation.feedback
+  - subtitle: Other utility functions
+    - as.DateYMD
 
