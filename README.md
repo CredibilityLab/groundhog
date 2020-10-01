@@ -49,8 +49,8 @@ keep all variables but, afterward the SAME function drops all other
 variables, The same line of code, run in the same computer, on the same
 date, has one effect before june 2016 vs after.
 
-With groundhogR the script tells us which version of dplyr to use
-keeping the same results:
+With groundhog the script tells us which version of dplyr to use keeping
+the same results:
 
 ``` r
 library(groundhog)

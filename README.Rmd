@@ -32,7 +32,9 @@ remotes::install_github("CredibilityLab/groundhog")
 
 ## Example 1 - Recovering broken code with backwards incompatible change in dplyr
 
-With version 0.5, [dplyr](https://dplyr.tidyverse.org/) changed how the [`distinct`](https://dplyr.tidyverse.org/reference/distinct.html) function worked, leading to dropped variables:
+With version 0.5, [dplyr](https://dplyr.tidyverse.org/) changed how the
+[`distinct`](https://dplyr.tidyverse.org/reference/distinct.html) function
+worked, leading to dropped variables:
 
 Say you have data with repeat values of `x`:
 
@@ -49,13 +51,15 @@ To drop repeated rows you can use the package dplyr and run:
 dplyr::distinct(df1, x1) 
 ```
 
-The problem is that in June 2016, the function [`dplyr::distinct()`](https://dplyr.tidyverse.org/reference/distinct.html) was modified in 
-a non backwards-compatible way. Up to that date it would keep all variables but,
-afterward the SAME function drops all other variables,
-The same line of code, run in the same computer, on the same date, has one effect
-before june 2016 vs after.
+The problem is that in June 2016, the function
+[`dplyr::distinct()`](https://dplyr.tidyverse.org/reference/distinct.html) was
+modified in a non backwards-compatible way. Up to that date it would keep all
+variables but, afterward the SAME function drops all other variables, The same
+line of code, run in the same computer, on the same date, has one effect before
+june 2016 vs after.
 
-With groundhogR the script tells us which version of dplyr to use keeping the same results:
+With groundhog the script tells us which version of dplyr to use keeping the
+same results:
 
 ```{r eval = FALSE}
 library(groundhog)
