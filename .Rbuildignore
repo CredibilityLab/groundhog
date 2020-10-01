@@ -7,3 +7,4 @@
 ^_tarballs/
 ^pkgdown$
 ^cran-comments\.md$
+^CRAN-RELEASE$
