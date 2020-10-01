@@ -270,5 +270,5 @@ checkpoint that were deemed undesirable and which are absent from groundhog
     install dates for each of the packages, but this is not possible with
     checkpoint, as all packages share the same date. In addition, changing the
     date to debug one package will lead to reinstalling all packages in any script
-    in that project. Thus every date attempted coud lead to several minutes of
+    in that project. Thus every date attempted could lead to several minutes of
     installation time before anything can be attempted.
