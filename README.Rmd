@@ -23,11 +23,11 @@ knitr::opts_chunk$set(
 
 ## Installation
 
-groundhog has not yet been released on CRAN and must be installed from GitHub:
+groundhog has not yet been released on CRAN and must be installed from our
+custom repository:
 
 ```{r}
-# install.packages("remotes")
-remotes::install_github("CredibilityLab/groundhog")
+install.packages("groundhog", repos = "https://cran.groundhogr.com")
 ```
 
 ## Example 1 - Recovering broken code with backwards incompatible change in dplyr

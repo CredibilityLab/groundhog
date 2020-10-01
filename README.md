@@ -14,11 +14,10 @@ coverage](https://codecov.io/gh/CredibilityLab/groundhog/branch/master/graph/bad
 ## Installation
 
 groundhog has not yet been released on CRAN and must be installed from
-GitHub:
+our custom repository:
 
 ``` r
-# install.packages("remotes")
-remotes::install_github("CredibilityLab/groundhog")
+install.packages("groundhog", repos = "https://cran.groundhogr.com")
 ```
 
 ## Example 1 - Recovering broken code with backwards incompatible change in dplyr
