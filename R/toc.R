@@ -1,4 +1,5 @@
-#' Show table of contents (toc) (package versions and publication dates) for a pkg, sorted chronologically
+#' Show table of contents (toc) (package versions and publication dates) for a
+#' package, sorted chronologically
 #'
 #' @param pkg (required) package name
 #' @param dependencies logical (defaults to `FALSE`). Should the output contain
@@ -7,7 +8,10 @@
 #' @return a `data.frame` where each row corresponds to one version of `pkg`.
 #'
 #' @examples
+#' \dontrun{
 #' toc("magrittr")
+#' }
+#'
 #' @export
 toc <- function(pkg, dependencies = FALSE) {
 

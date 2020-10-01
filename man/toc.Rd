@@ -2,7 +2,8 @@
 % Please edit documentation in R/toc.R
 \name{toc}
 \alias{toc}
-\title{Show table of contents (toc) (package versions and publication dates) for a pkg, sorted chronologically}
+\title{Show table of contents (toc) (package versions and publication dates) for a
+package, sorted chronologically}
 \usage{
 toc(pkg, dependencies = FALSE)
 }
@@ -16,8 +17,12 @@ package dependencies (\code{Imports}, \code{Depends} and \code{Suggests}) for \c
 a \code{data.frame} where each row corresponds to one version of \code{pkg}.
 }
 \description{
-Show table of contents (toc) (package versions and publication dates) for a pkg, sorted chronologically
+Show table of contents (toc) (package versions and publication dates) for a
+package, sorted chronologically
 }
 \examples{
+\dontrun{
 toc("magrittr")
+}
+
 }
