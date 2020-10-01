@@ -158,11 +158,11 @@ While in groundhog it is stored [^2]
 
 [^2]: Note then, that there is a parent directory with the R version for which 
 the package was installed. So there could also be a 
-`C:\Users\mike\Documents\groundhog\R-3.6.3\rio_0.5.1` and a 
-`C:\Users\mike\Documents\groundhog\R-3.6.1\rio_0.5.1`.
+`C:\Users\mike\Documents\groundhog\R-3.6\rio_0.5.1` and a 
+`C:\Users\mike\Documents\groundhog\R-3.5\rio_0.5.1`.
 
 ```
-C:\Users\mike\Documents\groundhog\R-3.6.2\rio_0.5.1
+C:\Users\mike\Documents\groundhog\R-3.6\rio_0.5.1
 ```
 
 So while when with base R rio is updated, the same folder now has different
@@ -175,16 +175,9 @@ C:\Users\mike\Documents\R\win-library\3.6\Rio
 With groundhog a new folder is added, keeping both versions available:
 
 ```
-C:\Users\mike\Documents\groundhog\R-3.6.2\rio_0.5.2
-C:\Users\mike\Documents\groundhog\R-3.6.2\rio_0.5.1
+C:\Users\mike\Documents\groundhog\R-3.6\rio_0.5.2
+C:\Users\mike\Documents\groundhog\R-3.6\rio_0.5.1
 ```
-
-But, when deciding whether to install a new copy of rio_0.5.1, groundhog
-checks if another identical copy already exists in an R version directory with
-the same minor (e.g., R-3.6.x) and if it does, it loads it instead of
-re-installing it. Unless, the `force.course = TRUE` option is checked, in which a
-full R version match is enforced, and if 3.6.1 has it, but using 3.6.2, it would
-be installed anyway.
 
 ## Dynamic search path
 
