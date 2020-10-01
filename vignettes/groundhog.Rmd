@@ -1,8 +1,8 @@
 ---
-title: "groundhogR"
+title: "groundhog"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{groundhogR}
+  %\VignetteIndexEntry{groundhog}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -26,7 +26,7 @@ In contrast to `library()`, with `groundhog.library()`
 - The version of the package available on that day, is automatically installed if needed
 - All dependencies for that package are installed as available that day.
  
-groundhogR allows having multiple (possibly all) versions of a package
+groundhog allows having multiple (possibly all) versions of a package
 available, and loading whichever one is wanted. For an older project you work
 with an older version of a package to ensure reproducibility, while for a new
 project you work with a newer version.
@@ -65,7 +65,7 @@ So the top of your reproducible R scripts will look something like this:
 ```{r}
 ####   Written in R Version 3.6.1 - ####
 
-library("groundhogR")
+library("groundhog")
 
 groundhog.date <- "2019-04-21"
 groundhog.library("rio", date = groundhog.day)
@@ -76,8 +76,8 @@ groundhog.library("pwr", date = groundhog.day)
 
 ## USE 2: Revive existing scripts
 
-The whole reason for groundhogR to exist is that packages change over time in
-ways that make old scripts not work. A likely use of groundhogR is thus to
+The whole reason for groundhog to exist is that packages change over time in
+ways that make old scripts not work. A likely use of groundhog is thus to
 revive old scripts that no longer work.
 
 To recover a non-working script replace its `library()` statements, with
@@ -88,17 +88,17 @@ last saved. If that does not work, roll back the clock further (and possibly
 separately for each package in the script).
 
 This process is facilitated by knowing when a package had a version change.
-Use `groundhogR::toc()` to get the table of contents, like this: 
+Use `groundhog::toc()` to get the table of contents, like this: 
 
 ```{r}
-groundhogR::toc("rio")
-groundhogR::toc("pwr")
+groundhog::toc("rio")
+groundhog::toc("pwr")
 ```
 
 To get a single set with all relevant changes worth trying:
 
 ```{r}
-groundhogR::cross.toc(c("rio", "pwr", "R"))
+groundhog::cross.toc(c("rio", "pwr", "R"))
 ```
  
 ## USE 3: Document changes in packages 
@@ -123,7 +123,7 @@ R being used
 
 # Back end
 
-Two key design features that enable groundhogR to maintain multiple versions of
+Two key design features that enable groundhog to maintain multiple versions of
 the same package within the same R installation, and calling specific versions
 on the spot:
 
@@ -142,9 +142,9 @@ replaced when a package gets updated. [^1]
 without awareness have more than one attached in `.libPaths()`. In practice,
 users tend to install all packages in the same library. More importantly, the
 name of subfolders in base R is just the name of the package, while in
-groundhogR it is the name and version combined: `package_version`.
+groundhog it is the name and version combined: `package_version`.
 
-groundhogR, instead, gives a different subfolder to each package version. When a
+groundhog, instead, gives a different subfolder to each package version. When a
 new version is installed, it is stored in a new subfolder, keeping all existing
 ones unchanged.
 
@@ -154,14 +154,15 @@ So for example, in base R, the package rio 0.5.1 is stored here
 C:\Users\mike\Documents\R\win-library\3.6\Rio
 ```
 
-While in groundhogR it is stored [^2]
+While in groundhog it is stored [^2]
 
 [^2]: Note then, that there is a parent directory with the R version for which 
 the package was installed. So there could also be a 
-`C:\Users\mike\Documents\groundhogR\R-3.6.3\rio_0.5.1` and a `C:\Users\mike\Documents\groundhogR\R-3.6.1\rio_0.5.1`.
+`C:\Users\mike\Documents\groundhog\R-3.6.3\rio_0.5.1` and a 
+`C:\Users\mike\Documents\groundhog\R-3.6.1\rio_0.5.1`.
 
 ```
-C:\Users\mike\Documents\groundhogR\R-3.6.2\rio_0.5.1
+C:\Users\mike\Documents\groundhog\R-3.6.2\rio_0.5.1
 ```
 
 So while when with base R rio is updated, the same folder now has different
@@ -171,14 +172,14 @@ contents
 C:\Users\mike\Documents\R\win-library\3.6\Rio
 ```
 
-With groundhogR a new folder is added, keeping both versions available:
+With groundhog a new folder is added, keeping both versions available:
 
 ```
-C:\Users\mike\Documents\groundhogR\R-3.6.2\rio_0.5.2
-C:\Users\mike\Documents\groundhogR\R-3.6.2\rio_0.5.1
+C:\Users\mike\Documents\groundhog\R-3.6.2\rio_0.5.2
+C:\Users\mike\Documents\groundhog\R-3.6.2\rio_0.5.1
 ```
 
-But, when deciding whether to install a new copy of rio_0.5.1, groundhogR
+But, when deciding whether to install a new copy of rio_0.5.1, groundhog
 checks if another identical copy already exists in an R version directory with
 the same minor (e.g., R-3.6.x) and if it does, it loads it instead of
 re-installing it. Unless, the `force.course = TRUE` option is checked, in which a
@@ -209,8 +210,8 @@ starting in late 2014). [^3]
 [^3]: I have learned that there are several individual days missing from the 
 MRAN archive, it is not literally every day.
 
-groundhogR is thus a substitute for checkpoint.
-This section discusses feature of checkpoint that were deemed undesirable and which are absent from groundhogR
+groundhog is thus a substitute for checkpoint. This section discusses feature of
+checkpoint that were deemed undesirable and which are absent from groundhog
 
 1. Lack of feedback on errors to debug 
 
@@ -225,7 +226,7 @@ This section discusses feature of checkpoint that were deemed undesirable and wh
     therefore so would the 500+ packages that depend on it, or those that depend on
     those packages, etc.).
   
-    groundhogR tells users which R version is needed to run igraph 0.7 (or any
+    groundhog tells users which R version is needed to run igraph 0.7 (or any
     package that fails to install), and gives instructions for installing and
     running older R.
 
@@ -236,7 +237,7 @@ This section discusses feature of checkpoint that were deemed undesirable and wh
     used for 20 scripts, it is installed 20 times byccheckpoint, and 20 copies are
     permanently stored.
   
-    groundhogR uses a single comprehensive library that has no duplicate package
+    groundhog uses a single comprehensive library that has no duplicate package
     installs.
 
 3. Script flow
@@ -258,7 +259,7 @@ This section discusses feature of checkpoint that were deemed undesirable and wh
 4. No packages before 2014
 
     Checkpoint relies exclusively on MRAN, which started in late 2014. No earlier
-    packages can be installed to render old scripts reproducible. groundhogR uses
+    packages can be installed to render old scripts reproducible. groundhog uses
     the CRAN archive of source files to access any CRAN package ever available.
 
 5. Difficult to debug non-working scripts.
