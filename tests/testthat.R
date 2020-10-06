@@ -1,7 +1,6 @@
 library(testthat)
 library(groundhog)
 
-if (R.version$status == "" && identical(Sys.getenv("NOT_CRAN"), "true")) {
+if (R.version$status == "") {
   test_check("groundhog")
 }
-

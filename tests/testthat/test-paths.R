@@ -3,30 +3,30 @@ test_that("get.groundhog.folder()", {
   Sys.unsetenv("GROUNDHOG_FOLDER")
   expect_identical(get.groundhog.folder(), path.expand(file.path("~", "groundhog")))
 
-  Sys.setenv("GROUNDHOG_FOLDER" = "~/groundhogR_test")
-  expect_identical(get.groundhog.folder(), path.expand(file.path("~", "groundhogR_test")))
+  test <- tempfile("groundhogR_test")
+  Sys.setenv("GROUNDHOG_FOLDER" = test)
+  expect_identical(get.groundhog.folder(), test)
   Sys.unsetenv("GROUNDHOG_FOLDER")
 
 })
 
 test_that("set.groundhog.folder", {
 
-  set.groundhog.folder("test")
+  test1 <- tempfile("test")
+  set.groundhog.folder(test1)
 
-  expect_identical(get.groundhog.folder(), "test")
+  expect_identical(get.groundhog.folder(), test1)
 
-  set.groundhog.folder("test2")
+  test2 <- tempfile("test2")
+  set.groundhog.folder(test2)
 
-  expect_identical(get.groundhog.folder(), "test2")
+  expect_identical(get.groundhog.folder(), test2)
 
-  # set.groundhogr.folder() doesn't overwrite other env vars
-  tmp_renviron <- tempfile("renviron")
+  # set.groundhog.folder() doesn't overwrite other env vars
+  write("TEST = test_var", Sys.getenv("R_ENVIRON"))
+  set.groundhog.folder(tempfile("test_preserver"))
 
-  Sys.setenv(R_ENVIRON = tmp_renviron)
-  write("TEST = test_var", tmp_renviron)
-  set.groundhog.folder("test_preserver")
-
-  expect_length(readLines(tmp_renviron), 2)
+  expect_identical(Sys.getenv("TEST"), "test_var")
 
 })
 
