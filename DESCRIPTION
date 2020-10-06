@@ -1,5 +1,5 @@
 Package: groundhog
-Title: Reproducible R Scripts via Version-Specific CRAN-Package Storing and Loading 
+Title: Reproducible Scripts via Version-Specific Package Loading 
 Version: 1.0.0
 Authors@R: c(
     person(given = "Uri",
