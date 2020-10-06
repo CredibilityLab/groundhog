@@ -15,7 +15,7 @@ get.installed_path <- function(pkg, vrs) {
   # Get full paths
   pkg_search_path <- get.pkg_search_paths(pkg, vrs)
 
-  installed_path <- find.package(pkg, pkg_search_paths, quiet = TRUE)
+  installed_path <- find.package(pkg, pkg_search_path, quiet = TRUE)
 
   if (length(installed_path) == 0) {
     return("")
