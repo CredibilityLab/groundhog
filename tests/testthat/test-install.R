@@ -1,13 +1,14 @@
 test_that("groundhog.library()", {
 
-  tmp_gdir <- file.path(tempdir(), "groundhogR")
-  dir.create(file.path(tmp_gdir, "_tarballs"), recursive = TRUE)
+  skip_on_cran()
+
+  tb_path <- file.path(get.groundhog.folder(), "_tarballs")
+
+  dir.create(tb_path, recursive = TRUE)
 
   file.copy(list.files("../../_tarballs/", full.names = TRUE),
-            file.path(tmp_gdir, "_tarballs"),
+            tb_path,
             recursive = TRUE)
-
-  Sys.setenv("GROUNDHOGR_FOLDER" = tmp_gdir)
 
   res <- expect_message(
     groundhog.library("magrittr", "2015-01-01"),
@@ -21,7 +22,5 @@ test_that("groundhog.library()", {
     groundhog.library(magrittr, "2015-01-01"),
     "already loaded"
   )
-
-  Sys.unsetenv("GROUNDHOGR_FOLDER")
 
 })
