@@ -6,10 +6,10 @@
 #'   installation path is returned. Otherwise, an empty string (`""`) is
 #'   returned.
 #'
-#' @examples
-#' \donttest{
-#' groundhog:::get.installed_path("magrittr", "1.5")
-#' }
+# @examples
+# \donttest{
+# groundhog:::get.installed_path("magrittr", "1.5")
+# }
 #'
 get.installed_path <- function(pkg, vrs) {
   # Get full paths

@@ -30,9 +30,3 @@ released, rather than the value of \code{date}.}
 \description{
 Generates dataframe with all dependencies needed to install a package, with version and source of installation
 }
-\examples{
-\dontrun{
-groundhog:::get.snowball("magrittr", "2018-02-12", current.deps = NULL)
-}
-
-}

@@ -11,10 +11,10 @@
 #'
 #' @inherit install.source return
 #'
-#' @examples
-#' \dontrun{
-#' groundhog:::install.snowball("magrittr", "2018-02-12", include.suggests = FALSE)
-#' }
+# @examples
+# \dontrun{
+# groundhog:::install.snowball("magrittr", "2018-02-12", include.suggests = FALSE)
+# }
 #'
 #' @seealso [get.snowball()] to determine in which order packages are installed
 #'

@@ -18,12 +18,6 @@ operation.
 Load a \code{data.frame} listing all CRAN packages, with their dependencies and
 publication date.
 }
-\examples{
-\donttest{
-groundhog:::load.cran.toc()
-}
-
-}
 \seealso{
 \link{update_cran.toc_if.needed}
 }

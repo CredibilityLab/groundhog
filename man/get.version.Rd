@@ -28,12 +28,6 @@ minor but maximal patch version numbers.}
 \description{
 Get version from date
 }
-\examples{
-\donttest{
-groundhog:::get.version("magrittr", "2018-02-12")
-}
-
-}
 \seealso{
 \code{\link[=get.R.pkg.date]{get.R.pkg.date()}} for the opposite operation: determining date
 for a given version.

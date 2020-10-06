@@ -15,11 +15,6 @@ update_cran.toc_if.needed(date)
 \description{
 Update \code{cran.toc} if it's not recent enough to include the required date.
 }
-\examples{
-\donttest{
-groundhog:::update_cran.toc_if.needed("2020-03-01")
-}
-}
 \seealso{
 \code{\link[=load.cran.toc]{load.cran.toc()}}
 }

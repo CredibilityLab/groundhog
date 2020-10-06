@@ -19,9 +19,3 @@ returned.
 \description{
 Check if package version is installed for current or past R versions,
 }
-\examples{
-\donttest{
-groundhog:::get.installed_path("magrittr", "1.5")
-}
-
-}

@@ -17,10 +17,10 @@
 #'   the maximum patch version available today.}
 #' }
 #'
-#' @examples
-#' \donttest{
-#' groundhog:::r.version.check("2018-02-12")
-#' }
+# @examples
+# \donttest{
+# groundhog:::r.version.check("2018-02-12")
+# }
 #'
 r.version.check <- function(date) {
   # Using

@@ -26,9 +26,3 @@ the maximum patch version available today.}
 \description{
 Compare the current R version to the \R version at a given \code{date}.`
 }
-\examples{
-\donttest{
-groundhog:::r.version.check("2018-02-12")
-}
-
-}

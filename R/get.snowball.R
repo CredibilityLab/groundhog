@@ -7,10 +7,10 @@
 #'   be loaded/installed based on the date when the version of \R being used was
 #'   released, rather than the value of `date`.
 #'
-#' @examples
-#' \dontrun{
-#' groundhog:::get.snowball("magrittr", "2018-02-12", current.deps = NULL)
-#' }
+# @examples
+# \dontrun{
+# groundhog:::get.snowball("magrittr", "2018-02-12", current.deps = NULL)
+# }
 #'
 get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE, current.deps) {
 

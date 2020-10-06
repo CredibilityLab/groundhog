@@ -9,10 +9,10 @@
 #'   underscore}
 #' }
 #'
-#' @examples
-#' \donttest{
-#' groundhog:::get.active()
-#' }
+# @examples
+# \donttest{
+# groundhog:::get.active()
+# }
 #'
 #' @importFrom utils installed.packages
 #'

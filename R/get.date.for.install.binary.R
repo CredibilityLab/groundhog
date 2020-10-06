@@ -6,10 +6,10 @@
 #'
 #' @inherit get.R.pkg.date return
 #'
-#' @examples
-#' \dontrun{
-#' groundhog:::get.date.for.install.binary("magrittr_1.0.1")
-#' }
+# @examples
+# \dontrun{
+# groundhog:::get.date.for.install.binary("magrittr_1.0.1")
+# }
 #'
 get.date.for.install.binary <- function(pkg_vrs) {
   binary.date <- as.DateYMD("1970-01-01")

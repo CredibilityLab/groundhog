@@ -8,10 +8,10 @@
 #' @return the required time (in seconds) to install the `pkg` with the specific
 #'   `vrs`.
 #'
-#' @examples
-#' \donttest{
-#' groundhog:::get.installation.time("magrittr", "1.5")
-#' }
+# @examples
+# \donttest{
+# groundhog:::get.installation.time("magrittr", "1.5")
+# }
 #'
 get.installation.time <- function(pkg, vrs) {
   if (is.null(.pkgenv[["cran.times"]])) {

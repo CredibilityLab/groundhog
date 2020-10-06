@@ -17,9 +17,3 @@ underscore}
 \description{
 Get currently active (=loaded) packages in the session, with their version
 }
-\examples{
-\donttest{
-groundhog:::get.active()
-}
-
-}

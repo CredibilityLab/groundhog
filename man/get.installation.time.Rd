@@ -19,9 +19,3 @@ the required time (in seconds) to install the \code{pkg} with the specific
 Get installation time for a given \code{pkg} and \code{vrs}. This is estimated from
 CRAN data about installation time on their build servers.
 }
-\examples{
-\donttest{
-groundhog:::get.installation.time("magrittr", "1.5")
-}
-
-}

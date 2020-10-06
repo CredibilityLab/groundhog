@@ -19,9 +19,3 @@ installed.
 Determine paths to search for an already installed package (versions of same
 minor, in reverse chronological order).
 }
-\examples{
-\donttest{
-groundhog:::get.pkg_search_paths("magrittr", "1.0.1")
-}
-
-}

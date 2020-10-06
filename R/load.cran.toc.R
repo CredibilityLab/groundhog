@@ -11,10 +11,10 @@
 #'
 #' @seealso [update_cran.toc_if.needed]
 #'
-#' @examples
-#' \donttest{
-#' groundhog:::load.cran.toc()
-#' }
+# @examples
+# \donttest{
+# groundhog:::load.cran.toc()
+# }
 #'
 #' @importFrom utils read.csv
 #'

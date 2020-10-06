@@ -10,10 +10,10 @@
 #' @seealso [get.R.pkg.date()] for the opposite operation: determining date
 #'   for a given version.
 #'
-#' @examples
-#' \donttest{
-#' groundhog:::get.version("magrittr", "2018-02-12")
-#' }
+# @examples
+# \donttest{
+# groundhog:::get.version("magrittr", "2018-02-12")
+# }
 #'
 get.version <- function(pkg, date, current.deps = c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders", "RcppParallel", "RcppProgress"), patch = c("current", "max")) {
 

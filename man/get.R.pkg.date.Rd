@@ -19,12 +19,6 @@ the date of the binary the download from MRAN, in the format
 \description{
 Get date of binary package from MRAN, given \R version being used
 }
-\examples{
-\donttest{
-groundhog:::get.R.pkg.date("magrittr_1.0.1", "3.6.0")
-}
-
-}
 \seealso{
 \code{\link[=get.version]{get.version()}} for the opposite operation: determining the package
 version from a given date.

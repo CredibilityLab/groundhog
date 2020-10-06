@@ -9,10 +9,10 @@
 #' @return the path where the package from a specific version is/will be
 #'   installed.
 #'
-#' @examples
-#' \donttest{
-#' groundhog:::get.pkg_search_paths("magrittr", "1.0.1")
-#' }
+# @examples
+# \donttest{
+# groundhog:::get.pkg_search_paths("magrittr", "1.0.1")
+# }
 #'
 get.pkg_search_paths <- function(pkg, vrs) {
 

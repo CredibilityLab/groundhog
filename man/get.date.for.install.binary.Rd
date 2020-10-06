@@ -17,12 +17,6 @@ the date of the binary the download from MRAN, in the format
 \description{
 Get date of binary package-version availability for current R version, on  MRAN
 }
-\examples{
-\dontrun{
-groundhog:::get.date.for.install.binary("magrittr_1.0.1")
-}
-
-}
 \seealso{
 \code{\link[=get.version]{get.version()}} for obtaining a package version from a given date
 }

@@ -43,12 +43,6 @@ Invisible \code{NULL}.
 Install given \code{pkg} with the version from \code{date}, making sure the order in
 which dependencies are installed doesn't generate conflicts.
 }
-\examples{
-\dontrun{
-groundhog:::install.snowball("magrittr", "2018-02-12", include.suggests = FALSE)
-}
-
-}
 \seealso{
 \code{\link[=get.snowball]{get.snowball()}} to determine in which order packages are installed
 }

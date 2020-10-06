@@ -10,10 +10,10 @@
 #' @seealso [get.version()] for the opposite operation: determining the package
 #'   version from a given date.
 #'
-#' @examples
-#' \donttest{
-#' groundhog:::get.R.pkg.date("magrittr_1.0.1", "3.6.0")
-#' }
+# @examples
+# \donttest{
+# groundhog:::get.R.pkg.date("magrittr_1.0.1", "3.6.0")
+# }
 #'
 get.R.pkg.date <- function(pkg_vrs, R_vrs) {
   if (is.null(.pkgenv[["cran.toc"]])) {
