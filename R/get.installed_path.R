@@ -13,13 +13,14 @@
 #'
 get.installed_path <- function(pkg, vrs) {
   # Get full paths
-  pkg_search_paths <- get.pkg_search_paths(pkg, vrs)
+  pkg_search_path <- get.pkg_search_paths(pkg, vrs)
 
   installed_path <- find.package(pkg, pkg_search_paths, quiet = TRUE)
 
   if (length(installed_path) == 0) {
-    installed_path <- ""
+    return("")
+  } else {
+    return(pkg_search_path)
   }
 
-  return(installed_path)
 }
