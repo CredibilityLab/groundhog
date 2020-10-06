@@ -29,7 +29,7 @@ Answer to other points raised during the review:
 \dontrun{} with \donttest{}. 
 
 We have carefully checked which examples could be wrapped with donttest rather
-than dontrun and only example that take more than 5 sec are wrapped in dontrun.
+than dontrun and only examples that take more than 5 sec are wrapped in dontrun.
 
 > Please ensure that your functions do not write by default or in your 
 examples/vignettes/tests in the user's home filespace (including the package 
@@ -41,3 +41,4 @@ the function `set.groundhog.folder()`. This emulates the behaviour of
 `install.packages()`.
 Examples that would write in the user directory are wrapped with `dontrun()`.
 All chunks from the vignette are set as `eval = FALSE`.
+All tests run in the `tmp` directory.
