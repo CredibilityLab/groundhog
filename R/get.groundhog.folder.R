@@ -100,7 +100,7 @@ set.groundhog.folder <- function(path) {
     file.create(renviron_path)
   }
 
-  env_vars <- readLines(renviron_path)
+  env_vars <- readRenviron(renviron_path)
 
   new_setting <- paste0("GROUNDHOG_FOLDER=", path)
   setting_line <- grep("GROUNDHOG_FOLDER", env_vars)
