@@ -129,3 +129,22 @@ get.available.mran.date <- function(date0, date1) {
   mid.date <- available.dates[mid.date.k]
   return(as.Date(mid.date, origin = "1970-01-01"))
 } # End of function
+
+base_pkg <- function() {
+  c(
+    "base",
+    "compiler",
+    "datasets",
+    "graphics",
+    "grDevices",
+    "grid",
+    "methods",
+    "parallel",
+    "splines",
+    "stats",
+    "stats4",
+    "tcltk",
+    "tools",
+    "utils"
+  )
+}

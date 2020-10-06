@@ -14,8 +14,6 @@
 # groundhog:::get.active()
 # }
 #'
-#' @importFrom utils installed.packages
-#'
 get.active <- function() {
   loaded.list <- utils::sessionInfo()$loadedOnly # pkgs in name space
   attached.list <- utils::sessionInfo()$otherPkgs # pkgs in attached
@@ -24,7 +22,7 @@ get.active <- function() {
   active.pkg_vrs <- paste0(active.pkg, "_", active.vrs) # merge to pkg_vrs
 
   # Drop those in base R
-  active.in.base <- active.pkg %in% installed.packages(priority = "base")
+  active.in.base <- active.pkg %in% base_pkg()
   active.pkg <- active.pkg[!active.in.base]
   active.vrs <- active.vrs[!active.in.base]
   active.pkg_vrs <- active.pkg_vrs[!active.in.base]

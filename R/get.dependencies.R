@@ -18,8 +18,6 @@
 #'
 #' @seealso [get.all.dependencies()] for recursive (=indirect) dependencies
 #'
-#' @importFrom utils installed.packages
-#'
 get.dependencies <- function(pkg, date, include.suggests = FALSE) {
 
   update_cran.toc_if.needed(date = date)
@@ -37,7 +35,7 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
   dep <- unlist(strsplit(dep, ",")) # turn to array
   dep <- dep[dep != ""] # drop empty values
   dep <- dep[dep != "R"] # drop R as a dependency
-  dep <- dep[!dep %in% installed.packages(priority = "base")] # base dependencies from R
+  dep <- dep[!dep %in% base_pkg()] # base dependencies from R
   return(dep)
 } # End get.dependencies()
 
