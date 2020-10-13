@@ -22,12 +22,6 @@ the version on CRAN at \code{date.}
 Get direct dependencies for one package \code{pkg}, for the version on CRAN at the
 given \code{date}.
 }
-\examples{
-\donttest{
-groundhog:::get.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
-}
-
-}
 \seealso{
 \code{\link[=get.all.dependencies]{get.all.dependencies()}} for recursive (=indirect) dependencies
 }

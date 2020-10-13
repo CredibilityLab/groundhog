@@ -11,10 +11,10 @@
 #' @return A character vector containing the package dependencies for `pkg`, for
 #'   the version on CRAN at `date.`
 #'
-#' @examples
-#' \donttest{
-#' groundhog:::get.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
-#' }
+# @examples
+# \donttest{
+# groundhog:::get.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
+# }
 #'
 #' @seealso [get.all.dependencies()] for recursive (=indirect) dependencies
 #'
@@ -50,10 +50,10 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
 #'   dependencies and the second column (`dep2` contains a dependencies of the
 #'   package in column `pkg`.
 #'
-#' @examples
-#' \donttest{
-#' groundhog:::get.all.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
-#' }
+# @examples
+# \donttest{
+# groundhog:::get.all.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
+# }
 #'
 #' @seealso [get.dependencies()] for direct dependencies only
 #'
