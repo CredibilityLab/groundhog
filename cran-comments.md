@@ -12,6 +12,7 @@
   - R release on windows
   - R release on macOS
 * R devel and release on winbuilder
+* rhub::check_for_cran()
 
 ## R CMD check results
 
@@ -19,26 +20,9 @@
 
 * This is a re-submission following Gregor Seyer's feedback:
 
-- Reduced title length to less than 65 characters
-- Removed examples from unexported functions
-- Removed calls to `installed.packages()` function
-
-Answer to other points raised during the review:
-
-> Please unwrap the examples if they are executable in < 5 sec, or replace 
-\dontrun{} with \donttest{}. 
-
-We have carefully checked which examples could be wrapped with donttest rather
-than dontrun and only examples that take more than 5 sec are wrapped in dontrun.
-
-> Please ensure that your functions do not write by default or in your 
-examples/vignettes/tests in the user's home filespace (including the package 
-directory and getwd()). This is not allowed by CRAN policies. In your 
-examples/vignettes/tests you can write to tempdir(). 
-
-This package will only write to a location explicitly chosen by the user (via 
-the function `set.groundhog.folder()`. This emulates the behaviour of 
-`install.packages()`.
-Examples that would write in the user directory are wrapped with `dontrun()`.
-All chunks from the vignette are set as `eval = FALSE`.
-All tests run in the `tmp` directory.
+- Remaining examples in unexported functions have been removed
+- One more example uses `\donttest{}` instead of `\dontrun{}`. We cannot change
+this for the remaining examples as they produce permanent setting changes, or
+write to the user home (at a user-specified location). We do not want users to
+run these accidentally. This is similar to the example in `install.packages()`, 
+which is wrapped in `\dontrun{}`
