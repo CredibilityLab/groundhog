@@ -76,8 +76,11 @@ test_that("update_cran.toc_if.needed()", {
   #                  "most recent")
   # )
 
-  expect_false(
-    update_cran.toc_if.needed("1970-01-01")
-  )
+  # This test is flimsy since it'll become false each time a new version of R
+  # is released
+
+  # expect_false(
+  #   update_cran.toc_if.needed("1970-01-01")
+  # )
 
 })
