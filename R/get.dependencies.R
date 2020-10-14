@@ -84,15 +84,10 @@ get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
     # 5.6 if pendingk not empty, update pending and dep12
     if (length(pendingk) > 0) {
       # [a] Process pendingk prior to adding to pending()
-      # drop empty
-      # FIXME: this line should not be necessary since there should be not
-      # context where an empty element is returned
-      pendingk <- pendingk[pendingk != ""]
       # Already processed dropped
       already.processed <- pendingk %in% dep12[, 1] # identify in pending those already processed
       pendingk.net <- pendingk[!already.processed] # drop them
       pending <- unique(c(pending, pendingk.net)) # Unique so that if we add somethign already pending we don't add it
-      pending <- pending[pending != ""] # drop empty
 
       # Add pendingk.net to dep12 if any
       if (length(pendingk.net) > 0) {
