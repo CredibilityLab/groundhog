@@ -65,7 +65,7 @@ get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
   # [b] dep12: data.frame with two columns, pkg-left, dependency-right, for snowball loading
   dep12 <- data.frame(pkg = as.character(), dep2 = as.character())
 
-  if (length(pending > 0)) {
+  if (length(pending) > 0) {
     dep12 <- data.frame(pkg = pkg, dep2 = pending)
   }
 
@@ -104,5 +104,5 @@ get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
     k <- k + 1
     if (k > 50000) break # In case the loop does not converge to a stable dataframe
   } # End while
-  return(dep12 = dep12)
+  return(dep12)
 } # End function get.all.dependencies
