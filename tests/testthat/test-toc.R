@@ -25,19 +25,6 @@ test_that("load.cran.toc()", {
 
 })
 
-test_that("update_cran.toc_if.needed()", {
-
-  # This error has been replaced by a exit() which doesn't play well with
-  # testthat
-
-  # expect_error(
-  #   expect_message(update_cran.toc_if.needed("9999-01-01"), "most recent date")
-  # )
-
-  expect_false(update_cran.toc_if.needed("2020-01-01"))
-
-})
-
 test_that("toc()", {
 
   # I'm using lightr here because I know it will on CRAN for the foreseeable
