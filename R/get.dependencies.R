@@ -62,12 +62,12 @@ get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
   # [a] Vector with pending deps, for looping install
   pending <- get.dependencies(pkg, date, include.suggests = include.suggests) # include.suggests=TRUE means that suggested dependencies and their depdencies are installed.
 
-  # [b] dep12: data.frame with two columns, pkg-left, dependency-right, for snowball loading
-  dep12 <- data.frame(pkg = as.character(), dep2 = as.character())
-
-  if (length(pending) > 0) {
-    dep12 <- data.frame(pkg = pkg, dep2 = pending)
+  if (length(pending) == 0) {
+    return(data.frame(pkg = character(), dep2 = character()))
   }
+
+  # [b] dep12: data.frame with two columns, pkg-left, dependency-right, for snowball loading
+  dep12 <- data.frame(pkg = pkg, dep2 = pending)
 
   # 5.2 Loop over pending, adding to dep12, and both adding and subtracting from pending till it's empty
   k <- 1
