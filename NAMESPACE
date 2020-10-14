@@ -3,7 +3,6 @@
 export(cross.toc)
 export(get.groundhog.folder)
 export(groundhog.library)
-export(msg.R.switch)
 export(set.groundhog.folder)
 export(toc)
 importFrom(stats,setNames)

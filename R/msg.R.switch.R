@@ -9,7 +9,6 @@
 #'
 #' @seealso [r.version.check()]
 #'
-#' @export
 msg.R.switch <- function(date) {
   rv <- r.version.check(date)
 
