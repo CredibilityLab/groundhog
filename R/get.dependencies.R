@@ -33,9 +33,15 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
   }
 
   dep <- unlist(strsplit(dep, ",")) # turn to array
+  dep <- dep[!dep %in% base_pkg()] # base dependencies from R
+  dep <- unique(dep) # some dependencies can be listed both in Imports and LinkingTo
+
+  # These steps are normally taken care of server side but let's stay on the
+  # safe side
   dep <- dep[dep != ""] # drop empty values
   dep <- dep[dep != "R"] # drop R as a dependency
-  dep <- dep[!dep %in% base_pkg()] # base dependencies from R
+  dep <- dep[is.na(dep)] # drop NA
+
   return(dep)
 } # End get.dependencies()
 
