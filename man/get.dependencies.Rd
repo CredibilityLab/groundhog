@@ -4,7 +4,7 @@
 \alias{get.dependencies}
 \title{Get dependencies for one package}
 \usage{
-get.dependencies(pkg, date, include.suggests = FALSE)
+get.dependencies(pkg, date, include.suggests = FALSE, drop.non.cran = TRUE)
 }
 \arguments{
 \item{pkg}{character. Name of the package to install}
@@ -13,6 +13,10 @@ get.dependencies(pkg, date, include.suggests = FALSE)
 
 \item{include.suggests}{Logical (defaults to \code{FALSE}. Should suggested
 packages be installed?}
+
+\item{drop.non.cran}{(defaults to \code{TRUE}. Should installation of
+dependencies that are not found in cran.toc.rds (i.e., not in CRAN) be
+attempted?}
 }
 \value{
 A character vector containing the package dependencies for \code{pkg}, for

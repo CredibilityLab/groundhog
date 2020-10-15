@@ -43,7 +43,16 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE, drop.non.cran 
   #Drop dependencies not in cran, if so requested.
   #   This will drop non-CRAN dependencies, and will also drop text in those fields which does not correspond to dependencies at all
   if (drop.non.cran) {
-    dep <- dep[dep %in% cran.toc$Package]
+      #Non cran dependencies
+        non.cran = dep[!dep %in% cran.toc$Package]
+      #Drop the non.cran
+        dep <- dep[!dep %in% non.cran]
+      #Spit out message
+        if (length(non.cran)>0) {
+          message2("Note. these dependencies \n",dep,"\n\nwere not found on CRAN and their installation will not be attempted.")
+          }
+      #List dropped
+        
     }
 
   # These steps are normally taken care of server side but let's stay on the
