@@ -7,7 +7,9 @@
 #' @param date date (in the format "%Y-%m-%d"), Required date for the package.
 #' @param include.suggests Logical (defaults to `FALSE`. Should suggested
 #'   packages be installed?
-#'
+#' @param drop.non.cran  (defaults to `TRUE`. Should installation of 
+#'   dependencies that are not found in cran.toc.rds (i.e., not in CRAN) be 
+#'   attempted?
 #' @return A character vector containing the package dependencies for `pkg`, for
 #'   the version on CRAN at `date.`
 #'
@@ -18,7 +20,7 @@
 #'
 #' @seealso [get.all.dependencies()] for recursive (=indirect) dependencies
 #'
-get.dependencies <- function(pkg, date, include.suggests = FALSE) {
+get.dependencies <- function(pkg, date, include.suggests = FALSE, drop.non.cran = TRUE) {
 
   update_cran.toc_if.needed(date = date)
   cran.toc <- .pkgenv[["cran.toc"]]
@@ -32,9 +34,17 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
     dep <- c(dep, row$Suggests) # add 'Suggests' dependencies if requested
   }
 
+
+  
   dep <- unlist(strsplit(dep, ",")) # turn to array
   dep <- dep[!dep %in% base_pkg()] # base dependencies from R
   dep <- unique(dep) # some dependencies can be listed both in Imports and LinkingTo
+  
+  #Drop dependencies not in cran, if so requested.
+  #   This will drop non-CRAN dependencies, and will also drop text in those fields which does not correspond to dependencies at all
+  if (drop.non.cran) {
+    dep <- dep[dep %in% cran.toc$Package]
+    }
 
   # These steps are normally taken care of server side but let's stay on the
   # safe side
@@ -63,7 +73,7 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
 #'
 #' @seealso [get.dependencies()] for direct dependencies only
 #'
-get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
+get.all.dependencies <- function(pkg, date, include.suggests = FALSE, drop.non.CRAN=TRUE) {
   # 5.1. Populate the starting point with this package and its dependencies
   # [a] Vector with pending deps, for looping install
   pending <- get.dependencies(pkg, date, include.suggests = include.suggests) # include.suggests=TRUE means that suggested dependencies and their depdencies are installed.
