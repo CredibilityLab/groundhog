@@ -4,7 +4,7 @@
 \alias{get.all.dependencies}
 \title{Get recursive dependencies}
 \usage{
-get.all.dependencies(pkg, date, include.suggests = FALSE, drop.non.CRAN = TRUE)
+get.all.dependencies(pkg, date, include.suggests = FALSE, drop.non.cran = TRUE)
 }
 \arguments{
 \item{pkg}{character. Name of the package to install}
@@ -13,6 +13,10 @@ get.all.dependencies(pkg, date, include.suggests = FALSE, drop.non.CRAN = TRUE)
 
 \item{include.suggests}{Logical (defaults to \code{FALSE}. Should suggested
 packages be installed?}
+
+\item{drop.non.cran}{(defaults to \code{TRUE}. Should installation of
+dependencies that are not found in cran.toc.rds (i.e., not in CRAN) be
+attempted?}
 }
 \value{
 a \code{data.frame} where the first column (\code{pkg}) contains non-terminal
