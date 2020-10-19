@@ -72,9 +72,9 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
 #'
 #' @seealso [get.dependencies()] for direct dependencies only
 #'
-get.all.dependencies <- function(pkg, date, include.suggests = FALSE, drop.non.cran=TRUE) {
-  
-  
+get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
+
+
   # 5.1. Populate the starting point with this package and its dependencies
   # [a] Vector with pending deps, for looping install
   pending <- get.dependencies(pkg, date, include.suggests = include.suggests) # include.suggests=TRUE means that suggested dependencies and their dependencies are installed.

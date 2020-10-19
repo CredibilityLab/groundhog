@@ -4,7 +4,7 @@
 \alias{get.all.dependencies}
 \title{Get recursive dependencies}
 \usage{
-get.all.dependencies(pkg, date, include.suggests = FALSE, drop.non.cran = TRUE)
+get.all.dependencies(pkg, date, include.suggests = FALSE)
 }
 \arguments{
 \item{pkg}{character. Name of the package to install}
