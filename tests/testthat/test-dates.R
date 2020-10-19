@@ -37,10 +37,10 @@ test_that("r.version.check()", {
   )
 
   expect_is(rv, "list")
-  expect_length(rv, 8)
+  expect_length(rv, 10)
   expect_named(rv,
-               c("r.using.full", "r.using.major", "r.using.minor", "r.using.patch",
-                  "r.need.full", "r.need.major", "r.need.minor", "r.need.patch"))
+               c("r.using.full", "r.using.major", "r.using.minor", "r.using.majmin", "r.using.patch",
+                  "r.need.full", "r.need.major", "r.need.minor", "r.need.majmin", "r.need.patch"))
 
 })
 

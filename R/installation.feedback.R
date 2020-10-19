@@ -35,7 +35,7 @@ installation.feedback <- function(k, date, snowball, start.time) {
   )
 
   # Add msg if R mismatch and recent enough for groundhog
-  if ((rv$r.using.major != rv$r.need.major | rv$r.using.minor != rv$r.need.minor) & date > "2014-09-18") {
+  if (rv$r.using.majmin != rv$r.need.majmin & date > "2014-09-18") {
     msg <- c(
       msg,
       "\n> Installation is slow because you are using R-", get.rversion(), "\n",

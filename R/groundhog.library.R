@@ -43,13 +43,13 @@ groundhog.library <- function(
 
   rv <- r.version.check(date) # Get version of r being used and needed
 
-  if (package_version(rv$r.using.full) < package_version(rv$r.need.full)) {
+  if (package_version(rv$r.using.majmin) < package_version(rv$r.need.majmin)) {
     message2()
     message(
       "You are using R-", rv$r.using.full, " and the current R version for the data you entered:",
-      "'", date, "' was R-", rv$r.need.full, ".\n",
+      "'", date, "' was R-", rv$r.need.majmin, ".\n",
       "To ensure reproducibility you must use groundhog.library() with a version of R ",
-      "that is as least\nas recent as the entered date (i.e., R>=", rv$r.need.full, ")\n",
+      "that is as least\nas recent as the entered date (i.e., R>=", rv$r.need.majmin, ")\n",
       "\n\n   ----------------- Package '", pkg, "' NOT LOADED ----------------"
     )
     exit()

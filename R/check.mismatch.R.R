@@ -12,7 +12,7 @@ check.mismatch.R <- function(date) {
   rv <- r.version.check(date)
 
   # If major or minor do not match, give warning
-  if (rv$r.using.major != rv$r.need.major | rv$r.using.minor != rv$r.need.minor) {
+  if (rv$r.using.minmaj != rv$r.need.minmaj) {
 
     # Check if have not warned for the last hour
     now <- Sys.time()

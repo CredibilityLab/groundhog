@@ -144,7 +144,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
 
         # If using different R version, attribute to that:
         rv <- r.version.check(date)
-        if ((rv$r.using.minor != rv$r.need.minor) | (rv$r.using.major != rv$r.need.major)) {
+        if (rv$r.using.minmaj != rv$r.need.minmaj) {
           message1() # to skip a line
           message2()
           message("Installation failed!")
