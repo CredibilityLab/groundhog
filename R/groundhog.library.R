@@ -42,11 +42,8 @@ groundhog.library <- function(
   update_cran.toc_if.needed(date = date)
 
   rv <- r.version.check(date) # Get version of r being used and needed
-  r.toc <- toc("R") # Get all versions of R
-  r.using.k <- match(rv$r.using.full, r.toc$Version) # Which
-  r.need.k <- match(rv$r.need.full, r.toc$Version)
 
-  if (r.using.k < r.need.k) {
+  if (package_version(rv$r.using.full) < package_version(rv$r.need.full)) {
     message2()
     message(
       "You are using R-", rv$r.using.full, " and the current R version for the data you entered:",
