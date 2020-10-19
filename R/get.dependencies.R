@@ -24,9 +24,9 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
 
   # Get version from date
   vrs <- get.version(pkg, date)
-  
+
   # Get dependencies if version exists
-  row <- cran.toc[cran.toc$Package == pkg & cran.toc$Version == vrs, c("Imports", "Depends", "Suggests", "LinkingTo")] 
+  row <- cran.toc[cran.toc$Package == pkg & cran.toc$Version == vrs, c("Imports", "Depends", "Suggests", "LinkingTo")]
   dep <- c(row$Imports, row$Depends, row$LinkingTo) # merge
   if (include.suggests) {
     dep <- c(dep, row$Suggests) # add 'Suggests' dependencies if requested
@@ -34,22 +34,22 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
   dep <- unlist(strsplit(dep, ","))  # turn to array
   dep <- dep[!dep %in% base_pkg()]   # base dependencies from R
   dep <- unique(dep)                 # some dependencies can be listed both in Imports and LinkingTo, keep only one
-  
-  
+
   #Drop non-cran
-        non.cran = dep[!dep %in% cran.toc$Package]
-        dep <- dep[!dep %in% non.cran]
-        
-      #Give warning (commented out becuse this code is executed twice within a groundhog.library() call, and so it duplicates the warning)
-        #if (length(non.cran)>0) {   #This only considers non-cran dependencies which are not the packae of interest, to avoid double reporting it
-        #  message2("groundhog.library() Warning: Missing dependencies *??!")
-        # message1("The following dependencies: '",non.cran,"' were not found on CRAN and their installation will not be attempted.")
-        # }
+  non.cran <- dep[!dep %in% cran.toc$Package]
+  dep <- dep[!dep %in% non.cran]
+
+  #Give warning (commented out because this code is executed twice within a groundhog.library() call, and so it duplicates the warning)
+  #if (length(non.cran)>0) {   #This only considers non-cran dependencies which are not the packaae of interest, to avoid double reporting it
+  #  message2("groundhog.library() Warning: Missing dependencies *??!")
+  # message1("The following dependencies: '",non.cran,"' were not found on CRAN and their installation will not be attempted.")
+  # }
+
   # These steps are normally taken care of server side but let's stay on the
-    # safe side
-    dep <- dep[dep != ""] # drop empty values
-    dep <- dep[dep != "R"] # drop R as a dependency
-    dep <- dep[is.na(dep)] # drop NA
+  # safe side
+  dep <- dep[dep != ""] # drop empty values
+  dep <- dep[dep != "R"] # drop R as a dependency
+  dep <- dep[is.na(dep)] # drop NA
 
   return(dep)
 } # End get.dependencies()
