@@ -38,7 +38,7 @@ installation.feedback <- function(k, date, snowball, start.time) {
   if (rv$r.using.majmin != rv$r.need.majmin & date > "2014-09-18") {
     msg <- c(
       msg,
-      "\n> Installation is slow because you are using R-", get.rversion(), "\n",
+      "\n> Installation is slow because you are using R-", rv$r.using.full, "\n",
       "> If you run this script with the R version current for the date you entered: '", date, "', i.e., R-", rv$r.need.patch, ",\n",
       "  the entire installation would take about a few minutes at most.\n",
       "> Instructions for running other versions of R on demand:  https://groundhogR.com/many"
