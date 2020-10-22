@@ -25,4 +25,4 @@
 this for the remaining examples as they produce permanent setting changes, or
 write to the user home (at a user-specified location). We do not want users to
 run these accidentally. This is similar to the example in `install.packages()`, 
-which is wrapped in `\dontrun{}`
+which is wrapped in `\dontrun{}`, and that this package tries to emulate.
