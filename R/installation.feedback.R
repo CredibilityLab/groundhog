@@ -38,10 +38,10 @@ installation.feedback <- function(k, date, snowball, start.time) {
   if (rv$r.using.majmin != rv$r.need.majmin & date > "2014-09-18") {
     msg <- c(
       msg,
-      "\n> Installation is slow because you are using R-", rv$r.using.full, "\n",
-      "> If you run this script with the R version current for the date you entered: '", date, "', i.e., R-", rv$r.need.full, ",\n",
-      "  the entire installation would take about a few minutes at most.\n",
-      "> Instructions for running other versions of R on demand:  https://groundhogR.com/many"
+      "\n> Installation is slow because you are using R-", rv$r.using.full, ", which was released long after ",date,"\n",
+      "> If you run this script with an R version with available around that time, \n", 
+	  "  e.g., with R-", rv$r.need.full, ", the installation would be much faster.\n",
+      "> Instructions for running previous versions of R:  https://groundhogR.com/many"
     )
   } # End if R mismach
 
