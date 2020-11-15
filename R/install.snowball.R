@@ -176,12 +176,12 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
         exit()
       }
 
-      # Installation succeded
+      # Installation succeeded
       if (now.installed) {
         # message2()
         message1(pkg_vrs.k, " installed succesfully. Saved to: ", lib.k)
       }
-    } # End of check for whetehr already installed
+    } # End of check for whether already installed
 
     # Force load package
     loadNamespace(pkg.k, lib.loc = lib.k)
