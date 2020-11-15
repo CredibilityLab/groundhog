@@ -30,8 +30,7 @@ installation.feedback <- function(k, date, snowball, start.time) {
     "> The time now is ", format(Sys.time(), "%H:%M"), ", and we quite roughly estimate the",
     "  process to end around ", finish.time.estimate, "\n",
     "> It is unlikely to finish after ", finish.time.max, "\n",
-    "> These estimates will be revised after each package installs,\n",
-    "  but they will remain noisy estimates."
+    "> These estimates will be revised after each package installs, but they will remain noisy estimates."
   )
 
   # Add msg if R mismatch and recent enough for groundhog
@@ -39,11 +38,11 @@ installation.feedback <- function(k, date, snowball, start.time) {
     msg <- c(
       msg,
       "\n> Installation is slow because you are using R-", rv$r.using.full, ", which was released long after ",date,"\n",
-      "> If you run this script with an R version with available around that time, \n", 
+      "> If you run this script with an R version available around that time, \n", 
 	  "  e.g., with R-", rv$r.need.full, ", the installation would be much faster.\n",
       "> Instructions for running previous versions of R:  https://groundhogR.com/many"
     )
-  } # End if R mismach
+  } # End if R mismatch
 
   # Add message if installing from source taht output has been supressed
   if (snowball[k, "from"] == "source") {
