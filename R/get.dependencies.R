@@ -49,7 +49,7 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
   # safe side
   dep <- dep[dep != ""] # drop empty values
   dep <- dep[dep != "R"] # drop R as a dependency
-  dep <- dep[is.na(dep)] # drop NA
+  dep <- dep[!is.na(dep)] # drop NA
 
   return(dep)
 } # End get.dependencies()
