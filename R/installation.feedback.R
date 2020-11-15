@@ -44,7 +44,7 @@ installation.feedback <- function(k, date, snowball, start.time) {
     )
   } # End if R mismatch
 
-  # Add message if installing from source taht output has been supressed
+  # Add message if installing from source taht output has been suppressed
   if (snowball[k, "from"] == "source") {
     msg <- c(
       msg,
