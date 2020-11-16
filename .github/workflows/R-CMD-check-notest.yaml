@@ -40,4 +40,6 @@ jobs:
         run: R CMD build .
 
       - name: Check
+        env:
+          _R_CHECK_FORCE_SUGGESTS_: false
         run: R CMD check groundhog_*.tar.gz
