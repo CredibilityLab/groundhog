@@ -8,7 +8,7 @@
 
 }
 
-#' @importFrom utils packageVersion
+#' @importFrom utils packageVersion compareVersion
 .onAttach <- function(libname, pkgname) {
 
   #current.packages <- tryCatch(
