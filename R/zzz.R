@@ -19,13 +19,12 @@
 
   groundhog_cran <- current.packages$Version[current.packages$Package == "groundhog"]
 
-  # isTRUE() is necessary here because this will return logical(0) is the pkg
-  # is not on CRAN, or if where working offline (current.packages is NULL in
-  # this case).
+  # isTRUE() is necessary here because this will return logical(0) if the pkg
+  # is not on CRAN, or if working offline (current.packages is NULL in this case).
   if (isTRUE(package_version(groundhog_cran) > packageVersion("groundhog"))) {
     packageStartupMessage(
       "A more recent version of groundhog is available. Please install it by ",
-      'running install.packages("groundhog") and then restart your R session.'
+      'running install.packages("groundhog").'
     )
   }
 }
