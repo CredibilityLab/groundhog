@@ -42,4 +42,4 @@ jobs:
       - name: Check
         env:
           _R_CHECK_FORCE_SUGGESTS_: false
-        run: R CMD check --no-tests groundhog_*.tar.gz
+        run: R CMD check --no-tests --no-vignettes groundhog_*.tar.gz
