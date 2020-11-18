@@ -53,24 +53,43 @@ get.script.folder <- function() {
   }
 }
 
+researchbox_code <- function() {
+
+  return(dirname(get.script.folder()))
+}
+
+researchbox_dir <- function() {
+
+  code_dir <- researchbox_code()
+  researchbox_dir <- dirname(code_dir)
+
+  return(researchbox_dir)
+}
 
 researchbox_data <- function() {
-  code_dir <- dirname(get.script.folder())
-  researchbox_dir <- dirname(code_dir)
-  data_dir <- paste0(researchbox_dir, "/Data")
-  if (!dir.exists(data_dir)) message("groundhog says: The 'ResearchBox/Data' folder you are referencing does not exist (", data_dir, ").")
+
+  data_dir <- file.path(researchbox_dir(), "Data")
+
+  if (!dir.exists(data_dir)) {
+    message(
+      "groundhog says: The 'ResearchBox/Data' folder you are referencing ",
+      "does not exist (", data_dir, ")."
+    )
+  }
+
   return(data_dir)
 }
 
 researchbox_other <- function() {
-  code_dir <- dirname(get.script.folder())
-  researchbox_dir <- dirname(code_dir)
-  other_dir <- paste0(researchbox_dir, "/Other")
-  if (!dir.exists(other_dir)) message("groundhog says: The 'ResearchBox/Other' folder you are referencig does not exist (", other_dir, ").")
-  return(other_dir)
-}
 
-# Alias for symmetry with other functions
-researchbox_code <- function() {
-  return(dirname(get.script.folder()))
+  other_dir <- file.path(researchbox_dir(), "Other")
+
+  if (!dir.exists(other_dir)) {
+    message(
+      "groundhog says: The 'ResearchBox/Other' folder you are referencing ",
+      "does not exist (", other_dir, ")."
+    )
+  }
+
+  return(other_dir)
 }
