@@ -5,6 +5,11 @@
 #' current script file (in full path)
 #' @description current script file (in full path)
 #' works with Rscript, source() or in RStudio Run selection, RStudio Console
+#'
+#' @examples
+#' setwd(researchbox_data())
+#' x <- researchbox_other()
+#'
 #' @export
 get.script.folder <- function() {
   # http://stackoverflow.com/a/32016824/2292993
@@ -69,7 +74,3 @@ researchbox_other <- function() {
 researchbox_code <- function() {
   return(dirname(get.script.folder()))
 }
-
-# Examples
-setwd(researchbox_data())
-x <- researchbox_other()
