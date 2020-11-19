@@ -21,24 +21,26 @@ get.script.folder <- function() {
         # Source'd via R console
         return(normalizePath(sys.frames()[[1]]$ofile))
       } else {
-        # RStudio Run Selection
-        # http://stackoverflow.com/a/35842176/2292993
-        pth <- rstudioapi::getActiveDocumentContext()$path
-        if (pth != "") {
-          return(normalizePath(pth))
-        } else {
-          # RStudio Console
-          tryCatch(
-            {
-              pth <- rstudioapi::getSourceEditorContext()$path
-              pth <- normalizePath(pth)
-            },
-            error = function(e) {
-              # normalizePath('') issues warning/error
-              pth <- ""
-            }
-          )
-          return(pth)
+        if (is_rstudio() && requireNamespace("rstudioapi", quietly = TRUE)) {
+          # RStudio Run Selection
+          # http://stackoverflow.com/a/35842176/2292993
+          pth <- rstudioapi::getActiveDocumentContext()$path
+          if (pth != "") {
+            return(normalizePath(pth))
+          } else {
+            # RStudio Console
+            tryCatch(
+              {
+                pth <- rstudioapi::getSourceEditorContext()$path
+                pth <- normalizePath(pth)
+              },
+              error = function(e) {
+                # normalizePath('') issues warning/error
+                pth <- ""
+              }
+            )
+            return(pth)
+          }
         }
       }
     }

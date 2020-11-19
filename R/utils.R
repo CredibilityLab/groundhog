@@ -148,3 +148,9 @@ base_pkg <- function() {
     "utils"
   )
 }
+
+is_rstudio <- function() {
+  # More reliable than the env variable because it works as expected even when
+  # code is called from the Terminal tab in RStudio (NOT the Console).
+  identical(.Platform$GUI, "RStudio")
+}
