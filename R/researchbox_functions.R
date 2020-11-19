@@ -8,43 +8,38 @@ get.script.folder <- function() {
   cmdArgs <- commandArgs(trailingOnly = FALSE)
   needle <- "--file="
   match <- grep(needle, cmdArgs)
+
   if (length(match) > 0) {
     # Rscript via command line
-    return(normalizePath(sub(needle, "", cmdArgs[match])))
-  } else {
-    ls_vars <- ls(sys.frames()[[1]])
-    if ("fileName" %in% ls_vars) {
-      # Source'd via RStudio
-      return(normalizePath(sys.frames()[[1]]$fileName))
-    } else {
-      if (!is.null(sys.frames()[[1]]$ofile)) {
-        # Source'd via R console
-        return(normalizePath(sys.frames()[[1]]$ofile))
-      } else {
-        if (is_rstudio() && requireNamespace("rstudioapi", quietly = TRUE)) {
-          # RStudio Run Selection
-          # http://stackoverflow.com/a/35842176/2292993
-          pth <- rstudioapi::getActiveDocumentContext()$path
-          if (pth != "") {
-            return(normalizePath(pth))
-          } else {
-            # RStudio Console
-            tryCatch(
-              {
-                pth <- rstudioapi::getSourceEditorContext()$path
-                pth <- normalizePath(pth)
-              },
-              error = function(e) {
-                # normalizePath('') issues warning/error
-                pth <- ""
-              }
-            )
-            return(pth)
-          }
-        }
-      }
+    path <- sub(needle, "", cmdArgs[match])
+    return(normalizePath())
+  }
+
+  if ("fileName" %in% ls(sys.frames()[[1]])) {
+    # Source'd via RStudio
+    return(normalizePath(sys.frames()[[1]]$fileName))
+  }
+
+  if (!is.null(sys.frames()[[1]]$ofile)) {
+    # Source'd via R console
+    return(normalizePath(sys.frames()[[1]]$ofile))
+  }
+
+  if (is_rstudio() && requireNamespace("rstudioapi", quietly = TRUE)) {
+    # RStudio Run Selection
+    # http://stackoverflow.com/a/35842176/2292993
+    pth <- rstudioapi::getActiveDocumentContext()$path
+    if (pth != "") {
+      return(normalizePath(pth))
+    }
+
+    pth <- rstudioapi::getSourceEditorContext()$path
+    if (pth != "") {
+      return(normalizePath(pth))
     }
   }
+
+  return("")
 }
 
 #' Get researchbox project paths
