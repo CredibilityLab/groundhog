@@ -5,7 +5,9 @@ test_that("groundhog.library()", {
   # testing workflow (as opposed to e.g. magrittr)
 
   skip_on_cran()
-  skip_if_not(getRversion() >= "3.5.0")
+
+  # Given the date we use, it will generate an error for earlier R versions
+  skip_if_not(getRversion() >= "4.0.0")
 
   tb_path <- file.path(get.groundhog.folder(), "_tarballs")
 
