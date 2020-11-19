@@ -98,10 +98,7 @@ quit.menu <- function(date, quiet = getOption("quiet.groundhog", default = FALSE
 } # End quit.menu
 
 # Stop message which does not say error
-exit <- function(...) {
-  message1(...)
-  invokeRestart("abort")
-}
+exit <- stop
 
 # Function added on 2020 05 18
 get.available.mran.date <- function(date0, date1) {
