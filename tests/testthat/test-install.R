@@ -1,6 +1,11 @@
 test_that("groundhog.library()", {
 
+  # We use contactdata for tests because it has no dependencies and
+  # because there is no risk of conflicts with packages used in the
+  # testing workflow (as opposed to e.g. magrittr)
+
   skip_on_cran()
+  skip_if_not(getRversion() >= "3.5.0")
 
   tb_path <- file.path(get.groundhog.folder(), "_tarballs")
 
