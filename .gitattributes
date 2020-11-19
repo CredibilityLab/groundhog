@@ -1,4 +1,1 @@
-_tarballs/stringr_1.4.0.tar.gz filter=lfs diff=lfs merge=lfs -text
-_tarballs/glue_1.3.1.tar.gz filter=lfs diff=lfs merge=lfs -text
-_tarballs/magrittr_1.5.tar.gz filter=lfs diff=lfs merge=lfs -text
-_tarballs/stringi_1.4.3.tar.gz filter=lfs diff=lfs merge=lfs -text
+_tarballs/* filter=lfs diff=lfs merge=lfs -text

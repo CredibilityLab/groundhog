@@ -11,15 +11,15 @@ test_that("groundhog.library()", {
             recursive = TRUE)
 
   res <- expect_message(
-    groundhog.library("magrittr", "2015-01-01"),
+    groundhog.library("contactdata", "2020-10-01"),
     "Successfully"
   )
 
-  expect_true("magrittr_1.5" %in% res)
+  expect_true("contactdata_0.1" %in% res)
 
   # Test non-standard evaluation
   res <- expect_message(
-    groundhog.library(magrittr, "2015-01-01"),
+    groundhog.library(contactdata, "2020-10-01"),
     "already loaded"
   )
 
