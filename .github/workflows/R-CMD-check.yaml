@@ -21,7 +21,8 @@ jobs:
           # RSPM is only available for R >=3.2
           # - {os: ubuntu-16.04, r: '3.0', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
           # - {os: ubuntu-16.04, r: '3.1', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
-          - {os: ubuntu-16.04, r: '3.2', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
+          # digest requires R >= 3.3
+          #'- {os: ubuntu-16.04, r: '3.2', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
           - {os: ubuntu-16.04, r: '3.3', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
           - {os: ubuntu-16.04, r: '3.4', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
           - {os: ubuntu-16.04, r: '3.5', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
