@@ -37,7 +37,7 @@ jobs:
       - name: Build
         env:
           _R_CHECK_CRAN_INCOMING_: false
-        run: R CMD build .
+        run: R CMD build --no-build-vignettes .
 
       - name: Check
         env:
