@@ -81,7 +81,7 @@ researchbox_data <- function() {
 
   data_dir <- file.path(researchbox_dir(), "Data")
 
-  if (!dir.exists(data_dir)) {
+  if (!file.exists(data_dir)) {
     message(
       "groundhog says: The 'ResearchBox/Data' folder you are referencing ",
       "does not exist (", data_dir, ")."
@@ -97,7 +97,7 @@ researchbox_other <- function() {
 
   other_dir <- file.path(researchbox_dir(), "Other")
 
-  if (!dir.exists(other_dir)) {
+  if (!file.exists(other_dir)) {
     message(
       "groundhog says: The 'ResearchBox/Other' folder you are referencing ",
       "does not exist (", other_dir, ")."
