@@ -185,7 +185,6 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
     } # End of check for whether already installed
 
     # Force load package
-    message1('loading ',k,') ',pkg.k)
     loadNamespace(pkg.k, lib.loc = lib.k)
 
     # If it's the focal package, we also want to attach it
