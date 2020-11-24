@@ -36,6 +36,9 @@ groundhog.library <- function(
     #return(invisible(get.active()$pkg_vrs))
   #}
   
+      update_cran.toc_if.needed(date = date)
+
+  
   #1 initial check,  stop if same version
     #1.1 Get version of requested package
         vrs <- get.version(pkg, date, current.deps = current.deps)
@@ -54,7 +57,7 @@ groundhog.library <- function(
          }
         
          if (pkg  %in% attached.pkg) {
-           message2()
+            message2()
             message1("You requested '", pkg, "_", vrs, "', but another version of that package is already loaded.\nYou can restart the R session to load a different version (in R Studio CTRL-SHIFT-F10)")
             return(invisible(get.active()$pkg_vrs))
           }
@@ -62,7 +65,6 @@ groundhog.library <- function(
   # Check if using R that's from a version PRIOR to that current for the desired date (prior to current release)
   # e.g., using R-3.3.3 for "2020-01-05"
 
-  update_cran.toc_if.needed(date = date)
 
   rv <- r.version.check(date) # Get version of r being used and needed
 

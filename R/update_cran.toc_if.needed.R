@@ -1,5 +1,3 @@
-#' Update `cran.toc` if needed
-#'
 #' Update `cran.toc` if it's not recent enough to include the required date.
 #'
 #' @param date required date, in the format "%Y-%m-%d" (ISO 8601 convention)
@@ -52,7 +50,7 @@ update_cran.toc_if.needed <- function(date) {
   }
 
   # 5 Also update if the  version of R being used is newer than that in cran.toc.rds
-  # Get verison of R being used
+  # Get version of R being used
   R.using <- get.rversion()
   tocR <- toc("R")
   # If not in cran.toc, update

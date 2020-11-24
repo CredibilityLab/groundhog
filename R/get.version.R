@@ -33,7 +33,8 @@ get.version <- function(pkg, date, current.deps = c("Rcpp", "RcppArmadillo", "BH
   # 2.3 Check if date requested comes before most up to date date
   last.toc.date <- max(cran.toc$Published, na.rm = TRUE)
   if (date > last.toc.date) {
-    exit(
+	update_cran.toc_if.needed(date)
+  exit(
       "groundhog.library() index of packages ends on ", last.toc.date,
       " which is before the date you entered: ", date, ".\n",
       "The index updates automatically "

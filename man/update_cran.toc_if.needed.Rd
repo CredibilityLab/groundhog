@@ -2,7 +2,7 @@
 % Please edit documentation in R/update_cran.toc_if.needed.R
 \name{update_cran.toc_if.needed}
 \alias{update_cran.toc_if.needed}
-\title{Update \code{cran.toc} if needed}
+\title{Update \code{cran.toc} if it's not recent enough to include the required date.}
 \usage{
 update_cran.toc_if.needed(date)
 }
