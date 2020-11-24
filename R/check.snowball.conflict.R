@@ -9,7 +9,7 @@ check.snowball.conflict <- function(snowball, force.install) {
   # Load active packages
   active <- get.active()
 
-  # Check if any package that needs to be installed are loaded; separte check from below because even SAME version created conflict
+  # Check if any package that needs to be installed are loaded; separate check from below because even SAME version created conflict
   if (force.install) {
     conflict.pkg <- snowball$pkg %in% active$pkg
     if (any(conflict.pkg)) {
@@ -25,18 +25,18 @@ check.snowball.conflict <- function(snowball, force.install) {
   } # End check force install
 
   # Compare already active package and package_version to find conflicts
-  conflict.needed <- "" # Assume nothing is in conflict
+    conflict.needed <- "" # Assume nothing is in conflict
   # These are packages that are needed and have a conflict with an active one
-  conflict.needed <- snowball$pkg_vrs[!(snowball$pkg_vrs %in% active$pkg_vrs) & (snowball$pkg %in% active$pkg)]
-  conflict.needed <- sort(conflict.needed)
+    conflict.needed <- snowball$pkg_vrs[!(snowball$pkg_vrs %in% active$pkg_vrs) & (snowball$pkg %in% active$pkg)]
+    conflict.needed <- sort(conflict.needed)
 
   # These are packages that are active and have a conflict with a needed one
-  conflict.active <- active$pkg_vrs[!(active$pkg_vrs %in% snowball$pkg_vrs) & (active$pkg %in% snowball$pkg)]
-  conflict.active <- sort(conflict.active)
+    conflict.active <- active$pkg_vrs[!(active$pkg_vrs %in% snowball$pkg_vrs) & (active$pkg %in% snowball$pkg)]
+    conflict.active <- sort(conflict.active)
 
   # How many packages are needed and conflicted
-  n.conflict <- length(conflict.needed)
-  n.needed <- nrow(snowball)
+    n.conflict <- length(conflict.needed)
+    n.needed <- nrow(snowball)
 
   # Paste the package(s), which are vectors, into a string
   conflict.needed <- paste(conflict.needed, collapse = ",  ") # put a , between packages
