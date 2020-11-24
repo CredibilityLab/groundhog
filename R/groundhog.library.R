@@ -31,11 +31,34 @@ groundhog.library <- function(
   pkg <- as.character(substitute(pkg))
 
   # 1 Initial check, if package already attached stop package is already attached
-  if (pkg %in% names(utils::sessionInfo()$otherPkgs)) {
-    message1("A version of the package '", pkg, "' is already loaded.")
-    return(invisible(get.active()$pkg_vrs))
-  }
-
+  #if (pkg %in% names(utils::sessionInfo()$otherPkgs)) {
+    #message1("A version of the package '", pkg, "' is already loaded.")
+    #return(invisible(get.active()$pkg_vrs))
+  #}
+  
+  #1 initial check,  stop if same version
+    #1.1 Get version of requested package
+        vrs <- get.version(pkg, date, current.deps = current.deps)
+        pkg_vrs <- paste0(pkg, "_", vrs)
+        
+    #1.2 Get pkg_vrs of attached packages
+        attached.pkg <- names(utils::sessionInfo()$otherPkgs)
+        
+        attached.vrs <- packageVersion(attached.pkg)
+        attached.pkg_vrs <- paste0(attached.pkg, "_" , attached.vrs)
+      
+    #1.3 If requested pkg_vrs is there, stop
+         if (pkg_vrs  %in% attached.pkg_vrs) {
+            message1("groundhog says: The package you requested ('", pkg, "_", vrs, "') is already loaded.")
+            return(invisible(get.active()$pkg_vrs))
+         }
+        
+         if (pkg  %in% attached.pkg) {
+           message2()
+            message1("You requested '", pkg, "_", vrs, "', but another version of that package is already loaded.\nYou can restart the R session to load a different version (in R Studio CTRL-SHIFT-F10)")
+            return(invisible(get.active()$pkg_vrs))
+          }
+    
   # Check if using R that's from a version PRIOR to that current for the desired date (prior to current release)
   # e.g., using R-3.3.3 for "2020-01-05"
 
@@ -73,7 +96,9 @@ groundhog.library <- function(
 
   # 8.6.4 CHECK FOR CONFLICT SNOWBALL <->ACTIVE PACKAGES
   if (!ignore.package.conflicts) {
-    check.snowball.conflict(snowball, force.install)
+    check.snowball.conflict(snowball, force.install)  #This was stop processing of request and ask for SHFT/CTRL-F10
+    #unload.conflicts(snowball)                         #This unloads packages in conflict
+    
   }
 
   # 8.6.5 message if installation will be necessary
@@ -101,9 +126,9 @@ groundhog.library <- function(
   # 8.9.1 If successful
   if (pkg_vrs %in% loaded_pkg_vrs) {
     # Success on package
-    msg <- c(">Successfully loaded ", pkg_vrs)
+    msg <- c(">groundhog says: successfully loaded '", pkg_vrs,"'.")
   } else {
-    msg <-c("FAILED to load ", pkg_vrs)
+    msg <-c("groundhog says: FAILED to load '", pkg_vrs,"'.")
   }
 
   # 9 Show messages

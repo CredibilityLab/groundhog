@@ -89,27 +89,46 @@
       #Add package itself to the list
           indep=c(indep,pkg)
       #Start unloading from the bottom of the table
-
+        unloaded=c()
         for (pkgk in indep) 
         {
-        unloadNamespace(pkgk)
-        message1('groundhog says: attempting to unload: ',pkgk)
-        }
+        #If we have not yet unloaded it
+        if (!pkgk %in% unloaded) {
+          #unload it
+            unloadNamespace(pkgk)
+          #Add it to the list
+            unloaded=c(unloaded,pkgk)
+            
+          #Feedback
+            message1('attempting to unload: ',pkgk)
+          }
+        
 
+        }
+    
     }
   
+    
     
     #Function 4. Unload all packages, and their parents, if they are of a different version from that in a  snowball
       unload.conflicts <- function (snowball)
       {
+       for (k in 1:10000)
+       {
        active=get.active()
-       pkgs.to.unload=snowball[(snowball$pkg %in% active$pkg ) & (!snowball$pkg_vrs %in% active$pkg_vrs ),]$pkg
-
-      for (pkgk in pkgs.to.unload)
-        {
+       pkgs.to.unload=snowball[(snowball$pkg %in% active$pkg ) & (!snowball$pkg_vrs %in% active$pkg_vrs ),]$pkg 
+       
+       if (length(pkgs.to.unload)>0 & k==1) {
+        message2()
+        message1("You curently have loaded different versions of some of the packages you need. Will try to unload them first.")
+        message1("If unloading fails, you will need to restart the R session. In R Studio SHIFT-CTRL-F10.")
+       }
+        pkgk <- pkgs.to.unload[1]
         groundhog.unload(pkgk)
         }  #End of for loop
       }    #End of function
     
     
+      
+
    
