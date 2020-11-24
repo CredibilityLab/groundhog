@@ -57,6 +57,7 @@ groundhog.library <- function(
 
   # Grab .libpaths()
   orig_lib_paths <- .libPaths()
+  .libPaths("")  #actively remove default library path
   on.exit(.libPaths(orig_lib_paths))
 
   # 8.2 Update cran.toc() if needed for entered date (#2.12)
@@ -68,6 +69,7 @@ groundhog.library <- function(
 
   # 8.5 GET SNOWBALL
   snowball <- get.snowball(pkg, date, include.suggests, current.deps = current.deps)
+
 
   # 8.6.4 CHECK FOR CONFLICT SNOWBALL <->ACTIVE PACKAGES
   if (!ignore.package.conflicts) {
@@ -84,6 +86,7 @@ groundhog.library <- function(
     )
   }
   # 8.7 Install packages if needed
+  
   install.snowball(pkg, date, include.suggests,
     force.install = force.install,
     force.source = force.source,

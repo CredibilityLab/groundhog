@@ -24,7 +24,7 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
   # Do until all dependencies have been assigned an order (so dep12 is empty)
   while (nrow(dep12) > 0) {
     k <- k + 1
-    indep.rows <- !(dep12$dep2 %in% dep12$pkg) ## Find dependecies without dependencies  TRUE/FALSE vector
+    indep.rows <- !(dep12$dep2 %in% dep12$pkg) ## Find dependencies without dependencies  TRUE/FALSE vector
     # Add those dependencies to the list of independencies
     indepk <- unique(as.character(dep12$dep2[indep.rows]))
     indep <- c(indep, indepk)
@@ -35,7 +35,6 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
       break
     }
   }
-
   # 3) Add pkg at the end
   snowball.pkg <- c(indep, pkg)
 
@@ -108,6 +107,7 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
     "installation.path" = snowball.installation.path,
     stringsAsFactors = FALSE
   )
+
 
   return(snowball)
 }

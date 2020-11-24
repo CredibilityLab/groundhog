@@ -70,6 +70,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
       # 3.4 Create directory
       dir.create(lib.k, recursive = TRUE, showWarnings = FALSE)
 
+
       # 3.5 INSTALL K FROM CRAN
       if (from.k == "CRAN") {
         message1("\n>Installing Binary from CRAN")
@@ -184,6 +185,7 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
     } # End of check for whether already installed
 
     # Force load package
+    message1('loading ',k,') ',pkg.k)
     loadNamespace(pkg.k, lib.loc = lib.k)
 
     # If it's the focal package, we also want to attach it
@@ -192,7 +194,8 @@ install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
     }
 
     # We need this because .libPaths() is where available.packages() will check
-    .libPaths(c(lib.k, .libPaths()))
+    .libPaths(c(.libPaths(),lib.k ))
+  
 
   } # End loop install
 
