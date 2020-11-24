@@ -19,7 +19,7 @@ test_that("groundhog.library()", {
 
   res <- expect_message(
     groundhog.library("contactdata", "2020-10-01"),
-    "Successfully"
+    ">groundhog says: successfully "
   )
 
   expect_true("contactdata_0.1" %in% res)
@@ -27,7 +27,7 @@ test_that("groundhog.library()", {
   # Test non-standard evaluation
   res <- expect_message(
     groundhog.library(contactdata, "2020-10-01"),
-    "already loaded"
+    "groundhog says: The package you requested"
   )
 
 })
