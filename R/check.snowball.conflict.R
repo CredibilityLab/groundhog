@@ -11,7 +11,7 @@ check.snowball.conflict <- function(snowball, force.install) {
 
   # Check if any package that needs to be installed are loaded; separate check from below because even SAME version created conflict
   if (force.install) {
-    conflict.pkg <- snowball$pkg %in% active$pkg
+    conflict.pkg <- (snowball$pkg %in% active$pkg) 
     if (any(conflict.pkg)) {
       message2()
       message(
@@ -19,6 +19,7 @@ check.snowball.conflict <- function(snowball, force.install) {
         "are currently loaded:", paste0(snowball$pkg[conflict.pkg], collapse = ",  "),
         "\n\nYou need to restart your R session to carry out the installation.\n",
         "(in R Studio press: CTRL/CMD-SHIFT-F10 to do so)"
+      
       )
       exit()
     } # End conflict found for forced install
@@ -46,15 +47,14 @@ check.snowball.conflict <- function(snowball, force.install) {
   # If different # of packages match pkg vs pkg_vrs, we have same packages  different vrs: stop
   if (conflict.needed != "") {
     message2()
-    message1(
-      "Other versions of needed packages are loaded, you will need to restart the R session ",
-      "to load '", requested_pkg_vrs, "'\n.", 
-      "In R Studio press: CTRL/CMD-SHIFT-F10)\n",
-      "library(groundhog)\ngroundhog.library(pkg,date)\n\n")
-
-    # Stop without error message
-    exit(
-      "The package '", requested_pkg_vrs,"' was not loaded"
-        )
+    message1("Some of the packages needed by '", requested_pkg_vrs, "' are currently loaded,",
+             " but not with the version that is needed.\n",
+            "To solve this: restart the R session (you will need to do 'library(groundhog)' again.\n\n",
+            "In R Studio press: CTRL/CMD-SHIFT-F10")
+     message("The package '", requested_pkg_vrs,"' was *NOT* loaded")
+    
+    #message2()
+    #message1('needed\n',conflict.needed,"\n\nactive:\n",conflict.active)
+    exit()
   } # End if some conflict found
 } # End function
