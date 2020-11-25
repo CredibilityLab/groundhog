@@ -51,7 +51,7 @@ message2 <- function(..., domain = NULL, appendLF = TRUE, quiet = getOption("qui
   }
   msg <- list(...)
   if (length(msg) == 0) {
-    msg <- c("groundhog says [using R-", get.rversion(), "]:")
+    msg <- c("groundhog says:")
   }
 
   if (.pkgenv[["supportsANSI"]]) {

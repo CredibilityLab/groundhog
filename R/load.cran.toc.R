@@ -63,6 +63,7 @@ load.cran.toc <- function(update.toc = FALSE) {
 
     .pkgenv[["missing.mran.dates"]] <- missing.mran.dates
   } else {
+    #If updating 
     dl_times <- try(download.file(paste0(groundhogR.url, "cran.times.rds"), times.path, mode = "wb", method = "internal"))
     dl_toc <- try(download.file(paste0(groundhogR.url, "cran.toc.rds"), toc.path, mode = "wb", method = "internal"))
     dl_mran <- try(download.file(paste0(groundhogR.url, "missing.mran.dates.rds"), mran.path, mode = "wb", method = "internal"))
