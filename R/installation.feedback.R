@@ -25,7 +25,7 @@ installation.feedback <- function(k, date, snowball, start.time) {
 
 
   # Show feedback
-  msg.header <- paste0("\n\n\ngroundhog.library(), says [using R-", get.rversion(), "]: Installing '", snowball[k, "pkg_vrs"], "', package #", k, " out of ", N, " needed for '", pkg_vrs, "'")
+  msg.header <- paste0("\n\n\ngroundhog says [using R-", get.rversion(), "]: Installing '", snowball[k, "pkg_vrs"], "', package #", k, " out of ", N, " needed for '", pkg_vrs, "'")
   msg <- c(
     "> The time now is ", format(Sys.time(), "%H:%M"), ", and we quite roughly estimate the",
     "  process to end around ", finish.time.estimate, "\n",
