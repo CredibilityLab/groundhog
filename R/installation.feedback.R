@@ -27,10 +27,9 @@ installation.feedback <- function(k, date, snowball, start.time) {
   # Show feedback
   msg.header <- paste0("\n\n\ngroundhog says [using R-", get.rversion(), "]: Installing '", snowball[k, "pkg_vrs"], "', package #", k, " out of ", N, " needed for '", pkg_vrs, "'")
   msg <- c(
-    "> The time now is ", format(Sys.time(), "%H:%M"), ", and we quite roughly estimate the",
-    "  process to end around ", finish.time.estimate, "\n",
-    "> It is unlikely to finish after ", finish.time.max, "\n",
-    "> These estimates will be revised after each package installs, but they will remain noisy estimates."
+    "> As of ", format(Sys.time(), "%H:%M"), ", the  best guess is that installation ends around ", finish.time.estimate, "\n",
+    "> Quite likely by ", finish.time.max, "\n",
+    "> Estimates are revised after each package, but remain noisy till the end."
   )
 
   # Add msg if R mismatch and recent enough for groundhog
