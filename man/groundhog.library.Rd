@@ -9,27 +9,17 @@ groundhog.library(
   date,
   quiet.install = TRUE,
   include.suggests = FALSE,
-  current.deps = c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders",
-    "RcppParallel", "RcppProgress"),
+  current.deps = .pkgenv$current.deps,
   ignore.package.conflicts = FALSE,
   force.source = FALSE,
   force.install = FALSE
 )
 }
 \arguments{
-\item{pkg}{character. Name of the package to install}
-
 \item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
 
 \item{quiet.install}{Logical (defaults to \code{TRUE}).Run \code{\link[=install.packages]{install.packages()}}
 with \code{quiet = TRUE}?}
-
-\item{include.suggests}{Logical (defaults to \code{FALSE}. Should suggested
-packages be installed?}
-
-\item{current.deps}{Character or character vector listing packages that will
-be loaded/installed based on the date when the version of \R being used was
-released, rather than the value of \code{date}.}
 
 \item{ignore.package.conflicts}{Logical (defaults to \code{FALSE}). With \code{TRUE},
 if an already attached package will be installed, it is detached, but all

@@ -5,23 +5,17 @@
 \title{Install snowball}
 \usage{
 install.snowball(
-  pkg,
+  snowball,
   date,
-  include.suggests,
   force.install = FALSE,
   force.source = FALSE,
-  quiet.install = TRUE,
-  current.deps = c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders",
-    "RcppParallel", "RcppProgress")
+  quiet.install = TRUE
 )
 }
 \arguments{
-\item{pkg}{character. Name of the package to install}
+\item{snowball}{the result of \code{\link[=get.snowball]{get.snowball()}}.}
 
 \item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
-
-\item{include.suggests}{Logical (defaults to \code{FALSE}. Should suggested
-packages be installed?}
 
 \item{force.install}{Logical (defaults to \code{FALSE}). If \code{TRUE}, even if
 package is found for this R-build, it will reinstall it.}
@@ -31,17 +25,12 @@ and MRAN attempts, download tar.gz, and install from it.}
 
 \item{quiet.install}{Logical (defaults to \code{TRUE}).Run \code{\link[=install.packages]{install.packages()}}
 with \code{quiet = TRUE}?}
-
-\item{current.deps}{Character or character vector listing packages that will
-be loaded/installed based on the date when the version of \R being used was
-released, rather than the value of \code{date}.}
 }
 \value{
 Invisible \code{NULL}.
 }
 \description{
-Install given \code{pkg} with the version from \code{date}, making sure the order in
-which dependencies are installed doesn't generate conflicts.
+Install given \code{snowball} from CRAN binary, MRAN binary, CRAN source or MRAN source as needed
 }
 \seealso{
 \code{\link[=get.snowball]{get.snowball()}} to determine in which order packages are installed

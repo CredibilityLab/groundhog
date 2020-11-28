@@ -31,9 +31,21 @@ get.date.for.install.binary <- function(pkg_vrs) {
       R2=R_vrs[length(R_vrs)]
       
     #1.4 Get those dates
-      date.R1=R.toc[match(R1,R.toc$Version),]$Published
-      date.R2=R.toc[match(R2,R.toc$Version),]$Published
-
+      R.k1=match(R1,R.toc$Version)  #kth observation with 1st date
+      R.k2=match(R2,R.toc$Version)  #kth with last
+        
+      #First R date based on match of minor  
+        date.R1=R.toc[R.k1,]$Published
+      #Second is either the next version of R, or the current day
+        
+        #If this is NOT teh most recent R, look at the next one
+        if (R.k2<nrow(R.toc)) 
+            {
+            date.R2=R.toc[R.k2 + 1,]$Published  
+        #If it is the most recent, look at today
+            } else {
+            date.R2=Sys.Date() -2  
+            }
   #2 Fine pkg1 and pkg2 (first and last dates with the desired package version
     #2.1 Get all package releases
       pkg=get.pkg(pkg_vrs)
@@ -49,8 +61,14 @@ get.date.for.install.binary <- function(pkg_vrs) {
           date.pkg2 <- Sys.Date()-2
           }
       
+      
+      
   #3 The date to use is day prior to either the new package or the new R release
-      binary.date <- min(date.R2 - 1, date.pkg2 -1)
+      #3.1 No overlap, january 1
+        if (date.pkg2<=date.R1) return(as.DateYMD("1970-01-01"))
+        if (date.R2<=date.pkg1) return(as.DateYMD("1970-01-01"))
+      #3.2 If overlap exist, take the end -1    
+        binary.date <- min(date.R2 - 1, date.pkg2 -1)
       
   return(as.DateYMD(binary.date))
 }

@@ -1,7 +1,6 @@
 #' Install snowball
 #'
-#' Install given `pkg` with the version from `date`, making sure the order in
-#' which dependencies are installed doesn't generate conflicts.
+#' Install given `snowball` from CRAN binary, MRAN binary, CRAN source or MRAN source as needed
 #'
 #' @inheritParams get.snowball
 #' @inheritParams install.source
@@ -20,184 +19,176 @@
 #'
 #' @importFrom utils install.packages
 #'
-install.snowball <- function(pkg, date, include.suggests, force.install = FALSE,
-                             force.source = FALSE, quiet.install = TRUE, current.deps = c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders", "RcppParallel", "RcppProgress")) {
+#########################################################
 
-  # 0 Get the snowball
-  snowball <- get.snowball(pkg, date, include.suggests, force.install, current.deps)
+  install.snowball=function(snowball, date, force.install = FALSE, force.source = FALSE, quiet.install = TRUE) 
+    {
+     #####################
+    #1 Preliminaries
+    #####################
+    
+      #1.1 Directory for downloaded binaries, source files, & libraries for installed packages
+          temp_path=paste0(get.groundhog.folder()    ,"/temp")
+          dir.create(temp_path, recursive = TRUE, showWarnings = FALSE)
+          for (k in 1:nrow(snowball))
+            {
+            dir.create(snowball$installation.path[k], recursive = TRUE, showWarnings = FALSE)
+            }
+      
+      #1.2 Count number of rows
+          n.snowball=nrow(snowball)
+        
+      #1.3 Main package
+         main.pkg_vrs=snowball$pkg_vrs[n.snowball]
 
-  # 0.1 pkg_vrs for target package
-  pkg_vrs <- as.character(snowball[nrow(snowball), "pkg_vrs"])
+        
+      #1.4 FORCE INSTALL
+          if (any(snowball$installed) & force.install) {
+          #Subset of packages that are installed
+              snowball.installed <- snowball[snowball$installed, ]
+          # Get their path
+              snowball.installed$paths <- mapply(get.installed_path, snowball.installed$pkg, snowball.installed$vrs)
+          # Delete the paths
+              unlink(snowball.installed$paths, recursive = TRUE, force = TRUE)
+              snowball$installed <- FALSE
+          } # End #1.4
 
-  # 1. FORCE INSTALL
-  if (any(snowball$installed) & force.install) {
-    # Subset of packages that are installed
-    snowball.installed <- snowball[snowball$installed, ]
-    # Get their path
-    snowball.installed$paths <- mapply(get.installed_path, snowball.installed$pkg, snowball.installed$vrs)
-    # Delete the paths
-    unlink(snowball.installed$paths, recursive = TRUE, force = TRUE)
-    snowball$installed <- FALSE
-  } # End #1 force
+      # 1.5. FORCE SOURCE
+          if (force.source || .Platform$pkgType == "source") {
+            snowball$from <- "source"
+            }
+        
+        
+      
+    #####################
+    #2 CRAN
+    #####################
+      #2.1 Subset of CRAN packages to download
+        snowball.cran <- snowball[snowball$installed==FALSE & snowball$from=="CRAN",]
+        n.cran=nrow(snowball.cran)
+        
+        if (n.cran>0)
+        {
+          
+        message2("\ngroundhog says: will now download ",n.cran, " binary packages from CRAN")
+        
+      #2.2 Download all CRAN binaries
 
-  # 2. FORCE SOURCE
-  if (force.source || .Platform$pkgType == "source") {
-    # If the user chooses it or we the platform doesn't support binary packages,
-    # we get it from source
-    snowball$from <- "source"
-  }
+        cran.binaries <- data.frame(download.packages(snowball.cran$pkg, type='binary', destdir=temp_path))
+        names(cran.binaries) <- c("pkg.cran","donwloaded.path")
+      
+      #2.3 Unzip them 
+        message2("\ngroundhog says: all ",n.cran, " files downloaded. Now they will be installed")
+        
+        for (k in 1:nrow(snowball.cran)) {
+              message1(k,") Installing: ",snowball$pkg_vrs[k])
+              untar(cran.binaries$donwloaded.path[k] , exdir=snowball.cran$installation.path[k])        
+              
+              } #End unzip loop
+              } #End if n.cran>0
+        
+    ##########################
+    #3 mRAN          
+    ###########################
 
-  # 3 INSTALLATION LOOP
+      #3.1 Subset of mRAN packages to download
+        snowball.mran <- snowball[snowball$installed==FALSE & snowball$from=="MRAN",]
+        n.mran=nrow(snowball.mran)
+        
+      #3.1.5 If any found, install them
+        if (n.mran>0)
+        {  
+        message2("\ngroundhog says: will now download ",n.mran, " binary packages from MRAN (a Microsoft archive storing binaries of older packages).")
+        message1("MRAN is slower than CRAN for binaries, but still faster than the alternative: *source* packages from CRAN.")
+        
+      #3.2 Setup URL to use as repository for each package
+        repos.mran = paste0("https://mran.microsoft.com/snapshot/", snowball.mran$MRAN.date, "/")
+      
+      #3.3 Download all mRAN binaries
+        
+        #Initialize dataframe that will store all results
+          mran.binaries=data.frame(pkg.mran=character() ,  donwloaded.path=character(), stringsAsFactors = FALSE)
+        
+        #Loop downloading
+          for (k in 1:n.mran) {
+            message1(k,") Downloading: '",snowball.mran$pkg_vrs[k],"' from MRAN")
+            mran.binaries[k,] <- download.packages(snowball.mran$pkg[k], type='binary',repos=repos.mran[k], destdir=temp_path)
+            }
 
-  start.time <- Sys.time() # When loops starts, to compute actual completion time
-  for (k in seq_len(nrow(snowball))) {
-    # 3.0 Assign path
-    lib.k <- as.character(snowball[k, "installation.path"])
-    pkg.k <- snowball[k, "pkg"]
+        
+      #3.4 Unzip them 
+        message2("\ngroundhog says: all ",n.mran, " files downloaded. Now they will be installed")
 
-    # 3.1 Install if needed
-    if (!snowball[k, "installed"]) {
+        for (k in 1:nrow(snowball.mran)) {
+          message1(k,") Installing: '",snowball.mran$pkg_vrs[k])
+          
+          #Verify the right version was downloaded prior to installing
+          # by checking if pkg_vrs appears in the file
+              pos <-  regexpr(snowball.mran$pkg_vrs[k], mran.binaries$donwloaded.path[k]) 
+              if (pos>0) {
+                  untar(mran.binaries$donwloaded.path[k] , exdir=snowball.mran$installation.path[k])        
+                  
+                  }
+              if (pos<0) {
+                #Tell user we will try source as backup
+                    message("MRAN provided the wrong binary version of this package, will downlad source from CRAN instead.")
+                #Update snowball to get this from source instead
+                    snowball$from=ifelse(snowball$pkg_vrs == snowball.mran[k]$pkg_vrs,"source",snowball$from)
+                  } #End if pos<0
+              }#End loop over mran
+          
+              message1() #skip a line for next message
 
-      # 3.2 Feedback to user on time and pogresss
-      installation.feedback(k, date, snowball, start.time)
+        } #End if any MRAN files found
 
-      # 3.3 Shorter variable names
-      vrs.k <- snowball[k, "vrs"]
-      pkg_vrs.k <- snowball[k, "pkg_vrs"]
-      from.k <- snowball[k, "from"]
-      mran.date.k <- snowball[k, "MRAN.date"]
-
-      # 3.4 Create directory
-      dir.create(lib.k, recursive = TRUE, showWarnings = FALSE)
-
-
-      # 3.5 INSTALL K FROM CRAN
-      if (from.k == "CRAN") {
-        message1("\n>Installing Binary from CRAN")
-        install.packages(pkg.k, dependencies = FALSE, lib = lib.k, repos = "https://cloud.r-project.org", type = "both", quiet = quiet.install, keep_outputs = file.path(get.groundhog.folder(), "logs/"))
-      }
-
-      # 3.6 INSTALL K FROM MRAN
-      if (from.k == "MRAN") {
-        message1("\n>Attempting to install binary from MRAN\n")
-        install.packages(pkg.k, lib = lib.k, type = "binary", repos = paste0("https://mran.microsoft.com/snapshot/", mran.date.k, "/"), dependencies = FALSE, quiet = quiet.install, keep_outputs = file.path(get.groundhog.folder(), "logs/"))
-      }
-
-
-      # 3.7 INSTALL K FROM SOURCE IF SUPPOSED TO, OR I STILL NOT INSTALLED
-      if (from.k == "source" | !is.pkg_vrs.installed(pkg.k, vrs.k)) {
-        message1("\n>Attempting to install from source")
-
-        # 1) Try CRAN
-        # This canonical URL works for both current and archived versions/packages
-        url1 <- paste0("https://cran.r-project.org/package=", pkg.k, "&version=", vrs.k)
-        install.packages(url1, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
-
-        # 2) Try MRAN
-        # Attempt 2 overall, MRAN around selected date, current tarballs path
-        if (!is.pkg_vrs.installed(pkg.k, vrs.k)) # if still not installed
+        
+        
+    ##############################################################################
+    #3 Load everything that has been installed already (non-source)
+    #  This allows install.packages() for sources to find the dependencies they need
+    ###############################################################################
+        snowball.binary=snowball[snowball$from!='source',]
+        n.binary=nrow(snowball.binary)
+        for (k1 in 1:n.binary)
+        {
+        
+          if (snowball.binary$from[k1] != "source")
           {
-            # Set date for mran, midpoint of available dates around requested date  +-10 days,
-            date <- as.Date(date) # Ensure formated as date
-            max.date <- min(Sys.Date() - 2, date + 10) # use as highest possible mran date, 2 days ago
-            mran.date <- get.available.mran.date(date - 10, max.date) # Function get.available.mran.date() in utils.R
-
-            # Try path for current packages
-            url2 <- paste0("https://cran.microsoft.com/snapshot/", mran.date, "/src/contrib/", pkg_vrs.k, ".tar.gz")
-            install.packages(url2, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
+          .libPaths(c(.libPaths(), snowball.binary$installation.path[k1] ))
+          loadNamespace(snowball.binary$pkg[k1], lib.loc = snowball.binary$installation.path[k1])
           }
-        # Attempt 4 overall, MRAN around selected date, Archive tarballs path
-        if (!is.pkg_vrs.installed(pkg.k, vrs.k)) # if still not installed
-          {
-            url3 <- paste0("https://cran.microsoft.com/snapshot/", mran.date, "/src/contrib/Archive/", pkg.k, "/", pkg_vrs.k, ".tar.gz")
-            install.packages(url3, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
-          }
-
-        # Attempt 5, MRAN around Publish date, current path
-        if (!is.pkg_vrs.installed(pkg.k, vrs.k)) # if still not installed
-          {
-            # Set date for mran, midpoint of available dates around requested date  +-10 days,
-            toc.pkg <- toc(pkg.k)
-            date.Published <- toc.pkg$Published[toc.pkg$Version == vrs.k] + 2
-            max.date.published <- min(Sys.Date() - 2, date.Published + 20) # Use as highest possible mran published date, 2 days ago
-            mran.published.date <- get.available.mran.date(date.Published, max.date.published) # Function get.available.mran.date() in utils.R
-            # Treat as current
-            url4 <- paste0("https://cran.microsoft.com/snapshot/", mran.published.date, "/src/contrib/", pkg_vrs.k, ".tar.gz")
-            install.packages(url4, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
-          }
-
-        # Attempt 6, MRAN around Publish date, Archive path
-        if (!is.pkg_vrs.installed(pkg.k, vrs.k)) # if still not installed
-          {
-            # If fails try archive
-            url5 <- paste0("https://cran.microsoft.com/snapshot/", mran.published.date, "/src/contrib/Archive/", pkg_vrs.k, ".tar.gz")
-            install.packages(url5, repos = NULL, lib = lib.k, type = "source", dependencies = FALSE, quiet = quiet.install)
-          }
-      }
-      # install.source(pkg_vrs.k, lib.k, date, quiet.install = quiet.install)  #used to call an external function
-
-
-      # 3.8 VERIFY INSTALL
-      now.installed <- is.pkg_vrs.installed(pkg.k, vrs.k)
-
-      # 3.9 Installation failed
-      if (!now.installed) {
-
-        # If using different R version, attribute to that:
-        rv <- r.version.check(date)
-        if (rv$r.using.minmaj != rv$r.need.minmaj) {
-          message1() # to skip a line
-          message2()
-          message("Installation failed!")
-          message1(
-            "A likely culprit is that there is a discrepancy between the R Version you are using R-", rv$r.using.full,
-            "\nand the one that matches the date (", date, ") you entered: R-", rv$r.need.full, ".\n",
-            "Many packages cannot be installed in newer versions of R.\n",
-            "Either use a newer version of the package, or follow the instructions below to run the older version of R."
-          )
-
-
-          # Instructions for switching R to specific date (separate function)
-          msg.R.switch(date)
         }
+        
+        
+        
+    ##########################
+    #4 source 
+    ###########################
+      #4.1 Subset of source packages to download
+        snowball.source <- snowball[snowball$from=="source" & snowball$installed==FALSE,]
+        n.source=nrow(snowball.source)
+        
 
-        # R TOOLS CHECK
-        # WINDOWS and missing R Tools
-        if (.Platform$OS.type == "windows" & Sys.which("make") == "") {
-          message1(
-            "\n***RTOOLS ALERT***\nYou need 'R Tools' to install packages from source (e.g., when installing\n",
-            "older versions of a package in newer versions of R). R Tools was not found (note that different\n",
-            "version of R Tools are needed for different versions of R. You may dowload R Tools from:\n",
-            "https://cran.r-project.org/bin/windows/Rtools/ \n\n "
-          )
-        } # End of if make==""
+      if (n.source>0)
+      {
+      #4.1.5 Feedback on time
+        start.time=Sys.time()
+        message1("groundhog says: ",n.source," packages need to be installed from source. \n",
+                 "Completion time estimates are reported after each package installs.")
+                  
+      #4.2 Install CRAN sources
+          source.download.path=c()
+          for (k in 1:n.source)
+          {
+            url <- paste0("https://cran.r-project.org/package=", snowball.source$pkg[k], "&version=", snowball.source$vrs[k])
+            
+            
+            installation.feedback(k, date, snowball.source, start.time) 
+            install.packages(url, repos = NULL, lib = snowball.source$installation.path[k], type = "source", dependencies = FALSE, quiet = quiet.install)
+            }
+          } #End if any source files to install
+        
 
-        # Stop the script
-        message("\n\n\n----------------   The package ", pkg_vrs, " did NOT install.  Read above for details  -----------------")
-        exit()
-      }
-
-      # Installation succeeded
-      if (now.installed) {
-        # message2()
-        message1(pkg_vrs.k, " installed succesfully. Saved to: ", lib.k)
-      }
-    } # End of check for whether already installed
-
-    # Force load package
-    loadNamespace(pkg.k, lib.loc = lib.k)
-
-    # If it's the focal package, we also want to attach it
-    if (pkg.k == pkg) {
-      attachNamespace(pkg.k)
-    }
-
-    # We need this because .libPaths() is where available.packages() will check
-    .libPaths(c(.libPaths(),lib.k ))
-  
-
-  } # End loop install
-
-
-  invisible(NULL)
-} # End install.snowball()
+  }#end of function
+          
+     

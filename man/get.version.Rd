@@ -7,8 +7,7 @@
 get.version(
   pkg,
   date,
-  current.deps = c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders",
-    "RcppParallel", "RcppProgress"),
+  current.deps = .pkgenv$current.deps,
   patch = c("current", "max")
 )
 }

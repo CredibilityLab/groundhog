@@ -5,8 +5,16 @@
 #'
 .onLoad <- function(libname, pkgname) {
   .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
+  packageStartupMessage("groundhog says: packages downloaded with groundhog are saved to '",get.groundhog.folder(),"'\n",
+                        "You may change that with: set.groundhog.folder('<path>')")
+ 
 }
 
+#Default parameters
+  #Dependencies loaded for version of R being used
+    .pkgenv$current.deps=c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders", "RcppParallel", "RcppProgress")
+
+    
 #' @importFrom utils packageVersion compareVersion
 .onAttach <- function(libname, pkgname) {
 
@@ -25,4 +33,6 @@
       groundhog.version_cran, '. Please update by running: \ninstall.packages("groundhog")'
     )
   }
+  
+  
 }

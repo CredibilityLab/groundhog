@@ -36,17 +36,17 @@ update_cran.toc_if.needed <- function(date) {
 
   # 3 If user wants  a newer date than available, or if their version of R is newer than that in cran.toc.rds - update it.
   cran.toc$Published <- as.DateYMD(cran.toc$Published) # Convert cran.toc $Published, to a date variable
-  max.date <- max(cran.toc$Published) # Most recent date in cron
+  max.date <- max(cran.toc$Published) # Most recent date in CRAN
 
   # 4 Compare most recent to entered date
   if (max.date < date) {
     message2()
     message1(
-      "The date you entered, '", format(date), "', requires updating  your local database with the list of all CRAN package-versions (cran.toc.rds), \n",
-      "because it goes only until ", format(max.date), ". That file is being updated now."
-    )
+      "The date you entered, '", format(date), "' requires updating your local database\n",
+      "with the list of all CRAN package-versions (cran.toc.rds)"
+      )
     # Update the database
-    return(load.cran.toc(TRUE))
+      return(load.cran.toc(TRUE))
   }
 
   # 5 Also update if the  version of R being used is newer than that in cran.toc.rds

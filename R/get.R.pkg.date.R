@@ -22,42 +22,42 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
 
   cran.toc <- .pkgenv[["cran.toc"]]
   # 1. Get pkg from pkg_vrs
-  pkg <- get.pkg(pkg_vrs)
-  vrs <- get.vrs(pkg_vrs)
+    pkg <- get.pkg(pkg_vrs)
+    vrs <- get.vrs(pkg_vrs)
 
   # 2. cross.toc with R - all available pkg versions and R
-  cross1 <- cross.toc(c(pkg, "R"))
+    cross1 <- cross.toc(c(pkg, "R"))
 
   # 3, Which row have pkg_vrs vs R_vrs
-  k.pkg <- which(pkg_vrs == paste0(cross1$Package, "_", cross1$Version))
-  k.R <- which(paste0("R_", R_vrs) == paste0(cross1$Package, "_", cross1$Version))
+    k.pkg <- which(pkg_vrs == paste0(cross1$Package, "_", cross1$Version))
+    k.R <- which(paste0("R_", R_vrs) == paste0(cross1$Package, "_", cross1$Version))
 
   # It's possible that cran.toc is outdated and doesn't include the required
   # version
-  if (length(k.R) == 0 | length(k.pkg) == 0) {
-    load.cran.toc(update.toc = TRUE)
-
-    cross1 <- cross.toc(c(pkg, "R"))
-
-    k.pkg <- which(pkg_vrs == paste0(cross1$Package, "_", cross1$Version))
-    k.R <- which(paste0("R_", R_vrs) == paste0(cross1$Package, "_", cross1$Version))
-  }
+    if (length(k.R) == 0 | length(k.pkg) == 0) {
+      load.cran.toc(update.toc = TRUE)
+  
+      cross1 <- cross.toc(c(pkg, "R"))
+  
+      k.pkg <- which(pkg_vrs == paste0(cross1$Package, "_", cross1$Version))
+      k.R <- which(paste0("R_", R_vrs) == paste0(cross1$Package, "_", cross1$Version))
+    }
 
   # Line indices that contain either pkg_vrs or R_vrs
-  ks <- c(k.pkg, k.R)
+    ks <- c(k.pkg, k.R)
 
   # 5. From one to the other (cross2: subset from cross1 where  pkg_vrs to R_vrs or vice versa)
-  cross2 <- cross1[min(ks):max(ks), ]
+    cross2 <- cross1[min(ks):max(ks), ]
 
   # 6. If the package came first:
-  if (k.pkg < k.R) {
-    # 6.1. If there is another version of the package in the subset, it means it changed before arriving at the desired R, so return ""
-    if (sum(cross2$Package == pkg) > 1) {
-      return(as.DateYMD("1970-01-01"))
-    }
+    if (k.pkg < k.R) {
+      # 6.1. If there is another version of the package in the subset, it means it changed before arriving at the desired R, so return ""
+        if (sum(cross2$Package == pkg) > 1) {
+        return(as.DateYMD("1970-01-01"))
+      }
     # 6.2 If there is only one package in the set, then starting with last row, the desired package is available for that R, take midpoint till next
     if (sum(cross2$Package == pkg) == 1) {
-      start.date <- cross1[k.R, ]$Published # start.date: start of period when pkg_vrs binary was avilable for this R-version
+      start.date <- cross1[k.R, ]$Published # start.date: start of period when pkg_vrs binary was available for this R-version
 
       # 6.3 If not using the most recent R, the midpoint is towardsthe next one, if most recent, halfway to today
       if (k.R < nrow(cross1)) {
