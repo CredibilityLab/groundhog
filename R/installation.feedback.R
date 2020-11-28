@@ -17,6 +17,7 @@ installation.feedback <- function(k, date, snowball, start.time) {
   # Shorter variables
 	  N <- nrow(snowball)
 	  pkg_vrs <- snowball[N, "pkg_vrs"]
+	  
 
   # Estimate of time
 	  seconds.left <- estimate.seconds.left(k, start.time, snowball)

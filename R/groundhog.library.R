@@ -111,8 +111,7 @@ groundhog.library <- function(
       message1(
         "Loading ", pkg_vrs, " requires loading ", nrow(snowball), " packages, of which ",
         need.to.install.total, " will need to be installed."
-      
-      )
+              )
       
 
   }
