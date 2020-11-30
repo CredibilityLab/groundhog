@@ -156,7 +156,7 @@
         
         
     #################################################
-    #4 LOAD(CRAN,MRAN) and INSTALL SOURCE
+    #4 FINAL LOOP: INSTALL SOURCE * LOAD
     ###################################################
       
       #4.1 Any Source files remain to be installed?
@@ -179,26 +179,41 @@
           }      
         
       #4.2 Loop through entire snowball: loading CRAN/MRAN and installing SOURCE
-          source.download.path=c()
-          
+
           for (k in 1:n.snowball)
           {
         
         #4.3 Install source 
             if (snowball$from[k]=='source' & snowball$installed[k]==FALSE )
               {
-              #URL for install
-                url <- paste0("https://cran.r-project.org/package=", snowball$pkg[k], "&version=", snowball$vrs[k])
+              #See if the needed version is the current version
+                toc.pkg=toc(snowball$pkg[k])
+                current.source <- ifelse (match( snowball$vrs[k] , toc.pkg$Version)==nrow(toc.pkg),1,0) 
                 
+              #Set URL for current vs archived copy
+                #ARCHIVE
+                if (current.source==0)  {
+                    url <- paste0( "https://cran.r-project.org/src/contrib/Archive/" , 
+                                    snowball$pkg[k] , "/" ,  
+                                    snowball$pkg_vrs[k] , ".tar.gz")
+                }
+                
+                #CURRENT
+                if (current.source==1)  {
+                    url <- paste0("https://cran.r-project.org/src/contrib/" , 
+                                  snowball$pkg_vrs[k] , ".tar.gz")
+                }
+                
+              #Download it
+                #download.file(url,destfile=snowball$temp_path)
+                
+              
               #Feedback on time to user
                 installation.feedback(k.source, date, snowball.source, start.time) 
                 
               #Add to counter for feedback 
                 k.source=k.source+1
                 
-              #Delete contents of folder  (overrule 00LOCK ) (e.g., it would delete ../rio/rio_0.5.16) before installing the latter
-                #lib_full= paste0(snowball$installation.path[k] ,"/",snowball$pkg_vrs)
-                #unlink(snowball$installation.path[k], recursive = TRUE, force = FALSE)
                 
               #Install it
                 install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", dependencies = FALSE, quiet = quiet.install, INSTALL_opts = '--no-lock')
