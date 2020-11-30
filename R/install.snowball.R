@@ -114,14 +114,16 @@
             mran.binaries_rowk <- download.packages(snowball.mran$pkg[k], type='binary',repos=repos.mran[k], destdir=temp_path)
             #verify it was downloaded by checking the output is a data.frame with 1 row
                 if (nrow(mran.binaries_rowk)==1) {
-                  #If downloaded succesfully, add info for unzipping to the data.drame
+                  
+                  #If downloaded successfully, add info for unzipping to the data.drame
                       mran.binaries[k,] <-mran.binaries_rowk  
+                      
                   #Else, enter NA and make it download from sour
                   } else {
                       mran.binaries[k,] <-c('missing','missing')
                       sk=match(snowball.mran$pkg_vrs[k],snowball$pkg_vrs)  #package number in snowball
                       snowball$from[sk]="source"
-                  } #End if downloaded succesfully
+                  } #End if downloaded successfully
               
             } #End loop over MRAN binaries
 
@@ -186,36 +188,29 @@
         #4.3 Install source 
             if (snowball$from[k]=='source' & snowball$installed[k]==FALSE )
               {
-              #See if the needed version is the current version
-                toc.pkg=toc(snowball$pkg[k])
-                current.source <- ifelse (match( snowball$vrs[k] , toc.pkg$Version)==nrow(toc.pkg),1,0) 
-                
-              #Set URL for current vs archived copy
-                #ARCHIVE
-                if (current.source==0)  {
-                    url <- paste0( "https://cran.r-project.org/src/contrib/Archive/" , 
-                                    snowball$pkg[k] , "/" ,  
-                                    snowball$pkg_vrs[k] , ".tar.gz")
-                }
-                
-                #CURRENT
-                if (current.source==1)  {
-                    url <- paste0("https://cran.r-project.org/src/contrib/" , 
-                                  snowball$pkg_vrs[k] , ".tar.gz")
-                }
-                
-              #Download it
-                #download.file(url,destfile=snowball$temp_path)
-                
               
+              
+              #Read the archive page in CRAN (listing all source files that are not current)
+                archive.page=paste0(readLines(paste0('https://cran.r-project.org/src/contrib/Archive/', snowball$pkg[k], '/')),
+                                     collapse='')
+                
+              #Do we find the package we want listed in this page?   
+                pos2 <-  as.numeric(regexpr(snowball$pkg_vrs[k], archive.page) )  #if >0, found``
+                
+              #URL - see if the name of the file we look for appears in the archive page, if not, look for source in current page
+                if (pos2>0) {
+                        url <- paste0( "https://cran.r-project.org/src/contrib/Archive/" ,snowball$pkg[k] , "/" ,  snowball$pkg_vrs[k] , ".tar.gz")
+                        } else {
+                        url <- paste0("https://cran.r-project.org/src/contrib/" ,snowball$pkg_vrs[k] , ".tar.gz")
+                        }
+                
               #Feedback on time to user
                 installation.feedback(k.source, date, snowball.source, start.time) 
                 
               #Add to counter for feedback 
                 k.source=k.source+1
                 
-                
-              #Install it
+              #Assume archive
                 install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", dependencies = FALSE, quiet = quiet.install, INSTALL_opts = '--no-lock')
                 
               } #End if source
