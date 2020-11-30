@@ -19,11 +19,12 @@
         R.date <- subset(R.toc,Version==R1)$Published
         suggested.date <- min(R.date+20 , Sys.Date()-2)
     
-    message2("Groundhog says")
-    message1("Packages downloaded with groundhog are saved to '",get.groundhog.folder(),"'\n",
-           "You may change that with: set.groundhog.folder('<path>')\n\n",
-           "You are using  'R-" , r.using.full , "', the suggested date for groundhog.library(pkg,'date'): '",suggested.date,"'\n",
-           "   To see an explanation run: 'explain.day()'")
+    message2("groundhog says [using:'R-" , r.using.full , "']") 
+    message1(
+            "Packages downloaded with groundhog are saved to '",get.groundhog.folder(),"'\n",
+            "You may change that with: set.groundhog.folder('<path>')\n\n"
+            )
+           
      }
 
 #Default parameters

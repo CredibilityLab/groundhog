@@ -177,28 +177,3 @@ get.r.majmin <- function() {
     }
 
 
-#Explanations
-
-#1) Day recommended for groundhog.day()
-  #' Show explanation for how and why groundhog suggests a date to use for loading all packages in a script
-  #' @export
-  explain.day <- function() {
-    #Functions in r.version.check.R
-      r.majmin <- get.r.majmin()  
-      r.majmin.release <- get.r.majmin.release()
-    
-    message2("Explaining suggested groundhog.day")
-    message1(
-              "The date in 'groundhog.library(pkg,date)' determines the versions of packages\n",
-              "that are loaded, and installed if needed. Using the same date across scripts \n",
-              "reduces the number of packages that are installed, making scripts more efficient.\n",
-              "Groundhog suggests using 20 days after the *main* R version being used was released\n",
-              "(and if that date is in the future the most recent available date).\n",
-              "You are using 'R-",r.majmin,"' originally released on '",r.majmin.release,"'.\n",
-              "So you *could* start your script like this:\n",
-              "   groundhog.day <- '",min(r.majmin.release+20,Sys.Date()-2),"'\n",
-              "   groundhog.library(<pkg>, groundhog.day)" 
-            )
-      }  #End of explain.day
-    
-    
