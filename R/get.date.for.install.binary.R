@@ -68,7 +68,17 @@ get.date.for.install.binary <- function(pkg_vrs) {
         if (date.pkg2<=date.R1) return(as.DateYMD("1970-01-01"))
         if (date.R2<=date.pkg1) return(as.DateYMD("1970-01-01"))
       #3.2 If overlap exist, take the end -1    
-        binary.date <- min(date.R2 - 1, date.pkg2 -1)
+        binary.date.end   <- min(date.R2 - 1, date.pkg2 -1)
+        binary.date.start <- min(date.R2 - 5, date.pkg2 -15)
+        binary.date.range <- binary.date.start:binary.date.end
+        
+      #3.3 Drop dates missing from MRAN
+          missing.mran.dates <- .pkgenv[["missing.mran.dates"]] 
+          binary.date.range <- binary.date.range[!binary.date.range %in% missing.mran.dates]
+        
+      #3.4 Highest in the set
+          binary.date=max(binary.date.range)
+          
       
   return(as.DateYMD(binary.date))
 }

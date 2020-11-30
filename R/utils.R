@@ -13,7 +13,7 @@ is.pkg_vrs.installed <- function(pkg, vrs) {
 #'
 #' @param x character string containing the date in the format "%Y-%m-%d"
 #'
-as.DateYMD <- function(x) as.Date(x, format = "%Y-%m-%d")
+as.DateYMD <- function(x) as.Date(x, format = "%Y-%m-%d",origin='1970-01-01')
 
 # 2.2  R Being used
 # 2.2.1 R Date
@@ -154,3 +154,51 @@ is_rstudio <- function() {
   # code is called from the Terminal tab in RStudio (NOT the Console).
   identical(.Platform$GUI, "RStudio")
 }
+
+
+
+
+
+get.r.majmin <- function() {
+   major <- as.numeric(R.version$major)
+   minor <- as.numeric(strsplit(R.version$minor, "\\.")[[1]][1])
+   majmin <- paste0(major, ".", minor)
+   return(majmin)
+   }
+   
+ get.r.majmin.release <- function()
+ {
+   r.majmin <- get.r.majmin()
+   R.toc <- toc("R") # Get R toc
+   R_same.majmin <- grep(paste0("^", r.majmin), R.toc$Version, value = TRUE)
+   R1 <- R_same.majmin[1]
+   release.date <- subset(R.toc,Version==R1)$Published
+   return(release.date)
+    }
+
+
+#Explanations
+
+#1) Day recommended for groundhog.day()
+  #' Show explanation for how and why groundhog suggests a date to use for loading all packages in a script
+  #' @export
+  explain.day <- function() {
+    #Functions in r.version.check.R
+      r.majmin <- get.r.majmin()  
+      r.majmin.release <- get.r.majmin.release()
+    
+    message2("Explaining suggested groundhog.day")
+    message1(
+              "The date in 'groundhog.library(pkg,date)' determines the versions of packages\n",
+              "that are loaded, and installed if needed. Using the same date across scripts \n",
+              "reduces the number of packages that are installed, making scripts more efficient.\n",
+              "Groundhog suggests using 20 days after the *main* R version being used was released\n",
+              "(and if that date is in the future the most recent available date).\n",
+              "You are using 'R-",r.majmin,"' originally released on '",r.majmin.release,"'.\n",
+              "So you *could* start your script like this:\n",
+              "   groundhog.day <- '",min(r.majmin.release+20,Sys.Date()-2),"'\n",
+              "   groundhog.library(<pkg>, groundhog.day)" 
+            )
+      }  #End of explain.day
+    
+    

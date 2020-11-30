@@ -53,7 +53,7 @@ check.snowball.conflict <- function(snowball, force.install) {
             "To solve this: restart the R session. Note: you will need to do 'library(groundhog)' again.\n\n",
             "In R Studio press: CTRL/CMD-SHIFT-F10")
      message("The package '", requested_pkg_vrs,"' was *NOT* loaded")
-     cat("needed conflict:\n",conflict.needed,"\n\nconflict active:\n", conflict.active)
+     
     exit()
   } # End if some conflict found
 } # End function

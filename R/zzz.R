@@ -5,14 +5,31 @@
 #'
 .onLoad <- function(libname, pkgname) {
   .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
-  packageStartupMessage("groundhog says: packages downloaded with groundhog are saved to '",get.groundhog.folder(),"'\n",
-                        "You may change that with: set.groundhog.folder('<path>')")
- 
-}
+  
+  
+  
+  #Message shown when loading the package
+      #Generate suggested date
+        r.using.full <- get.rversion() # Get current
+        r.using.major <- R.version$major
+        r.using.minor <- strsplit(R.version$minor, "\\.")[[1]][1]
+        R.toc <- toc("R") # Get R toc
+        R_vrs <- grep(paste0("^", r.using.major, ".", r.using.minor), R.toc$Version, value = TRUE)
+        R1 <- R_vrs[1]
+        R.date <- subset(R.toc,Version==R1)$Published
+        suggested.date <- min(R.date+20 , Sys.Date()-2)
+    
+    message2("Groundhog says")
+    message1("Packages downloaded with groundhog are saved to '",get.groundhog.folder(),"'\n",
+           "You may change that with: set.groundhog.folder('<path>')\n\n",
+           "You are using  'R-" , r.using.full , "', the suggested date for groundhog.library(pkg,'date'): '",suggested.date,"'\n",
+           "   To see an explanation run: 'explain.day()'")
+     }
 
 #Default parameters
   #Dependencies loaded for version of R being used
-    .pkgenv$current.deps=c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders", "RcppParallel", "RcppProgress")
+    .pkgenv$current.deps=c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders", 
+                           "RcppParallel", "RcppProgress")
 
     
 #' @importFrom utils packageVersion compareVersion

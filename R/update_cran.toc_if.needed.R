@@ -18,13 +18,12 @@ update_cran.toc_if.needed <- function(date) {
   if (date > Sys.Date() - 2) {
     message2()
     message1(
-      "Groundhog's database is updated multiple times a day, but, to ensure",
-      " reproducibility of your script, given time zone differences and ",
-      "delays in updating different CRAN mirrors, don't use a date more ",
-      "recent than two days ago, (i.e., the most recent date you may use ",
-      "today with groundhog is:'", format(Sys.Date() - 2), "')."
+      "To ensure reproducibility of your script, given timezone differences and \n",
+      "delays in updating different CRAN mirrors, don't use a date more \n",
+      "recent than two days ago: ", format(Sys.Date() - 2), "."
     )
-    exit("################### invalid date ##########################")
+	message("Invalid date.")
+    exit()
   }
 
   # 2 Load cran.toc if not yet loaded
