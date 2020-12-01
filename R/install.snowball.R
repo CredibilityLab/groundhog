@@ -94,7 +94,7 @@
         snowball.mran <- snowball[snowball$installed==FALSE & snowball$from=="MRAN",]
         n.mran=nrow(snowball.mran)
         
-      #3.1.5 If any found, install them
+      #3.1.5 If any MRAN in snowball found, install them
         if (n.mran>0)
         {  
         message2("\ngroundhog says: will now download ",n.mran, " binary packages from MRAN (a Microsoft archive storing binaries of older packages).")

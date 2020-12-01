@@ -46,7 +46,7 @@ get.date.for.install.binary <- function(pkg_vrs) {
             } else {
             date.R2=Sys.Date() -2  
             }
-  #2 Fine pkg1 and pkg2 (first and last dates with the desired package version
+  #2 Find pkg1 and pkg2 (first and last dates with the desired package version)
     #2.1 Get all package releases
       pkg=get.pkg(pkg_vrs)
       pkg.toc <- toc(pkg) 
@@ -63,21 +63,25 @@ get.date.for.install.binary <- function(pkg_vrs) {
       
       
       
-  #3 The date to use is day prior to either the new package or the new R release
-      #3.1 No overlap, january 1
-        if (date.pkg2<=date.R1) return(as.DateYMD("1970-01-01"))
-        if (date.R2<=date.pkg1) return(as.DateYMD("1970-01-01"))
-      #3.2 If overlap exist, take the end -1    
-        binary.date.end   <- min(date.R2 - 1, date.pkg2 -1)
-        binary.date.start <- min(date.R2 - 5, date.pkg2 -15)
-        binary.date.range <- binary.date.start:binary.date.end
-        
-      #3.3 Drop dates missing from MRAN
+  #3 Find range of values when package and R version match
+      #3.1 Start period
+        D1 <- max(date.R1, date.pkg1)
+        D2 <- min(date.R2, date.pkg2)
+      
+      #3.2 If there is no overlap, ends before it starts, January 1
+        if (D2<=D1) return(as.DateYMD("1970-01-01"))
+   
+      #3.3 Available dates
+          available.dates <- D1:D2
+      
+      #3.4 Drop MRAN missing dates
           missing.mran.dates <- .pkgenv[["missing.mran.dates"]] 
-          binary.date.range <- binary.date.range[!binary.date.range %in% missing.mran.dates]
-        
-      #3.4 Highest in the set
-          binary.date=max(binary.date.range)
+          available.dates <- available.dates[!available.dates %in% missing.mran.dates]
+      
+      #3.5 Use week before end, unless it is too early
+          date.median <- median(available.dates)
+          date.1week  <- max(available.dates)-7
+          binary.date=max(date.median,date.1week)
           
       
   return(as.DateYMD(binary.date))
