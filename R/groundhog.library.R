@@ -138,14 +138,17 @@ groundhog.library <- function(
       loaded_pkg_vrs <- get.active()$pkg_vrs
 
     #11.2 
-    if (pkg_vrs %in% loaded_pkg_vrs) {
+    #if (pkg_vrs %in% loaded_pkg_vrs) {
+      if (all(snowball$pkg_vrs %in% loaded_pkg_vrs)) {
         message1("groundhog says: successfully loaded '", pkg_vrs,"'.")
         } else {
         message("groundhog says: FAILED to load '", pkg_vrs,"'.")
       }
 
+      
+      
     
   #12 output
-  invisible(loaded_pkg_vrs)
+    invisible(loaded_pkg_vrs)
   }
 

@@ -1,13 +1,12 @@
   #' Get groundhog folder location
 #'
-#' @return the path to the groundhog folder where groundhog files will be
-#'   stored and where packages loaded with [groundhog.library()] will be
-#'   installed.
+#' @return the path to the groundhog folder, the meta-library where 
+#'   [groundhog.library()] downloads and stores binaries and source files 
 #'
 #' @note you can change the location of this folder by editing the environment
 #'   variable GROUNDHOG_FOLDER. In R, you can do this with the command
 #'   `set.groundhog.folder("path")`.
-#'
+#' 
 #' @examples
 #' \dontrun{
 #' get.groundhog.folder()
@@ -20,7 +19,17 @@
 
 # Function that gets the groundhog folder, or prompts user to create it.
 get.groundhog.folder <- function() {
-  groundhog.folder <- path.expand(Sys.getenv("GROUNDHOG_FOLDER"))
+  
+  #Home path for this user
+    home_path <- Sys.getenv("home")
+    cookie_path <- paste0(home_path, "/R_groundhog/")
+    folder_cookie <- paste0(cookie_path ,"current_groundhog_folder.txt")
+    if (file.exists(folder_cookie)) {
+        groundhog.folder <- scan(folder_cookie,what='character', quiet=TRUE)
+        } else {
+        groundhog.folder <-""
+        }
+    
 
   # If a folder for has not been set, prompt user
   if (groundhog.folder == "") {
@@ -51,7 +60,7 @@ get.groundhog.folder <- function() {
       exit("OK folder setting process was stopped.")
     }
 
-    # 5. Assign groundghog folder to default or answer
+    # 5. Assign groundhog folder to default or answer
     if (nchar(answer) == 0) {
       groundhog.folder <- path.expand(file.path("~", "groundhog"))
     } # End if default answer
@@ -93,24 +102,19 @@ get.groundhog.folder <- function() {
 #'
 #' @seealso [get.groundhog.folder()]
 #'
-set.groundhog.folder <- function(path) {
-  renviron_path <- Sys.getenv("R_ENVIRON", "~/.Renviron")
-
-  if (!file.exists(renviron_path)) {
-    file.create(renviron_path)
-  }
-
-  env_vars <- readRenviron(renviron_path)
-
-  new_setting <- paste0("GROUNDHOG_FOLDER=", path)
-  setting_line <- grep("GROUNDHOG_FOLDER", env_vars)
-
-  if (length(setting_line) > 0) {
-    env_vars[setting_line] <- new_setting
-    writeLines(env_vars, renviron_path)
-  } else {
-    write(new_setting, renviron_path, sep = "\n", append = TRUE)
-  }
-
-  Sys.setenv(GROUNDHOG_FOLDER = path)
-}
+set.groundhog.folder <- function(groundhog.folder) {
+  
+  #Home path for this user
+    home_path <- Sys.getenv("home")
+    cookie_path <- paste0(home_path, "/R_groundhog/")
+    dir.create(cookie_path, showWarnings = FALSE, recursive = TRUE)
+    
+  #Path to file saving groundhog folder
+    folder_cookie <- paste0(cookie_path ,"current_groundhog_folder.txt")
+    
+  #Save the cookie
+    cat(groundhog.folder, file = folder_cookie)
+  
+  #Assign it to the live environment
+    Sys.setenv(GROUNDHOG_FOLDER = groundhog.folder)
+    }
