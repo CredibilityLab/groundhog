@@ -74,15 +74,17 @@
       #2.2 Download all CRAN binaries
 
           cran.binaries <- data.frame(download.packages(snowball.cran$pkg, type='binary', destdir=temp_path))
-          names(cran.binaries) <- c("pkg.cran","donwloaded.path")
+          names(cran.binaries) <- c("pkg.cran","downloaded.path")
       
+          
       #2.3 Unzip them 
           message2("\ngroundhog says: all ",n.cran, " files downloaded. Now they will be installed")
         
           for (k in 1:nrow(snowball.cran)) {
+                infile  <- as.character(cran.binaries$downloaded.path[k])
+                outfile <- as.character(snowball.cran$installation.path[k])
                 message1(k,") Installing: ",snowball.cran$pkg_vrs[k])
-                untar(cran.binaries$donwloaded.path[k] , exdir=snowball.cran$installation.path[k])        
-                
+                untar(infile ,exdir=outfile)
                 } #End unzip loop
           } #End if n.cran>0
           
@@ -106,7 +108,7 @@
       #3.3 Download all MRAN binaries
         
         #Initialize dataframe that will store all results
-          mran.binaries=data.frame(pkg.mran=character() ,  donwloaded.path=character(), stringsAsFactors = FALSE)
+          mran.binaries=data.frame(pkg.mran=character() ,  downloaded.path=character(), stringsAsFactors = FALSE)
         
         #Loop downloading
           for (k in 1:n.mran) {
@@ -136,9 +138,9 @@
           
           #Verify the right version was downloaded prior to installing (we *guess* which version MRAN has, with cran.toc.rds)
           # by checking if pkg_vrs appears in the file name
-              pos <-  regexpr(snowball.mran$pkg_vrs[k], mran.binaries$donwloaded.path[k]) 
+              pos <-  regexpr(snowball.mran$pkg_vrs[k], mran.binaries$downloaded.path[k]) 
               if (pos>0) {
-                  untar(mran.binaries$donwloaded.path[k] , exdir=snowball.mran$installation.path[k])        
+                  untar(mran.binaries$downloaded.path[k] , exdir=snowball.mran$installation.path[k])        
                   
                   } else {
               #Tell user we will try 'source' as backup
