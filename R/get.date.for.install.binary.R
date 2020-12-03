@@ -79,8 +79,9 @@ get.date.for.install.binary <- function(pkg_vrs) {
           available.dates <- available.dates[!available.dates %in% missing.mran.dates]
       
       #3.5 Use week before end, unless it is too early
-          date.median <- median(available.dates)
-          date.1week  <- max(available.dates)-7
+          n=length(available.dates)
+          date.median <- available.dates[ceiling(n/2)]
+          date.1week  <- max(available.dates[n-7], date.median)
           binary.date=max(date.median,date.1week)
           
       
