@@ -5,8 +5,16 @@ get.current.packages <- function(type) {
     cookie_path <- paste0(home_path, "/R_groundhog/")
     ap_file_path <- paste0(cookie_path ,"available_packages_",get.rversion(),"_",Sys.Date(),".rds")
 
-  
-  #If file with today's date exist, use it
+  #Delete outdated available.packages files
+    cookie_files <- list.files(cookie_path)
+    for (filek in cookie_files)
+      {
+      filek_path <- paste0(cookie_path, filek)
+      pos.ap_file <- regexpr('available_packages', filek)   #file is called available_packages
+      pos.date    <- regexpr(Sys.Date(), filek)             #file has today's date
+      if (pos.ap_file>0 & pos.date<0) unlink(filek_path) 
+    }
+    #If file with today's and current R version, use it, bypassing slow available.packages() command
     if (file.exists(ap_file_path)) {
         current.packages <- readRDS(ap_file_path)
         } else {
