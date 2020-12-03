@@ -20,64 +20,31 @@
 # Function that gets the groundhog folder, or prompts user to create it.
 get.groundhog.folder <- function() {
   
-  #Home path for this user
-    home_path <- Sys.getenv("home")
-    cookie_path <- paste0(home_path, "/R_groundhog/")
-    folder_cookie <- paste0(cookie_path ,"current_groundhog_folder.txt")
-    if (file.exists(folder_cookie)) {
-        groundhog.folder <- scan(folder_cookie,what='character', quiet=TRUE)
-        } else {
-        groundhog.folder <-""
-        }
+  #Set main folder with 'cookie files' and default for library
+    main_folder <-  paste0(path.expand("~"), "/R_groundhog/")
     
+  #Create main folder 
+    dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
 
-  # If a folder for has not been set, prompt user
-  if (groundhog.folder == "") {
-    # 1. Put the default folder into a variable to show user
-    default.folder <- paste0(path.expand("~"), "/groundhog/")
-
-    # a=function() {
-    # 2. Show message asking for the desired folder
-    message2(
-      "*****************  Setting a directory for groundhog   ***********************\n\n",
-      "         <PRESS ENTER> to accept the default directory:\n",
-      "         '",default.folder, "'\n"
-    )#End of message 2
-
-    message1(
-      "You need to set a directory save all packages installed by groundhog.\n",
-      "You may <PRESS ENTER> to use the default for this computer ('", default.folder, "').\n",
-      "Or, type in the folder you would like to use instead (e.g, 'c:/dropbox/groundhog').\n",
-      "Do not include quotes.\n",
-      "If the folder does not already exists, it will be created.\n\n",
-      "Type 'quit' to not choose a directory at this time"
-    )
-
-    message2("************************************************************************************************")
-    answer <- readline(prompt = "Please enter a path for your groundhog folder: >")
-
-    if (tolower(answer) == "quit") {
-      exit("OK folder setting process was stopped.")
-    }
-
-    # 5. Assign groundhog folder to default or answer
-    if (nchar(answer) == 0) {
-      groundhog.folder <- path.expand(file.path("~", "groundhog"))
-    } # End if default answer
-    if (nchar(answer) > 0) {
-      groundhog.folder <- answer
-    } # End if entered answer
-
-    # 6   Set it
-    set.groundhog.folder(groundhog.folder) # see function below
-
-    # 7  Tell user, wait 7 seconds.
-    message1(
-      "The folder was succesfully set to: '", groundhog.folder, "'\n",
-      "You can undo this selection by running: set.groundhog.folder('')\n\n\n\n"
-    )
-  } # End if no groundhog folder
-  return(groundhog.folder)
+  #Path to cookie file with location of folder
+    path_file_storing_groundhog_library_location <- paste0(main_folder ,"current_groundhog_folder.txt")
+    
+  #If cookie file exists, use it, otherwise, use that same location for library
+      if (file.exists(path_file_storing_groundhog_library_location)) {
+        #Read the cookie file with the location of the library
+          groundhog.folder <- scan(path_file_storing_groundhog_library_location,what='character', quiet=TRUE)
+        
+        } else {
+          
+        #This is the default
+          groundhog.folder <-paste0(main_folder, "/groundhog_library/")
+          
+        #Set it using function below
+          set.groundhog.folder(groundhog.folder) 
+          
+        } #End if cookie file does not exist
+    
+    return(groundhog.folder)
 }
 
 #' Set groundhog folder location
