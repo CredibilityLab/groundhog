@@ -60,7 +60,7 @@ get.groundhog.folder <- function() {
 #'
 #' @examples
 #' \dontrun{
-#' set.groundhog.folder("~/.groundhog")
+#' set.groundhog.folder("~/.R_groundhog")
 #' }
 #'
 #' @return (invisibly) `TRUE` upon success.
@@ -71,16 +71,17 @@ get.groundhog.folder <- function() {
 #'
 set.groundhog.folder <- function(groundhog.folder) {
   
-  #Home path for this user
-    home_path <- Sys.getenv("home")
-    cookie_path <- paste0(home_path, "/R_groundhog/")
-    dir.create(cookie_path, showWarnings = FALSE, recursive = TRUE)
+  #Set main folder with 'cookie files' and default for library
+    main_folder <-  paste0(path.expand("~"), "/R_groundhog/")
+    
+  #Create main folder 
+    dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
     
   #Path to file saving groundhog folder
-    folder_cookie <- paste0(cookie_path ,"current_groundhog_folder.txt")
+    path_file_storing_groundhog_library_location <- paste0(main_folder ,"current_groundhog_folder.txt")
     
   #Save the cookie
-    cat(groundhog.folder, file = folder_cookie)
+    cat(groundhog.folder, file = path_file_storing_groundhog_library_location)
   
   #Assign it to the live environment
     Sys.setenv(GROUNDHOG_FOLDER = groundhog.folder)
