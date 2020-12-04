@@ -27,13 +27,7 @@
     #1 Preliminaries
     #####################
     
-      #1.1 Directory for downloaded binaries, source files, & libraries for installed packages
-          temp_path=paste0(get.groundhog.folder()    ,"/temp")
-          dir.create(temp_path, recursive = TRUE, showWarnings = FALSE)
-          for (k in 1:nrow(snowball))
-            {
-            dir.create(snowball$installation.path[k], recursive = TRUE, showWarnings = FALSE)
-            }
+     
       
       #1.2 Count number of rows
           n.snowball=nrow(snowball)
@@ -49,8 +43,10 @@
           # Get their path
               snowball.installed$paths <- mapply(get.installed_path, snowball.installed$pkg, snowball.installed$vrs)
           # Delete the paths
-              unlink(snowball.installed$paths, recursive = TRUE, force = TRUE)
-              snowball$installed <- FALSE
+              unlink(snowball.installed$paths, recursive=TRUE, force = TRUE)
+              
+          # Reload snowball for it may be incomplete since some packages used to be installed
+              snowball <- get.snowball(snowball$pkg[n.snowball], date)
           } # End #1.4
 
       # 1.5. FORCE SOURCE
@@ -58,7 +54,13 @@
             snowball$from <- "source"
             }
         
-        
+        #1.1 Directory for downloaded binaries, source files, & libraries for installed packages
+          temp_path=paste0(get.groundhog.folder()    ,"/temp")
+          dir.create(temp_path, recursive = TRUE, showWarnings = FALSE)
+          for (k in 1:nrow(snowball))
+            {
+            dir.create(snowball$installation.path[k], recursive = TRUE, showWarnings = FALSE)
+            } 
       
     #####################
     #2 CRAN
@@ -218,9 +220,9 @@
               } #End if source
             
          
-        #4.4 If it did not instal and was quietlyi installing from sourced, try again not quietly
-            if (!is.pkg_vrs.installed(snowball$pkg[k], snowball$vrsg[k]) & 
-                snowball$from=="source" & 
+        #4.4 If it did not install and was quietly installing from sourced, try again not quietly
+            if (!is.pkg_vrs.installed(snowball$pkg[k], snowball$vrs[k]) & 
+                snowball$from[k]=="source" & 
                 quiet.install==TRUE)
                   {
                   message1("Will try again, now showing all installation output.")

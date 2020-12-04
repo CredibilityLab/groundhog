@@ -22,8 +22,8 @@
     error = function(e) NULL
   )
     r.using.full= get.rversion() 
-    message2("groundhog says [using R-" ,r.using.full, "]:") 
-    message1(
+    packageStartupMessage ("groundhog says [using R-" ,r.using.full, "]:") 
+    packageStartupMessage (
             "The groundhog library is here: '",get.groundhog.folder(),"'.\nTo change its location: 'set.groundhog.folder(<path>)'\n"
              )
   
