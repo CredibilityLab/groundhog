@@ -1,12 +1,11 @@
 get.current.packages <- function(type) {
   
   #path to local copy of available packages
-    home_path <- Sys.getenv("home")
-    cookie_path <- paste0(home_path, "/R_groundhog/")
-    ap_file_path <- paste0(cookie_path ,"available_packages_",get.rversion(),"_",Sys.Date(),".rds")
+    main_folder <-  paste0(path.expand("~"), "/R_groundhog/")
+    ap_file_path <- paste0(main_folder ,"available_packages_",get.rversion(),"_",Sys.Date(),".rds")
 
   #Delete outdated available.packages files
-    cookie_files <- list.files(cookie_path)
+    cookie_files <- list.files(ap_file_path)
     for (filek in cookie_files)
       {
       filek_path <- paste0(cookie_path, filek)
