@@ -24,7 +24,7 @@
     r.using.full= get.rversion() 
     message2("groundhog says [using R-" ,r.using.full, "]:") 
     message1(
-            "Packages saved here: '",get.groundhog.folder(),"'. Change with: 'set.groundhog.folder(<path>)'\n"
+            "The groundhog library is here: '",get.groundhog.folder(),"'.\nTo change its location: 'set.groundhog.folder(<path>)'\n"
              )
   
   # isTRUE() is necessary here because this will return logical(0) if the pkg
@@ -36,6 +36,6 @@
       groundhog.version_cran, '. Please update by running: \ninstall.packages("groundhog")'
     )
   }
-  
-  
 }
+  
+ 
