@@ -71,11 +71,13 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
     )
   }
 
-  if (max(toc("R")$Version) == get.rversion()) {
+  
+  
+  #if (max(toc("R")$Version) == get.rversion()) {
     snowball.CRAN <- snowball.pkg_vrs %in% get.current.packages("binary")$pkg_vrs
-  } else {
-    snowball.CRAN <- rep_len(FALSE, length(snowball.pkg_vrs))
-  }
+  #} else {
+  #  snowball.CRAN <- rep_len(FALSE, length(snowball.pkg_vrs))
+  #}
   snowball.MRAN.date <- as.Date(sapply(snowball.pkg_vrs, get.date.for.install.binary), origin = "1970-01-01") # 5.3 Binary date in MRAN?
   snowball.MRAN.date <- as.DateYMD(snowball.MRAN.date)
 
