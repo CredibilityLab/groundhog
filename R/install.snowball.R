@@ -190,21 +190,19 @@
         #4.3 Install source 
             if (snowball$from[k]=='source' & snowball$installed[k]==FALSE )
               {
+              #Get list of current packages
+                ap=get.current.packages('source')
               
-              
-              #Read the archive page in CRAN (listing all source files that are not current)
-                archive.page=paste0(readLines(paste0('https://cran.r-project.org/src/contrib/Archive/', snowball$pkg[k], '/')),
-                                     collapse='')
-                
-              #Do we find the package we want listed in this page?   
-                pos2 <-  as.numeric(regexpr(snowball$pkg_vrs[k], archive.page) )  #if >0, found``
-                
-              #URL - see if the name of the file we look for appears in the archive page, if not, look for source in current page
-                if (pos2>0) {
-                        url <- paste0( "https://cran.r-project.org/src/contrib/Archive/" ,snowball$pkg[k] , "/" ,  snowball$pkg_vrs[k] , ".tar.gz")
-                        } else {
-                        url <- paste0("https://cran.r-project.org/src/contrib/" ,snowball$pkg_vrs[k] , ".tar.gz")
-                        }
+                    
+              #If needed version is there, get source from current
+                if (snowball$pkg_vrs[k] %in% ap$pkg_vrs) 
+                  {
+                  #If it is current, get from page with all sources
+                    url <- paste0("https://cran.r-project.org/src/contrib/" ,snowball$pkg_vrs[k] , ".tar.gz")
+                    } else { 
+                  #If it is not current, use archive
+                    url <- paste0( "https://cran.r-project.org/src/contrib/Archive/" ,snowball$pkg[k] , "/" ,  snowball$pkg_vrs[k] , ".tar.gz")
+                  }
                 
               #Feedback on time to user
                 installation.feedback(k.source, date, snowball.source, start.time) 
@@ -212,17 +210,66 @@
               #Add to counter for feedback 
                 k.source=k.source+1
                 
-              #Assume archive
+              #Install source (turn off warnings because if something goes wrong, we try again, with warnings on)
+              #                this prevents a package that actually installed succesfully on the 2nd attempt, showing a warning)
+                if (quiet.install==TRUE) options(warn=-1)
                 install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", dependencies = FALSE, quiet = quiet.install, INSTALL_opts = '--no-lock')
-                
+                if (quiet.install==TRUE) options(warn=0)
               } #End if source
             
-         #4.4 Load 
-            .libPaths(c(.libPaths(), snowball$installation.path[k] ))
-            loadNamespace(snowball$pkg[k], lib.loc =  snowball$installation.path[k]) 
-          
+         
+        #4.4 If it did not instal and was quietlyi installing from sourced, try again not quietly
+            if (!is.pkg_vrs.installed(snowball$pkg[k], snowball$vrsg[k]) & 
+                snowball$from=="source" & 
+                quiet.install==TRUE)
+                  {
+                  message1("Will try again, now showing all installation output.")
+                  install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", 
+                                      dependencies = FALSE, quiet = FALSE, INSTALL_opts = '--no-lock')
+                  }
+            
+        #4.5 If not installed show error    
+              if (!is.pkg_vrs.installed(snowball$pkg[k], snowball$vrs[k]))
+              {
+                  message("The package '",snowball$pkg_vrs[k],"' failed to install!")
+                
+                  #4.5.1  R TOOLS CHECK
+                      if (.Platform$OS.type == "windows" & Sys.which("make") == "") {
+                      message2()
+                      message1(
+                              "***RTOOLS ALERT***\nYou need 'R Tools' to install packages from source in Windows, but R Tools was not ",
+                              "found. For help see:\nhttp://groundhogr.com/rtools"
+                               )
+                            } # End of if make=="
+                
+                
+                  #4.5.2  R mismatch
+                     rv <- r.version.check(date)
+                     if (rv$r.using.majmin!= rv$r.need.majmin)
+                        {
+                          message2()
+                          message1(
+                          "The package may have failed to install because you are using R-", rv$r.using.full,"\n",
+                          "which is at least one major update after the date you entered '", date, "'.\n",
+                          "You can try using a more recent date in your groundhog.library() command, \n",
+                          "or run it with the same date using 'R-", rv$r.need.full, "'\n", 
+                          "Instructions for running older versions of R: ",
+                          "    http://groundhogr.com/many")
+                          }
+                          
+                
+                #4.5.3 Stop the script
+                    message("\n\n\n----------------   The package ", main.pkg_vrs, " did NOT install.  Read above for details  -----------------")
+                    exit()
+                    }
+                
+                
+                
+        #5 Assume success at this point, load it
+                .libPaths(c(.libPaths(), snowball$installation.path[k] ))
+                loadNamespace(snowball$pkg[k], lib.loc =  snowball$installation.path[k]) 
           } #End loop over snowball        
 
-  }#end of function
+  } #end of function
           
      
