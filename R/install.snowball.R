@@ -162,7 +162,7 @@
         
         
     #################################################
-    #4 FINAL LOOP: INSTALL SOURCE * LOAD
+    #4 INSTALL SOURCE & LOAD
     ###################################################
       
       #4.1 Any Source files remain to be installed?
@@ -182,6 +182,9 @@
           #Counter for snowball source
             k.source=1
             
+          #Load list of *current* SOURCE packages
+            ap_source=get.available.packages("source")
+            
           }      
         
       #4.2 Loop through entire snowball: loading CRAN/MRAN and installing SOURCE
@@ -192,12 +195,10 @@
         #4.3 Install source 
             if (snowball$from[k]=='source' & snowball$installed[k]==FALSE )
               {
-              #Get list of current packages
-                ap=get.current.packages('source')
               
                     
               #If needed version is there, get source from current
-                if (snowball$pkg_vrs[k] %in% ap$pkg_vrs) 
+                if (snowball$pkg_vrs[k] %in% ap_source$pkg_vrs) 
                   {
                   #If it is current, get from page with all sources
                     url <- paste0("https://cran.r-project.org/src/contrib/" ,snowball$pkg_vrs[k] , ".tar.gz")
