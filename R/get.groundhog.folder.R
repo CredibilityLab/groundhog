@@ -27,7 +27,7 @@ get.groundhog.folder <- function() {
     dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
 
   #Path to cookie file with location of folder
-    path_file_storing_groundhog_library_location <- paste0(main_folder ,"current_groundhog_folder.txt")
+    path_file_storing_groundhog_library_location <- paste0(main_folder ,"/current_groundhog_folder.txt")
     
   #If cookie file exists, use it, otherwise, use that same location for library
       if (file.exists(path_file_storing_groundhog_library_location)) {
@@ -37,7 +37,7 @@ get.groundhog.folder <- function() {
         } else {
           
         #This is the default
-          groundhog.folder <-paste0(main_folder, "/groundhog_library/")
+          groundhog.folder <-paste0(main_folder, "groundhog_library/")
           
         #Set it using function below
           set.groundhog.folder(groundhog.folder) 
