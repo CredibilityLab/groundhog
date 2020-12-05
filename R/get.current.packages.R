@@ -4,14 +4,14 @@ get.current.packages <- function(type) {
     main_folder <-  paste0(path.expand("~"), "/R_groundhog/")
     ap_file_path <- paste0(main_folder , "available_packages_" , type , "_" , get.rversion() , "_" , Sys.Date() , ".rds")
 
-  #Delete outdated available.packages files
+  #Delete  available.packages files older than 1 hour
     cookie_files <- list.files(main_folder)
     for (filek in cookie_files)
       {
       filek_path <- paste0(main_folder , filek)             #full path to file
       pos.ap_file <- regexpr('available_packages', filek)   #>0 if file contains the words available_packages
-      pos.date    <- regexpr(Sys.Date(), filek)             #> if it has todays date
-      if (pos.ap_file>0 & pos.date<0) unlink(filek_path)    #If only first is true, outdated available packages file
+      age <- as.numeric(difftime(Sys.time() , file.mtime(filek),units='mins'))
+      if (pos.ap_file>0 & age>60) unlink(filek_path)        #Delete available_package files older than 60 minutes
     }
     
 	#If file with today's and current R version, use it, bypassing slow available.packages() command
