@@ -183,7 +183,7 @@
             k.source=1
             
           #Load list of *current* SOURCE packages
-            ap_source=get.available.packages("source")
+            ap_source=get.current.packages("source")
             
           }      
         
