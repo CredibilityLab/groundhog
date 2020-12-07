@@ -29,14 +29,14 @@
     
      
       
-      #1.2 Count number of rows
+      #1.1 Count number of rows
           n.snowball=nrow(snowball)
         
-      #1.3 Main package
+      #1.2 Main package
          main.pkg_vrs=snowball$pkg_vrs[n.snowball]
 
         
-      #1.4 FORCE INSTALL
+      #1.3 FORCE INSTALL
           if (any(snowball$installed) & force.install) {
           #Subset of packages that are installed
               snowball.installed <- snowball[snowball$installed, ]
@@ -49,12 +49,12 @@
               snowball <- get.snowball(snowball$pkg[n.snowball], date)
           } # End #1.4
 
-      # 1.5. FORCE SOURCE
+      # 1.4. FORCE SOURCE
           if (force.source || .Platform$pkgType == "source") {
             snowball$from <- "source"
             }
         
-        #1.1 Directory for downloaded binaries, source files, & libraries for installed packages
+      #1.5 Directory for downloaded binaries, source files, & libraries for installed packages
           temp_path=paste0(get.groundhog.folder()    ,"/temp")
           dir.create(temp_path, recursive = TRUE, showWarnings = FALSE)
           for (k in 1:nrow(snowball))
@@ -86,7 +86,11 @@
                 infile  <- as.character(cran.binaries$downloaded.path[k])
                 outfile <- as.character(snowball.cran$installation.path[k])
                 message1(k,") Installing: ",snowball.cran$pkg_vrs[k])
-                untar(infile ,exdir=outfile)
+                #unzip
+                  untar(infile ,exdir=outfile)
+                #delete
+                  unlink(cran.binaries$downloaded.path[k])
+
                 } #End unzip loop
           } #End if n.cran>0
           
@@ -107,28 +111,48 @@
       #3.2 Setup URL to use as repository for each package
         repos.mran = paste0("https://mran.microsoft.com/snapshot/", snowball.mran$MRAN.date, "/")
       
-      #3.3 Download all MRAN binaries
-        
-        #Initialize dataframe that will store all results
+      
+      #3.3 Initialize dataframe that will store all results
           mran.binaries=data.frame(pkg.mran=character() ,  downloaded.path=character(), stringsAsFactors = FALSE)
         
         #Loop downloading
+          good.mran.file=c()
+          
           for (k in 1:n.mran) {
-            message1(k,") Downloading: '",snowball.mran$pkg_vrs[k],"' from MRAN")
-            mran.binaries_rowk <- download.packages(snowball.mran$pkg[k], type='binary',repos=repos.mran[k], destdir=temp_path)
-            #verify it was downloaded by checking the output is a data.frame with 1 row
-                if (nrow(mran.binaries_rowk)==1) {
-                  
-                  #If downloaded successfully, add info for unzipping to the data.drame
-                      mran.binaries[k,] <-mran.binaries_rowk  
-                      
-                  #Else, enter NA and make it download from sour
-                  } else {
-                      mran.binaries[k,] <-c('missing','missing')
-                      sk=match(snowball.mran$pkg_vrs[k],snowball$pkg_vrs)  #package number in snowball
-                      snowball$from[sk]="source"
-                  } #End if downloaded successfully
+            
+          #Dummy to identify if a problem is found and move file to source
+            good.mran.file[k] <- TRUE
+            
+          
+      #3.4 Verify the binary being served is the one we want
+            #Get the available packages on that date
+              ap <-    available.packages(repos=repos.mran[k],type='binary')   
+              ap.df <- data.frame(ap)                       
+              ap.pkg <- subset(ap.df,Package==snowball.mran$pkg[k])
               
+              
+            #If there is a match for that pkg_vrs, get it
+            if (ap.pkg$Version == snowball.mran$vrs[k])
+            {
+            #Message
+              message1(k,") Downloading: '",snowball.mran$pkg_vrs[k],"' from MRAN")
+    
+            #Download it
+              mran.binaries_rowk <- download.packages(snowball.mran$pkg[k], type='binary',repos=repos.mran[k],available=ap, destdir=temp_path)
+            
+            #If file was successfully downloaded
+                  if (nrow(mran.binaries_rowk)==1) {
+                      mran.binaries[k,] <-mran.binaries_rowk  
+            #If file did not download 
+                  } else {
+                    good.mran.file <- FALSE 
+                  } 
+            #IF file was not the right version
+            } else {
+              good.mran.file[k] <- FALSE 
+            } #End else for whether if binary asked for is on available.packages
+              
+           
             } #End loop over MRAN binaries
 
         
@@ -137,25 +161,36 @@
 
         for (k in 1:nrow(snowball.mran)) {
           message1(k,") Installing: '",snowball.mran$pkg_vrs[k])
+            #Correct MRAN, unzip
           
-          #Verify the right version was downloaded prior to installing (we *guess* which version MRAN has, with cran.toc.rds)
-          # by checking if pkg_vrs appears in the file name
+              if (good.mran.file[k])
+              {
+              #Legacy check, from before using available.packages() to ensure correct MRAN file was downloaded
+              #Kept as an extra security, but no mismatched file should be downloaed
+             
               pos <-  regexpr(snowball.mran$pkg_vrs[k], mran.binaries$downloaded.path[k]) 
-              if (pos>0) {
+              if (pos>0 ) {
+                #unzip
                   untar(mran.binaries$downloaded.path[k] , exdir=snowball.mran$installation.path[k])        
-                  
-                  } else {
-              #Tell user we will try 'source' as backup
+                #delete
+                  unlink(mran.binaries$downloaded.path[k])
+                  } else { 
+                #if the name of the file does not match despite passing available.packages check, bad file
+                      good.mran.file[k] <- FALSE
+                }#EDnd if pos>0
+              }#End if good mran file  
+              
+          #Incorrect MRAN, put it up for source
+              if (!good.mran.file[k]) # don't use else{} becasue prior if() could chnage the value
+                  {
+                  #Tell user we will try 'source' as backup
                     message("Did not find the binary we were looking for in MRAN, will install source from CRAN instead.")
-                
-                #Update snowball to get this package from source instead
-                    sk=match(snowball.mran$pkg_vrs[k],snowball$pkg_vrs)  #package number in snowball
-                    snowball$from[sk]="source"
-                    
-                  } #End if pos<0
+                  #Update snowball to get this package from source instead
+                      sk=match(snowball.mran$pkg_vrs[k],snowball$pkg_vrs)  #package number in snowball
+                      snowball$from[sk]="source"
+                  } #End if !good.mran
               }#End loop over mran
-          
-              message1() #skip a line for next message
+          message1() #skip a line for next message
 
         } #End if any MRAN files found
 
@@ -230,6 +265,8 @@
                   install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", 
                                       dependencies = FALSE, quiet = FALSE, INSTALL_opts = '--no-lock')
                   }
+            
+            
             
         #4.5 If not installed show error    
               if (!is.pkg_vrs.installed(snowball$pkg[k], snowball$vrs[k]))
