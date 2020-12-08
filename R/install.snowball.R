@@ -21,6 +21,9 @@
 #'
 #########################################################
 
+ 
+
+
   install.snowball=function(snowball, date, force.install = FALSE, force.source = FALSE, quiet.install = TRUE) 
     {
      #####################
@@ -86,6 +89,8 @@
           message2("\ngroundhog says: all ",n.cran, " files downloaded. Now they will be installed")
         
           for (k in 1:nrow(snowball.cran)) {
+            
+
                 infile  <- as.character(cran.binaries$downloaded.path[k])
                 outfile <- as.character(snowball.cran$installation.path[k])
                 message1(k,") Installing: ",snowball.cran$pkg_vrs[k])
@@ -122,7 +127,6 @@
           good.mran.file=c()
           
           for (k in 1:n.mran) {
-            
           #Dummy to identify if a problem is found and move file to source
             good.mran.file[k] <- TRUE
             
@@ -199,6 +203,9 @@
 
         
         
+        
+        
+        
     #################################################
     #4 INSTALL SOURCE & LOAD
     ###################################################
@@ -206,6 +213,9 @@
       #4.1 Any Source files remain to be installed?
           n.source=sum(snowball$from=="source" & snowball$installed==FALSE)
           if (n.source>0) {
+            
+            
+        
             
           #Start clock for install feedback
               start.time=Sys.time()
@@ -230,6 +240,8 @@
           for (k in 1:n.snowball)
           {
         
+            
+
         #4.3 Install source 
             if (snowball$from[k]=='source' & snowball$installed[k]==FALSE )
               {
