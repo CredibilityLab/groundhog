@@ -139,7 +139,7 @@ groundhog.library <- function(
 
     #11.2 
     if (pkg_vrs %in% loaded_pkg_vrs) {
-      message1("groundhog says: successfully loaded '", pkg_vrs,"'.")
+      message1("\ngroundhog says: successfully loaded '", pkg_vrs,"'.")
         } else {
         message("groundhog says: FAILED to load '", pkg_vrs,"'.")
       }
