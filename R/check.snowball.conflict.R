@@ -29,11 +29,11 @@ check.snowball.conflict <- function(snowball, force.install) {
     conflict.needed <- "" # Assume nothing is in conflict
     
   # These are packages that are needed and have a conflict with an active one
-    conflict.needed <- snowball$pkg_vrs[!(snowball$pkg_vrs %in% active$pkg_vrs) & (snowball$pkg %in% active$pkg)]
+    conflict.needed <- snowball$pkg_vrs[!(snowball$pkg_vrs %in% active$pkg_vrs) & (snowball$pkg %in% active$pkg) & snowball$pkg!='testthat']
     conflict.needed <- sort(conflict.needed)
 
   # These are packages that are active and have a conflict with a needed one
-    conflict.active <- active$pkg_vrs[!(active$pkg_vrs %in% snowball$pkg_vrs) & (active$pkg %in% snowball$pkg)]
+    conflict.active <- active$pkg_vrs[!(active$pkg_vrs %in% snowball$pkg_vrs) & (active$pkg %in% snowball$pkg) & active$pkg!='testthat']
     conflict.active <- sort(conflict.active)
 
   # How many packages are needed and conflicted
