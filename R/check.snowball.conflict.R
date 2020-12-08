@@ -48,12 +48,14 @@ check.snowball.conflict <- function(snowball, force.install) {
   # If different # of packages match pkg vs pkg_vrs, we have same packages  different vrs: stop
   if (conflict.needed != "") {
     message2()
-    message1("Some of the packages needed by '", requested_pkg_vrs, "' are currently loaded,",
+    message1(n.conflict, " of the ", n.needed, " packages needed by '", requested_pkg_vrs, "' are currently loaded,",
              " but not with the version that is needed.\n",
+            "Loaded: ",conflict.active,"\n",
+            "Needed: ",conflict.needed,"\n\n",
             "To solve this: restart the R session. Note: you will need to do 'library(groundhog)' again.\n\n",
             "In R Studio press: CTRL/CMD-SHIFT-F10")
      message("The package '", requested_pkg_vrs,"' was *NOT* loaded")
-     
+     invisible(list(packages.needed=conflict.needed, packages.active=conflict.active))
     exit()
   } # End if some conflict found
 } # End function
