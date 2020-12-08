@@ -62,6 +62,9 @@
             dir.create(snowball$installation.path[k], recursive = TRUE, showWarnings = FALSE)
             } 
       
+        #1.6 Original selection, in for one source file we modify it temporarily, we return to this value
+          quiet.install.original <- quiet.install
+          
     #####################
     #2 CRAN
     #####################
@@ -248,13 +251,31 @@
               #Add to counter for feedback 
                 k.source=k.source+1
                 
-              #Install source (turn off warnings because if something goes wrong, we try again, with warnings on)
-              #                this prevents a package that actually installed succesfully on the 2nd attempt, showing a warning)
+                
+              #Bypass quiet install fro slow packages
+                seconds=snowball$installation.time[k]
+                minutes=round(seconds/60,0)
+                
+                
+                if (snowball$installation.time[k]>120 & quiet.install==TRUE) {
+                      message("### PATIENCE WARNING ###\nThe next package is expected to take about ",minutes," minutes to install.\n ",
+                        "Usually groundhog supresses all installation output that floods this console, but for long to install packages ",
+                        "it is included. See you in about ",minutes," minutes.")
+                      quiet.install <- FALSE
+                      Sys.sleep(10)
+                      }
+                
+              #Install source 
+                              #(turn off warnings because if something goes wrong, we try again, with warnings on)
+                              #this prevents a package that actually installed successfully on the 2nd attempt, showing a warning)
                 if (quiet.install==TRUE) options(warn=-1)
-                install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", dependencies = FALSE, quiet = quiet.install, INSTALL_opts = '--no-lock')
+                      install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", dependencies = FALSE, quiet = quiet.install, INSTALL_opts = '--no-lock')
                 if (quiet.install==TRUE) options(warn=0)
               } #End if source
             
+                 
+            #Return quiet install to original selection   
+                quiet.install <- quiet.install.original
          
         #4.4 If it did not install and was quietly installing from sourced, try again not quietly
             if (!is.pkg_vrs.installed(snowball$pkg[k], snowball$vrs[k]) & 
@@ -313,3 +334,6 @@
   } #end of function
           
      
+  
+  
+  

@@ -7,9 +7,8 @@
 get.groundhog.folder()
 }
 \value{
-the path to the groundhog folder where groundhog files will be
-stored and where packages loaded with \code{\link[=groundhog.library]{groundhog.library()}} will be
-installed.
+the path to the groundhog folder, the meta-library where
+\code{\link[=groundhog.library]{groundhog.library()}} downloads and stores binaries and source files
 }
 \description{
 Get groundhog folder location

@@ -4,7 +4,7 @@
 \alias{set.groundhog.folder}
 \title{Set groundhog folder location}
 \usage{
-set.groundhog.folder(path)
+set.groundhog.folder(groundhog.folder)
 }
 \arguments{
 \item{path}{Character. The path to the groundhog folder where groundhog
@@ -25,7 +25,7 @@ project.
 }
 \examples{
 \dontrun{
-set.groundhog.folder("~/.groundhog")
+set.groundhog.folder("~/.R_groundhog")
 }
 
 }

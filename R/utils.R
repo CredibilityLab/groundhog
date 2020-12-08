@@ -177,3 +177,5 @@ get.r.majmin <- function() {
     }
 
 
+  
+ 

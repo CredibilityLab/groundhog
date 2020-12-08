@@ -54,17 +54,13 @@ installation.feedback <- function(k, date, snowball, start.time) {
 		  msg,
 		  "\n\n> When installing a package from source, abundant and fast-speed output is generated \n",
 		  " flooding the console where these messages are printed. Thus, groundhog.library() supresses\n",
-		  " such output. You may run groundhog.library() with the option 'quiet=FALSE' to display all output."
+		  " such output. You may run groundhog.library() with the option 'quiet.install=FALSE' to display all output."
 		) # End of message
 		
-	#Add warning fo slow package
-		#Add estimate for this one package, unless it is the last one.
-	  if (snowball$installation.time[k]>120) {
-	        msg <- c(msg, "\n\n>       *PATIENCE*: This package ('", snowball$pkg_vrs[k],"') is expected to take about ",
-	       snowball$installation.time[k], " seconds.")  
-	       }
-	 
-		
+	#Add estimate for this one package
+	   msg <- c(msg, "\n\n> THIS package ('", snowball$pkg_vrs[k],"') is expected to take about ",snowball$installation.time[k], " seconds.")  
+	       
+	   
 	  } # End of if source file
 	  
 	  
