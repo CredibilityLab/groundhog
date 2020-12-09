@@ -10,6 +10,7 @@ groundhog.library(
   quiet.install = TRUE,
   include.suggests = FALSE,
   current.deps = .pkgenv$current.deps,
+  ignore.deps = c(),
   ignore.package.conflicts = FALSE,
   force.source = FALSE,
   force.install = FALSE
@@ -21,10 +22,10 @@ groundhog.library(
 \item{quiet.install}{Logical (defaults to \code{TRUE}).Run \code{\link[=install.packages]{install.packages()}}
 with \code{quiet = TRUE}?}
 
-\item{ignore.package.conflicts}{Logical (defaults to \code{FALSE}). With \code{TRUE},
-if an already attached package will be installed, it is detached, but all
-dependencies are left installed. With default, \code{FALSE}, script stops and
-asks for session restart.}
+\item{ignore.deps}{optional character vector containing dependencies which
+may mismatch those implied by the entered date and be tolerated. This will
+prevent the installation to stop and request restarting the R session for
+specified dependencies.}
 
 \item{force.source}{Logical (defaults to \code{FALSE}). If \code{TRUE},` will skip CRAN
 and MRAN attempts, download tar.gz, and install from it.}
