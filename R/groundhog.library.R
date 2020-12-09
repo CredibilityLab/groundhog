@@ -1,10 +1,10 @@
 #' Install packages as available on set date -  groundhog.library()
 #'
 #' @inheritParams install.snowball
-#' @param ignore.package.conflicts Logical (defaults to `FALSE`). With `TRUE`,
-#'   if an already attached package will be installed, it is detached, but all
-#'   dependencies are left installed. With default, `FALSE`, script stops and
-#'   asks for session restart.
+#' @param ignore.deps optional character vector containing dependencies which 
+#'   may mismatch those implied by the entered date and be tolerated. This will
+#'   prevent the installation to stop and request restarting the R session for 
+#'   specified dependencies.
 #'
 #' @return a character vector containing all active packages for the session,
 #'   with their version number, under the format `pkg_vrs`.
@@ -23,6 +23,7 @@ groundhog.library <- function(
                               quiet.install = TRUE,
                               include.suggests = FALSE,
                               current.deps = .pkgenv$current.deps,  #set in zzz.R
+                              ignore.deps = c(),
                               ignore.package.conflicts = FALSE,
                               force.source = FALSE,
                               force.install = FALSE) {
@@ -98,11 +99,10 @@ groundhog.library <- function(
 
 
   #7 CHECK FOR CONFLICT SNOWBALL <->ACTIVE PACKAGES
-    if (!ignore.package.conflicts) {
-      check.snowball.conflict(snowball, force.install)  #This was stop processing of request and ask for SHFT/CTRL-F10
-      #unload.conflicts(snowball)                         #This unloads packages in conflict
+      check.snowball.conflict(snowball, force.install,ignore.deps)  
+    
       
-    }
+    
 
   #8 message if installation will be necessary
     need.to.install.total <- sum(!snowball$installed)
@@ -135,13 +135,29 @@ groundhog.library <- function(
 
   #11 Success/failure message
     #11.1 look at loaded packages
-      loaded_pkg_vrs <- get.active()$pkg_vrs
-
-    #11.2 
+      active <- groundhog:::get.active()
+      
+    #11.2 Message
+        #Package not loaded
+            if (!pkg %in% active$pkg) 
+                  {
+                  message("groundhog says: FAILED to load '", pkg_vrs,"'")
+                  }
+      
+        #Unexpected version loaded
+            loaded_pkg_vrs <- active[active$pkg==pkg,]$pkg_vrs
+            if ((pkg %in% active$pkg) & (!pkg_vrs %in% active$pkg_vrs)) 
+                  {
+                  
+                  message("groundhog says: WARNING, loaded unexpected version of '", pkg, "'\n",
+                         "expected: ''", pkg_vrs, "\n",
+                         "loaded  : ''", pkg_vrs, "\n"
+                    )
+                  }
     if (pkg_vrs %in% loaded_pkg_vrs) {
       message1("groundhog says: successfully loaded '", pkg_vrs,"'.")
         } else {
-        message("groundhog says: FAILED to load '", pkg_vrs,"'.")
+        
       }
 
       

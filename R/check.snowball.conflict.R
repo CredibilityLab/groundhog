@@ -3,11 +3,15 @@
 #' @inheritParams estimate.seconds.left
 #' @inheritParams install.snowball
 #'
-check.snowball.conflict <- function(snowball, force.install) {
+check.snowball.conflict <- function(snowball, force.install, ignore.deps) {
+  #Always include in ignore deps testthat and Rstudioapi - when testthat is loaded it loads off the current .libpath() creating unoavoidable version conflicts
+    ignore.deps=c("testthat", "rstudioapi")
+  
   # short name for package being installed/loaded
-  requested_pkg_vrs <- snowball$pkg_vrs[length(snowball$pkg_vrs)]
+    requested_pkg_vrs <- snowball$pkg_vrs[length(snowball$pkg_vrs)]
+    
   # Load active packages
-  active <- get.active()
+    active <- get.active()
 
   # Check if any package that needs to be installed are loaded; separate check from below because even SAME version created conflict
   if (force.install) {
@@ -29,11 +33,11 @@ check.snowball.conflict <- function(snowball, force.install) {
     conflict.needed <- "" # Assume nothing is in conflict
     
   # These are packages that are needed and have a conflict with an active one
-    conflict.needed <- snowball$pkg_vrs[!(snowball$pkg_vrs %in% active$pkg_vrs) & (snowball$pkg %in% active$pkg) & snowball$pkg!='testthat']
+    conflict.needed <- snowball$pkg_vrs[!(snowball$pkg_vrs %in% active$pkg_vrs) & (snowball$pkg %in% active$pkg) & (!snowball$pkg %in% ignore.deps)]
     conflict.needed <- sort(conflict.needed)
 
-  # These are packages that are active and have a conflict with a needed one
-    conflict.active <- active$pkg_vrs[!(active$pkg_vrs %in% snowball$pkg_vrs) & (active$pkg %in% snowball$pkg) & active$pkg!='testthat']
+  # These are packages that are active and have a conflict with a needed one (do not include packages in ignore.deps)
+    conflict.active <- active$pkg_vrs[!(active$pkg_vrs %in% snowball$pkg_vrs) & (active$pkg %in% snowball$pkg) & (!active$pkg %in% ignore.deps)]
     conflict.active <- sort(conflict.active)
 
   # How many packages are needed and conflicted
