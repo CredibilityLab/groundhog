@@ -10,7 +10,7 @@
 #Default parameters
   #Dependencies loaded for version of R being used
     .pkgenv$current.deps=c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders", 
-                           "RcppParallel", "RcppProgress", "testthat" )
+                           "RcppParallel", "RcppProgress" )
 
     
 #' @importFrom utils packageVersion compareVersion
