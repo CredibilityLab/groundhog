@@ -139,7 +139,7 @@
               
               
             #If there is a match for that pkg_vrs, get it
-            if (ap.pkg$Version == snowball.mran$vrs[k])
+            if (nrow(ap.pkg>0) &&ap.pkg$Version == snowball.mran$vrs[k])
             {
             #Message
               message1(k,") Downloading: '",snowball.mran$pkg_vrs[k],"' from MRAN")
@@ -341,11 +341,11 @@
         #5 Assume success at this point, load it
                 .libPaths(c(.libPaths(), snowball$installation.path[k] ))
                 loadNamespace(snowball$pkg[k], lib.loc =  snowball$installation.path[k]) 
+                
           } #End loop over snowball        
 
   } #end of function
           
      
-  
   
   
