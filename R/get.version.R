@@ -50,19 +50,25 @@ get.version <- function(pkg, date,
               } #End second 'if' current date>cran
           } #End first 'if' 
 
-  # 3 If pkg is in current.deps, deliver version for current version of R
-      if (pkg %in% current.deps) {
-        using.r.rdate <- get.rdate() # date of R being used
-        version.k <- max(which(dfk$Published < using.r.rdate)) # which kth date of pkg matches it
-        vrs <- dfk[version.k, ]$Version # get kth version
-        return(vrs)
-      }
-
-
-  # 4 Get version
+  
+  # 3 Get version
   version.k <- max(which(dfk$Published < date)) # Position of last package available before the date
   current.version <- dfk$Version[version.k]
-
+  
+  #4 Adjust the current deps 
+         if (pkg %in% current.deps) {
+            using.r.rdate <- get.rdate() # date of R being used
+            version.k <- max(which(dfk$Published < using.r.rdate)) # which kth date of pkg matches it
+            minimum.vrs <- dfk[version.k, ]$Version # get kth version
+            if (compareVersion(minimum.vrs, current.version )==1) 
+                {
+                return(minimum.vrs)
+                } else {
+                return(current.version)
+                }
+            }
+  
+  #5 Output version
   if (patch == "current") {
     return(current.version)
   } else if (patch == "max") {
