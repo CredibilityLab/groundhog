@@ -108,30 +108,31 @@
 
       #3.1 Subset of MRAN packages to download
         snowball.mran <- snowball[snowball$installed==FALSE & snowball$from=="MRAN",]
-        n.mran=nrow(snowball.mran)
+        n.mran <- nrow(snowball.mran)
         
       #3.1.5 If any MRAN in snowball found, install them
         if (n.mran>0)
         {  
-        message2("\ngroundhog says: will now download ",n.mran, " binary packages from MRAN (a Microsoft archive storing binaries of older packages).")
+        message2("\ngroundhog says: will now look for ",n.mran, " binary packages in MRAN (a Microsoft archive storing binaries of older packages).")
         message1("MRAN is slower than CRAN for binaries, but still faster than the alternative: *source* packages from CRAN.")
         
       #3.2 Setup URL to use as repository for each package
-        repos.mran = paste0("https://mran.microsoft.com/snapshot/", snowball.mran$MRAN.date, "/")
-      
+        repos.mran <- paste0("https://mran.microsoft.com/snapshot/", snowball.mran$MRAN.date, "/")
       
       #3.3 Initialize dataframe that will store all results
-          mran.binaries=data.frame(pkg.mran=character() ,  downloaded.path=character(), stringsAsFactors = FALSE)
+          mran.binaries <- data.frame(pkg.mran=character() ,  downloaded.path=character(), stringsAsFactors = FALSE)
         
-        #Loop downloading
-          good.mran.file=c()
+      #3.4 Loop downloading
+          good.mran.file <- c()
+          
+          j1 <- 0 #Counter for actually downloaded files
           
           for (k in 1:n.mran) {
-          #Dummy to identify if a problem is found and move file to source
-            good.mran.file[k] <- TRUE
             
-          
-      #3.4 Verify the binary being served is the one we want
+            #Dummy to identify if a problem is found and move file to source
+              good.mran.file[k] <- TRUE   
+            
+      #3.5 Verify the binary being served is the one we want
             #Get the available packages on that date
               ap <-    available.packages(repos=repos.mran[k],type='binary')   
               ap.df <- data.frame(ap)                       
@@ -141,8 +142,10 @@
             #If there is a match for that pkg_vrs, get it
             if (nrow(ap.pkg>0) &&ap.pkg$Version == snowball.mran$vrs[k])
             {
+            #Add to downloaded counter
+              j1 <- j1 + 1
             #Message
-              message1(k,") Downloading: '",snowball.mran$pkg_vrs[k],"' from MRAN")
+              message1(j1,") Downloading: '",snowball.mran$pkg_vrs[k],"' from MRAN")
     
             #Download it
               mran.binaries_rowk <- download.packages(snowball.mran$pkg[k], type='binary',repos=repos.mran[k],available=ap, destdir=temp_path)
@@ -162,36 +165,45 @@
            
             } #End loop over MRAN binaries
 
-        
-      #3.4 Unzip them 
-        message2("\ngroundhog says: all ",n.mran, " files downloaded. Now they will be installed")
-
-        for (k in 1:nrow(snowball.mran)) {
-          message1(k,") Installing: '",snowball.mran$pkg_vrs[k])
-            #Correct MRAN, unzip
           
+          
+                  
+      #3.4 Unzip them 
+        #Message
+          if (j1 >  0) message2("groundhog says: found ",j1," packages in MRAN, will install them now.")
+          if (j1 == 0) message2("groundhog says: did not find any pacakges in MRAN")
+      
+        #Reset counter
+          j2 <- 0 
+  
+        for (k in 1:nrow(snowball.mran)) {
+
+            
+          #Correct MRAN, unzip
               if (good.mran.file[k])
               {
+                  j2 <- j2 + 1
               #Legacy check, from before using available.packages() to ensure correct MRAN file was downloaded
-              #Kept as an extra security, but no mismatched file should be downloaed
-             
-              pos <-  regexpr(snowball.mran$pkg_vrs[k], mran.binaries$downloaded.path[k]) 
+              #Kept as an extra security, but no mismatched file should be downloaded so no mismatched file should be found
+               pos <-  regexpr(snowball.mran$pkg_vrs[k], mran.binaries$downloaded.path[k]) 
               if (pos>0 ) {
+                #message 
+                  message1(j2,") Installing: '",snowball.mran$pkg_vrs[k])
                 #unzip
                   untar(mran.binaries$downloaded.path[k] , exdir=snowball.mran$installation.path[k])        
+                
                 #delete
                   unlink(mran.binaries$downloaded.path[k])
                   } else { 
                 #if the name of the file does not match despite passing available.packages check, bad file
                       good.mran.file[k] <- FALSE
-                }#EDnd if pos>0
+                }#End if pos>0
               }#End if good mran file  
               
           #Incorrect MRAN, put it up for source
-              if (!good.mran.file[k]) # don't use else{} becasue prior if() could chnage the value
+              if (!good.mran.file[k]) # don't use else{} because prior if() could chnage the value
                   {
-                  #Tell user we will try 'source' as backup
-                    message("Did not find the binary we were looking for in MRAN, will install source from CRAN instead.")
+                
                   #Update snowball to get this package from source instead
                       sk=match(snowball.mran$pkg_vrs[k],snowball$pkg_vrs)  #package number in snowball
                       snowball$from[sk]="source"
@@ -215,39 +227,36 @@
           if (n.source>0) {
             
             
-        
-            
-          #Start clock for install feedback
+      #4.2 Start clock for install feedback
               start.time=Sys.time()
               
-          #Show message
-            message1("groundhog says: ",n.source," packages need to be installed from source. \n",
-                 "Completion time estimates are reported after each package installs.")
+      #4.3 Show message
+            message1("groundhog says: will now attempt installing ",n.source," packages from source.")
           
-          #Smaller snowball to send to feedback
+      #4.4 Smaller snowball to send to feedback
             snowball.source=snowball[snowball$from=="source" & snowball$installed==FALSE,]
             
-          #Counter for snowball source
+      #4.5 Counter for snowball source
             k.source=1
             
-          #Load list of *current* SOURCE packages
+      #4.6 Load list of *current* SOURCE packages
             ap_source=get.current.packages("source")
             
           }      
         
-      #4.2 Loop through entire snowball: loading CRAN/MRAN and installing SOURCE
+      #4.7 Loop through entire snowball: loading CRAN/MRAN and installing SOURCE
 
           for (k in 1:n.snowball)
           {
         
             
 
-        #4.3 Install source 
+        #4.8 Install source 
             if (snowball$from[k]=='source' & snowball$installed[k]==FALSE )
               {
               
                     
-              #If needed version is there, get source from current
+        #4.9 If needed version is there, get source from current
                 if (snowball$pkg_vrs[k] %in% ap_source$pkg_vrs) 
                   {
                   #If it is current, get from page with all sources
@@ -257,18 +266,18 @@
                     url <- paste0( "https://cran.r-project.org/src/contrib/Archive/" ,snowball$pkg[k] , "/" ,  snowball$pkg_vrs[k] , ".tar.gz")
                   }
                 
-              #Feedback on time to user
+        #4.10 Feedback on time to user
                 installation.feedback(k.source, date, snowball.source, start.time) 
                 
               #Add to counter for feedback 
                 k.source=k.source+1
                 
                 
-              #Bypass quiet install fro slow packages
+        #4.11 Bypass quiet install for slow packages
                 seconds=snowball$installation.time[k]
                 minutes=round(seconds/60,0)
                 
-                
+               
                 if (snowball$installation.time[k]>120 & quiet.install==TRUE) {
                       message("### PATIENCE WARNING ###\nThe next package is expected to take about ",minutes," minutes to install.\n ",
                         "Usually groundhog supresses all installation output that floods this console, but for long to install packages ",
@@ -286,10 +295,10 @@
               } #End if source
             
                  
-            #Return quiet install to original selection   
+        #4.12 Return quiet install to original selection   
                 quiet.install <- quiet.install.original
          
-        #4.4 If it did not install and was quietly installing from sourced, try again not quietly
+        #4.13 If it did not install and was quietly installing from source, try again not quietly
             if (!is.pkg_vrs.installed(snowball$pkg[k], snowball$vrs[k]) & 
                 snowball$from[k]=="source" & 
                 quiet.install==TRUE)
@@ -301,12 +310,12 @@
             
             
             
-        #4.5 If not installed show error    
+        #4.14 If not installed show error    
               if (!is.pkg_vrs.installed(snowball$pkg[k], snowball$vrs[k]))
               {
                   message("The package '",snowball$pkg_vrs[k],"' failed to install!")
                 
-                  #4.5.1  R TOOLS CHECK
+                  #4.15  R TOOLS CHECK
                       if (.Platform$OS.type == "windows" & Sys.which("make") == "") {
                       message2()
                       message1(
@@ -316,7 +325,7 @@
                             } # End of if make=="
                 
                 
-                  #4.5.2  R mismatch
+                  #4.16  R mismatch
                      rv <- r.version.check(date)
                      if (rv$r.using.majmin!= rv$r.need.majmin)
                         {
@@ -331,18 +340,18 @@
                           }
                           
                 
-                #4.5.3 Stop the script
+                #4.17 Stop the script
                     message("\n\n\n----------------   The package ", main.pkg_vrs, " did NOT install.  Read above for details  -----------------")
                     exit()
                     }
                 
                 
                 
-        #5 Assume success at this point, load it
+      #5 Assume success at this point, load it
                 .libPaths(c(.libPaths(), snowball$installation.path[k] ))
                 loadNamespace(snowball$pkg[k], lib.loc =  snowball$installation.path[k]) 
                 
-          } #End loop over snowball        
+      } #End loop over snowball        
 
   } #end of function
           
