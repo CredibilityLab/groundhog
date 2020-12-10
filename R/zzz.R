@@ -29,7 +29,7 @@
     # is not on CRAN, or if working offline (current.packages is NULL in this case).
       #Try to read from groundhogr.com   
           groundhog.version_cran <- tryCatch(
-          as.character(readLines("http://groundhogr.com/groundhog_version2.txt")),
+          as.character(readLines("http://groundhogr.com/groundhog_version.txt")),
           warning = function(w) NULL,
           error = function(e) NULL
         )
