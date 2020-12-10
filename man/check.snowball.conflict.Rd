@@ -4,13 +4,15 @@
 \alias{check.snowball.conflict}
 \title{Check snowball conflict}
 \usage{
-check.snowball.conflict(snowball, force.install, ignore.deps)
+check.snowball.conflict(snowball, force.install, ignore.deps, date)
 }
 \arguments{
 \item{snowball}{the result of \code{\link[=get.snowball]{get.snowball()}}.}
 
 \item{force.install}{Logical (defaults to \code{FALSE}). If \code{TRUE}, even if
 package is found for this R-build, it will reinstall it.}
+
+\item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
 }
 \description{
 Check snowball conflict
