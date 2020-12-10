@@ -65,7 +65,9 @@ groundhog.library <- function(
 
   #2 Check R version
     rv <- r.version.check(date) # Get version of r being used and needed
-  
+    
+    #2.1 Is date for a later major R? STOP
+
     if (package_version(rv$r.using.majmin) < package_version(rv$r.need.majmin)) {
       message2()
       message(
@@ -77,6 +79,50 @@ groundhog.library <- function(
       )
       exit()
     }
+    
+    
+    #2.2 Is date for a previous major R? Warn
+    
+      if (package_version(rv$r.using.majmin) > package_version(rv$r.need.majmin)) {
+          
+         #Path to text file to keep track if warning already shown
+            cookie_path <- paste0(get.groundhog.folder(),"/warning_r_mismatch.txt")
+        
+          #How long since last warning?
+            since_warning <- 25  #assume 25 hours, i.e., show warnings
+            if (file.exists(cookie_path)) since_warning <- difftime(Sys.time(),file.info(cookie_path)$ctime,units='hours')
+            
+          #If >24 show warnings
+          if (since_warning>24)
+          {
+          message2()
+          message1(
+            "You are using R-", rv$r.using.full, ", but on (","'", date, "') the current version was R-", rv$r.need.majmin, ".\n",
+            "Across different R versions, the same code can give different results or not\n",
+            "work at all. You may want to either change the date you entered, or the version of R you use.\n",
+            " - To change a date, choose something after '",get.r.majmin.release(),"'\n",
+            " - Or use R-",rv$r.need.full, "  (instructions for running older R versions: http://groundhogr.com/many)\n\n")
+          message1("Type 'OK' to continue anyway")
+          text <- readline()
+            
+          #If they press stop, don't load/install package
+            if (text!='ok' & text!="OK" & text!="'ok'") {
+              message("You did not type OK, so it stopped.")
+              message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+              exit()
+              }
+            message1("OK. We will continue. This warning will not be shown again within 24 hours")
+            
+            #Save file to indicate this warning was shown (but only if they don't say stop, will show again if they say stop)
+                write("1",cookie_path)
+                
+          } #Showed warnings
+            
+          
+          }
+      
+          
+          
 
   #3 Grab .libpaths()
     orig_lib_paths <- .libPaths()
