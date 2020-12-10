@@ -99,7 +99,7 @@ groundhog.library <- function(
 
 
   #7 CHECK FOR CONFLICT SNOWBALL <->ACTIVE PACKAGES
-      check.snowball.conflict(snowball, force.install,ignore.deps)  
+      check.snowball.conflict(snowball, force.install,ignore.deps,date)  
     
       
     

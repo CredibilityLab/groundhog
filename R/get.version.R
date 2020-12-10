@@ -52,8 +52,8 @@ get.version <- function(pkg, date,
 
   
   # 3 Get version
-  version.k <- max(which(dfk$Published < date)) # Position of last package available before the date
-  current.version <- dfk$Version[version.k]
+    version.k <- max(which(dfk$Published < date)) # Position of last package available before the date
+    current.version <- dfk$Version[version.k]
   
   #4 Adjust the current deps 
          if (pkg %in% current.deps) {
