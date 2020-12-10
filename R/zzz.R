@@ -13,29 +13,44 @@
                            "RcppParallel", "RcppProgress" )
 
     
-#' @importFrom utils packageVersion compareVersion
-.onAttach <- function(libname, pkgname) {
-
-  groundhog.version_cran <- tryCatch(
-    as.character(readLines("http://groundhogr.com/groundhog_version.txt")),
-    warning = function(w) NULL,
-    error = function(e) NULL
-  )
-    r.using.full= get.rversion() 
-    packageStartupMessage ("Loaded 'groundhog' (version:",packageVersion('groundhog'),  ") using R-" ,r.using.full) 
-    packageStartupMessage (
-            "The groundhog library is here: '",get.groundhog.folder(),"'.\nTo change its location: 'set.groundhog.folder(<path>)'\n"
-             )
-  
-  # isTRUE() is necessary here because this will return logical(0) if the pkg
-  # is not on CRAN, or if working offline (current.packages is NULL in this case).
-  groundhog.version_using <- as.character(packageVersion("groundhog"))
-  if (isTRUE(groundhog.version_cran > groundhog.version_using)) {
-    packageStartupMessage(
-      '-OUTDATED GROUNDHOG-\nYou are using version ', groundhog.version_using, " and the current version is ",
-      groundhog.version_cran, '. Please update by running: \ninstall.packages("groundhog")'
-    )
-  }
-}
-  
+#2. Attaching 
+    #2.1 Show message of library path 
+    #' @importFrom utils packageVersion compareVersion
+    .onAttach <- function(libname, pkgname) {
+        groundhog.version_using <- as.character(packageVersion("groundhog"))
+        r.using.full= get.rversion() 
+        packageStartupMessage ("Loaded 'groundhog' (version:",packageVersion('groundhog'),  ") using R-" ,r.using.full) 
+        packageStartupMessage (
+                "The groundhog library is here: '",get.groundhog.folder(),"'.\nTo change its location: 'set.groundhog.folder(<path>)'\n"
+                 )
+        
+    #2.2 check for update
+    # isTRUE() is necessary here because this will return logical(0) if the pkg
+    # is not on CRAN, or if working offline (current.packages is NULL in this case).
+      #Try to read from groundhogr.com   
+          groundhog.version_cran <- tryCatch(
+          as.character(readLines("http://groundhogr.com/groundhog_version2.txt")),
+          warning = function(w) NULL,
+          error = function(e) NULL
+        )
+       
+    #Get majmin
+      if (!is.null(groundhog.version_cran)) {
+          gv.using <- as.numeric(strsplit(groundhog.version_using, "\\.")[[1]])
+          gv.cran  <- as.numeric(strsplit(groundhog.version_cran, "\\.")[[1]])
+          gv.using.majmin <- 10000*gv.using[1] + gv.using[2]
+          gv.cran.majmin <-  10000*gv.cran[1]  + gv.cran[2]
+    
+    
+        if (isTRUE(gv.cran.majmin > gv.using.majmin)) {
+          packageStartupMessage(
+            "          OUTDATED GROUNDHOG\n",
+            "          You are using version  '" , groundhog.version_using, "\n",
+            "          The current version is '" , groundhog.version_cran, "'\n\n",
+            "Please update by running: \ninstall.packages('groundhog')"
+            )
+            }  #End mismatch in version
+          } #End if !is.null()
+      } #End on attach
+    
  
