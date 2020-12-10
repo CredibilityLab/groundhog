@@ -134,13 +134,14 @@
             
       #3.5 Verify the binary being served is the one we want
             #Get the available packages on that date
-              ap <-    available.packages(repos=repos.mran[k],type='binary')   
-              ap.df <- data.frame(ap)                       
+              ap <- available.packages(contrib.url (repos.mran[k],'binary'))
+  
+              ap.df <- data.frame(ap, stringsAsFactors = FALSE)                       
               ap.pkg <- subset(ap.df,Package==snowball.mran$pkg[k])
               
               
             #If there is a match for that pkg_vrs, get it
-            if (nrow(ap.pkg>0) &&ap.pkg$Version == snowball.mran$vrs[k])
+            if (nrow(ap.pkg)>0 && ap.pkg$Version == snowball.mran$vrs[k])
             {
             #Add to downloaded counter
               j1 <- j1 + 1
@@ -148,7 +149,7 @@
               message1(j1,") Downloading: '",snowball.mran$pkg_vrs[k],"' from MRAN")
     
             #Download it
-              mran.binaries_rowk <- download.packages(snowball.mran$pkg[k], type='binary',repos=repos.mran[k],available=ap, destdir=temp_path)
+              mran.binaries_rowk <- download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path)
             
             #If file was successfully downloaded
                   if (nrow(mran.binaries_rowk)==1) {
@@ -213,8 +214,6 @@
 
         } #End if any MRAN files found
 
-        
-        
         
         
         
