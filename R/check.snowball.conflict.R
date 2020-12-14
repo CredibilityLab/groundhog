@@ -2,6 +2,8 @@
 #'
 #' @inheritParams estimate.seconds.left
 #' @inheritParams install.snowball
+#' @inheritParams groundhog.library
+
 #'
 check.snowball.conflict <- function(snowball, force.install, ignore.deps=c(), date) {
   #1 Get sets of packages that are treated differently 
