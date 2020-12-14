@@ -4,7 +4,7 @@
 \alias{check.snowball.conflict}
 \title{Check snowball conflict}
 \usage{
-check.snowball.conflict(snowball, force.install, ignore.deps, date)
+check.snowball.conflict(snowball, force.install, ignore.deps = c(), date)
 }
 \arguments{
 \item{snowball}{the result of \code{\link[=get.snowball]{get.snowball()}}.}
