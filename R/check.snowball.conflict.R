@@ -3,7 +3,7 @@
 #' @inheritParams estimate.seconds.left
 #' @inheritParams install.snowball
 #'
-check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) {
+check.snowball.conflict <- function(snowball, force.install, ignore.deps=c(), date) {
   #1 Get sets of packages that are treated differently 
       #1.1. Ignore conflicts 
           ignore.deps=c("testthat", "rstudioapi", ignore.deps)  
