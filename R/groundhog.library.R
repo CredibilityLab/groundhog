@@ -5,6 +5,7 @@
 #'   may mismatch those implied by the entered date and be tolerated. This will
 #'   prevent the installation to stop and request restarting the R session for 
 #'   specified dependencies.
+#' @param pkg character string dependencies which 
 #'
 #' @return a character vector containing all active packages for the session,
 #'   with their version number, under the format `pkg_vrs`.

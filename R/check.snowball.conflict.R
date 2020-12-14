@@ -3,9 +3,13 @@
 #' @inheritParams estimate.seconds.left
 #' @inheritParams install.snowball
 #' @inheritParams groundhog.library
+#' @param ignore.deps optional character vector containing dependencies which 
+#'   may mismatch those implied by the entered date and be tolerated. This will
+#'   prevent the installation to stop and request restarting the R session for 
+#'   specified dependencies.
 
 #'
-check.snowball.conflict <- function(snowball, force.install, ignore.deps=c(), date) {
+check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) {
   #1 Get sets of packages that are treated differently 
       #1.1. Ignore conflicts 
           ignore.deps=c("testthat", "rstudioapi", ignore.deps)  
