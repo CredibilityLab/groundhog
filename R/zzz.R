@@ -17,12 +17,44 @@
     #2.1 Show message of library path 
     #' @importFrom utils packageVersion compareVersion
     .onAttach <- function(libname, pkgname) {
-        groundhog.version_using <- as.character(packageVersion("groundhog"))
-        r.using.full= get.rversion() 
-        packageStartupMessage ("Loaded 'groundhog' (version:",packageVersion('groundhog'),  ") using R-" ,r.using.full) 
-        packageStartupMessage (
-                "The groundhog library is here: '",get.groundhog.folder(),"'.\nTo change its location: 'set.groundhog.folder(<path>)'\n"
-                 )
+      
+      #Consent previously?
+        main_folder <-  paste0(path.expand("~"), "/R_groundhog")
+        consent <- (file.exists(main_folder))
+        
+       #Check if folder exists, or ask for consent otherwise
+         if (consent == FALSE) {
+            packageStartupMessage("groundhog needs authorization to save files to  '",main_folder, "'\n",
+                                  "Enter 'OK' to provide authorization")
+                                  
+            answer <- readline()
+            answer <- gsub("'", "", answer)  #kill the ' if entered
+
+            if (toupper(answer)=="OK")
+             {
+             consent <- TRUE
+            }
+         } #End if consent == FALSE
+        
+      # If No consent, die
+          if (consent == FALSE)
+          {
+          packageStartupMessage("You did not say 'OK'\nIf you run 'groundhog.library()' you will be asked again")
+          }
+        
+      #Proceed only if consent exists
+            if (consent == TRUE)
+            {
+      
+        #Create the folder (when running groundhog.library() this will signal consent was given)
+          dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
+
+          groundhog.version_using <- as.character(packageVersion("groundhog"))
+          r.using.full= get.rversion() 
+          packageStartupMessage ("Loaded 'groundhog' (version:",packageVersion('groundhog'),  ") using R-" ,r.using.full) 
+          packageStartupMessage (
+                  "The groundhog library is here: '",get.groundhog.folder(),"'.\nTo change its location: 'set.groundhog.folder(<path>)'\n"
+                   )
         
     #2.2 check for update
     # isTRUE() is necessary here because this will return logical(0) if the pkg
@@ -51,6 +83,7 @@
             )
             }  #End mismatch in version
           } #End if !is.null()
+          } #ENd if consent==TRUE
       } #End on attach
     
  

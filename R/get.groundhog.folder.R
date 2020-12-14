@@ -21,7 +21,33 @@
 get.groundhog.folder <- function() {
   
   #Set main folder with 'cookie files' and default for library
-    main_folder <-  paste0(path.expand("~"), "/R_groundhog/")
+    main_folder <-  paste0(path.expand("~"), "/R_groundhog")
+    
+    
+  #See if consent has been given  \
+        consent <- (file.exists(main_folder))
+        
+       #If no folder, ask for consent 
+         if (consent == FALSE) {
+            message2()
+            message1("groundhog needs authorization to save files to  '",main_folder, "'\n",
+                    "Enter 'OK' to provide authorization")
+                                  
+            answer <- readline()
+            answer <- gsub("'", "", answer)  #kill the ' if entered
+
+            if (toupper(answer)=="OK")
+             {
+             consent <- TRUE
+            }
+         } #End if consent == FALSE
+        
+        if (consent == FALSE)
+          {
+          
+          message("You entred '",answer,"'. Only if you enter 'OK' can you use groundhog.library()")
+          exit()
+          }
     
   #Create main folder 
     dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
@@ -37,7 +63,7 @@ get.groundhog.folder <- function() {
         } else {
           
         #This is the default
-          groundhog.folder <-paste0(main_folder, "groundhog_library/")
+          groundhog.folder <-paste0(main_folder, "/groundhog_library/")
           
         #Set it using function below
           set.groundhog.folder(groundhog.folder) 
