@@ -16,7 +16,6 @@ test_that("load.cran.toc()", {
 
   expect_is(cran.times, "data.frame")
   expect_named(cran.times, c("pkg_vrs", "installation.time", "update.date"))
-  expect_true(min(cran.times$installation.time, na.rm = TRUE) > 0)
   expect_is(cran.times$update.date, "Date")
 
   skip_if_not(getRversion() >= "3.2.0", {
@@ -27,9 +26,8 @@ test_that("load.cran.toc()", {
 
 test_that("toc()", {
 
-  # I'm using lightr here because I know it will on CRAN for the foreseeable
-  # future and it's lightweight but this line can be edited
-  test_pkg <- "lightr"
+  
+  test_pkg <- "dplyr"
 
   toc_pkg <- toc(test_pkg)
 

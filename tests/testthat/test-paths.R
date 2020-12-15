@@ -1,6 +1,4 @@
 test_that("get.groundhog.folder()", {
-
-  Sys.unsetenv("GROUNDHOG_FOLDER")
   expect_identical(get.groundhog.folder(), path.expand(file.path("~", "groundhog")))
 
   test <- tempfile("groundhogR_test")
@@ -21,12 +19,6 @@ test_that("set.groundhog.folder", {
   set.groundhog.folder(test2)
 
   expect_identical(get.groundhog.folder(), test2)
-
-  # set.groundhog.folder() doesn't overwrite other env vars
-  write("TEST = test_var", Sys.getenv("R_ENVIRON"))
-  set.groundhog.folder(tempfile("test_preserver"))
-
-  expect_identical(Sys.getenv("TEST"), "test_var")
 
 })
 
