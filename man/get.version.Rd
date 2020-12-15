@@ -12,9 +12,9 @@ get.version(
 )
 }
 \arguments{
-\item{pkg}{character. Name of the package to install}
+\item{pkg}{character with the name of the package to be loaded}
 
-\item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
+\item{date}{date (yyyy-mm--dd) for version that determines version of package to be loaded}
 
 \item{current.deps}{Character or character vector listing packages that will
 be loaded/installed based on the date when the version of \R being used was

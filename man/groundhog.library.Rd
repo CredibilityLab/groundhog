@@ -17,10 +17,9 @@ groundhog.library(
 )
 }
 \arguments{
-\item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
+\item{pkg}{character string dependencies which}
 
-\item{quiet.install}{Logical (defaults to \code{TRUE}).Run \code{\link[=install.packages]{install.packages()}}
-with \code{quiet = TRUE}?}
+\item{date}{date (yyyy-mm--dd) for version that determines version of package to be loaded}
 
 \item{ignore.deps}{optional character vector containing dependencies which
 may mismatch those implied by the entered date and be tolerated. This will

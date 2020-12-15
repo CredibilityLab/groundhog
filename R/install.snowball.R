@@ -1,9 +1,9 @@
 #' Install snowball
 #'
 #' Install given `snowball` from CRAN binary, MRAN binary, CRAN source or MRAN source as needed
-#'
+#' @importFrom utils download.packages installed.packages untar
+#' 
 #' @inheritParams get.snowball
-#' @inheritParams install.source
 #' @inheritParams installation.feedback
 #' @param force.install Logical (defaults to `FALSE`). If `TRUE`, even if
 #'   package is found for this R-build, it will reinstall it.

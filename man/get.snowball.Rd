@@ -9,16 +9,16 @@ get.snowball(
   date,
   include.suggests = FALSE,
   force.source = FALSE,
-  current.deps = c()
+  current.deps = get.current.deps()
 )
 }
 \arguments{
-\item{pkg}{character. Name of the package to install}
+\item{pkg}{character with the name of the package to be loaded}
 
-\item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
+\item{date}{date (yyyy-mm--dd) for version that determines version of package to be loaded}
 
-\item{include.suggests}{Logical (defaults to \code{FALSE}. Should suggested
-packages be installed?}
+\item{include.suggests}{logical (defaults to \code{FALSE}). If \code{TRUE} will also load packages that are
+suggested in the DESCRIPTION file}
 
 \item{force.source}{Logical (defaults to \code{FALSE}). If \code{TRUE},` will skip CRAN
 and MRAN attempts, download tar.gz, and install from it.}

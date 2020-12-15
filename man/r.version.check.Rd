@@ -7,7 +7,7 @@
 r.version.check(date)
 }
 \arguments{
-\item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
+\item{date}{date (yyyy-mm--dd) for version that determines version of package to be loaded}
 }
 \value{
 a named \code{list} with the following elements:

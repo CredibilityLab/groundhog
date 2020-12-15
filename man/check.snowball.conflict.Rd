@@ -4,7 +4,7 @@
 \alias{check.snowball.conflict}
 \title{Check snowball conflict}
 \usage{
-check.snowball.conflict(snowball, force.install, ignore.deps = c(), date)
+check.snowball.conflict(snowball, force.install, ignore.deps, date)
 }
 \arguments{
 \item{snowball}{the result of \code{\link[=get.snowball]{get.snowball()}}.}
@@ -12,7 +12,12 @@ check.snowball.conflict(snowball, force.install, ignore.deps = c(), date)
 \item{force.install}{Logical (defaults to \code{FALSE}). If \code{TRUE}, even if
 package is found for this R-build, it will reinstall it.}
 
-\item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
+\item{ignore.deps}{optional character vector containing dependencies which
+may mismatch those implied by the entered date and be tolerated. This will
+prevent the installation to stop and request restarting the R session for
+specified dependencies.}
+
+\item{date}{date (yyyy-mm--dd) for version that determines version of package to be loaded}
 }
 \description{
 Check snowball conflict

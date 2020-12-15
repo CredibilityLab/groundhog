@@ -182,7 +182,7 @@ groundhog.library <- function(
 
   #11 Success/failure message
     #11.1 look at loaded packages
-      active <- groundhog:::get.active()
+      active <- get.active()
       
     #11.2 Message
         #Package not loaded

@@ -7,7 +7,7 @@
 msg.R.switch(date)
 }
 \arguments{
-\item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
+\item{date}{date (yyyy-mm--dd) for version that determines version of package to be loaded}
 }
 \value{
 (invisibly) the full \R version in use at \code{date}.

@@ -15,16 +15,13 @@ install.snowball(
 \arguments{
 \item{snowball}{the result of \code{\link[=get.snowball]{get.snowball()}}.}
 
-\item{date}{date (in the format "\%Y-\%m-\%d"), Required date for the package.}
+\item{date}{date (yyyy-mm--dd) for version that determines version of package to be loaded}
 
 \item{force.install}{Logical (defaults to \code{FALSE}). If \code{TRUE}, even if
 package is found for this R-build, it will reinstall it.}
 
 \item{force.source}{Logical (defaults to \code{FALSE}). If \code{TRUE},` will skip CRAN
 and MRAN attempts, download tar.gz, and install from it.}
-
-\item{quiet.install}{Logical (defaults to \code{TRUE}).Run \code{\link[=install.packages]{install.packages()}}
-with \code{quiet = TRUE}?}
 }
 \value{
 Invisible \code{NULL}.
