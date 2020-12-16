@@ -4,16 +4,16 @@ Version: 1.1.0
 Authors@R: c(
     person(given = "Uri",
            family = "Simonsohn",
-           role = c("aut", "cre"),
+           role = c("aut", "cph"),
            email = "urisohn@gmail.com",
            comment = c(ORCID = "0000-0002-8601-7211")),
     person(given = "Hugo",
            family = "Gruson",
-           role = c("ctb", "aut"),
+           role = c("cre", "aut"),
            email = "hugo.gruson+R@normalesup.org",
            comment = c(ORCID = "0000-0002-4094-1476"))
     )
-Description: Make R scripts that rely on packages reproducible, by ensuring that
+Description: Make R scripts that rely on packages reproducible by ensuring that
     every time a given script is run, the same version of the used packages are
     loaded (instead of whichever version the user running the script happens to
     have installed). This is achieved by using the new command
@@ -29,6 +29,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
     covr,
+    testthat (>= 2.1.0),
     knitr,
     rmarkdown,
     rstudioapi
