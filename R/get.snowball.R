@@ -1,13 +1,22 @@
 #' Generates dataframe with all dependencies needed to install a package, with version and source of installation
 #'
-#' @inheritParams groundhog.library
-
+#' @param force.source Logical (defaults to `FALSE`). If `TRUE`,` will skip CRAN
+#'   and MRAN attempts, download tar.gz, and install from it.
+#' @param pkg character with the name of the package to be loaded
+#' @param date date (yyyy-mm--dd) for version that determines version of package to be loaded
+#' @param include.suggests logical (defaults to `FALSE`). If `TRUE` will also load packages that are
+#'    suggested in the DESCRIPTION file
+#' 
+#' @param current.deps Character or character vector listing packages that will
+#'   be loaded/installed based on the date when the version of \R being used was
+#'   released, rather than the value of `date`.
+#'
 # @examples
 # \dontrun{
 # groundhog:::get.snowball("magrittr", "2018-02-12", current.deps = NULL)
 # }
 #'
-get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE, current.deps=.pkgenv$current.deps) {
+get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE, current.deps=get.current.deps()) {
 
   # 1) Get dependencies
   dep12 <- get.all.dependencies(pkg, date, include.suggests = include.suggests)

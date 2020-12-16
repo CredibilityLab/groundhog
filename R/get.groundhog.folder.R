@@ -75,8 +75,9 @@ get.groundhog.folder <- function() {
 
 #' Set groundhog folder location
 #'
-#' @param path Character. The path to the groundhog folder containing the library
-#'   where packages are downloaded and installed.
+#' @param path Character. The path to the groundhog folder where groundhog
+#'   files will be stored and where packages loaded with [groundhog.library()]
+#'   will be installed.
 #'
 #' @note This setting can also be achieved by manually editing the `.Renviron`
 #'   file. You can set this globally by editing `~/.Renviron` or only for a
@@ -94,7 +95,7 @@ get.groundhog.folder <- function() {
 #'
 #' @seealso [get.groundhog.folder()]
 #'
-set.groundhog.folder <- function(path) {
+set.groundhog.folder <- function(groundhog.folder) {
   
   #Set main folder with 'cookie files' and default for library
     main_folder <-  paste0(path.expand("~"), "/R_groundhog/")
@@ -106,8 +107,8 @@ set.groundhog.folder <- function(path) {
     path_file_storing_groundhog_library_location <- paste0(main_folder ,"current_groundhog_folder.txt")
     
   #Save the cookie
-    cat(path, file = path_file_storing_groundhog_library_location)
+    cat(groundhog.folder, file = path_file_storing_groundhog_library_location)
   
   #Assign it to the live environment
-    Sys.setenv(GROUNDHOG_FOLDER = path)
+    Sys.setenv(GROUNDHOG_FOLDER = groundhog.folder)
     }
