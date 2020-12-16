@@ -9,23 +9,27 @@ get.snowball(
   date,
   include.suggests = FALSE,
   force.source = FALSE,
-  current.deps = get.current.deps()
+  current.deps = .pkgenv$current.deps
 )
 }
 \arguments{
-\item{pkg}{character with the name of the package to be loaded}
+\item{pkg}{character string with name of target package to install,
+need not be in quotes.}
 
-\item{date}{date (yyyy-mm--dd) for version that determines version of package to be loaded}
+\item{date}{character string, or date value, with the date which determines the
+version of the package, and all dependencies, to be installed. It's in yyyy-mm-dd format.}
 
-\item{include.suggests}{logical (defaults to \code{FALSE}). If \code{TRUE} will also load packages that are
-suggested in the DESCRIPTION file}
+\item{include.suggests}{logical, defaults to FALSE, when set to TRUE installs/
+loads dependencies classified in the DESCRIPTION file as suggested.}
 
-\item{force.source}{Logical (defaults to \code{FALSE}). If \code{TRUE},` will skip CRAN
-and MRAN attempts, download tar.gz, and install from it.}
+\item{force.source}{Logical (defaults to \code{FALSE}). If \code{TRUE},` will not attempt
+installing binary from CRAN or MRAN and instead download source file and install it.}
 
-\item{current.deps}{Character or character vector listing packages that will
-be loaded/installed based on the date when the version of \R being used was
-released, rather than the value of \code{date}.}
+\item{current.deps}{character vector with dependencies that, if needed, will be
+installed with the newest version between the requested date the release of the
+version of R being used, instead of necessarily with the version implied by the
+date. Default includes series of C++ related packages which tend to be incompatible
+across R versions.}
 }
 \description{
 Generates dataframe with all dependencies needed to install a package, with version and source of installation

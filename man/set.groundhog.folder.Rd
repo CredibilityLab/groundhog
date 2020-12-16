@@ -4,12 +4,11 @@
 \alias{set.groundhog.folder}
 \title{Set groundhog folder location}
 \usage{
-set.groundhog.folder(groundhog.folder)
+set.groundhog.folder(path)
 }
 \arguments{
-\item{path}{Character. The path to the groundhog folder where groundhog
-files will be stored and where packages loaded with \code{\link[=groundhog.library]{groundhog.library()}}
-will be installed.}
+\item{path}{Character. The path to the groundhog folder containing the library
+where packages are downloaded and installed.}
 }
 \value{
 (invisibly) \code{TRUE} upon success.

@@ -9,15 +9,16 @@ check.snowball.conflict(snowball, force.install, ignore.deps, date)
 \arguments{
 \item{snowball}{the result of \code{\link[=get.snowball]{get.snowball()}}.}
 
-\item{force.install}{Logical (defaults to \code{FALSE}). If \code{TRUE}, even if
-package is found for this R-build, it will reinstall it.}
+\item{force.install}{Logical (defaults to \code{FALSE}). If \code{TRUE},` will deleted
+existing package files in groundhog folder, and install anew.}
 
 \item{ignore.deps}{optional character vector containing dependencies which
 may mismatch those implied by the entered date and be tolerated. This will
 prevent the installation to stop and request restarting the R session for
 specified dependencies.}
 
-\item{date}{date (yyyy-mm--dd) for version that determines version of package to be loaded}
+\item{date}{character string, or date value, with the date which determines the
+version of the package, and all dependencies, to be installed. It's in yyyy-mm-dd format.}
 }
 \description{
 Check snowball conflict
