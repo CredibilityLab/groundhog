@@ -7,7 +7,8 @@
 msg.R.switch(date)
 }
 \arguments{
-\item{date}{date (yyyy-mm--dd) for version that determines version of package to be loaded}
+\item{date}{character string, or date value, with the date which determines the
+version of the package, and all dependencies, to be installed. It's in yyyy-mm-dd format.}
 }
 \value{
 (invisibly) the full \R version in use at \code{date}.

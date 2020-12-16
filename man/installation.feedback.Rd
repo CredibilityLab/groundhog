@@ -9,7 +9,8 @@ installation.feedback(k, date, snowball, start.time)
 \arguments{
 \item{k}{numeric. Current step in the snowball process.}
 
-\item{date}{date (yyyy-mm--dd) for version that determines version of package to be loaded}
+\item{date}{character string, or date value, with the date which determines the
+version of the package, and all dependencies, to be installed. It's in yyyy-mm-dd format.}
 
 \item{snowball}{the result of \code{\link[=get.snowball]{get.snowball()}}.}
 
