@@ -1,6 +1,5 @@
 #' Generates dataframe with all dependencies needed to install a package, with version and source of installation
 #'
-#' @inheritParams get.all.dependencies
 #' @param force.source Logical (defaults to `FALSE`). If `TRUE`,` will skip CRAN
 #'   and MRAN attempts, download tar.gz, and install from it.
 #' @param pkg character with the name of the package to be loaded
