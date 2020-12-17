@@ -131,23 +131,10 @@ get.available.mran.date <- function(date0, date1) {
 } # End of function
 
 base_pkg <- function() {
-  c(
-    "base",
-    "compiler",
-    "datasets",
-    "graphics",
-    "grDevices",
-    "grid",
-    "methods",
-    "parallel",
-    "splines",
-    "stats",
-    "stats4",
-    "tcltk",
-    "tools",
-    "utils"
-  )
-}
+  ip <- data.frame(utils::installed.packages())
+  base.pkg <- subset(ip,`Priority`=="base")$Package
+  base.pkg
+  }
 
 
 default.current.deps <-function() {
