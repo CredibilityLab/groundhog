@@ -21,7 +21,7 @@ Show table of contents (toc) (package versions and publication dates) for a
 package, sorted chronologically
 }
 \examples{
-\donttest{
+\dontrun{
 toc("magrittr")
 }
 
