@@ -12,7 +12,7 @@
 #'  installed with the newest version between the requested date the release of the 
 #'  version of R being used, instead of necessarily with the version implied by the
 #'  date. Default includes series of C++ related packages which tend to be incompatible
-#'  across R versions (to see the set of packages run 'groundhog:::get.current.deps()')
+#'  across R versions (to see the set of packages run 'groundhog:::default.current.deps()')
 #'@param ignore.deps optional character vector containing dependencies which 
 #'   may mismatch those implied by the entered date and be tolerated. This will
 #'   prevent the installation to stop and request restarting the R session for 
