@@ -9,9 +9,6 @@
    }
 
 #Default parameters
-  #Dependencies loaded for version of R being used
-    .pkgenv$current.deps=c("Rcpp", "RcppArmadillo", "BH", "RcppEigen", "StanHeaders", 
-                           "RcppParallel", "RcppProgress" )
 
     
 #2. Attaching 

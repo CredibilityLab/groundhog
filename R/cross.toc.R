@@ -13,7 +13,9 @@
 #' @seealso [toc()] for the same function for a single package.
 #'
 #' @examples
+#' 
 #' \dontrun{
+#' cross.toc(c("magrittr", "R"))
 #' cross.toc(c("magrittr", "rlang"), date1 = "2012-02-01", date2 = "2020-02-01")
 #' }
 #'

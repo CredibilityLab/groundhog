@@ -9,6 +9,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' toc("R")
 #' toc("magrittr")
 #' }
 #'

@@ -7,7 +7,7 @@
 # groundhog:::get.snowball("magrittr", "2018-02-12", current.deps = NULL)
 # }
 #'
-get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE, current.deps=.pkgenv$current.deps) {
+get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE, current.deps=default.current.deps()) {
 
   # 1) Get dependencies
   dep12 <- get.all.dependencies(pkg, date, include.suggests = include.suggests)

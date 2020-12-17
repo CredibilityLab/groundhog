@@ -9,7 +9,7 @@ groundhog.library(
   date,
   quiet.install = TRUE,
   include.suggests = FALSE,
-  current.deps = .pkgenv$current.deps,
+  current.deps = default.current.deps(),
   ignore.deps = c(),
   force.source = FALSE,
   force.install = FALSE
@@ -32,7 +32,7 @@ loads dependencies classified in the DESCRIPTION file as suggested.}
 installed with the newest version between the requested date the release of the
 version of R being used, instead of necessarily with the version implied by the
 date. Default includes series of C++ related packages which tend to be incompatible
-across R versions.}
+across R versions (to see the set of packages run 'groundhog:::get.current.deps()')}
 
 \item{ignore.deps}{optional character vector containing dependencies which
 may mismatch those implied by the entered date and be tolerated. This will

@@ -150,6 +150,17 @@ base_pkg <- function() {
 }
 
 
+default.current.deps <-function() {
+     c("Rcpp", 
+       "RcppArmadillo", 
+       "BH", 
+       "RcppEigen", 
+       "StanHeaders", 
+       "RcppParallel", 
+       "RcppProgress" )
+      }
+
+
 is_rstudio <- function() {
   # More reliable than the env variable because it works as expected even when
   # code is called from the Terminal tab in RStudio (NOT the Console).

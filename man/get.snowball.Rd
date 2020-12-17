@@ -9,7 +9,7 @@ get.snowball(
   date,
   include.suggests = FALSE,
   force.source = FALSE,
-  current.deps = .pkgenv$current.deps
+  current.deps = default.current.deps()
 )
 }
 \arguments{
@@ -29,7 +29,7 @@ installing binary from CRAN or MRAN and instead download source file and install
 installed with the newest version between the requested date the release of the
 version of R being used, instead of necessarily with the version implied by the
 date. Default includes series of C++ related packages which tend to be incompatible
-across R versions.}
+across R versions (to see the set of packages run 'groundhog:::get.current.deps()')}
 }
 \description{
 Generates dataframe with all dependencies needed to install a package, with version and source of installation

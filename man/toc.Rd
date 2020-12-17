@@ -22,6 +22,7 @@ package, sorted chronologically
 }
 \examples{
 \dontrun{
+toc("R")
 toc("magrittr")
 }
 

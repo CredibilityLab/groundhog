@@ -22,7 +22,7 @@ version of the package, and all dependencies, to be installed. It's in yyyy-mm-d
 installed with the newest version between the requested date the release of the
 version of R being used, instead of necessarily with the version implied by the
 date. Default includes series of C++ related packages which tend to be incompatible
-across R versions.}
+across R versions (to see the set of packages run 'groundhog:::get.current.deps()')}
 
 \item{patch}{Either \code{"current"} for the exact current version of the \code{pkg}
 at the specified date, or \code{"max"} for the version with the same major and
