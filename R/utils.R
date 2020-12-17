@@ -132,7 +132,7 @@ get.available.mran.date <- function(date0, date1) {
 
 base_pkg <- function() {
   ip <- data.frame(utils::installed.packages())
-  base.pkg <- subset(ip,`Priority`=="base")$Package
+  base.pkg <- subset(ip,'Priority'=="base")$Package
   base.pkg
   }
 
