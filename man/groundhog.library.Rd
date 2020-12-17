@@ -32,12 +32,14 @@ loads dependencies classified in the DESCRIPTION file as suggested.}
 installed with the newest version between the requested date the release of the
 version of R being used, instead of necessarily with the version implied by the
 date. Default includes series of C++ related packages which tend to be incompatible
-across R versions (to see the set of packages run 'groundhog:::get.current.deps()')}
+across R versions (to see the set of packages run 'groundhog:::default.current.deps()')}
 
-\item{ignore.deps}{optional character vector containing dependencies which
-may mismatch those implied by the entered date and be tolerated. This will
-prevent the installation to stop and request restarting the R session for
-specified dependencies.}
+\item{ignore.deps}{an optional character vector containing dependencies which
+may be already loaded in the R session and even if the loaded version does not match
+the version implied by the entered date, groundhog.library() will proceed and ignore
+this conflict. If one version of a package is loaded, and a different is needed for
+groundhog, the default behavior is to stop the request and ask the user to restart
+the R session to unload all packages. This will bypass that behavior.}
 
 \item{force.source}{Logical (defaults to \code{FALSE}). If \code{TRUE},` will not attempt
 installing binary from CRAN or MRAN and instead download source file and install it.}
