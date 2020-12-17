@@ -8,7 +8,7 @@
 #' @return a `data.frame` where each row corresponds to one version of `pkg`.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' toc("magrittr")
 #' }
 #'

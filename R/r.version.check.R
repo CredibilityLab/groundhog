@@ -20,7 +20,7 @@
 #' }
 #'
 # @examples
-# \donttest{
+# \dontrun{
 # groundhog:::r.version.check("2018-02-12")
 # }
 #'

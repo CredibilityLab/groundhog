@@ -7,7 +7,7 @@
 #'   returned.
 #'
 # @examples
-# \donttest{
+# \dontrun{
 # groundhog:::get.installed_path("magrittr", "1.5")
 # }
 #'

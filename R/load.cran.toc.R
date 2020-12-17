@@ -12,7 +12,7 @@
 #' @seealso [update_cran.toc_if.needed]
 #'
 # @examples
-# \donttest{
+# \dontrun{
 # groundhog:::load.cran.toc()
 # }
 #'

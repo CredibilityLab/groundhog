@@ -10,7 +10,7 @@
 #'   installed.
 #'
 # @examples
-# \donttest{
+# \dontrun{
 # groundhog:::get.pkg_search_paths("magrittr", "1.0.1")
 # }
 #'

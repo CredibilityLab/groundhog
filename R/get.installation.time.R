@@ -9,7 +9,7 @@
 #'   `vrs`.
 #'
 # @examples
-# \donttest{
+# \dontrun{
 # groundhog:::get.installation.time("magrittr", "1.5")
 # }
 #'

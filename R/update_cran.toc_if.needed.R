@@ -7,7 +7,7 @@
 #' @seealso [load.cran.toc()]
 #'
 # @examples
-# \donttest{
+# \dontrun{
 # groundhog:::update_cran.toc_if.needed("2020-03-01")
 # }
 update_cran.toc_if.needed <- function(date) {

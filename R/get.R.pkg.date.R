@@ -11,7 +11,7 @@
 #'   version from a given date.
 #'
 # @examples
-# \donttest{
+# \dontrun{
 # groundhog:::get.R.pkg.date("magrittr_1.0.1", "3.6.0")
 # }
 #'

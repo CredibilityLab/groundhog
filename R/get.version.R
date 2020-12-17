@@ -11,7 +11,7 @@
 #'   for a given version.
 #'
 # @examples
-# \donttest{
+# \dontrun{
 # groundhog:::get.version("magrittr", "2018-02-12")
 # }
 #'

@@ -10,7 +10,7 @@
 #' }
 #'
 # @examples
-# \donttest{
+# \dontrun{
 # groundhog:::get.active()
 # }
 #'

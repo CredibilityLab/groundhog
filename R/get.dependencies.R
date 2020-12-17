@@ -11,7 +11,7 @@
 #'   the version on CRAN at `date.`
 #'
 # @examples
-# \donttest{
+# \dontrun{
 # groundhog:::get.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
 # }
 #'
@@ -66,7 +66,7 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
 #'   package in column `pkg`.
 #'
 # @examples
-# \donttest{
+# \dontrun{
 # groundhog:::get.all.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
 # }
 #'
