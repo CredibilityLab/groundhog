@@ -15,10 +15,12 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
           ignore.deps=c("testthat", "rstudioapi", ignore.deps)  
       
       #1.2 REcommended 
-            #Deal with potential conflicts with non explicitly aknolwedged dependencies with recommended packages
+            #Deal with potential conflicts with non explicitly aknowledged dependencies with recommended packages
           ip <- data.frame(utils::installed.packages())
 
-          recommended.pkg <- subset(ip,'Priority'=="recommended")$Package
+          
+          #recommended.pkg <- subset(ip,'Priority'=="recommended")$Package
+          recommended.pkg <- ip[ip$Priority=="recommended",]$Package
     
       #1.3 Active packages
         active <- get.active()
@@ -83,7 +85,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
       #7.2
        if (n.cr>0) {
             message("\n\n       IMPORTANT: if you see this message after having restarted your R session,\n", 
-                    "       it means one of the packages you are laoding does not properly reference\n",
+                    "       it means one of the packages you are loading does not properly reference\n",
                     "       a package it needs (in its 'DESCRIPTION' file).\n",
                     "       To solve this, you need to restart the session again, CTRL-SHIFT-F10,\n",
                     "       then run the code below **BEFORE** loading the packages you want to load:")
