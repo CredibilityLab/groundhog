@@ -150,16 +150,6 @@ base_pkg <- function() {
 }
 
 
-default.current.deps <-function() {
-     c("Rcpp", 
-       "RcppArmadillo", 
-       "BH", 
-       "RcppEigen", 
-       "StanHeaders", 
-       "RcppParallel", 
-       "RcppProgress" )
-      }
-
 
 is_rstudio <- function() {
   # More reliable than the env variable because it works as expected even when
@@ -184,7 +174,8 @@ get.r.majmin <- function() {
    R.toc <- toc("R") # Get R toc
    R_same.majmin <- grep(paste0("^", r.majmin), R.toc$Version, value = TRUE)
    R1 <- R_same.majmin[1]
-   release.date <- subset(R.toc,"Version"==R1)$Published
+   #release.date <- subset(R.toc,"Version"==R1)$Published
+   release.date <- R.toc[R.toc$Version==R1,]$Published
    return(release.date)
     }
 

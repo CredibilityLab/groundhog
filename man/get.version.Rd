@@ -4,29 +4,22 @@
 \alias{get.version}
 \title{Get version from date}
 \usage{
-get.version(
-  pkg,
-  date,
-  current.deps = .pkgenv$current.deps,
-  patch = c("current", "max")
-)
+get.version(pkg, date, patch = c("current", "max"))
 }
 \arguments{
-\item{pkg}{character string with name of target package to install,
+\item{pkg}{character string with name of target package to load (and install if needed),
 need not be in quotes.}
 
-\item{date}{character string, or date value, with the date which determines the
-version of the package, and all dependencies, to be installed. It's in yyyy-mm-dd format.}
-
-\item{current.deps}{character vector with dependencies that, if needed, will be
-installed with the newest version between the requested date the release of the
-version of R being used, instead of necessarily with the version implied by the
-date. Default includes series of C++ related packages which tend to be incompatible
-across R versions (to see the set of packages run 'groundhog:::default.current.deps()')}
+\item{date}{character string  (yyyy-mm-dd), or date value, with the date which determines the
+version of the package, and all dependencies, to be loaded (and installed if needed).}
 
 \item{patch}{Either \code{"current"} for the exact current version of the \code{pkg}
 at the specified date, or \code{"max"} for the version with the same major and
 minor but maximal patch version numbers.}
+}
+\value{
+most recent package version available on requested date (if source
+and binary package versions do not match, the most recent of the two versions is returned.
 }
 \description{
 Get version from date

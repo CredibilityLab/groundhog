@@ -4,8 +4,8 @@
 #' @param patch Either `"current"` for the exact current version of the `pkg`
 #'   at the specified date, or `"max"` for the version with the same major and
 #'   minor but maximal patch version numbers.
-#'
-# FIXME: add @return
+#'@return most recent package version available on requested date (if source 
+#'  and binary package versions do not match, the most recent of the two versions is returned.
 #'
 #' @seealso [get.R.pkg.date()] for the opposite operation: determining date
 #'   for a given version.
@@ -15,9 +15,7 @@
 # groundhog:::get.version("magrittr", "2018-02-12")
 # }
 #'
-get.version <- function(pkg, date, 
-              current.deps = .pkgenv$current.deps,   #Set in zzz.R - dependencies installed based on version of R being used regardless or entered date
-              patch = c("current", "max")) {
+get.version <- function(pkg, date, patch = c("current", "max")) {
 
   patch <- match.arg(patch)
 
@@ -55,20 +53,8 @@ get.version <- function(pkg, date,
     version.k <- max(which(dfk$Published < date)) # Position of last package available before the date
     current.version <- dfk$Version[version.k]
   
-  #4 Adjust the current deps 
-         if (pkg %in% current.deps) {
-            using.r.rdate <- get.rdate() # date of R being used
-            version.k <- max(which(dfk$Published < using.r.rdate)) # which kth date of pkg matches it
-            minimum.vrs <- dfk[version.k, ]$Version # get kth version
-            if (compareVersion(minimum.vrs, current.version )==1) 
-                {
-                return(minimum.vrs)
-                } else {
-                return(current.version)
-                }
-            }
-  
-  #5 Output version
+   
+  #4 Output version
   if (patch == "current") {
     return(current.version)
   } else if (patch == "max") {

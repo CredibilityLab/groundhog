@@ -4,32 +4,20 @@
 \alias{get.snowball}
 \title{Generates dataframe with all dependencies needed to install a package, with version and source of installation}
 \usage{
-get.snowball(
-  pkg,
-  date,
-  include.suggests = FALSE,
-  force.source = FALSE,
-  current.deps = default.current.deps()
-)
+get.snowball(pkg, date, include.suggests = FALSE, force.source = FALSE)
 }
 \arguments{
-\item{pkg}{character string with name of target package to install,
+\item{pkg}{character string with name of target package to load (and install if needed),
 need not be in quotes.}
 
-\item{date}{character string, or date value, with the date which determines the
-version of the package, and all dependencies, to be installed. It's in yyyy-mm-dd format.}
+\item{date}{character string  (yyyy-mm-dd), or date value, with the date which determines the
+version of the package, and all dependencies, to be loaded (and installed if needed).}
 
-\item{include.suggests}{logical, defaults to FALSE, when set to TRUE installs/
-loads dependencies classified in the DESCRIPTION file as suggested.}
+\item{include.suggests}{logical, defaults to \code{FALSE}. When set to \code{TRUE}, installs/
+loads dependencies classified in the DESCRIPTION file as \code{suggested}.}
 
-\item{force.source}{Logical (defaults to \code{FALSE}). If \code{TRUE},` will not attempt
+\item{force.source}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will not attempt
 installing binary from CRAN or MRAN and instead download source file and install it.}
-
-\item{current.deps}{character vector with dependencies that, if needed, will be
-installed with the newest version between the requested date the release of the
-version of R being used, instead of necessarily with the version implied by the
-date. Default includes series of C++ related packages which tend to be incompatible
-across R versions (to see the set of packages run 'groundhog:::default.current.deps()')}
 }
 \description{
 Generates dataframe with all dependencies needed to install a package, with version and source of installation

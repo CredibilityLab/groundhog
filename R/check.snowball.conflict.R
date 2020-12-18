@@ -17,9 +17,6 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
       #1.2 REcommended 
             #Deal with potential conflicts with non explicitly aknowledged dependencies with recommended packages
           ip <- data.frame(utils::installed.packages())
-
-          
-          #recommended.pkg <- subset(ip,'Priority'=="recommended")$Package
           recommended.pkg <- ip[ip$Priority=="recommended",]$Package
     
       #1.3 Active packages

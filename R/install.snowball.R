@@ -132,7 +132,8 @@
               ap <- available.packages(contrib.url (repos.mran[k],'binary'))
   
               ap.df <- data.frame(ap, stringsAsFactors = FALSE)                       
-              ap.pkg <- subset(ap.df,"Package"==snowball.mran$pkg[k])
+              #ap.pkg <- subset(ap.df,"Package"==snowball.mran$pkg[k])
+			  ap.pkg <- ap.df[ap.df$Package==snowball.mran$pkg[k],]
               
               
             #If there is a match for that pkg_vrs, get it
@@ -184,7 +185,7 @@
                pos <-  regexpr(snowball.mran$pkg_vrs[k], mran.binaries$downloaded.path[k]) 
               if (pos>0 ) {
                 #message 
-                  message1(j2,") Installing: '",snowball.mran$pkg_vrs[k])
+                  message1(j2,") Installing: '",snowball.mran$pkg_vrs[k],"'")
                 #unzip
                   untar(mran.binaries$downloaded.path[k] , exdir=snowball.mran$installation.path[k])        
                 
