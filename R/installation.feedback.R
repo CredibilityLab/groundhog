@@ -57,9 +57,6 @@ installation.feedback <- function(k, date, snowball, start.time) {
 		  " such output. You may run groundhog.library() with the option 'quiet.install=FALSE' to display all output."
 		) # End of message
 		
-	#Add estimate for this one package
-	   msg <- c(msg, "\n\n> THIS package ('", snowball$pkg_vrs[k],"') is expected to take about ",snowball$installation.time[k], " seconds.")  
-	       
 	   
 	  } # End of if source file
 	  
