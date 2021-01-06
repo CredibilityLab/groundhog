@@ -57,8 +57,10 @@ get.groundhog.folder <- function() {
     
   #If cookie file exists, use it, otherwise, use that same location for library
       if (file.exists(path_file_storing_groundhog_library_location)) {
-        #Read the cookie file with the location of the library
-          groundhog.folder <- scan(path_file_storing_groundhog_library_location,what='character', quiet=TRUE)
+        
+        #Read the 'cookie' file with the location of the library
+          f < -path_file_storing_groundhog_library_location
+          groundhog.folder <- readChar(f, file.info(f)$size)  #Reads full file into a string, fixes bug in groundhog 1.1.0
         
         } else {
           
