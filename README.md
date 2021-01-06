@@ -13,4 +13,7 @@ status](https://github.com/CredibilityLab/groundhog/workflows/R-CMD-check/badge.
 coverage](https://codecov.io/gh/CredibilityLab/groundhog/branch/master/graph/badge.svg)](https://codecov.io/gh/CredibilityLab/groundhog?branch=master)
 <!-- badges: end -->
 
-For information about groundhog check out the blogpost annoucning it (http://datacolada.org/95) or its website (https://groundhogr.com)
+For information about groundhog, check out the blogpost announcing it (http://datacolada.org/95) or groundhog's website (https://groundhogr.com)
+
+it's on CRAN, so you can just
+install.packages('groundhog') to install it
