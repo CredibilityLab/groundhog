@@ -112,13 +112,12 @@
             "work at all. You may want to either change the date you entered, or the version of R you use.\n",
             " - To change a date, choose something after '",get.r.majmin.release(),"'\n",
             " - Or use R-",rv$r.need.full, "  (instructions for running older R versions: http://groundhogr.com/many)\n\n")
-          message1("Type 'OK' to continue anyway")
+          message1("Type 'OK' to continue anyway, type anything else to stop.")
           text <- readline()
             
           #If they press stop, don't load/install package
             if (text!='ok' & text!="OK" & text!="'ok'") {
-              message("You did not type OK, so it stopped.")
-              message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+              message("You did not type OK, so installation has stopped.")
               exit()
               }
             message1("OK. We will continue. This warning will not be shown again within 24 hours")
