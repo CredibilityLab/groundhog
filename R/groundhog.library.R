@@ -16,7 +16,7 @@
 #'   the R session to unload all packages. This will bypass that requirement.
 #'@param force.source logical (defaults to `FALSE`). When set to `TRUE`, will not attempt 
 #'   installing binary from CRAN or MRAN and instead download source file and install it.
-#'@param force.install logical (defaults to `FALSE`). When set to `TRUE`, will deleted  
+#'@param force.install logical (defaults to `FALSE`). When set to `TRUE`, will delete  
 #'   existing package files in groundhog folder, and install anew.
 #'@return a character vector containing all active packages for the session,
 #'   with their version number, under the format `pkg_vrs`.
@@ -38,6 +38,26 @@
                               force.source = FALSE,
                               force.install = FALSE) {
 
+    
+  #0) If pkg is a vector, loop over it
+    if (is.vector(pkg) && length(pkg)>1) {
+      for (pkgk in pkg)
+        {
+        pkgk.character <- as.character(pkgk)
+        exec_line <- paste0("groundhog.library('", pkgk, "', '" , 
+                     date, "'," , 
+                     quiet.install, "," ,
+                     include.suggests, "," , 
+                     ignore.deps, "," , 
+                     force.source, "," , 
+                     force.install,")")
+          eval(parse(text=exec_line))  
+        }
+          exit()
+        }
+      
+    
+    
   # If package name was given using non-standard evaluation (i.e., unquoted)
   pkg <- as.character(substitute(pkg))
 
@@ -204,8 +224,8 @@
                   {
                   
                   message("groundhog says: WARNING, loaded unexpected version of '", pkg, "'\n",
-                         "expected: ''", pkg_vrs, "\n",
-                         "loaded  : ''", pkg_vrs, "\n"
+                         "expected: '", pkg_vrs, "'\n",
+                         "loaded  : '", active$pkg_vrs, "'\n"
                     )
                   }
     if (pkg_vrs %in% loaded_pkg_vrs) {
