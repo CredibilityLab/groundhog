@@ -37,7 +37,7 @@ the R session to unload all packages. This will bypass that requirement.}
 \item{force.source}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will not attempt
 installing binary from CRAN or MRAN and instead download source file and install it.}
 
-\item{force.install}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will deleted
+\item{force.install}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will delete
 existing package files in groundhog folder, and install anew.}
 }
 \value{
