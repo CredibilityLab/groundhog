@@ -9,7 +9,7 @@ check.snowball.conflict(snowball, force.install, ignore.deps, date)
 \arguments{
 \item{snowball}{the result of \code{\link[=get.snowball]{get.snowball()}}.}
 
-\item{force.install}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will deleted
+\item{force.install}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will delete
 existing package files in groundhog folder, and install anew.}
 
 \item{ignore.deps}{optional character vector containing dependencies which
