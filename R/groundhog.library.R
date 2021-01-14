@@ -40,21 +40,25 @@
 
     
   #0) If pkg is a vector, loop over it
-    if (is.vector(pkg) && length(pkg)>1) {
-      for (pkgk in pkg)
-        {
-        pkgk.character <- as.character(pkgk)
-        exec_line <- paste0("groundhog.library('", pkgk, "', '" , 
-                     date, "'," , 
-                     quiet.install, "," ,
-                     include.suggests, "," , 
-                     ignore.deps, "," , 
-                     force.source, "," , 
-                     force.install,")")
-          eval(parse(text=exec_line))  
-        }
-          exit()
-        }
+    if (exists(as.character(substitute(pkg))) && is.vector(pkg) && length(pkg)>1) {
+        #Check first that "pkg" has been defined in the environment
+        #If it has check that it is a vector
+        #If it is, and has more than 1 element, loop
+      
+          for (pkgk in pkg)
+            {
+            pkgk.character <- as.character(pkgk)
+            exec_line <- paste0("groundhog.library('", pkgk, "', '" , 
+                         date, "'," , 
+                         quiet.install, "," ,
+                         include.suggests, "," , 
+                         ignore.deps, "," , 
+                         force.source, "," , 
+                         force.install,")")
+              eval(parse(text=exec_line))  
+            }
+              exit()
+            }
       
     
     
@@ -121,10 +125,17 @@
           #How long since last warning?
             since_warning <- 25  #assume 25 hours, i.e., show warnings
             if (file.exists(cookie_path)) since_warning <- difftime(Sys.time(),file.info(cookie_path)$ctime,units='hours')
+			
             
           #If >24 show warnings
           if (since_warning>24)
           {
+          #Update cookie to indicate warning has been shown now
+            unlink(cookie_path)
+            write("1",cookie_path)
+            
+          #Show warning
+
           message2()
           message1(
             "You are using R-", rv$r.using.full, ", but on (","'", date, "') the current version was R-", rv$r.need.majmin, ".\n",

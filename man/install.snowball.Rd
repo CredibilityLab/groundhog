@@ -19,7 +19,7 @@ loaded, whether they need to be installed, where the files will be obtained from
 \item{date}{character string  (yyyy-mm-dd), or date value, with the date which determines the
 version of the package, and all dependencies, to be loaded (and installed if needed).}
 
-\item{force.install}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will deleted
+\item{force.install}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will delete
 existing package files in groundhog folder, and install anew.}
 
 \item{force.source}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will not attempt
