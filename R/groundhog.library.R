@@ -39,7 +39,31 @@
                               force.install = FALSE) {
 
     
-  #0) If pkg is a vector, loop over it
+    
+  #0) Validate date
+      # numeric
+        bad.date <- 0
+         if (is.numeric(date)) {
+          bad.date <- 1
+        }
+ 
+      # correct format
+        d <- try(as.Date(date, format="%Y-%m-%d"))
+          if("try-error" %in% class(d) || is.na(d)) {
+            bad.date <- 1
+          }
+            
+      #If bad date die 
+          if (bad.date==1) {
+            message(
+                "\ngroundhog.library() error.\n",
+                "The date you entered '", date,"', is not valid.\n",
+                "Please use the 'yyyy-mm-dd' format"
+                  )
+            exit()
+            }
+    
+  #0.5) If pkg is a vector, loop over it
     if (exists(as.character(substitute(pkg))) && is.vector(pkg) && length(pkg)>1) {
         #Check first that "pkg" has been defined in the environment
         #If it has check that it is a vector
