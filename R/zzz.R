@@ -76,9 +76,11 @@
     
         if (isTRUE(gv.cran.majmin > gv.using.majmin)) {
           packageStartupMessage(
+            "\n\n\n",
             "          OUTDATED GROUNDHOG\n",
-            "          You are using version  '" , groundhog.version_using, "\n",
-            "          The current version is '" , groundhog.version_cran, "'\n\n",
+            "            You are using version  '" , groundhog.version_using, "\n",
+            "            The current version is '" , groundhog.version_cran, "'\n\n",
+            "            You can read about the changes here: http://groundhogr.com/changelog\n\n",
             "Please update by running: \ninstall.packages('groundhog')"
             )
             }  #End mismatch in version
