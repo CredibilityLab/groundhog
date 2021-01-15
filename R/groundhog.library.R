@@ -1,6 +1,6 @@
 #' Install packages as available on set date -  groundhog.library()
 #'
-#'@param pkg character string with name of target package to load (and install if needed), 
+#'@param pkg character string pr vector with name of target package(s) to load (and install if needed), 
 #'need not be in quotes.
 #'@param date character string  (yyyy-mm-dd), or date value, with the date which determines the 
 #'version of the package, and all dependencies, to be loaded (and installed if needed).
@@ -23,7 +23,10 @@
 #'
 #' @examples
 #' \dontrun{
-#' groundhog.library("magrittr", "2018-02-12")
+#' groundhog.library("magrittr", "2020-07-12")
+#'
+#' pkgs <- c('pwr','metafor')
+#' groundhog.library(pkgs, "2020-02-12")
 #' }
 #'
 #' @importFrom utils capture.output

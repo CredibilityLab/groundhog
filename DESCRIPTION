@@ -1,6 +1,6 @@
 Package: groundhog
 Title: Reproducible Scripts via Version-Specific Package Loading 
-Version: 1.2.0
+Version: 1.2.1
 Authors@R: c(
     person(given = "Uri",
            family = "Simonsohn",
