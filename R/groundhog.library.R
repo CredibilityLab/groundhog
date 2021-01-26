@@ -79,7 +79,7 @@
                          date, "'," , 
                          quiet.install, "," ,
                          include.suggests, "," , 
-                         ignore.deps, "," , 
+                         "'", ignore.deps, "'," , 
                          force.source, "," , 
                          force.install,")")
               eval(parse(text=exec_line))  
