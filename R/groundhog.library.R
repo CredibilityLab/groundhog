@@ -224,9 +224,8 @@
         "Loading ", pkg_vrs, " requires loading ", nrow(snowball), " packages, of which ",
         need.to.install.total, " will need to be installed."
               )
-      
-
-  }
+    }
+    
   #9 Install packages if needed
   
   install.snowball(snowball, 
@@ -237,13 +236,31 @@
     )
   
   #10 Load packages & attach the requested package
-    n=nrow(snowball)
-   for (k in 1:n)
-    {
-    .libPaths(c(.libPaths(), snowball$installation.path[k] ))
-    loadNamespace(snowball$pkg[k], lib.loc = snowball$installation.path[k])
-    if (k==n)   attachNamespace(snowball$pkg[k])
-  }
+   n <- nrow(snowball)
+   
+   #10.1 Load the cran.toc
+      cran.toc <- .pkgenv[["cran.toc"]]
+      cran.toc.snowball <- cran.toc [paste0(cran.toc$Package,"_",cran.toc$Version) %in% snowball$pkg_vrs, ]
+      
+   #10.2 Get the needed DEPEND dependencies so that they are attached
+      attach.all <- unique(unlist(strsplit(cran.toc.snowball$Depends, ",")))
+
+   #10.3
+       for (k in 1:n)
+        {
+        attached.so_far <- names(sessionInfo()$otherPkgs)
+        .libPaths(c(.libPaths(), snowball$installation.path[k] ))
+        loadNamespace(snowball$pkg[k], lib.loc = snowball$installation.path[k])
+        if (
+             snowball$pkg[k] %in% attach.all & 
+            !snowball$pkg[k] %in% attached.so_far
+            ) 
+          {
+          attachNamespace(snowball$pkg[k]) 
+          }
+        
+        if (k==n)   attachNamespace(snowball$pkg[k])
+        }
 
   #11 Success/failure message
     #11.1 look at loaded packages

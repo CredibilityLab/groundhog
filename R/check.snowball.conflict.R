@@ -15,7 +15,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
           ignore.deps=c("testthat", "rstudioapi", ignore.deps)  
       
       #1.2 REcommended 
-            #Deal with potential conflicts with non explicitly aknowledged dependencies with recommended packages
+            #Deal with potential conflicts with non explicitly acknowledged dependencies with recommended packages
           ip <- data.frame(utils::installed.packages())
           recommended.pkg <- ip[ip$Priority=="recommended",]$Package
     
