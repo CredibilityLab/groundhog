@@ -132,8 +132,7 @@
               ap <- available.packages(contrib.url (repos.mran[k],'binary'))
   
               ap.df <- data.frame(ap, stringsAsFactors = FALSE)                       
-              #ap.pkg <- subset(ap.df,"Package"==snowball.mran$pkg[k])
-			  ap.pkg <- ap.df[ap.df$Package==snowball.mran$pkg[k],]
+              ap.pkg <- ap.df[ap.df$Package==snowball.mran$pkg[k],]
               
               
             #If there is a match for that pkg_vrs, get it
@@ -144,8 +143,16 @@
             #Message
               message1(j1,") Downloading: '",snowball.mran$pkg_vrs[k],"' from MRAN")
     
-            #Download it
-              mran.binaries_rowk <- download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path)
+            #Download it from MRAN
+              #Specify binary explicitly if R>3.2.0, but not otherwise as it generates errors
+              #Is R being used newer than 3.2.0?
+                newer.R.3_2_0 <- utils::compareVersion(groundhog:::get.rversion(),"3.2.0") == 1 
+                
+                if (newer.R.3_2_0) {
+                    mran.binaries_rowk <- download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path)
+                  } else {
+                    mran.binaries_rowk <- download.packages(snowball.mran$pkg[k],repos = repos.mran[k],available=ap, destdir=temp_path)
+                }
             
             #If file was successfully downloaded
                   if (nrow(mran.binaries_rowk)==1) {

@@ -25,10 +25,17 @@ get.current.packages <- function(type) {
           stringsAsFactors = FALSE
         )},
         error = function(e) NULL)
+		
         if (is.null(current.packages)) {
-        exit("Cannot install packages, connection to CRAN server failed. Perhaps you are offline?")
+			#Make empty available pacakges if offline or if older version of R being used to current packages is not available.	
+			current.packages <- data.frame(Package="", Version="")
+			
         }
-        current.packages$pkg_vrs <- paste0(current.packages$Package, "_", current.packages$Version)
+	#If current packages is not empty, create pkg_vrs for it
+        if (nrow(current.packages)>0) {
+			current.packages$pkg_vrs <- paste0(current.packages$Package, "_", current.packages$Version)
+			}
+			
         saveRDS(current.packages, ap_file_path)
     } #End if file found
     
