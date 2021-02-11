@@ -151,9 +151,8 @@
         
           #How long since last warning?
             since_warning <- 25  #assume 25 hours, i.e., show warnings
-            if (file.exists(cookie_path)) since_warning <- difftime(Sys.time(),file.info(cookie_path)$ctime,units='hours')
-			
-            
+            if (file.exists(cookie_path)) since_warning <- difftime(Sys.time(),file.info(cookie_path)$mtime,units='hours')
+			      
           #If >24 show warnings
           if (since_warning>24)
           {
@@ -170,7 +169,7 @@
             "work at all. You may want to either change the date you entered, or the version of R you use.\n",
             " - To change a date, choose something after '",get.r.majmin.release(),"'\n",
             " - Or use R-",rv$r.need.full, "  (instructions for running older R versions: http://groundhogr.com/many)\n\n")
-          message1("Type 'OK' to continue anyway, type anything else to stop.")
+          message2("--->>> Type 'OK' to continue anyway, type anything else to stop. <<<---")
           text <- readline()
             
           #If they press stop, don't load/install package

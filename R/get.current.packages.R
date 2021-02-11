@@ -10,7 +10,7 @@ get.current.packages <- function(type) {
       {
       filek_path <- paste0(main_folder , filek)             #full path to file
       pos.ap_file <- regexpr('available_packages', filek)   #>0 if file contains the words available_packages
-      age <- as.numeric(difftime(Sys.time() , file.info(filek_path)$ctime,units='mins'))
+      age <- as.numeric(difftime(Sys.time() , file.info(filek_path)$mtime,units='mins'))
       if (pos.ap_file>0 & age>60) unlink(filek_path)        #Delete available_package files older than 60 minutes
     }
     
