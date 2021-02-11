@@ -68,8 +68,8 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
             if (length(unload.pkg.all > 0))
             {
             #Loop over them trying to unload them
-                for (pk in unload.pks.all) tryCatch(unloadNamespace(pk))
-                      
+                for (pk in unload.pks.all) try(unloadNamespace(pk),silent=TRUE)
+            
             #Return conflict check
                 active <- get.active()
                 
