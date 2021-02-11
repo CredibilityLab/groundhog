@@ -41,29 +41,66 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
     } # End conflict found for forced install
   } # End check force install
 
+  
+  
+    
   #4 Compare sets 
-    # Compare already active package and package_version to find conflicts
+    #Compare already active package and package_version to find conflicts
       conflict.needed <- "" # Assume nothing is in conflict
       
-    # These are packages that are needed and have a conflict with an active one
-      conflict.needed <- snowball$pkg_vrs[!(snowball$pkg_vrs %in% active$pkg_vrs) & (snowball$pkg %in% active$pkg) & (!snowball$pkg %in% ignore.deps)]
+    #These are packages that are needed and have a conflict with an active one
+      conflict.needed     <- snowball$pkg_vrs[!(snowball$pkg_vrs %in% active$pkg_vrs) & (snowball$pkg %in% active$pkg) & (!snowball$pkg %in% ignore.deps)]
+      conflict.needed.pkg <- snowball$pkg    [!(snowball$pkg_vrs %in% active$pkg_vrs) & (snowball$pkg %in% active$pkg) & (!snowball$pkg %in% ignore.deps)]
       conflict.needed <- sort(conflict.needed)
-  
-    # These are packages that are active and have a conflict with a needed one (do not include packages in ignore.deps)
+      
+      
+   #5 R Studio .rmd work-around: actively unload pacakges they automatically load
+      
+      #Try to unload knitr and xfun if loaded and mismatch, workaround R STudio automatically loading them for .rmd files
+     
+      #Packages groundhog tries to unload if there is a mismatch
+          unload.pkg.all <- c("knitr" , 'xfun')
+          
+      #Keep those in the conflict list, if any
+          unload.pkg.all <- unload.pkg.all[unload.pkg.all %in% conflict.needed.pkg]
+          
+      #If any are there loop, unload, recheck
+            if (length(unload.pkg.all > 0))
+            {
+            #Loop over them trying to unload them
+                for (pk in unload.pks.all) tryCatch(unloadNamespace(pk))
+                      
+            #Return conflict check
+                active <- get.active()
+                
+                #Compare already active package and package_version to find conflicts
+                    conflict.needed <- "" # Assume nothing is in conflict
+          
+                #These are packages that are needed and have a conflict with an active one
+                    conflict.needed <- snowball$pkg_vrs[!(snowball$pkg_vrs %in% active$pkg_vrs) & (snowball$pkg %in% active$pkg) & (!snowball$pkg %in% ignore.deps)]
+                    conflict.needed <- sort(conflict.needed)
+            }
+      
+      
+     
+    #6 These are packages that are active and have a conflict with a needed one (do not include packages in ignore.deps)
       conflict.active     <- active$pkg_vrs[!(active$pkg_vrs %in% snowball$pkg_vrs) & (active$pkg %in% snowball$pkg) & (!active$pkg %in% ignore.deps)]
       conflict.active.pkg <- active$pkg    [!(active$pkg_vrs %in% snowball$pkg_vrs) & (active$pkg %in% snowball$pkg) & (!active$pkg %in% ignore.deps)]
       conflict.active     <- sort(conflict.active)
 
-  #5 Generate variables with counts and list of packages in conflict
+      
+      
+      
+  #7 Generate variables with counts and list of packages in conflict
     n.conflict <- length(conflict.needed)
     n.needed <- nrow(snowball)
 
-    # Paste the package(s), which are vectors, into a string
+  #8 Paste the package(s), which are vectors, into a string
     conflict.needed <- paste(conflict.needed, collapse = ",  ") # put a , between packages
     conflict.active <- paste(conflict.active, collapse = ",  ")
 
 
-  #6 If different # of packages match pkg vs pkg_vrs, we have same packages  different vrs: stop
+  #9 If different # of packages match pkg vs pkg_vrs, we have same packages  different vrs: stop
   if (conflict.needed != "") {
     message2()
     message1(n.conflict, " of the ", n.needed, " packages needed by '", requested_pkg_vrs, "' are currently loaded,",
@@ -75,11 +112,11 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
      message("The package '", requested_pkg_vrs,"' was *NOT* loaded")
      
     
-  #7 If in the conflict we have a recommended package, special instructions
-     #7.1 Set of recommended files with a conflict
+  #10 If in the conflict we have a recommended package, special instructions
+     #10.1 Set of recommended files with a conflict
           conflict.recommended <- conflict.active.pkg [conflict.active.pkg %in% recommended.pkg]
           n.cr <- length(conflict.recommended)
-      #7.2
+      #10.2
        if (n.cr>0) {
             message("\n\n       IMPORTANT: if you see this message after having restarted your R session,\n", 
                     "       it means one of the packages you are loading does not properly reference\n",
@@ -92,7 +129,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                 } #End of loop over conflicts with recommended files.
         
       }
-  #8 Return
+  #11 Return
      invisible(list(packages.needed=conflict.needed, packages.active=conflict.active))
     exit()
   } # End if some conflict found
