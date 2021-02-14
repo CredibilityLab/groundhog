@@ -66,6 +66,9 @@
             exit()
             }
     
+  #0.4) Set of ignorable conflicts
+        ignore.deps <- c(ignore.deps_default() , ignore.deps) #Add any ignore.deps explicitly stated to the default set in utils
+        
   #0.5) If pkg is a vector, loop over it
     if (exists(as.character(substitute(pkg))) && is.vector(pkg) && length(pkg)>1) {
         #Check first that "pkg" has been defined in the environment
@@ -90,11 +93,12 @@
     
     
   # If package name was given using non-standard evaluation (i.e., unquoted)
-  pkg <- as.character(substitute(pkg))
+    pkg <- as.character(substitute(pkg))
 
   
-  #1 initial check,  stop if same version
+    #1.0 initial check,  stop if same version
       active=get.active()
+      
   
     #1.1 Get version of requested package
         vrs <- get.version(pkg, date)
@@ -109,9 +113,41 @@
         if (pkg_vrs %in% attached.pkg_vrs) {
             message1("groundhog says: the package you requested ('", pkg, "_", vrs, "') is already attached")
             return(invisible(active$pkg_vrs))
+        }
+        
+    #1.3 Mismatched package already attached  
+         if ((pkg %in% attached.pkg) &  (!pkg_vrs %in% attached.pkg_vrs)) {
+            message1(
+                    "groundhog says: another verion of '", pkg,"' is already attached ('", active$pkg_vrs[active$pkg==pkg],"').\n",
+                    "To solve this: restart the R session. Note: you will need to do 'library(groundhog)' again.\n\n",
+                    "In R Studio press: CTRL/CMD-SHIFT-F10"
+                    )
+          message("\nThe package '", pkg_vrs,"' was *NOT* attached")
+          return(invisible(active$pkg_vrs))
+        }
+        
+    #1.4 Attach mismatched version if ignore.deps is loaded but not attached (common scenario, trying to attach knitr in .rmd file)
+       if ((pkg %in% active$pkg) & (!pkg_vrs %in%  active$pkg_vrs) & (pkg %in% ignore.deps))
+        {
+          attachNamespace(pkg)
+          message("groundhog warning:\n", 
+                   "'", pkg, "' was already loaded, and it is now attached,\n",
+                  "BUT the loaded version ('" , active$pkg_vrs[active$pkg==pkg] , "') does not match the version for ",
+                   "'" , date, "' ('", pkg_vrs , "').\n",
+                  "To attach the desired version you can try restarting the R session.\n\n",
+                  "In R Studio press: CTRL/CMD-SHIFT-F10\n\n",
+                  "Note that it is possible that R Studio is automatically loading '" , active$pkg_vrs[active$pkg==pkg] ,"' ",
+                  "from your local library.\n",
+                  "In this case, after restarting the session R studio will load it again and\n",
+                  "this issue will persist (this is a common issue for 'knitr' & 'xfun' with .rmd files).\n",
+                  "You can either tolerate the version mismatch or work on an .R instead of .rmd script to prevent\n",
+                  "R Studio from loading that package.")
+          return(invisible(active$pkg_vrs))
 
         }
-    #1.3 Attach if package is loaded but not attached
+
+        
+    #1.5 Attach if package is loaded but not attached
         if (pkg_vrs %in% active$pkg_vrs)
         {
           attachNamespace(pkg)
@@ -119,8 +155,7 @@
           return(invisible(active$pkg_vrs))
 
         }
-      
- 
+   
   # Check if using R that's from a version PRIOR to that current for the desired date (prior to current release)
   # e.g., using R-3.3.3 for "2020-01-05"
 
@@ -244,7 +279,8 @@
    #10.2 Get the needed DEPEND dependencies so that they are attached
       attach.all <- unique(unlist(strsplit(cran.toc.snowball$Depends, ",")))
 
-   #10.3
+      
+   #10.3 Attach ?
        for (k in 1:n)
         {
         attached.so_far <- names(sessionInfo()$otherPkgs)
@@ -255,10 +291,11 @@
             !snowball$pkg[k] %in% attached.so_far
             ) 
           {
-          attachNamespace(snowball$pkg[k]) 
+          attachNamespace(snowball$pkg[k])
+          message1("Attaching ",snowball$pkg[k])
           }
         
-        if (k==n)   attachNamespace(snowball$pkg[k])
+        if (k==n) attachNamespace(snowball$pkg[k])
         }
 
   #11 Success/failure message
@@ -283,7 +320,7 @@
                     )
                   }
     if (pkg_vrs %in% loaded_pkg_vrs) {
-      message1("groundhog says: successfully loaded '", pkg_vrs,"'.")
+      message1("groundhog says: successfully attached '", pkg_vrs,"'.")
         } else {
         
       }

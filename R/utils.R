@@ -149,6 +149,17 @@ base_pkg <- function() {
   )
 }
 
+#Packages that R Studio loads automatically and other packages likely to be loaded without explicit calls
+ignore.deps_default <- function() {
+  c("testthat", 
+    "rstudioapi",
+    "knitr",      #Loaded by R STudio for .rmd files
+    "rmarkdown",  #Loaded by R STudio for .rmd files
+    "xfun"        #Loaded by R STudio for .rmd files
+    )
+}
+
+
 
 
 is_rstudio <- function() {
