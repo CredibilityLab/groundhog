@@ -1,9 +1,22 @@
-# Generates dataframe with all dependencies needed to install a package, with version and source of installation
-#
-# Example
-# groundhog:::get.snowball("magrittr", "2018-02-12")
+#'  Generates dataframe with all dependencies needed to install a package, in the order they will be loaded
+#'
+#'@param pkg character string, name of target package to load (and install if needed), 
+#'@param date character string  (yyyy-mm-dd), or date value, with the date which determines the 
+#'version of the package, and all dependencies, to be loaded (and installed if needed).
+#'@param include.suggests logical, defaults to `FALSE`. When set to `TRUE`, includes
+#'   dependencies classified in the DESCRIPTION file as `suggested`.
+#'@param force.source logical (defaults to `FALSE`). When set to `TRUE`, will not attempt 
+#'   installing binary from CRAN or MRAN and instead download source file and install it.
+#'@return a dataframe with all packages that need to be installed, their version , whether they are installed, where 
+#'to obtain them if not locally available (CRAN vs MRAN), which date to use for MRAN, 
+#'installation time from source (in seconds), and local path for storage
+#' @examples
+#' \dontrun{
+#' get.snowball("rio", "2020-07-12")
+#'}
+#' @export
 
-#
+
 get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE) {
 
   # 1) Get dependencies
