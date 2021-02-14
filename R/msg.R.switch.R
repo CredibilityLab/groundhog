@@ -1,14 +1,12 @@
-#' Message about \R version switch
-#'
-#' This message is printed when the \R version you currently use does not match
-#' the \R version in use at `date`.
-#'
-#' @inheritParams r.version.check
-#'
-#' @return (invisibly) the full \R version in use at `date`.
-#'
-#' @seealso [r.version.check()]
-#'
+# Message about \R version switch
+#
+# This message is printed when the \R version you currently use does not match
+# the \R version in use at `date`.
+#
+# @return (invisibly) the full \R version in use at `date`.
+#
+# @seealso [r.version.check()]
+#
 msg.R.switch <- function(date) {
   rv <- r.version.check(date)
 

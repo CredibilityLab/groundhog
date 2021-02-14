@@ -2,20 +2,19 @@
 % Please edit documentation in R/get.groundhog.folder.R
 \name{get.groundhog.folder}
 \alias{get.groundhog.folder}
-\title{Get groundhog folder location}
+\title{Get current local path to groundhog folder}
 \usage{
 get.groundhog.folder()
 }
 \value{
 the path to the groundhog folder, the meta-library where
-\code{\link[=groundhog.library]{groundhog.library()}} downloads and stores binaries and source files
+\code{\link[=groundhog.library]{groundhog.library()}} downloads and stores packages that can be loaded
 }
 \description{
-Get groundhog folder location
+Get current local path to groundhog folder
 }
 \note{
-you can change the location of this folder by editing the environment
-variable GROUNDHOG_FOLDER. In R, you can do this with the command
+you can change the location of this folder with the command
 \code{set.groundhog.folder("path")}.
 }
 \examples{

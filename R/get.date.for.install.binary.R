@@ -1,16 +1,6 @@
-#' Get date of binary package-version availability for current R version, on  MRAN
-#'
-#' @inheritParams get.R.pkg.date
-#'
-#' @seealso [get.version()] for obtaining a package version from a given date
-#'
-#' @inherit get.R.pkg.date return
-#'
-# @examples
-# \dontrun{
-# groundhog:::get.date.for.install.binary("magrittr_1.0.1")
-# }
-#'
+# Get date of binary package-version availability for current R version, on  MRAN
+
+
 get.date.for.install.binary <- function(pkg_vrs) {
   binary.date <- as.DateYMD("1970-01-01")
   # R being used

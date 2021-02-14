@@ -1,7 +1,6 @@
 #' Install package from source
 #'
-#' @inheritParams get.R.pkg.date
-#' @inheritParams get.dependencies
+#' @noRd
 #' @param quiet.install Logical (defaults to `TRUE`).Run [install.packages()]
 #'   with `quiet = TRUE`?
 #' @param lib character. Path where to install the package.

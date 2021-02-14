@@ -1,10 +1,9 @@
-  #' Get groundhog folder location
+#' Get current local path to groundhog folder
 #'
 #' @return the path to the groundhog folder, the meta-library where 
-#'   [groundhog.library()] downloads and stores binaries and source files 
+#'   [groundhog.library()] downloads and stores packages that can be loaded 
 #'
-#' @note you can change the location of this folder by editing the environment
-#'   variable GROUNDHOG_FOLDER. In R, you can do this with the command
+#' @note you can change the location of this folder with the command
 #'   `set.groundhog.folder("path")`.
 #' 
 #' @examples

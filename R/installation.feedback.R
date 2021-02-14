@@ -1,11 +1,9 @@
-#' Installation feedback
-#'
-#' Print progress about the package installation process (number of packages
-#' already installed or remaining, time left, etc.)
-#'
-#' @inheritParams r.version.check
-#' @inheritParams estimate.seconds.left
-#'
+# Installation feedback
+#
+# Print progress about the package installation process (number of packages
+# already installed or remaining, time left, etc.)
+#
+
 installation.feedback <- function(k, date, snowball, start.time) {
 
   # Get R being used and needed

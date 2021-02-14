@@ -2,17 +2,16 @@
 get.pkg <- function(x) substr(x, 1, regexpr("_", basename(x)) - 1)
 get.vrs <- function(x) substr(x, regexpr("_", basename(x)) + 1, nchar(x))
 
-#' Is pkg_vrs installed (within same R-minor version)?
-#'
-#' @inheritParams get.installed_path
+# Is pkg_vrs installed (within same R-minor version)?
+#
 is.pkg_vrs.installed <- function(pkg, vrs) {
   (get.installed_path(pkg, vrs) %in% get.pkg_search_paths(pkg, vrs))
 }
 
-#' Format Y-M-D as date
-#'
-#' @param x character string containing the date in the format "%Y-%m-%d"
-#'
+# Format Y-M-D as date
+#
+# @param x character string containing the date in the format "%Y-%m-%d"
+#
 as.DateYMD <- function(x) as.Date(x, format = "%Y-%m-%d",origin='1970-01-01')
 
 # 2.2  R Being used
@@ -185,7 +184,6 @@ get.r.majmin <- function() {
    R.toc <- toc("R") # Get R toc
    R_same.majmin <- grep(paste0("^", r.majmin), R.toc$Version, value = TRUE)
    R1 <- R_same.majmin[1]
-   #release.date <- subset(R.toc,"Version"==R1)$Published
    release.date <- R.toc[R.toc$Version==R1,]$Published
    return(release.date)
     }

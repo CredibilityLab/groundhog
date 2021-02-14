@@ -1,23 +1,8 @@
-#' Load `cran.toc`
-#'
-#' Load a `data.frame` listing all CRAN packages, with their dependencies and
-#' publication date.
-#'
-#' @param update.toc logical (defaults to `FALSE`). Should `cran.toc` be updated
-#'   from the server if it already exists locally.
-#'
-#' @return (invisibly) `TRUE`/`FALSE` depending on the success/failure of this
-#'   operation.
-#'
-#' @seealso [update_cran.toc_if.needed]
-#'
-# @examples
-# \dontrun{
-# groundhog:::load.cran.toc()
-# }
-#'
-#' @importFrom utils read.csv
-#'
+# Load `cran.toc`
+#
+# Load a `data.frame` listing all CRAN packages, with their dependencies and
+# publication date.
+
 load.cran.toc <- function(update.toc = FALSE) {
   groundhogR.url <- "http://groundhogR.com/"
   groundhog.folder <- get.groundhog.folder()

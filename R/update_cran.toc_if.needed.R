@@ -1,15 +1,14 @@
-#' Update `cran.toc` if it's not recent enough to include the required date.
-#'
-#' @param date required date, in the format "%Y-%m-%d" (ISO 8601 convention)
-#'
-#' @return `TRUE` or `FALSE` depending on whether `cran.toc` was updated or not.
-#'
-#' @seealso [load.cran.toc()]
-#'
-# @examples
-# \dontrun{
-# groundhog:::update_cran.toc_if.needed("2020-03-01")
-# }
+# Update `cran.toc` if it's not recent enough to include the required date.
+#
+# @param date required date, in the format "%Y-%m-%d" (ISO 8601 convention)
+#
+# @return `TRUE` or `FALSE` depending on whether `cran.toc` was updated or not.
+#
+#
+# Example:  
+#groundhog:::update_cran.toc_if.needed("2020-03-01")
+
+
 update_cran.toc_if.needed <- function(date) {
   # 1 Format entered date by user
   date <- as.DateYMD(date)

@@ -1,20 +1,7 @@
-#' Get version from date
-#'
-#' @inheritParams get.snowball
-#' @param patch Either `"current"` for the exact current version of the `pkg`
-#'   at the specified date, or `"max"` for the version with the same major and
-#'   minor but maximal patch version numbers.
-#'@return most recent package version available on requested date (if source 
-#'  and binary package versions do not match, the most recent of the two versions is returned.
-#'
-#' @seealso [get.R.pkg.date()] for the opposite operation: determining date
-#'   for a given version.
-#'
-# @examples
-# \dontrun{
+# Get package version from date
+# Example
 # groundhog:::get.version("magrittr", "2018-02-12")
-# }
-#'
+
 get.version <- function(pkg, date, patch = c("current", "max")) {
 
   patch <- match.arg(patch)

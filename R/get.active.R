@@ -1,19 +1,16 @@
-#' Get active packages
-#'
-#' Get currently active (=loaded) packages in the session, with their version
-#'
-#' @return a `data.frame` with two columns:
-#' \describe{
-#'   \item{pkg}{the package name}
-#'   \item{pkg_vrs}{the package name and its version, separated by an
-#'   underscore}
-#' }
-#'
-# @examples
-# \dontrun{
-# groundhog:::get.active()
+# Get active packages
+#
+# Get currently active (=loaded) packages in the session, with their version
+#
+# return a `data.frame` with two columns:
+# \describe{
+#   \item{pkg}{the package name}
+#   \item{pkg_vrs}{the package name and its version, separated by an
+#   underscore}
 # }
-#'
+#
+
+#
 get.active <- function() {
   loaded.list <- utils::sessionInfo()$loadedOnly # pkgs in name space
   attached.list <- utils::sessionInfo()$otherPkgs # pkgs in attached

@@ -9,7 +9,7 @@
 #'   packages be installed?
 #' @return A character vector containing the package dependencies for `pkg`, for
 #'   the version on CRAN at `date.`
-#'
+#' @noRd
 # @examples
 # \dontrun{
 # groundhog:::get.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
@@ -17,6 +17,8 @@
 #'
 #' @seealso [get.all.dependencies()] for recursive (=indirect) dependencies
 #'
+#' @noRd
+
 get.dependencies <- function(pkg, date, include.suggests = FALSE) {
 
   update_cran.toc_if.needed(date = date)
@@ -59,19 +61,18 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
 #' Get all recursive (=indirect) dependencies for one package `pkg`, for the
 #' version on CRAN at the given `date`.
 #'
-#' @inheritParams get.dependencies
 #'
 #' @return a `data.frame` where the first column (`pkg`) contains non-terminal
 #'   dependencies and the second column (`dep2` contains a dependencies of the
 #'   package in column `pkg`.
-#'
+#' @noRd
 # @examples
 # \dontrun{
 # groundhog:::get.all.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
 # }
 #'
-#' @seealso [get.dependencies()] for direct dependencies only
-#'
+#seealso [get.dependencies()] for direct dependencies only
+
 get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
 
 

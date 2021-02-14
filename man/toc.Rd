@@ -2,8 +2,7 @@
 % Please edit documentation in R/toc.R
 \name{toc}
 \alias{toc}
-\title{Show table of contents (toc) (package versions and publication dates) for a
-package, sorted chronologically}
+\title{Show CRAN publication dates for all versions of a given package}
 \usage{
 toc(pkg, dependencies = FALSE)
 }
@@ -14,16 +13,17 @@ toc(pkg, dependencies = FALSE)
 package dependencies (\code{Imports}, \code{Depends} and \code{Suggests}) for \code{pkg}.}
 }
 \value{
-a \code{data.frame} where each row corresponds to one version of \code{pkg}.
+a \code{data.frame} where each row corresponds to one version of \code{pkg}, a date column contains the publication date,
+and when \code{dependecies}=TRUE, columns show package dependencies over time as well.
 }
 \description{
-Show table of contents (toc) (package versions and publication dates) for a
-package, sorted chronologically
+Show CRAN publication dates for all versions of a given package
 }
 \examples{
 \dontrun{
 toc("R")
 toc("magrittr")
+toc("rio",dependencies = TRUE)
 }
 
 }

@@ -1,18 +1,10 @@
-#' Get installation time
-#'
-#' Get installation time for a given `pkg` and `vrs`. This is estimated from
-#' CRAN data about installation time on their build servers.
-#'
-#' @inheritParams get.pkg_search_paths
-#'
-#' @return the required time (in seconds) to install the `pkg` with the specific
-#'   `vrs`.
-#'
-# @examples
-# \dontrun{
+# Get installation time for a given `pkg` and `vrs`. This is estimated from
+# CRAN data about installation time on their build servers.
+#
+# Example:
 # groundhog:::get.installation.time("magrittr", "1.5")
-# }
-#'
+# 
+
 get.installation.time <- function(pkg, vrs) {
   if (is.null(.pkgenv[["cran.times"]])) {
     load.cran.toc()

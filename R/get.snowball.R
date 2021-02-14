@@ -1,12 +1,9 @@
-#' Generates dataframe with all dependencies needed to install a package, with version and source of installation
-#'
-#' @inheritParams groundhog.library
-
-# @examples
-# \dontrun{
+# Generates dataframe with all dependencies needed to install a package, with version and source of installation
+#
+# Example
 # groundhog:::get.snowball("magrittr", "2018-02-12")
-# }
-#'
+
+#
 get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE) {
 
   # 1) Get dependencies

@@ -1,16 +1,17 @@
-#' Show table of contents (toc) (package versions and publication dates) for a
-#' package, sorted chronologically
+#' Show CRAN publication dates for all versions of a given package
 #'
 #' @param pkg (required) package name
 #' @param dependencies logical (defaults to `FALSE`). Should the output contain
 #'    package dependencies (`Imports`, `Depends` and `Suggests`) for `pkg`.
 #'
-#' @return a `data.frame` where each row corresponds to one version of `pkg`.
+#' @return a `data.frame` where each row corresponds to one version of `pkg`, a date column contains the publication date,
+#' and when `dependecies`=TRUE, columns show package dependencies over time as well.
 #'
 #' @examples
 #' \dontrun{
 #' toc("R")
 #' toc("magrittr")
+#' toc("rio",dependencies = TRUE)
 #' }
 #'
 #' @export
