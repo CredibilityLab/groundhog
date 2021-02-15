@@ -79,10 +79,7 @@ get.groundhog.folder <- function() {
 #' @param path Character. The path to the groundhog folder containing the library
 #'   where packages are downloaded and installed.
 #'
-#' @note This setting can also be achieved by manually editing the `.Renviron`
-#'   file. You can set this globally by editing `~/.Renviron` or only for a
-#'   specific project by editing the `.Renviron` file at the root of your
-#'   project.
+
 #'
 #' @examples
 #' \dontrun{

@@ -16,12 +16,6 @@ where packages are downloaded and installed.}
 \description{
 Set groundhog folder location
 }
-\note{
-This setting can also be achieved by manually editing the \code{.Renviron}
-file. You can set this globally by editing \verb{~/.Renviron} or only for a
-specific project by editing the \code{.Renviron} file at the root of your
-project.
-}
 \examples{
 \dontrun{
 set.groundhog.folder("~/.R_groundhog")

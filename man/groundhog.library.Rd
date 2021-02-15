@@ -15,7 +15,7 @@ groundhog.library(
 )
 }
 \arguments{
-\item{pkg}{character string pr vector with name of target package(s) to load (and install if needed),
+\item{pkg}{character string or vector with name of target package(s) to load (and install if needed),
 need not be in quotes.}
 
 \item{date}{character string  (yyyy-mm-dd), or date value, with the date which determines the

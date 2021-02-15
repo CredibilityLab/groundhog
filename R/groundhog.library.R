@@ -1,6 +1,6 @@
 #' Install packages as available on set date -  groundhog.library()
 #'
-#'@param pkg character string pr vector with name of target package(s) to load (and install if needed), 
+#'@param pkg character string or vector with name of target package(s) to load (and install if needed), 
 #'need not be in quotes.
 #'@param date character string  (yyyy-mm-dd), or date value, with the date which determines the 
 #'version of the package, and all dependencies, to be loaded (and installed if needed).
@@ -69,12 +69,13 @@
   #0.4) Set of ignorable conflicts
         ignore.deps <- c(ignore.deps_default() , ignore.deps) #Add any ignore.deps explicitly stated to the default set in utils
         
+        
   #0.5) If pkg is a vector, loop over it
     if (exists(as.character(substitute(pkg))) && is.vector(pkg) && length(pkg)>1) {
         #Check first that "pkg" has been defined in the environment
         #If it has check that it is a vector
         #If it is, and has more than 1 element, loop
-      
+           
           for (pkgk in pkg)
             {
             pkgk.character <- as.character(pkgk)
@@ -82,10 +83,11 @@
                          date, "'," , 
                          quiet.install, "," ,
                          include.suggests, "," , 
-                         "'", ignore.deps, "'," , 
+                         "'", paste0(ignore.deps, collapse=','), "'," , 
                          force.source, "," , 
                          force.install,")")
               eval(parse(text=exec_line))  
+              
             }
               exit()
             }
@@ -104,6 +106,7 @@
         vrs <- get.version(pkg, date)
         pkg_vrs <- paste0(pkg, "_", vrs)
         
+
     #1.2 Stop if  pkg_vrs already attached
         attached.list=utils::sessionInfo()$otherPkgs
         attached.pkg <- names(attached.list)
@@ -111,14 +114,27 @@
         attached.pkg_vrs <- paste0(attached.pkg, "_", attached.vrs) 
         
         if (pkg_vrs %in% attached.pkg_vrs) {
-            message1("groundhog says: the package you requested ('", pkg, "_", vrs, "') is already attached")
+            message1("groundhog says: the package you requested ('", pkg_vrs, "') is already attached.")
             return(invisible(active$pkg_vrs))
+            
         }
-        
+
     #1.3 Mismatched package already attached  
          if ((pkg %in% attached.pkg) &  (!pkg_vrs %in% attached.pkg_vrs)) {
             message1(
-                    "groundhog says: another verion of '", pkg,"' is already attached ('", active$pkg_vrs[active$pkg==pkg],"').\n",
+                    "groundhog says: another version of '", pkg,"' is already attached ('", active$pkg_vrs[active$pkg==pkg],"').\n",
+                    "To solve this: restart the R session. Note: you will need to do 'library(groundhog)' again.\n\n",
+                    "In R Studio press: CTRL/CMD-SHIFT-F10"
+                    )
+          message("\nThe package '", pkg_vrs,"' was *NOT* attached")
+          return(invisible(active$pkg_vrs))
+         }
+        
+        
+    #1.4 Mismatched package already loaded, and not one of the ignore.deps  
+         if ((pkg %in% active$pkg) &  (!pkg_vrs %in% active$pkg_vrs) & (!pkg %in% ignore.deps)) {
+            message1(
+                    "groundhog says: another version of '", pkg,"' is already loaded ('", active$pkg_vrs[active$pkg==pkg],"').\n",
                     "To solve this: restart the R session. Note: you will need to do 'library(groundhog)' again.\n\n",
                     "In R Studio press: CTRL/CMD-SHIFT-F10"
                     )
@@ -126,7 +142,8 @@
           return(invisible(active$pkg_vrs))
         }
         
-    #1.4 Attach mismatched version if ignore.deps is loaded but not attached (common scenario, trying to attach knitr in .rmd file)
+        
+    #1.5 Attach mismatched version if ignore.deps is loaded but not attached (common scenario, trying to attach knitr in .rmd file)
        if ((pkg %in% active$pkg) & (!pkg_vrs %in%  active$pkg_vrs) & (pkg %in% ignore.deps))
         {
           attachNamespace(pkg)

@@ -76,11 +76,13 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
       #Read last conflict cookie
           cookie_path <- paste0(get.groundhog.folder(),"/package_conflict.txt")
           last_conflict <- 5  #assume 5 minutes
+          last_conflict.pkg <- "" #empty last conflict pkg
            if (file.exists(cookie_path)) {
               last_conflict <- difftime(Sys.time(),file.info(cookie_path)$mtime,units='mins')
+              last_conflict.pkg <- scan(cookie_path, what='character')
               }
-      #Write entire snowball to  conflict cookie
-          write("1",cookie_path)
+      #Save file with name of package being attempted 
+          write(requested_pkg , cookie_path)
           
    #7 Show general message
          message2()
@@ -94,20 +96,24 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
        
     
   #8 Show fix, workaround message if same failure less than 5 minutes ago
-        if (last_conflict<5)
+        if (last_conflict<5 & requested_pkg == last_conflict.pkg)
         {
-         message1(
+          #Example of dependency with conflict to avoid
+             dep.example <- ifelse(conflict.active.pkg[1] == requested_pkg, conflict.active.pkg[2], conflict.active.pkg[1] )
+    
+             message1(
                   "\n\n",
+                  "YOU RECENTLY GOT THIS MESSAGE, SO A BIT MOR INFO:\n",
                   "If you get this message even after restarting the R session, the package generating the conflict is\n",
                   "being reloaded automatically. The two most common scenarios are that R Studio loads the package \n",
                   "(e.g., it loads 'knitr' when opening an .rmd file) or that another package loads it without\n",
                   " documenting that it does. There is a fix *for the latter*, and a workaround for both. You can try:\n",
                   "1. Fix:  Explicitly load the package(s) with the conflict with groundhog.library(),\n",
-                  "     e.g., run groundhog.library('",conflict.active.pkg[1], "','" , date , "')  before ",
+                  "     e.g., run groundhog.library('",dep.example, "','" , date , "')  before ",
                   "groundhog.library('", requested_pkg , "',' " , date , "').\n",
             
                   "2. Workaround: Tell groundhog to ignore this particular conflict with 'ignore.deps'\n",
-                  "     e.g., groundhog.library('tidyverse','2021-01-01', ignore.deps='",conflict.active.pkg[1],"')\n"
+                  "     e.g., groundhog.library('" ,requested_pkg , "','" , date , "', ignore.deps='",dep.example,"')\n"
                   )  
        
           exit()
