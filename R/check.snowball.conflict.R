@@ -79,7 +79,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
           last_conflict.pkg <- "" #empty last conflict pkg
            if (file.exists(cookie_path)) {
               last_conflict <- difftime(Sys.time(),file.info(cookie_path)$mtime,units='mins')
-              last_conflict.pkg <- scan(cookie_path, what='character')
+              last_conflict.pkg <- scan(cookie_path, what='character',quiet=TRUE)
               }
       #Save file with name of package being attempted 
           write(requested_pkg , cookie_path)
