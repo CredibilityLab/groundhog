@@ -89,7 +89,7 @@
               eval(parse(text=exec_line))  
               
             }
-              exit()
+              return()
             }
       
     
