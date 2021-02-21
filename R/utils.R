@@ -189,5 +189,34 @@ get.r.majmin <- function() {
     }
 
 
-  
+   orig_lib_paths <- .libPaths()
+    show.orig_lib_paths <- function() {
+      return(orig_lib_paths)
+    }
+	
  
+  #Function to validate date  
+  validate.date <- function(date)
+      {
+      # numeric
+        bad.date <- 0
+         if (is.numeric(date)) {
+          bad.date <- 1
+        }
+ 
+      # correct format
+        d <- try(as.Date(date, format="%Y-%m-%d"))
+          if("try-error" %in% class(d) || is.na(d)) {
+            bad.date <- 1
+          }
+            
+      #If bad date die 
+          if (bad.date==1) {
+            message(
+                "\ngroundhog says: error!\n",
+                "The date you entered '", date,"', is not valid.\n",
+                "Please use the 'yyyy-mm-dd' format"
+                  )
+            exit()
+          }
+  }#End is valid date

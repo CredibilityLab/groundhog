@@ -4,7 +4,7 @@
 # publication date.
 
 load.cran.toc <- function(update.toc = FALSE) {
-  groundhogR.url <- "http://groundhogR.com/"
+  groundhogR.url <- "https://groundhogR.com/"
   groundhog.folder <- get.groundhog.folder()
 
   # 3.0 Ensure directory for groundhog exists

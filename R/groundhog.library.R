@@ -43,28 +43,8 @@
 
     
     
-  #0) Validate date
-      # numeric
-        bad.date <- 0
-         if (is.numeric(date)) {
-          bad.date <- 1
-        }
- 
-      # correct format
-        d <- try(as.Date(date, format="%Y-%m-%d"))
-          if("try-error" %in% class(d) || is.na(d)) {
-            bad.date <- 1
-          }
-            
-      #If bad date die 
-          if (bad.date==1) {
-            message(
-                "\ngroundhog.library() error.\n",
-                "The date you entered '", date,"', is not valid.\n",
-                "Please use the 'yyyy-mm-dd' format"
-                  )
-            exit()
-            }
+  #0.1) Is date valid?
+        validate.date(date) #Function defined in utils.R
     
   #0.4) Set of ignorable conflicts
         ignore.deps <- c(ignore.deps_default() , ignore.deps) #Add any ignore.deps explicitly stated to the default set in utils
@@ -244,7 +224,8 @@
 
   #3 Grab .libpaths()
     orig_lib_paths <- .libPaths()
-    .libPaths("")  #actively remove default library path
+   
+	  .libPaths("")  #actively remove default library path
     on.exit(.libPaths(orig_lib_paths))
 
   #4 Update cran.toc() if needed for entered date 

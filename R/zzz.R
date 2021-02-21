@@ -53,7 +53,7 @@
           packageStartupMessage (
                   "Path to folder where downloaded packages are saved: '",get.groundhog.folder(),
                   "'.\nTo change its location: 'set.groundhog.folder(<path>)'\n",
-                  "     >>> If you encounter errors using groundhog: http://groundhogR.com/troubleshooting"
+                  "     >>> If you encounter errors using groundhog: https://groundhogR.com/troubleshooting"
                    )
         
     #2.2 check for update
@@ -61,7 +61,7 @@
     # is not on CRAN, or if working offline (current.packages is NULL in this case).
       #Try to read from groundhogr.com   
           groundhog.version_cran <- tryCatch(
-          as.character(readLines("http://groundhogr.com/groundhog_version.txt")),
+          as.character(readLines("https://groundhogr.com/groundhog_version.txt")),
           warning = function(w) NULL,
           error = function(e) NULL
         )
@@ -80,7 +80,7 @@
             "          OUTDATED GROUNDHOG\n",
             "            You are using version  '" , groundhog.version_using, "\n",
             "            The current version is '" , groundhog.version_cran, "'\n\n",
-            "            You can read about the changes here: http://groundhogr.com/changelog\n\n",
+            "            You can read about the changes here: https://groundhogr.com/changelog\n\n",
             "Please update by running: \ninstall.packages('groundhog')"
             )
             }  #End mismatch in version
