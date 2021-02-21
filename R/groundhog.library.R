@@ -20,8 +20,7 @@
 #'   existing package files in groundhog folder, and install anew.
 #'@return a character vector containing all active packages for the session,
 #'   with their version number, under the format `pkg_vrs`.
-#'
-#' @examples
+#'@examples
 #' \dontrun{
 #' groundhog.library("magrittr", "2020-07-12")
 #'

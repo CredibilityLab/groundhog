@@ -4,7 +4,7 @@
 \alias{reinstall.conflict}
 \title{Re-install packages that created a conflict}
 \usage{
-reinstall.conflict(since = NULL)
+reinstall.conflict(since = "1970-01-01")
 }
 \arguments{
 \item{since}{(optional) character string  (yyyy-mm-dd), or date value, to specify that only packages uninstalled
@@ -24,6 +24,7 @@ The set of packages uninstalled in this way are recorded and saved to a data.fra
 even months later. Specifically, a user running the function \code{reinstall.conflict()} will loop over that data.frame,
 reinstalling all packages listed if they are not currently available (into the original path they were previously installed).
 Again, these are not packages in the groundhog library, but rather, in the default library R uses to install packages.
+IF the optiona parameter \code{since} is used, only packages uninstalled since that date will be reinstalled.
 }
 \note{
 Because these packages are not managed by groundhog, there is no version control. The package that is re-installed
