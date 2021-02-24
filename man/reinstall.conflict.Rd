@@ -8,7 +8,7 @@ reinstall.conflict(since = "1970-01-01")
 }
 \arguments{
 \item{since}{(optional) character string  (yyyy-mm-dd), or date value, to specify that only packages uninstalled
-since that date will be reinstalled.}
+since that date will be reinstalled. If not set then all packages ever uninstalled this way will be re-installed.}
 }
 \description{
 Re-install uninstalled packages (from the non-groundhog local library) previously uninstalled to prevent
