@@ -36,6 +36,18 @@
             #Add new one
               uninstalled.conflicts <- rbind(uninstalled.conflicts, new.uninstall.conflicts)
               
+            #Confimration
+              message2()
+              message1(
+                    "Type OK to uninstall the following packages from your local non-groundhog library:",
+                    paste0(uninstalled.conflicts$Package,sep=" ")
+                      )
+              text.answer <-readline(prompt = "Type OK to proceed, anything else to stop >")
+              if (tolower(text.answer)!="ok") {
+                  message("You did not type OK, uninstall aborted.")
+                  exit()
+                  }
+              
             #Save
               saveRDS(uninstalled.conflicts,file = file_path, version=2)
             

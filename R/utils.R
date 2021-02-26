@@ -148,15 +148,28 @@ base_pkg <- function() {
   )
 }
 
-#Packages that R Studio loads automatically and other packages likely to be loaded without explicit calls
+#Default pacakges to ignore conflicts with (but gives warning)
 ignore.deps_default <- function() {
-  c("testthat", 
-    "rstudioapi",
-    "knitr",      #Loaded by R STudio for .rmd files
-    "rmarkdown",  #Loaded by R STudio for .rmd files
-    "xfun"        #Loaded by R STudio for .rmd files
-    )
-}
+  
+  #Packages r-studio tends to load automatically
+      Rstudio.deps <- c("testthat", 
+        "rstudioapi",
+        "knitr",     
+        "rmarkdown", 
+        "xfun"       
+        )
+  
+  #Recommended and thus hard to uninstall packages
+      ip <- data.frame(utils::installed.packages())
+      recommended.pkgs <- unique(subset(ip, Priority=="recommended")$Package) #unique becuase there may be two versions of the same package in different libraries
+      
+  #Combine
+      ignore.deps <- c(Rstudio.deps, recommended.pkgs)
+    
+  #Return
+      return(ignore.deps)
+           
+    }
 
 
 
