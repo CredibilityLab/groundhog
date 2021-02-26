@@ -42,67 +42,77 @@ get.script.folder <- function() {
   return("")
 }
 
-#' Get researchbox project paths
+#' Get path to data directory in researchbox structure
 #'
-#' Get paths relative to the different subfolders of a
-#' [researchbox](https://researchbox.org/).
+#' [researchbox](https://researchbox.org/) organizes files into a main folder with 5 subfolders:
+#' code, data, other, pre-registration, and materials. This function allows referencing the 
+#' data folder if such structure is used, whereby the current r script is assumed to be in the code
+#' folder, and the data in a neighboring folder. 
+#' For example, if locally the script is saved into 
+#' `c:/dropbox/researchbox_1821/code/script.r`, then researchbox_data() will return 
+#' `c:/dropbox/researchbox_1821/data/` allowing making a dynamic reference to the data path. 
+#' That way, when a user downloads the ResearchBox files to their folder, no matter where the that is locally, 
+#' because subdirectories will maintain their relative position, code that uses researchbox_data() to set the 
+#' data path will run in the new computer without needed adjustments.
+#' If the user who downloaded the the files saves them into, say, "d:/temp/researchbox/code/script.r"
+#' the command `researchbox_data()` will output "d:/temp/researchbox/data/" allowing the same code to load the 
+#' same data despite the different parental folder structure.
+
 #'
 #' @return
-#' - For `researchbox_code()`, the path to the `Code` folder of the researchbox
-#' - For `researchbox_data()`, the path to the `Data` folder of the researchbox
-#' - For `researchbox_other()`, the path to the `Other` folder of the
-#' researchbox
-#'
+#' Path to the `Data` folder within  [researchbox](https://researchbox.org/) structure 
 #' @examples
-#' x <- researchbox_other()
-#' \dontrun{
-#' setwd(researchbox_data())
+#' #' \dontrun{
+#' data_path <- researchbox_data()           #assign dynamically path as a sibling to current script's path
+#' file_name <- 'example.csv'                #name of data file
+#' file_path <- paste0(data_path, file_name) #full path, dynamically generated
+#' data1 <- read.csv(file_path)
 #' }
 #'
 #' @export
 #'
-#' @rdname researchbox
-researchbox_code <- function() {
-
-  return(dirname(get.script.folder()))
-}
-
-researchbox_dir <- function() {
-
-  code_dir <- researchbox_code()
-  researchbox_dir <- dirname(code_dir)
-
-  return(researchbox_dir)
-}
-
-#' @rdname researchbox
-#' @export
 researchbox_data <- function() {
-
   data_dir <- file.path(researchbox_dir(), "Data")
-
   if (!file.exists(data_dir)) {
     message(
-      "groundhog says: The 'ResearchBox/Data' folder you are referencing ",
-      "does not exist (", data_dir, ")."
+      "warning: this folder does not exist"
     )
   }
 
   return(data_dir)
 }
 
-#' @rdname researchbox
+
+#' Get path to parent directory in  [ResearchBox](https://researchbox.org/) structure
+
+#' See `researchbox_data()`
 #' @export
+
+researchbox_dir <- function() {
+  code_dir <- get.script.folder()
+  researchbox_dir <- dirname(code_dir)
+
+  return(researchbox_dir)
+}
+
+#' 
+
+
+#' Get path to 'other' directory in  [ResearchBox](https://researchbox.org/) structure
+
+#' See `researchbox_data()`
+#' @export
+
 researchbox_other <- function() {
 
   other_dir <- file.path(researchbox_dir(), "Other")
 
   if (!file.exists(other_dir)) {
     message(
-      "groundhog says: The 'ResearchBox/Other' folder you are referencing ",
-      "does not exist (", other_dir, ")."
+      "warning: this folder does not exist"
     )
   }
 
   return(other_dir)
 }
+

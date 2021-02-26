@@ -115,10 +115,12 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                   "OK. That's the problem. Here are your possible *solution(s)*:"
                   )
             
+          
+              
           #1. New order
             msg.repeat.conflict.explicit.first <- paste0(
                   #Option 1 
-                  "- Solution for the less common cases. Use groundhog to explicitly load the conflicting dependency first,\n",
+                  "- Solution for the less common cases: Use groundhog to explicitly load the conflicting dependency first,\n",
                   "  e.g., run groundhog.library('",dep.example, "','" , date , "')  before groundhog.library('", requested_pkg , "',' " , date , "').\n"
                   )
                     
