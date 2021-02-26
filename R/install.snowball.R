@@ -76,7 +76,7 @@
         
       #2.2 Download all CRAN binaries
 
-          cran.binaries <- data.frame(download.packages(snowball.cran$pkg, type='binary', destdir=temp_path))
+          cran.binaries <- data.frame(utils::download.packages(snowball.cran$pkg, type='binary', destdir=temp_path))
           names(cran.binaries) <- c("pkg.cran","downloaded.path")
       
           
@@ -90,7 +90,7 @@
                 outfile <- as.character(snowball.cran$installation.path[k])
                 message1(k,") Installing: ",snowball.cran$pkg_vrs[k])
                 #unzip
-                  untar(infile ,exdir=outfile)
+                  utils::untar(infile ,exdir=outfile)
                 #delete
                   unlink(cran.binaries$downloaded.path[k])
 
@@ -129,7 +129,7 @@
             
       #3.5 Verify the binary being served is the one we want
             #Get the available packages on that date
-              ap <- available.packages(contrib.url (repos.mran[k],'binary'))
+              ap <- utils::available.packages(utils::contrib.url (repos.mran[k],'binary'))
   
               ap.df <- data.frame(ap, stringsAsFactors = FALSE)                       
               ap.pkg <- ap.df[ap.df$Package==snowball.mran$pkg[k],]
@@ -146,12 +146,12 @@
             #Download it from MRAN
               #Specify binary explicitly if R>3.2.0, but not otherwise as it generates errors
               #Is R being used newer than 3.2.0?
-                newer.R.3_2_0 <- utils::compareVersion(groundhog:::get.rversion(),"3.2.0") == 1 
+                newer.R.3_2_0 <- utils::compareVersion(get.rversion(),"3.2.0") == 1 
                 
                 if (newer.R.3_2_0) {
-                    mran.binaries_rowk <- download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path)
+                    mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path)
                   } else {
-                    mran.binaries_rowk <- download.packages(snowball.mran$pkg[k],repos = repos.mran[k],available=ap, destdir=temp_path)
+                    mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k],repos = repos.mran[k],available=ap, destdir=temp_path)
                 }
             
             #If file was successfully downloaded
@@ -194,7 +194,7 @@
                 #message 
                   message1(j2,") Installing: '",snowball.mran$pkg_vrs[k],"'")
                 #unzip
-                  untar(mran.binaries$downloaded.path[k] , exdir=snowball.mran$installation.path[k])        
+                  utils::untar(mran.binaries$downloaded.path[k] , exdir=snowball.mran$installation.path[k])        
                 
                 #delete
                   unlink(mran.binaries$downloaded.path[k])

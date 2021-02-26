@@ -30,3 +30,12 @@ IF the optiona parameter \code{since} is used, only packages uninstalled since t
 Because these packages are not managed by groundhog, there is no version control. The package that is re-installed
 may be a newer version than that previously available (or the installation may fail if the package becomes archived).
 }
+\examples{
+\dontrun{
+#Re-install all packages ever uninstalled due to conflict
+reinstall.conflict()
+#Re-install all packages uninstalled since 2021-02-04 due to conflict
+reinstall.conflict("2021-02-04")
+}
+
+}

@@ -7,7 +7,7 @@
     
         #Currently installed packages
             original_lib_path <- show.orig_lib_paths()
-            installed.packages_current <- data.frame(installed.packages(noCache = TRUE, lib.loc=original_lib_path))
+            installed.packages_current <- data.frame(utils::installed.packages(noCache = TRUE, lib.loc=original_lib_path))
             installed.pkg_vrs <- paste0(installed.packages_current$Package,"_",installed.packages_current$Version)
             
         #Subset that has conflict
@@ -62,7 +62,7 @@
                     "You will need to restart the R session for the uninstallation to take effect\n",
                     "In R Studio: CMD/CTRL-SHIFT-F10"
                     )
-              remove.packages(remove.pkg , remove.lib)
+              utils::remove.packages(remove.pkg , remove.lib)
               }
   
         }
@@ -93,7 +93,7 @@
 #' reinstall.conflict()
 #' #Re-install all packages uninstalled since 2021-02-04 due to conflict
 #' reinstall.conflict("2021-02-04")
-# }
+#' }
 #'
 #' @export
 
@@ -140,19 +140,19 @@
             #Message
               message1("groundhog says: reinstalling '" , pkgk , "'")
             #Updated installed packages
-              installed.packages_current <- data.frame(installed.packages(noCache = TRUE, lib.loc=original_lib_path))
+              installed.packages_current <- data.frame(utils::installed.packages(noCache = TRUE, lib.loc=original_lib_path))
             
             #If not there, install it
               if (!pkgk %in% installed.packages_current) 
                 {
-                install.packages(pkgk,lib =libk)
+                utils::install.packages(pkgk,lib =libk)
                 }
               
           }#End for
       
        
     #Update the file with uninstalled.conflicts dropping anything that was succesfully re-installed
-            installed.packages_current <- data.frame(installed.packages(noCache = TRUE, lib.loc=original_lib_path))           
+            installed.packages_current <- data.frame(utils::installed.packages(noCache = TRUE, lib.loc=original_lib_path))           
             remain.uninstalled       <- uninstalled.conflicts[!uninstalled.conflicts$Package %in% installed.packages_current$Package,]
             saveRDS(remain.uninstalled, file_path, version=2)
       }

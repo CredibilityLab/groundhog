@@ -93,7 +93,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
 
           #Assess if any packages in conflict are alway locally available suggesting came from local library
                 original_lib_path <- show.orig_lib_paths()
-                install.packages_current <- data.frame(installed.packages(noCache = FALSE, lib.loc = original_lib_path))
+                install.packages_current <- data.frame(utils::installed.packages(noCache = FALSE, lib.loc = original_lib_path))
                 installed.pkg_vrs <- paste0(install.packages_current$Package,"_",install.packages_current$Version)
                 remove.set <- (installed.pkg_vrs %in% conflict.active)
                 

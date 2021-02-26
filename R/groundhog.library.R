@@ -137,7 +137,7 @@
         {
          #Recommended
              ip <- data.frame(utils::installed.packages())
-             recommended.pkgs <- unique(subset(ip, Priority=="recommended")$Package) #unique becuase there may be two versions of the same package in different libraries
+             recommended.pkgs <- unique(subset(ip, ip$Priority=="recommended")$Package) #unique becuase there may be two versions of the same package in different libraries
          
           attachNamespace(pkg)
           message("groundhog warning:\n", 
@@ -296,7 +296,7 @@
    #10.3 Attach ?
        for (k in 1:n)
         {
-        attached.so_far <- names(sessionInfo()$otherPkgs)
+        attached.so_far <- names(utils::sessionInfo()$otherPkgs)
         .libPaths(c(.libPaths(), snowball$installation.path[k] ))
         loadNamespace(snowball$pkg[k], lib.loc = snowball$installation.path[k])
         if (

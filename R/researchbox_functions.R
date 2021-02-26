@@ -62,14 +62,18 @@ get.script.folder <- function() {
 #'@return
 #'Path to the `Data` folder within  [researchbox](https://researchbox.org/) structure 
 #'@examples
-#'\dontrun{
-#'data_path <- researchbox_data()           #assign dynamically path as a sibling to current script's path
-#'file_name <- 'example.csv'                #name of data file
-#'file_path <- paste0(data_path, file_name) #full path, dynamically generated
+#' \dontrun{
+#' #assign dynamically path as a sibling to current script's path
+#'data_path <- researchbox_data()           
+#'#name of data file
+#'file_name <- 'example.csv'                
+#'#full path, dynamically generated
+#'file_path <- paste0(data_path, file_name) 
 #'data1 <- read.csv(file_path)
 #'}
 #'
 #'@export
+#'
 #'
 researchbox_data <- function() {
   data_dir <- file.path(researchbox_dir(), "Data")
