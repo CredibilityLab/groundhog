@@ -59,17 +59,17 @@ get.script.folder <- function() {
 #' same data despite the different parental folder structure.
 
 #'
-#' @return
-#' Path to the `Data` folder within  [researchbox](https://researchbox.org/) structure 
-#' @examples
-#' #' \dontrun{
-#' data_path <- researchbox_data()           #assign dynamically path as a sibling to current script's path
-#' file_name <- 'example.csv'                #name of data file
-#' file_path <- paste0(data_path, file_name) #full path, dynamically generated
-#' data1 <- read.csv(file_path)
-#' }
+#'@return
+#'Path to the `Data` folder within  [researchbox](https://researchbox.org/) structure 
+#'@examples
+#'\dontrun{
+#'data_path <- researchbox_data()           #assign dynamically path as a sibling to current script's path
+#'file_name <- 'example.csv'                #name of data file
+#'file_path <- paste0(data_path, file_name) #full path, dynamically generated
+#'data1 <- read.csv(file_path)
+#'}
 #'
-#' @export
+#'@export
 #'
 researchbox_data <- function() {
   data_dir <- file.path(researchbox_dir(), "Data")
