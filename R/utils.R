@@ -160,7 +160,7 @@ ignore.deps_default <- function() {
         )
   
   #Recommended and thus hard to uninstall packages
-      ip <- data.frame(utils::installed.packages(),stringsAsFactors = FALSE))
+      ip <- data.frame(utils::installed.packages(),stringsAsFactors = FALSE)
       recommended.pkgs <- unique(subset(ip, ip$Priority=="recommended")$Package) #unique becuase there may be two versions of the same package in different libraries
       
   #Combine

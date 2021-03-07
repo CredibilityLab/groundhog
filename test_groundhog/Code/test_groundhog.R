@@ -51,7 +51,7 @@
   #Test conflict 6 - another version is loaded, and it is not on ignored deps
       library(groundhog)
       pwr::pwr.2p.test()
-      groundhog.library('ssev','2019-10-10')
+      groundhog.library('ssev',test.day)
 
       
       see.unistalled.conflicts()
@@ -59,9 +59,9 @@
   #Test conflict 7 - another version already loaded, for involving dependencies in ignore.deps
     library('groundhog')
     library('rio')
-    groundhog.library('dplyr','2020-08-10')   #Fails, then gives all 3 options
-    groundhog.library('foreign','2019-08-10') #Gives warning because it is a recommended packageoptions
-    groundhog.library('AER','2019-08-10')     #Fails, then gives all 3 options
+    groundhog.library('dplyr',test.day)   #Fails, then gives all 3 options
+    groundhog.library('foreign',test.day #Gives warning because it is a recommended packageoptions
+    groundhog.library('AER',test.day)     #Fails, then gives all 3 options
     
     
     
