@@ -1,5 +1,4 @@
 
-
 #This function removes all packages found in the local library that match the pkg_vrs it is fed, asking for "OK" for confirmation
   
   remove.conflict <- function(conflict.pkg_vrs)
@@ -7,11 +6,11 @@
     
         #Currently installed packages
             original_lib_path <- show.orig_lib_paths()
-            installed.packages_current <- data.frame(utils::installed.packages(noCache = TRUE, lib.loc=original_lib_path))
+            installed.packages_current <- data.frame(utils::installed.packages(noCache = TRUE, lib.loc=original_lib_path),stringsAsFactors = FALSE)
             installed.pkg_vrs <- paste0(installed.packages_current$Package,"_",installed.packages_current$Version)
             
         #Subset that has conflict
-            remove.pkg <- installed.packages_current$Package [installed.pkg_vrs %in% conflict.pkg_vrs] 
+            remove.pkg <- as.character(installed.packages_current$Package [installed.pkg_vrs %in% conflict.pkg_vrs] )
             
         #Add reverse dependencies
             remove.revdep <- tools::dependsOnPkgs (remove.pkg, recursive=TRUE, lib.loc=original_lib_path)
@@ -21,7 +20,7 @@
             remove.lib <- installed.packages_current$LibPath [installed.packages_current$Package %in% remove.pkg] 
             
         #Make a record of deleted packages, with the date when it was deleted
-            new.uninstall.conflicts <- data.frame(Package=remove.pkg, lib.loc=remove.lib, date  = as.numeric(Sys.time()))
+            new.uninstall.conflicts <- data.frame(Package=remove.pkg, lib.loc=remove.lib, date  = as.numeric(Sys.time()),stringsAsFactors = FALSE)
       
         #Read and append existing and save
             #Start empty data.frame
@@ -58,7 +57,7 @@
                     "Uninstalling the following packages from your non-groundhog library:\n",
                     paste0(remove.pkg, sep=' '),
                     "\n\n",
-                    "Recall that you can reinstall all packages uninstalled this way with: 'groundhog::reinstall.conflict()'\n\n",
+                    "Recall that you can reinstall all packages uninstalled this way with: 'groundhog::reinstalled.conflicts()'\n\n",
                     "You will need to restart the R session for the uninstallation to take effect\n",
                     "In R Studio: CMD/CTRL-SHIFT-F10"
                     )
@@ -81,7 +80,7 @@
 #' the local (non-groundhog) library. When this occurs, groundhog.library() will prompt users with a set of options, one of which is
 #' to  uninstall these packages from the non-groundhog library.
 #' The set of packages uninstalled in this way are recorded and saved to a data.frame, allowing easily undoing this action, 
-#' even months later. Specifically, a user running the function `reinstall.conflict()` will loop over that data.frame, 
+#' even months later. Specifically, a user running the function `reinstalled.conflicts()` will loop over that data.frame, 
 #' reinstalling all packages listed if they are not currently available (into the original path they were previously installed).
 #' Again, these are not packages in the groundhog library, but rather, in the default library R uses to install packages.
 #' IF the optiona parameter `since` is used, only packages uninstalled since that date will be reinstalled.
@@ -90,15 +89,15 @@
 #' @examples
 #' \dontrun{
 #' #Re-install all packages ever uninstalled due to conflict
-#' reinstall.conflict()
+#' reinstall.conflicts()
 #' #Re-install all packages uninstalled since 2021-02-04 due to conflict
-#' reinstall.conflict("2021-02-04")
+#' reinstall.conflicts("2021-02-04")
 #' }
 #'
 #' @export
 
   #Re-install all packages in local library previously uninstalled with groundhog.
-    reinstall.conflict <- function(since="1970-01-01")
+    reinstall.conflicts <- function(since="1970-01-01")
     {
       
       #Validate the date
@@ -140,7 +139,7 @@
             #Message
               message1("groundhog says: reinstalling '" , pkgk , "'")
             #Updated installed packages
-              installed.packages_current <- data.frame(utils::installed.packages(noCache = TRUE, lib.loc=original_lib_path))
+              installed.packages_current <- data.frame(utils::installed.packages(noCache = TRUE, lib.loc=original_lib_path),stringsAsFactors = FALSE)
             
             #If not there, install it
               if (!pkgk %in% installed.packages_current) 
@@ -152,7 +151,7 @@
       
        
     #Update the file with uninstalled.conflicts dropping anything that was succesfully re-installed
-            installed.packages_current <- data.frame(utils::installed.packages(noCache = TRUE, lib.loc=original_lib_path))           
+            installed.packages_current <- data.frame(utils::installed.packages(noCache = TRUE, lib.loc=original_lib_path),stringsAsFactors = FALSE)           
             remain.uninstalled       <- uninstalled.conflicts[!uninstalled.conflicts$Package %in% installed.packages_current$Package,]
             saveRDS(remain.uninstalled, file_path, version=2)
       }
@@ -160,4 +159,32 @@
       
     
   
-  
+#' View uninstalled conflicting packages by groundhog 
+#' 
+#' List all packages that have been uninstalled with groundhog, by user, after creating a conflict with
+#' package attempted to be loaded with groundhog.library(). These packages can be reinstalled into the local 
+#' non-groundhog library with `reinstall.conflicts()`
+#' 
+#' @export
+
+  see.unistalled.conflicts <- function()
+    {
+     #Path to file with documented uninstalled packages
+        file_path <- paste0(get.groundhog.folder(), "/" , "uninstalled.conflicts.R-" , get.r.majmin() , ".rds")
+        if (file.exists(file_path))  uninstalled.conflicts <- readRDS(file_path)
+      
+        
+      #End if nothing to re-install
+        if (!file.exists(file_path) || nrow(uninstalled.conflicts)==0) 
+          {
+          message2()
+          message1("There is no record of package conflicts uninstalled with groundhog.")
+          exit()
+        }
+        
+      #Format date
+        uninstalled.conflicts$date <- as.Date(as.POSIXct( uninstalled.conflicts$date, origin="1970-01-01"))
+      #Return the packages
+        return (uninstalled.conflicts)
+   
+    }

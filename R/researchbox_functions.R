@@ -42,6 +42,9 @@ get.script.folder <- function() {
   return("")
 }
 
+
+
+
 #' Get path to data directory in researchbox structure
 #'
 #' [researchbox](https://researchbox.org/) organizes files into a main folder with 5 subfolders:
@@ -94,7 +97,7 @@ researchbox_data <- function() {
 
 researchbox_dir <- function() {
   code_dir <- get.script.folder()
-  researchbox_dir <- dirname(code_dir)
+  researchbox_dir <- dirname(dirname(code_dir))
 
   return(researchbox_dir)
 }
@@ -119,4 +122,7 @@ researchbox_other <- function() {
 
   return(other_dir)
 }
+
+
+
 

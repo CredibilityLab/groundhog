@@ -149,16 +149,16 @@
                   "Note that it is possible that this package is being loaded automatically from your local\n",
                   "library. In this case, after restarting the session the problem will persist.\n",
                   "This occurs, for example, when R Studio loads 'knitr' automatically when opening an \n",
-                  ".rmd file. You can either accept this version mismatch or attempt to remove the\n",
-                  "package from your non-groundhog library:\n",
-                  "To uninstall, run: remove.packages('", pkg ,"')"
+                  ".rmd file. It is probably best to ignore this version mismatch and have imperfect version control\n",
+                  "but you could uninstall the package from you local non-groundhog library and it will no longer be\n",
+                  "loaded automatically. To uninstall, run:\nremove.packages('", pkg ,"')"
             )
           
         #Explain the recommended issue if appropriate
           if (pkg %in% recommended.pkgs) {
               message(
                     "The package in question '", pkg , "', is a 'recommended' package which makes removing it from the\n",
-                    "local (non-groundhog) library more difficult; this is why this conflict is tolerated by groundhog,\n",
+                    "local (non-groundhog) library potentially more problematic; this is why this conflict is tolerated by groundhog,\n",
                     "producing a warning rather than an error."
                     )
             }
