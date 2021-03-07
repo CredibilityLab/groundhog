@@ -76,7 +76,7 @@
         
       #2.2 Download all CRAN binaries
 
-          cran.binaries <- data.frame(utils::download.packages(snowball.cran$pkg, type='binary', destdir=temp_path))
+          cran.binaries <- data.frame(utils::download.packages(snowball.cran$pkg, type='binary', destdir=temp_path),stringsAsFactors = FALSE)
           names(cran.binaries) <- c("pkg.cran","downloaded.path")
       
           

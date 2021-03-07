@@ -136,7 +136,7 @@
        if ((pkg %in% active$pkg) & (!pkg_vrs %in%  active$pkg_vrs) & (pkg %in% ignore.deps))
         {
          #Recommended
-             ip <- data.frame(utils::installed.packages())
+             ip <- data.frame(utils::installed.packages(),stringsAsFactors = FALSE)
              recommended.pkgs <- unique(subset(ip, ip$Priority=="recommended")$Package) #unique becuase there may be two versions of the same package in different libraries
          
           attachNamespace(pkg)
