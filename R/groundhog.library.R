@@ -67,9 +67,10 @@
                          force.install,")")
               eval(parse(text=exec_line))  
               
-            }
-              return()
-            }
+            } 
+      } else  {
+            
+            
       
     
     
@@ -340,4 +341,4 @@
   #12 output
     invisible(loaded_pkg_vrs)
   }
-
+}#ENd elseif
