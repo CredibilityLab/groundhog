@@ -183,13 +183,17 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                       "A different version of at least one of the needed packages is already loaded, \n",
                       "this usually would terminate the groundhog.library() call and you would be asked\n",
                       "to restart the R Session, but the package(s) involved:\n",
-                      "(" , conflict.ignored.pkg , ")", " are in the set for which conflicts are tolerated either becuase\n",
+                      "(" , conflict.ignored.pkg , ")", " are in the set for which conflicts are tolerated either because\n",
                       "they are often loaded automatically (e.g., by R Studio) from your local R library, and/or are \n",
                       "'recommended' packages by R and thus version control can be attained by using the version of R matching\n",
                       "the date you entered.\n\n",
-                      "You may want to try a session restart (in R Studio: SHIFT-CTRL-F10) to ensure version control\n",
-                      "but if the problem may persist and you will just need to use your current version of those packages.\n",
-                      "This issue is most common when using R Studio for .rmd files, but arises in a few other scenarios."
+                      "You may want to try a session restart (in R Studio: SHIFT-CTRL-F10) to remove the conflict and \n",
+                      "enable loading the desired version but the problem may persist.\n",
+                      "At that point you may either tolerate imperfect version control or resolve the issue by changing how \n",
+                      "you are running the script. For example, if 'knitting', you could  bypass R Studio automatically loading\n",
+                      "packages by writing the script as an .R file and using rmarkdown::render() instead of the point-and-click\n",
+                      "'knit' button solution offered by R Studio. While this issue is most common when using R Studio for .rmd files, \n",
+                      "it may arise in other scenarios."
                       )
               }
              
