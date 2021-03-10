@@ -39,7 +39,7 @@
               message2()
               message1(
                     "Type OK to uninstall the following packages from your local non-groundhog library:",
-                    paste0(uninstalled.conflicts$Package,sep=" ")
+                    paste0(new.uninstalled.conflicts$Package,sep=" ")
                       )
               text.answer <-readline(prompt = "Type OK to proceed, anything else to stop >")
               if (tolower(text.answer)!="ok") {
