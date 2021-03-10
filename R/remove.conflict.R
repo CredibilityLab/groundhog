@@ -39,7 +39,7 @@
               message2()
               message1(
                     "Type OK to uninstall the following packages from your local non-groundhog library:",
-                    paste0(new.uninstalled.conflicts$Package,sep=" ")
+                    paste0(new.uninstall.conflicts$Package,sep=" ")
                       )
               text.answer <-readline(prompt = "Type OK to proceed, anything else to stop >")
               if (tolower(text.answer)!="ok") {
@@ -96,6 +96,8 @@
 #'
 #' @export
 
+  
+  
   #Re-install all packages in local library previously uninstalled with groundhog.
     reinstall.conflicts <- function(since="1970-01-01")
     {
@@ -108,7 +110,12 @@
 
       #Path to file with documented uninstalled packages
         file_path <- paste0(get.groundhog.folder(), "/" , "uninstalled.conflicts.R-" , get.r.majmin() , ".rds")
-        if (file.exists(file_path))  uninstalled.conflicts <- readRDS(file_path)
+        if (file.exists(file_path)) {
+               uninstalled.conflicts <- readRDS(file_path)
+              } else {
+              message("groundhog says: There is no record of uninstalled packages that can be re-installed")
+              exit()
+              }
       
       #Select based on the date
         uninstalled.conflicts <- subset(uninstalled.conflicts, date > as.numeric(as.POSIXct(since)))
@@ -151,6 +158,7 @@
       
        
     #Update the file with uninstalled.conflicts dropping anything that was succesfully re-installed
+            uninstalled.conflicts <- uninstalled.conflicts <- readRDS(file_path) #get full list of uninstalled packages (not by date)
             installed.packages_current <- data.frame(utils::installed.packages(noCache = TRUE, lib.loc=original_lib_path),stringsAsFactors = FALSE)           
             remain.uninstalled       <- uninstalled.conflicts[!uninstalled.conflicts$Package %in% installed.packages_current$Package,]
             saveRDS(remain.uninstalled, file_path, version=2)
