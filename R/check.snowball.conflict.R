@@ -105,23 +105,26 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                   "\n\n",
                   "YOU RECENTLY GOT THIS MESSAGE, SO A BIT MORE INFO:\n",
                   "If you get this message even after restarting the R session, the packages(s) generating\n",
-                  "the conflict are being reloaded automatically. The most common scenario is R Studio \n",
-                  "loading the packages behind the scenes before you run the groundhog.library() command \n",
-                  "(e.g., it loads 'knitr' & packages referenced via :: when opening an .rmd file). \n",
+                  "the conflict are being reloaded automatically. The most common scenario is R Studio\n",
+                  "loading the packages behind the scenes before you run the groundhog.library() command.\n",
+                  "For instance, R Studio often loads packages referred elsewhere in a script with the\n",
+                  "<pkg>:: operator (e.g., load 'dplyr' if it finds dplyr::filter() ).\n",
+                  "R Studio also loads packages when it works on .rmd files (e.g., 'knitr' & 'xfun).\n\n",
                   "Less common scenarios involve packages you loaded earlier loading a dependency \n",
                   "without properly documenting it, having in your environment objects that require \n",
                   "those packages, and modifications to the .rprofile file, which load some packages \n",
                   "by deafult when you start R.\n\n",
-                  "OK. That's the problem. Here are your possible *solution(s)*:"
+                  "OK. That's the problem. Here are your possible *solution(s)* :"
                   )
             
-          
+            
               
           #1. New order
             msg.repeat.conflict.explicit.first <- paste0(
                   #Option 1 
-                  "- Solution for the less common cases: Use groundhog to explicitly load the conflicting dependency first,\n",
-                  "  e.g., run groundhog.library('",dep.example, "','" , date , "')  before groundhog.library('", requested_pkg , "',' " , date , "').\n"
+                  "- Solution for the less common case of improperly documented packages: Use groundhog to \n",
+                  "explicitly load the conflicting dependency first e.g., run:\n", 
+                  "groundhog.library('",dep.example, "','" , date , "')  before groundhog.library('", requested_pkg , "',' " , date , "').\n"
                   )
                     
           #2. Ignore
