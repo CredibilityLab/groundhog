@@ -202,8 +202,9 @@ get.r.majmin <- function() {
     }
 
 
-   orig_lib_paths <- .libPaths()
+  
     show.orig_lib_paths <- function() {
+      orig_lib_paths <- .libPaths()
       return(orig_lib_paths)
     }
 	
