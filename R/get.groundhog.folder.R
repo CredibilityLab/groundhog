@@ -108,4 +108,7 @@ set.groundhog.folder <- function(path) {
   
   #Assign it to the live environment
     Sys.setenv(GROUNDHOG_FOLDER = path)
+    
+  #Show message
+    message1("The groundhog folder path is now:\n",path)
     }

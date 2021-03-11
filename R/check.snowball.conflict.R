@@ -113,7 +113,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                   "Less common scenarios involve packages you loaded earlier loading a dependency \n",
                   "without properly documenting it, having in your environment objects that require \n",
                   "those packages, and modifications to the .rprofile file, which load some packages \n",
-                  "by deafult when you start R.\n\n",
+                  "by default when you start R.\n\n",
                   "OK. That's the problem. Here are your possible *solution(s)* :"
                   )
             
