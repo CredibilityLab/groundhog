@@ -141,7 +141,8 @@
              recommended.pkgs <- unique(subset(ip, ip$Priority=="recommended")$Package) #unique becuase there may be two versions of the same package in different libraries
          
           attachNamespace(pkg)
-          message("groundhog warning:\n", 
+          message1("groundhog says: succesfully attached '" , pkg , "'")
+          message("\ngroundhog warning:\n", 
                    "'", pkg, "' was already loaded, and it is now attached,\n",
                   "BUT the loaded version ('" , active$pkg_vrs[active$pkg==pkg] , "') does not match the version for ",
                    "'" , date, "' ('", pkg_vrs , "').\n",
@@ -161,8 +162,8 @@
           if (pkg %in% recommended.pkgs) {
               message(
                     "The package in question '", pkg , "', is a 'recommended' package which makes removing it from the\n",
-                    "local (non-groundhog) library potentially more problematic; this is why this conflict is tolerated by groundhog,\n",
-                    "producing a warning rather than an error."
+                    "local (non-groundhog) library potentially more problematic; this is why this conflict\n",
+                    "is tolerated by groundhog, producing a warning rather than an error."
                     )
             }
           return(invisible(active$pkg_vrs))
