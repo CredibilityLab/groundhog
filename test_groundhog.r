@@ -30,7 +30,8 @@
   #Test conflict 2 - other versions of package loaded, cannot attach, later offered to uninstall 
                        #(since it is the package being called with conflict no offer to load early or ignore conflict, only to uninstall)
     library(groundhog)
-    #install.packages('pwr')
+    install.packages('https://cran.r-project.org/src/contrib/Archive/pwr/pwr_1.2-2.tar.gz',repos=NULL,type='source')
+
     pwr::pwr.t.test(n=50,d=.4)  #load pkg
     groundhog.library('pwr',  test.day) #Default error ctrl-shift-f10
     groundhog.library('pwr',  test.day) #2nd time, offer to uninstall, accept it and see if it works
@@ -40,11 +41,11 @@
     
     
   #Test conflict 3 - same as 2, but conflict triggered by a loaded dependency rather than target package
+    #install.packages("https://cran.r-project.org/src/contrib/Archive/hms/hms_0.1.tar.gz",repos=NULL,type='source')  #hms is a dependency of haven, install old version
     library(groundhog)
-    groundhog.library('rio',test.day)
-    library('rio')
-    groundhog.library('tibble',test.day)
-
+    library('haven')
+    groundhog.library('hms',test.day)
+    
   #Test conflict 4 - another version already attached, for an ignore.deps case, same behavior as test conflict 1
     library(groundhog)
     library('knitr')
@@ -55,15 +56,8 @@
     library(groundhog)
     groundhog.library('knitr',test.day)
     
-    
-  #Test conflict 6 - another version is loaded, and it is not on ignored deps
-      library(groundhog)
-      pwr::pwr.2p.test()
-      groundhog.library('ssev',test.day)
-      see.unistalled.conflicts()
-      reinstall.conflicts()
-      
-  #Test conflict 7 - another version already loaded, for involving dependencies in ignore.deps
+ 
+  #Test conflict 6 - another version already loaded, for dependencies in ignore.deps
     library('groundhog')
     library('rio')
     groundhog.library('dplyr',test.day)   #Fails, then gives all 3 options
@@ -81,12 +75,11 @@
     groundhog.library(pkgs,test.day)
     
 #2) Folder with space names
-    library('groundhog')
-    set.groundhog.folder("c:/temp/another folder with spaces")
+   library('groundhog')
+    current.folder <- get.groundhog.folder()
+    set.groundhog.folder(paste0(current.folder," t e m p "))
     groundhog.library('pwr',test.day)
-    
-    #rest the default folder
-    set.groundhog.folder("c:/dropbox/groundhog_folder/")
+    set.groundhog.folder(current.folder)
     
     
 #3) Source a script which uses groundhog with a vector of packages
@@ -215,10 +208,7 @@
 # Installation can be tested with most downloaded packages as of the release of R's version matching that being used
 # or based on available packages when testing. 
     library('groundhog') 
-      test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
-
-    groundhog.library(c('pwr','metafor'),test.day,force.source = TRUE, force.install=TRUE, quiet.install = FALSE)
-        
+          
     test.groundhog(1:100)         #Install the 100 most downloaded packages   -- note, gmailr is a package that creates a conflict with message(), generating errors unrelated to groundhog
     test.groundhog(500:525)       #install the 500-525 most downloaded packages
     test.groundhog(-10, seed=29)  #install 10 random packages available right now for this version of R
