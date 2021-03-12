@@ -201,12 +201,7 @@ get.r.majmin <- function() {
    return(release.date)
     }
 
-
-  
-    show.orig_lib_paths <- function() {
-      orig_lib_paths <- .libPaths()
-      return(orig_lib_paths)
-    }
+ 
 	
  
   #Function to validate date  

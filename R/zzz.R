@@ -88,4 +88,8 @@
           } #ENd if consent==TRUE
       } #End on attach
     
+    
+    #Assign null value to original path, as precaution for it is a .pkg value called in groundhog.library
+      .pkgenv[["orig_lib_paths"]] <- NULL 
+      
  
