@@ -123,7 +123,7 @@
           set.seed(seed)
     
     #If groundhoglibrary does not exist, create it
-        if (!file.exists(get.groundhog.folder())) dir.create(get.groundhog.folder())
+        if (!file.exists(get.groundhog.folder())) dir.create(get.groundhog.folder(),showWarnings = FALSE)
       
     #0 Which version of R is being used?
             r.majmin=groundhog:::get.r.majmin()              #Which R version is being used

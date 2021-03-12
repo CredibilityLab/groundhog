@@ -49,7 +49,7 @@ get.groundhog.folder <- function() {
           }
     
   #Create main folder 
-    dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
+      dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
 
   #Path to cookie file with location of folder
     path_file_storing_groundhog_library_location <- paste0(main_folder ,"/current_groundhog_folder.txt")
