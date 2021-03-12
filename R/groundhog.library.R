@@ -149,11 +149,13 @@
                   "In R Studio press: CTRL/CMD-SHIFT-F10\n\n",
                   "Note that it is possible that this package is being loaded automatically from your local\n",
                   "library. In this case, after restarting the session the problem will persist.\n",
-                  "This occurs, for example, when R Studio loads 'knitr' automatically when opening an \n",
-                  ".rmd file. It is probably best to ignore this version mismatch and have imperfect version control\n",
-                  "but you could uninstall the package from your local non-groundhog library and it will no longer be\n",
-                  "loaded automatically. To uninstall, run:\nremove.packages('", pkg ,"')"
-            )
+                  "You can ignore this problem and tolerate lack of version control for the involved packages.\n", 
+				  "You can also prevent this problem by uninstalling the package from your non-groundhog library\n",
+				  "running: remove.packages('", pkg ,"'), but if R Studio is using the package (e.g., the\n",
+				  "'knit' button requires 'knitr' outside of groundhog), you may need to rely on R rather than\n",
+				  "R Studio for that disabled functionality."
+				 )
+		
           
         #Explain the recommended issue if appropriate
           if (pkg %in% recommended.pkgs) {
@@ -241,11 +243,17 @@
           
           
 
-  #3 Grab .libpaths()
-    orig_lib_paths <- .libPaths()
-   
-	  .libPaths("")  #actively remove default library path
-    on.exit(.libPaths(orig_lib_paths))
+  #3 Reset .libpaths()
+    #Get original
+      orig_lib_paths <- .libPaths()
+      
+    #Assign package variable to be available in snowball conflict check (to see if a conflict is caused by local library)
+      .pkgenv[["orig_lib_paths"]] <- orig_lib_paths
+
+      
+    #actively remove default library path
+	    .libPaths("")  
+      on.exit(.libPaths(orig_lib_paths))
 
   #4 Update cran.toc() if needed for entered date 
     update_cran.toc_if.needed(date)

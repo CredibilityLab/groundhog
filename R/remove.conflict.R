@@ -5,7 +5,9 @@
       {
     
         #Currently installed packages
-            original_lib_path <- show.orig_lib_paths()
+            #original_lib_path <- show.orig_lib_paths()
+			      #original_lib_path <- .libPaths()
+            original_lib_path <- .pkgenv[["orig_lib_paths"]]
             installed.packages_current <- data.frame(utils::installed.packages(noCache = TRUE, lib.loc=original_lib_path),stringsAsFactors = FALSE)
             installed.pkg_vrs <- paste0(installed.packages_current$Package,"_",installed.packages_current$Version)
             
@@ -106,8 +108,8 @@
           validate.date(since) #function in utils.r, exits() if not valid
       
       #Path to local libraries (obtained before temporarily modifying while groundhog runs in groundhog library)
-        original_lib_path <- show.orig_lib_paths()
-
+        #original_lib_path <- show.orig_lib_paths()
+		    original_lib_path <- .libPaths()
       #Path to file with documented uninstalled packages
         file_path <- paste0(get.groundhog.folder(), "/" , "uninstalled.conflicts.R-" , get.r.majmin() , ".rds")
         if (file.exists(file_path)) {
