@@ -1,7 +1,6 @@
-#' Install packages as available on set date -  groundhog.library()
+#' Load, attach, and automatically install if needed, packages as available on set date
 #'
-#'@param pkg character string or vector with name of target package(s) to load (and install if needed), 
-#'need not be in quotes.
+#'@param pkg character string or vector with name of target package(s), need not be in quotes.
 #'@param date character string  (yyyy-mm-dd), or date value, with the date which determines the 
 #'version of the package, and all dependencies, to be loaded (and installed if needed).
 #'@param quiet.install logical, defaults to `TRUE`. When set to `FALSE`, displays
