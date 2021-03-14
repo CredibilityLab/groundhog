@@ -119,19 +119,7 @@
           return(invisible(active$pkg_vrs))
          }
         
-        
-    #1.4 Mismatched package already loaded, and not one of the ignore.deps  
-        #  if ((pkg %in% active$pkg) &  (!pkg_vrs %in% active$pkg_vrs) & (!pkg %in% ignore.deps)) {
-        #     message1(
-        #             "groundhog says: another version of '", pkg,"' is already loaded ('", active$pkg_vrs[active$pkg==pkg],"').\n",
-        #             "To solve this: restart the R session. Note: you will need to do 'library(groundhog)' again.\n\n",
-        #             "In R Studio press: CTRL/CMD-SHIFT-F10"
-        #             )
-        #   message("\nThe package '", pkg_vrs,"' was *NOT* attached")
-        #   return(invisible(active$pkg_vrs))
-        # }
-        
-        
+    #1.4 dropped
     #1.5 Attach mismatched version if ignore.deps is loaded but not attached (common scenario, trying to attach knitr in .rmd file)
        if ((pkg %in% active$pkg) & (!pkg_vrs %in%  active$pkg_vrs) & (pkg %in% ignore.deps))
         {
@@ -170,10 +158,7 @@
         }   
         
         
-        
-        
-        
-        
+  
   # Check if using R that's from a version PRIOR to that current for the desired date (prior to current release)
   # e.g., using R-3.3.3 for "2020-01-05"
 
@@ -223,10 +208,22 @@
             " - To change a date, choose something after '",get.r.majmin.release(),"'\n",
             " - Or use R-",rv$r.need.full, "  (instructions for running older R versions: http://groundhogr.com/many)\n\n")
           message2("--->>> Type 'OK' to continue anyway, type anything else to stop. <<<---")
-          text <- readline()
+           
+          #While loop for readline to avoid submitted code to be interpreted as the answer
+            len.answer <- 0
+            while (len.answer <1 | len.answer > 7)  #assume any answer longer than 8 characters is actually code
+            {
+              text <- readline("Type OK to continue >")
+              len.answer <- nchar(text)
+              if (len.answer>3) {
+                
+                    message("To prevent interpreting code you are trying to run as your answer to this prompt, please answer in less than 8 characters.")
+              } #end if
+            } #End while
+          
             
           #If they press stop, don't load/install package
-            if (text!='ok' & text!="OK" & text!="'ok'") {
+            if (text!='ok' & text!="OK" & text!="'ok'" & text!="'OK'") {
               message("You did not type OK, so installation has stopped.")
               exit()
               }

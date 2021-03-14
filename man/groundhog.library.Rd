@@ -2,7 +2,7 @@
 % Please edit documentation in R/groundhog.library.R
 \name{groundhog.library}
 \alias{groundhog.library}
-\title{Install packages as available on set date -  groundhog.library()}
+\title{Load, attach, and automatically install if needed, packages as available on set date}
 \usage{
 groundhog.library(
   pkg,
@@ -15,8 +15,7 @@ groundhog.library(
 )
 }
 \arguments{
-\item{pkg}{character string or vector with name of target package(s) to load (and install if needed),
-need not be in quotes.}
+\item{pkg}{character string or vector with name of target package(s), need not be in quotes.}
 
 \item{date}{character string  (yyyy-mm-dd), or date value, with the date which determines the
 version of the package, and all dependencies, to be loaded (and installed if needed).}
@@ -45,7 +44,7 @@ a character vector containing all active packages for the session,
 with their version number, under the format \code{pkg_vrs}.
 }
 \description{
-Install packages as available on set date -  groundhog.library()
+Load, attach, and automatically install if needed, packages as available on set date
 }
 \examples{
 \dontrun{
