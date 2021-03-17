@@ -218,7 +218,8 @@
             all.text <-''
             while (len.answer <1 | len.answer > 5)  #assume any answer longer than 5 characters is actually code
             {
-              text <- readline("Type OK to ignore this warning and continue. Type anything else to stop. >")
+              prompt.text <- paste0("Type OK to ignore this warning about the date for '", pkg , "'. Type anything else to stop. >")
+              text <- readline(prompt.text)
               len.answer <- nchar(text)
               if (len.answer>=5) {
                   message("To ensure you are actively answering this prompt, please answer in less than 5 characters.\n")

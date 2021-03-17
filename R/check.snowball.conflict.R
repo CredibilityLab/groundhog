@@ -164,7 +164,28 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                     {
                       message(msg.repeat.conflict.uninstall)
                       text.answer <-readline(prompt = "To unistall conflicting packages type 'uninstall'. Type anything else to turn this solution down >")
-                      if (tolower(text.answer)=="uninstall") remove.conflict(conflict.active)
+                      
+                    #If they typed uninstall, do it
+                      if (tolower(text.answer)=="uninstall") 
+                          {
+                          remove.conflict(conflict.active)
+                          } else {
+                      
+                    #If it is not uninstall, check length, if too long or too short assumed it was not interactively entered
+                        len.answer <- 0
+                        while (len.answer <1 | len.answer >= 5)
+                        {
+                          message("groundhog says: in relation to the request to load '" , requested_pkg , "'")
+                          prompt.text <- paste0("To unistall conflicting packages type 'uninstall'. Type anything else to turn this solution down")
+                          message(prompt.text)
+                          text.answer <- readline(">")
+                          len.answer <- nchar(text.answer)
+                          if (len.answer>=5) {
+                              message("To ensure you are actively answering this prompt, type something shorter than 5 characters to turn down this solution.\n")
+                          } #end if
+                        } #End while
+                        } #End else
+                      
                       if (tolower(text.answer)!="uninstall") message("You typed '", text.answer, "', which is != 'uninstall', so will NOT uninstall conflicts.")
                   }
                   exit()
