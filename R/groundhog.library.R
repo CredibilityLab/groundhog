@@ -166,6 +166,40 @@
   #2 Check R version
     rv <- r.version.check(date) # Get version of r being used and needed
     
+    #If using version of R too advance for groundhog, give error and ask to add to cran.toc.rds by hand
+      R.toc <- toc("R")
+      if (package_version(max(R.toc$Version)) < package_version(rv$r.using.majmin))
+          {
+          #two days ago
+            two.days.ago <- Sys.Date()-2
+          #update temporarily cran.toc.if needed
+            max.date <- (max(.pkgenv[["cran.toc"]]$Published))
+            if (max.date < two.days.ago) load.cran.toc(update.toc = TRUE)
+            rv <- r.version.check(date) 
+            if (package_version(max(R.toc$Version)) < package_version(rv$r.using.majmin))
+              {
+              message("groundhog says:")
+              message("The version of R you are using, 'R-" , rv$r.using.full, "' is not in the groundhog database.")
+              message("You can temporarily add it. This is a work-around intended for testing groundhog with R versions\n",
+                      "that have not yet been released. You should not consider this script reproducible.\n",
+                      "To write reproducible R code please use an already released version of R instead. \n\n",
+                      "Type OK to temporarily add ", rv$r.using.full , " to your local groundhog database\n",
+                      " (it will be added as if it were released 2 days ago, and when you restart the R session it will be removed).")
+              text <- readline("Enter OK to add, anything else to stop >")
+              
+              #If say OK, add row to database temporarily
+                if (tolower(text)=="ok")
+                {
+                  row <- data.frame(Package="R",Version=rv$r.using.full,Published = two.days.ago, Imports="",Depends="",Suggests="",LinkingTo="")
+                  .pkgenv[["cran.toc"]] <- rbind(.pkgenv[["cran.toc"]], row)
+                } else {
+              #Else, end
+                  message("Your typed '" , text, "!=OK, groundhog.library() request will terminate here.")
+                  exit()
+                 } #end else
+              } #End if version not in cran.toc even after update
+            }   #End if version not in cran.toc before update
+    
     #2.1 Is date for a later major R? STOP
 
     if (package_version(rv$r.using.majmin) < package_version(rv$r.need.majmin)) {
