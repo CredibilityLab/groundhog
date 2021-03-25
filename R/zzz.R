@@ -6,7 +6,10 @@
 #'
 .onLoad <- function(libname, pkgname) {
   .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
-   }
+
+  #Grab originally available library paths (before groundhog loaded)
+      .pkgenv[["orig_lib_paths"]] <- .libPaths()                      
+    } #End of onLoad
 
 #Default parameters
 
@@ -89,7 +92,5 @@
       } #End on attach
     
     
-    #Assign null value to original path, as precaution for it is a .pkg value called in groundhog.library
-      .pkgenv[["orig_lib_paths"]] <- NULL 
       
  

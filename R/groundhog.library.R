@@ -40,7 +40,9 @@
                               force.source = FALSE,
                               force.install = FALSE) {
 
+  
     
+          
     
   #0.1) Is date valid?
         validate.date(date) #Function defined in utils.R
@@ -51,6 +53,15 @@
         
   #0.5) If pkg is a vector, loop over it
     if (exists(as.character(substitute(pkg))) && is.vector(pkg) && length(pkg)>1) {
+      
+        if ("groundhog" %in% pkg) {
+          message("Error. May not use groundhog.library() to load groundhog.\n",
+                  "To load the version of groundhog available on '", date, "', please use:\n",
+                  "meta.groundhog('" ,  date , "')"
+                   )
+          exit()
+        } #End if groundhog is a package being called
+      
         #Check first that "pkg" has been defined in the environment
         #If it has check that it is a vector
         #If it is, and has more than 1 element, loop
@@ -76,11 +87,22 @@
     
   # If package name was given using non-standard evaluation (i.e., unquoted)
     pkg <- as.character(substitute(pkg))
+    
+        
+    #Second check, now in case it is entered as a string instead of as a vector
+        if ("groundhog" == pkg) {
+          message("Error. May not use groundhog.library() to load groundhog.\n",
+                  "To load the version of groundhog available on '", date, "', please use:\n",
+                  "meta.groundhog('" ,  date , "')"
+                   )
+          exit()
+        } #End if groundhog is a package being called
 
   
     #1.0 initial check,  stop if same version
       active=get.active()
       
+  
   
     #1.1 Get version of requested package
         vrs <- get.version(pkg, date)
@@ -88,10 +110,16 @@
         
 
     #1.2 Stop if  pkg_vrs already attached
-        attached.list=utils::sessionInfo()$otherPkgs
+        attached.list= utils::sessionInfo()$otherPkgs
         attached.pkg <- names(attached.list)
         attached.vrs <- lapply(attached.list, function(x) x$Version)
-        attached.pkg_vrs <- paste0(attached.pkg, "_", attached.vrs) 
+        
+      #Add base backages  
+        attached.base.pkg <- utils::sessionInfo()$basePkgs
+        attached.base.vrs <- vapply(attached.base.pkg, get.version, date, FUN.VALUE = character(1)) 
+        attached.pkg <- c(attached.pkg, attached.base.pkg)
+        attached.vrs <- c(attached.vrs, attached.base.vrs)
+        attached.pkg_vrs <- paste0(attached.pkg , "_" , attached.vrs)
         
         if (pkg_vrs %in% attached.pkg_vrs) {
             message1("groundhog says: the package you requested ('", pkg_vrs, "') is already attached.")
@@ -100,6 +128,7 @@
         }
 
   
+        
     #1.2.5 Attach if package is loaded but not attached
         if (pkg_vrs %in% active$pkg_vrs)
         {
@@ -271,7 +300,7 @@
             
               } #End else
           } #Showed warnings
-            
+        
           
           }
       
@@ -279,21 +308,19 @@
           
 
   #3 Reset .libpaths()
-    #Get original
-      orig_lib_paths <- .libPaths()
-      
-    #Assign package variable to be available in snowball conflict check (to see if a conflict is caused by local library)
-      .pkgenv[["orig_lib_paths"]] <- orig_lib_paths
+#      #Grab existing ones  
+#         orig_lib_paths <- .libPaths()
+#      #actively remove default library paths to prevent loading packages from local library
+# 	      .libPaths("")  
+# 	   #return to default path upon exiting
+#          on.exit(.libPaths(orig_lib_paths))
+#        
 
-      
-    #actively remove default library path
-	    .libPaths("")  
-      on.exit(.libPaths(orig_lib_paths))
-
+          
+       
   #4 Update cran.toc() if needed for entered date 
-    update_cran.toc_if.needed(date)
+      update_cran.toc_if.needed(date)
 
- 
   #5 GET SNOWBALL
     snowball <- get.snowball(pkg, date, 
                              include.suggests=include.suggests, 
@@ -335,25 +362,32 @@
       
    #10.2 Get the needed DEPEND dependencies so that they are attached
       attach.all <- unique(unlist(strsplit(cran.toc.snowball$Depends, ",")))
-
+  
+    #10.3 add package itself to attach list
+      attach.all <- c(attach.all, pkg)
       
-   #10.3 Attach ?
+   #10.4 Add to path and attach if needed
        for (k in 1:n)
         {
-        attached.so_far <- names(utils::sessionInfo()$otherPkgs)
-        .libPaths(c(.libPaths(), snowball$installation.path[k] ))
-        loadNamespace(snowball$pkg[k], lib.loc = snowball$installation.path[k])
-        if (
-             snowball$pkg[k] %in% attach.all & 
-            !snowball$pkg[k] %in% attached.so_far
-            ) 
-          {
-          attachNamespace(snowball$pkg[k])
-          message1("Attaching ",snowball$pkg[k])
-          }
         
-        if (k==n) attachNamespace(snowball$pkg[k])
-        }
+      #Load the package and put it on the library path in case there is a reference to it like a library call.
+        if (!snowball$pkg[k] %in% base_pkg())
+          {
+          loadNamespace(snowball$pkg[k], lib.loc = snowball$installation.path[k])
+          #.libPaths(c( snowball$installation.path[k], .libPaths() ))
+          }
+
+        if (snowball$pkg[k] %in% attach.all)
+          { 
+            attached.so_far <- names(utils::sessionInfo()$otherPkgs)
+            if (!snowball$pkg[k] %in% attached.so_far) 
+            {
+            attachNamespace(snowball$pkg[k])           
+            message1("Attaching ",snowball$pkg_vrs[k])
+            } #End if not attached
+          } #End if it is in the to-attach list
+      
+        } #End for loop
 
   #11 Success/failure message
     #11.1 look at loaded packages
@@ -375,12 +409,14 @@
                          "loaded  : '", active$pkg_vrs[active$pkg %in% pkg], "'\n"
                     )
                   }
-    if (pkg_vrs %in% loaded_pkg_vrs) {
-      message1("groundhog says: successfully attached '", pkg_vrs,"'.")
-        } else {
-        
-      }
-    
+   
+      
+    if (pkg %in% base_pkg()) {
+      message("Note: the package '", pkg, "' is part of base R.\n",
+              "The version included in base R is always loaded, regardless of the date entered.")
+    }
+ 
+
   #12 output
     invisible(loaded_pkg_vrs)
   }

@@ -38,8 +38,13 @@
           if (any(snowball$installed) & force.install) {
           #Subset of packages that are installed
               snowball.installed <- snowball[snowball$installed, ]
+              
+          #Drop any that are base
+              snowball.installed <- snowball.installed[!snowball.installed$pkg %in% base_pkg(),]
+              
           # Get their path
               snowball.installed$paths <- mapply(get.installed_path, snowball.installed$pkg, snowball.installed$vrs)
+          
           # Delete the paths
               unlink(snowball.installed$paths, recursive=TRUE, force = TRUE)
               
@@ -108,8 +113,8 @@
       #3.1.5 If any MRAN in snowball found, install them
         if (n.mran>0)
         {  
-        message2("\ngroundhog says: will now look for ",n.mran, " binary packages in MRAN (a Microsoft archive storing binaries of older packages).")
-        message1("MRAN is slower than CRAN for binaries, but still faster than the alternative: *source* packages from CRAN.")
+        message2("\ngroundhog says: will now look for ",n.mran, " binary packages in MRAN (a Microsoft archive of CRAN).")
+        message1("MRAN is slower than CRAN, but faster than installing from source.")
         
       #3.2 Setup URL to use as repository for each package
         repos.mran <- paste0("https://mran.microsoft.com/snapshot/", snowball.mran$MRAN.date, "/")
@@ -347,11 +352,6 @@
                     exit()
                     }
                 
-                
-                
-      #5 Assume success at this point, load it
-                .libPaths(c(.libPaths(), snowball$installation.path[k] ))
-                loadNamespace(snowball$pkg[k], lib.loc =  snowball$installation.path[k]) 
                 
       } #End loop over snowball        
 
