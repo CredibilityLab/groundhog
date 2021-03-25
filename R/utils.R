@@ -5,7 +5,12 @@ get.vrs <- function(x) substr(x, regexpr("_", basename(x)) + 1, nchar(x))
 # Is pkg_vrs installed (within same R-minor version)?
 #
 is.pkg_vrs.installed <- function(pkg, vrs) {
-  (get.installed_path(pkg, vrs) %in% get.pkg_search_paths(pkg, vrs))
+  #Assume base package is installed
+  if (pkg %in% base_pkg()) {
+    return(TRUE)
+    } else {
+    (get.installed_path(pkg, vrs) %in% get.pkg_search_paths(pkg, vrs))
+    } #End else
 }
 
 # Format Y-M-D as date

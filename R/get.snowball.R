@@ -30,22 +30,23 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
   while (nrow(dep12) > 0) {
     k <- k + 1
     indep.rows <- !(dep12$dep2 %in% dep12$pkg) ## Find dependencies without dependencies  TRUE/FALSE vector
+    
     # Add those dependencies to the list of independencies
-    indepk <- unique(as.character(dep12$dep2[indep.rows]))
-    indep <- c(indep, indepk)
+      indepk <- unique(as.character(dep12$dep2[indep.rows]))
+      indep <- c(indep, indepk)
     # Drop those rows from both
-    dep12 <- dep12[!indep.rows, ]
+      dep12 <- dep12[!indep.rows, ]
     # Safety valve in case loop impossible to end
-    if (k == 50000) {
-      break
+      if (k == 50000) {
+        break
     }
   }
   # 3) Add pkg at the end
   snowball.pkg <- c(indep, pkg)
 
   # 4) Get the version of each package
-  snowball.vrs <- vapply(snowball.pkg, get.version, date, FUN.VALUE = character(1)) 
-  snowball.pkg_vrs <- paste0(snowball.pkg, "_", snowball.vrs)
+    snowball.vrs <- vapply(snowball.pkg, get.version, date, FUN.VALUE = character(1)) 
+    snowball.pkg_vrs <- paste0(snowball.pkg, "_", snowball.vrs)
 
   # 5 Snowball table, with installed | CRAN | MRAN | TARBALL | INSTALLATION TIME
 
@@ -53,10 +54,10 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
   # - else, install from MRAN if possible
   # - else, install from source
 
-  snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs) # 5.1 Installed?  TRUE/FALSE
+    snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs) # 5.1 Installed?  TRUE/FALSE
 
   # Vector with paths
-  snowball.installation.path <- mapply(get.pkg_search_paths, snowball.pkg, snowball.vrs)
+    snowball.installation.path <- mapply(get.pkg_search_paths, snowball.pkg, snowball.vrs)
 
   # No need to find the locations if everything is already installed. This also
   # allows us to run offline in easy cases
@@ -77,14 +78,9 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
   }
 
   
-  
-  #if (max(toc("R")$Version) == get.rversion()) {
     snowball.CRAN <- snowball.pkg_vrs %in% get.current.packages("binary")$pkg_vrs
-  #} else {
-  #  snowball.CRAN <- rep_len(FALSE, length(snowball.pkg_vrs))
-  #}
-  snowball.MRAN.date <- as.Date(sapply(snowball.pkg_vrs, get.date.for.install.binary), origin = "1970-01-01") # 5.3 Binary date in MRAN?
-  snowball.MRAN.date <- as.DateYMD(snowball.MRAN.date)
+    snowball.MRAN.date <- as.Date(sapply(snowball.pkg_vrs, get.date.for.install.binary), origin = "1970-01-01") # 5.3 Binary date in MRAN?
+    snowball.MRAN.date <- as.DateYMD(snowball.MRAN.date)
 
   # IF force.source==TRUE then all packages will come from source, else, figure out where from
   if (force.source) {
@@ -94,6 +90,9 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
     snowball.from <- ifelse(snowball.MRAN, "MRAN", "source") # MRAN if available, if not source
     snowball.from <- ifelse(snowball.CRAN, "CRAN", snowball.from) # Replace MRAN if CRAN is available and using most recent version of R
   }
+    
+  
+      
 
   # Installation time from source
   snowball.time <- round(mapply(get.installation.time, snowball.pkg, snowball.vrs), 0)

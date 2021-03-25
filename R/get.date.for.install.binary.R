@@ -2,11 +2,23 @@
 
 
 get.date.for.install.binary <- function(pkg_vrs) {
+  
+  
   binary.date <- as.DateYMD("1970-01-01")
-  # R being used
-  r.using.full <- get.rversion() # Get current
-  r.using.major <- R.version$major
-  r.using.minor <- strsplit(R.version$minor, "\\.")[[1]][1]
+  
+  #0 REturn 1970-01-01  if it is a base package, 
+    pkg <- get.pkg(pkg_vrs)
+    if (pkg %in% base_pkg()) 
+      {
+      return(binary.date)
+      }
+      
+      
+  
+  #0.5 R being used
+    r.using.full <- get.rversion() # Get current
+    r.using.major <- R.version$major
+    r.using.minor <- strsplit(R.version$minor, "\\.")[[1]][1]
 
   #1 Find R1 and R2 (first and last dates with the current vesion of R (ignoring patch)
   

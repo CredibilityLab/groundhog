@@ -4,7 +4,16 @@
 
 get.version <- function(pkg, date, patch = c("current", "max")) {
 
+  #if it is a base package, return the installed version
+    if (pkg %in% base_pkg()) {
+        ip <- data.frame(installed.packages())    
+        ip.pkg <- subset(ip, Package==pkg)
+        return(ip.pkg$Version)
+        }
+    
   patch <- match.arg(patch)
+  
+  
 
   # 1. Get toc
     dfk <- toc(pkg)
