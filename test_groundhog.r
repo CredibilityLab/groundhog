@@ -20,7 +20,11 @@
   #date to use for testing individual packages
     test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
 
+  
+    #Install older pwr package
+    install.packages('https://cran.r-project.org/src/contrib/Archive/pwr/pwr_1.2-2.tar.gz',repos=NULL,type='source')
 
+    
   #Test conflict 1 - another version  already attached
    library(groundhog)
    library('pwr')
@@ -30,7 +34,10 @@
   #Test conflict 2 - other versions of package loaded, cannot attach, later offered to uninstall 
                        #(since it is the package being called with conflict no offer to load early or ignore conflict, only to uninstall)
     library(groundhog)
-    install.packages('https://cran.r-project.org/src/contrib/Archive/pwr/pwr_1.2-2.tar.gz',repos=NULL,type='source')
+    groundhog.library('pwr', "2017-01-01")
+    rnorm(100)
+    rbeta(100,4,3)
+    plot(rnorm(100),rnorm(100))
 
     pwr::pwr.t.test(n=50,d=.4)  #load pkg
     groundhog.library('pwr',  test.day) #Default error ctrl-shift-f10
