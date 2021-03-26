@@ -272,9 +272,9 @@
             "You are using R-", rv$r.using.full, ", but on (","'", date, "') the current version was R-", rv$r.need.majmin, ".\n",
             "Across different R versions, the same code can give different results or not\n",
             "work at all. You may want to either change the date you entered, or the version of R you use.\n",
-            " - To change a date, choose something after '",get.r.majmin.release(),"'\n",
-            " - Or use R-",rv$r.need.full, "  (instructions for running older R versions: http://groundhogr.com/many)\n\n")
-          message2("--->>> Type 'OK' to continue anyway, type anything else to stop. <<<---")
+            " - To change the date, choose something after '",get.r.majmin.release(),"'\n",
+            " - For help running R-",rv$r.need.full, ", see http://groundhogr.com/many)\n\n")
+          #message2("--->>> Type 'OK' to continue anyway, type anything else to stop. <<<---")
            
           #While loop for readline to avoid submitted code to be interpreted as the answer
             len.answer <- 0

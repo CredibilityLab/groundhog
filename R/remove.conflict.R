@@ -5,8 +5,6 @@
       {
     
         #Currently installed packages
-            #original_lib_path <- show.orig_lib_paths()
-			      #original_lib_path <- .libPaths()
             original_lib_path <- .pkgenv[["orig_lib_paths"]]
             installed.packages_current <- data.frame(utils::installed.packages(noCache = TRUE, lib.loc=original_lib_path),stringsAsFactors = FALSE)
             installed.pkg_vrs <- paste0(installed.packages_current$Package,"_",installed.packages_current$Version)
@@ -37,7 +35,7 @@
             #Add new one
               uninstalled.conflicts <- rbind(uninstalled.conflicts, new.uninstall.conflicts)
               
-            #Confimration
+            #Confirmation
               message2()
               message1(
                     "Type OK to uninstall the following packages from your local non-groundhog library:",
