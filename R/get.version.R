@@ -22,7 +22,7 @@ get.version <- function(pkg, date, patch = c("current", "max")) {
   # 2.2 Check if date request comes after first date for that package
     if (dfk$Published[1] > date) {
       message2()
-      message1("According to our records, the package: '", pkg, "' was not yet available on CRAN on '", date, "'")
+      message1("According to our records, the package '", pkg, "' was not yet available on CRAN on '", date, "'")
       exit()
     }
     
