@@ -234,3 +234,18 @@ get.r.majmin <- function() {
             exit()
           }
   }#End is valid date
+  
+  #Clean up prompt asnwer, lowercase and no quotes
+  strip.prompt <- function(x)
+  {
+     x <- gsub('`' ,"", x)
+     x <- gsub('"' ,"", x)
+     x <- gsub("'" ,"", x)
+     x <- tolower(x)
+     x
+     }
+
+  
+  
+    
+    

@@ -20,10 +20,9 @@ get.active <- function() {
   
   #Add base packages to those active
   active.base.pkg <- utils::sessionInfo()$basePkgs
-  active.base.vrs <- vapply(active.base.pkg, get.version, date, FUN.VALUE = character(1)) 
+  active.base.vrs <- as.character(sapply(active.base.pkg, get.version, date) )
   active.pkg <- c(active.pkg, active.base.pkg)
   active.vrs <- c(active.vrs, active.base.vrs)
-  
   
   active.pkg_vrs <- paste0(active.pkg, "_", active.vrs) # merge to pkg_vrs
 

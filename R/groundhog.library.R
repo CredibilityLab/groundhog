@@ -18,7 +18,9 @@
 #'   installing binary from CRAN or MRAN and instead download source file and install it.
 #'@param force.install logical (defaults to `FALSE`). When set to `TRUE`, will delete  
 #'   existing package files in groundhog folder, and install anew.
-#'@return a character vector containing all active packages for the session,
+#'@param tolerate.R.version character containing an R version which groundhog will not throw 
+#'   an error for using, even if the date enter corresponds to more recent major R release.  
+#'#'@return a character vector containing all active packages for the session,
 #'   with their version number, under the format `pkg_vrs`.
 #'@examples
 #' \dontrun{
@@ -26,6 +28,10 @@
 #'
 #' pkgs <- c('pwr','metafor')
 #' groundhog.library(pkgs, "2020-02-12")
+#' 
+#' #Allow using R 3.6.x despite entering a date that corresponds to R 4.0
+#' groundhog.library('rio', '2021-04-12', tolerate.R.version='3.6')
+#' 
 #' }
 #'
 #' @importFrom utils capture.output
@@ -38,12 +44,11 @@
                               include.suggests = FALSE,
                               ignore.deps=c(),
                               force.source = FALSE,
-                              force.install = FALSE) {
+                              force.install = FALSE,
+                              tolerate.R.version=""
+                               )
+    {
 
-  
-    
-          
-    
   #0.1) Is date valid?
         validate.date(date) #Function defined in utils.R
     
@@ -103,20 +108,19 @@
       active=get.active()
       
   
-  
     #1.1 Get version of requested package
         vrs <- get.version(pkg, date)
         pkg_vrs <- paste0(pkg, "_", vrs)
-        
+      
 
     #1.2 Stop if  pkg_vrs already attached
         attached.list= utils::sessionInfo()$otherPkgs
         attached.pkg <- names(attached.list)
         attached.vrs <- lapply(attached.list, function(x) x$Version)
         
-      #Add base backages  
+      #Add base packages  
         attached.base.pkg <- utils::sessionInfo()$basePkgs
-        attached.base.vrs <- vapply(attached.base.pkg, get.version, date, FUN.VALUE = character(1)) 
+        attached.base.vrs <- as.character(sapply(attached.base.pkg, get.version, date)) 
         attached.pkg <- c(attached.pkg, attached.base.pkg)
         attached.vrs <- c(attached.vrs, attached.base.vrs)
         attached.pkg_vrs <- paste0(attached.pkg , "_" , attached.vrs)
@@ -155,7 +159,7 @@
         {
          #Recommended
              ip <- data.frame(utils::installed.packages(),stringsAsFactors = FALSE)
-             recommended.pkgs <- unique(subset(ip, ip$Priority=="recommended")$Package) #unique becuase there may be two versions of the same package in different libraries
+             recommended.pkgs <- unique(subset(ip, ip$Priority=="recommended")$Package) #unique because there may be two versions of the same package in different libraries
          
           attachNamespace(pkg)
           message1("groundhog says: succesfully attached '" , pkg , "'")
@@ -195,7 +199,7 @@
   #2 Check R version
     rv <- r.version.check(date) # Get version of r being used and needed
     
-    #If using version of R too advance for groundhog, give error and ask to add to cran.toc.rds by hand
+    #If using version of R too advance for groundhog
       R.toc <- toc("R")
       if (package_version(max(R.toc$Version)) < package_version(rv$r.using.majmin))
           {
@@ -231,18 +235,36 @@
     
     #2.1 Is date for a later major R? STOP
 
-    if (package_version(rv$r.using.majmin) < package_version(rv$r.need.majmin)) {
+    if ((package_version(rv$r.using.majmin) < package_version(rv$r.need.majmin)) & 
+        (rv$r.using.majmin!=tolerate.R.version & rv$r.using.full!=tolerate.R.version)) 
+      {
       message2()
       message(
-        "You are using R-", rv$r.using.full, " and the current R version for the data you entered:",
+        "You are using R-", rv$r.using.full, " and the current R version for the date you entered:",
         "'", date, "' was R-", rv$r.need.majmin, ".\n",
-        "To ensure reproducibility you must use groundhog.library() with a version of R ",
-        "that is as least\nas recent as the entered date (i.e., R>=", rv$r.need.majmin, ")\n",
+        "It is recommended that you use the matching version of R, but you may bypass this error message\n",
+        "by adding: `tolerate.R.version='",rv$r.using.majmin,"'` as an option to your groundhog.library() call.",
         "\n\n   ----------------- Package '", pkg, "' NOT LOADED ----------------"
       )
       exit()
     }
     
+        
+    #2.1.5 throw warning if using R that is too old, but explicitly allowingg via command 
+    if ((package_version(rv$r.using.majmin) < package_version(rv$r.need.majmin)) & 
+        (rv$r.using.majmin==tolerate.R.version | rv$r.using.full==tolerate.R.version)) {
+          message2()
+          message(
+           "You are using R-", rv$r.using.full, " and the current R version for the data you entered:",
+           "'", date, "' was R-", rv$r.need.majmin, ".\n",
+           "Usually this results in an error and groundhog stops processing the request, but\n",
+           "you are receiving only a warning because you explicitly allowed version 'R-", tolerate.R.version, "'.\n"
+          )
+            
+            
+         }
+
+        
     
     #2.2 Is date for a previous major R? Warn
     
@@ -270,33 +292,32 @@
           message2()
           message1(
             "You are using R-", rv$r.using.full, ", but on ","'", date, "' the current version was R-", rv$r.need.majmin, ".\n",
-            "Across different R versions, the same code can give different results or not\n",
-            "work at all. You may want to either change the date you entered, or the version of R you use.\n",
+            "Old packages can take longer to install, and old code in general and old packages\n",
+            "in particular can give different results, or not run at all, in newer R versions.\n",
+            "You may want to either change the date you entered or the version of R you use.\n",
             " - To change the date, choose something after '",get.r.majmin.release(),"'\n",
-            " - For instructios to run older versions of R (e.g. R-",rv$r.need.full, "), see http://groundhogr.com/many\n\n")
-          #message2("--->>> Type 'OK' to continue anyway, type anything else to stop. <<<---")
-           
+            " - For instructions to run older versions of R (e.g. R-",rv$r.need.full, "), see http://groundhogr.com/many\n\n")
+          
           #While loop for readline to avoid submitted code to be interpreted as the answer
             len.answer <- 0
-            all.text <-''
+            text <-''
             j <- 1 #counter of times message is shown
-            while (len.answer <1 | len.answer > 5)  #assume any answer longer than 5 characters is actually code
+            while (strip.prompt(text)!="x" & strip.prompt(text)!="ok")  
             {
-              prompt.text <- paste0("Type OK to ignore this warning about the date for '", pkg , "'. Type anything else to stop. >")
+              prompt.text <- paste0("Type 'OK' to ignore this warning about the date for {", pkg , "}, or type 'X' to stop >")
               text <- readline(prompt.text)
-              len.answer <- nchar(text)
-              if (len.answer>=5) {
-                  
+              if (strip.prompt(text) !="ok" & strip.prompt(text) != "x") {
+                    
                   message(j , ") You answered: '", text , "'") 
-                  message("   To ensure you are actively answering this prompt, please answer in less than 5 characters.\n")
+                  message("   To ensure you are actively answering, only 'OK' and 'X' are accepted as responses\n")
                   j<-j+1 #Add to counter of msgs rejected
                 } #end if
             } #End while
           
             
           #If they press stop, don't load/install package
-            if (text!='ok' & text!="OK" & text!="'ok'" & text!="'OK'") {
-              message("You did not type OK, so installation has stopped.")
+            if (strip.prompt(text)=="x") {
+              message("You typed 'X'; the attempt to load '",pkg,"' has stopped.")
               exit()
               } else {
               message1("OK. We will continue. This warning will not be shown again within 30 minutes.\n")
@@ -313,12 +334,12 @@
 
   #3 Reset .libpaths()
 #      #Grab existing ones  
-#         orig_lib_paths <- .libPaths()
+         orig_lib_paths <- .libPaths()
 #      #actively remove default library paths to prevent loading packages from local library
-# 	      .libPaths("")  
+ 	      .libPaths("")  
 # 	   #return to default path upon exiting
-#          on.exit(.libPaths(orig_lib_paths))
-#        
+          on.exit(.libPaths(orig_lib_paths))
+        
 
           
        
@@ -378,7 +399,7 @@
         if (!snowball$pkg[k] %in% base_pkg())
           {
           loadNamespace(snowball$pkg[k], lib.loc = snowball$installation.path[k])
-          #.libPaths(c( snowball$installation.path[k], .libPaths() ))
+          .libPaths(c( snowball$installation.path[k], .libPaths() ))
           }
 
         if (snowball$pkg[k] %in% attach.all)
@@ -424,4 +445,4 @@
   #12 output
     invisible(loaded_pkg_vrs)
   }
-}#ENd elseif
+} #ENd elseif

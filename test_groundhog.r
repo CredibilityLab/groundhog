@@ -35,14 +35,18 @@
                        #(since it is the package being called with conflict no offer to load early or ignore conflict, only to uninstall)
     library(groundhog)
     groundhog.library('pwr', "2017-01-01")
-    rnorm(100)
-    rbeta(100,4,3)
-    plot(rnorm(100),rnorm(100))
-
+    #run this to test teh prompt loop
+    
     pwr::pwr.t.test(n=50,d=.4)  #load pkg
     groundhog.library('pwr',  test.day) #Default error ctrl-shift-f10
     groundhog.library('pwr',  test.day) #2nd time, offer to uninstall, accept it and see if it works
-    
+      rnorm(100)
+      rbeta(100,4,3)
+      plot(rnorm(100),rnorm(100))
+
+      
+      noquote("a")
+      
     see.unistalled.conflicts()
     reinstall.conflicts()
     

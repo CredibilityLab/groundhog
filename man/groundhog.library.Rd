@@ -11,7 +11,8 @@ groundhog.library(
   include.suggests = FALSE,
   ignore.deps = c(),
   force.source = FALSE,
-  force.install = FALSE
+  force.install = FALSE,
+  tolerate.R.version = ""
 )
 }
 \arguments{
@@ -39,10 +40,11 @@ installing binary from CRAN or MRAN and instead download source file and install
 
 \item{force.install}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will delete
 existing package files in groundhog folder, and install anew.}
-}
-\value{
-a character vector containing all active packages for the session,
-with their version number, under the format \code{pkg_vrs}.
+
+\item{tolerate.R.version}{character containing an R version which groundhog will not throw
+an error for using, even if the date enter corresponds to more recent major R release.
+#'@return a character vector containing all active packages for the session,
+with their version number, under the format \code{pkg_vrs}.}
 }
 \description{
 Load, attach, and automatically install if needed, packages as available on set date
@@ -53,6 +55,10 @@ groundhog.library("magrittr", "2020-07-12")
 
 pkgs <- c('pwr','metafor')
 groundhog.library(pkgs, "2020-02-12")
+
+#Allow using R 3.6.x despite entering a date that corresponds to R 4.0
+groundhog.library('rio', '2021-04-12', tolerate.R.version='3.6')
+
 }
 
 }

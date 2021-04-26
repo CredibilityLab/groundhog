@@ -44,7 +44,7 @@ get.groundhog.folder <- function() {
         if (consent == FALSE)
           {
           
-          message("You entred '",answer,"'. Only if you enter 'OK' can you use groundhog.library()")
+          message("You typed '",answer,"'. Only if you type 'OK' can you use groundhog.library()")
           exit()
           }
     
@@ -104,6 +104,7 @@ set.groundhog.folder <- function(path) {
     path_file_storing_groundhog_library_location <- paste0(main_folder ,"current_groundhog_folder.txt")
     
   #Save the cookie
+    path <- trimws(path)
     cat(path, file = path_file_storing_groundhog_library_location)
   
   #Assign it to the live environment
