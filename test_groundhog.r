@@ -24,31 +24,32 @@
     #Install older pwr package
     install.packages('https://cran.r-project.org/src/contrib/Archive/pwr/pwr_1.2-2.tar.gz',repos=NULL,type='source')
 
+   
+ #Test taht not answring prompt leads to loop taht prevents other code from being executed
+      library(groundhog)
+      groundhog.library('pwr', "2017-01-01")
+      #run this to test the prompt loop
     
+     
   #Test conflict 1 - another version  already attached
    library(groundhog)
    library('pwr')
    groundhog.library('pwr',test.day)  #error, not attached, even after repeated, same message
 
+   reinstall.conflicts("2021-04-01")
+   
    
   #Test conflict 2 - other versions of package loaded, cannot attach, later offered to uninstall 
                        #(since it is the package being called with conflict no offer to load early or ignore conflict, only to uninstall)
     library(groundhog)
-    groundhog.library('pwr', "2017-01-01")
-    #run this to test teh prompt loop
-    
     pwr::pwr.t.test(n=50,d=.4)  #load pkg
     groundhog.library('pwr',  test.day) #Default error ctrl-shift-f10
     groundhog.library('pwr',  test.day) #2nd time, offer to uninstall, accept it and see if it works
       rnorm(100)
       rbeta(100,4,3)
       plot(rnorm(100),rnorm(100))
-
-      
-      noquote("a")
-      
     see.unistalled.conflicts()
-    reinstall.conflicts()
+    reinstall.conflicts('2021-04-01')
     
     
   #Test conflict 3 - same as 2, but conflict triggered by a loaded dependency rather than target package
@@ -88,13 +89,13 @@
 #2) Folder with space names
    library('groundhog')
     current.folder <- get.groundhog.folder()
-    set.groundhog.folder(paste0(current.folder," t e m p "))
+    set.groundhog.folder(paste0(current.folder," a  a  a  a "))
     groundhog.library('pwr',test.day)
-    set.groundhog.folder(current.folder)
-    
+    set.groundhog.folder("c:/dropbox/groundhog_folder")
     
 #3) Source a script which uses groundhog with a vector of packages
-    source("http://groundhogr.com/source_file_for_test_groundhog.r")
+   library('groundhog')
+   source("http://groundhogr.com/source_file_for_test_groundhog.r")
     
 ########################################################################
 #SET OF TESTS 3 -  INSTALLATION OF PACKAGES IN RANDOM ORDER
@@ -224,5 +225,14 @@
     test.groundhog(500:525)       #install the 500-525 most downloaded packages
     test.groundhog(-10, seed=29)  #install 10 random packages available right now for this version of R
 
+    
+    
+#SET 4 ABILITY TO USE DIFFERNT R VERSION (older than desired date)
+    #Run this in R-3.6.3
+    library(groundhog)
+    groundhog.library('pwr' , '2021-04-01'), tolerate.R.version = '3.6.3')
+    
+    
+    
     
     
