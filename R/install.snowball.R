@@ -164,7 +164,7 @@
                       mran.binaries[k,] <-mran.binaries_rowk  
             #If file did not download 
                   } else {
-                    good.mran.file <- FALSE 
+                    good.mran.file[k] <- FALSE 
                   } 
             #IF file was not the right version
             } else {

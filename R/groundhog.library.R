@@ -20,7 +20,7 @@
 #'   existing package files in groundhog folder, and install anew.
 #'@param tolerate.R.version character containing an R version which groundhog will not throw 
 #'   an error for using, even if the date enter corresponds to more recent major R release.  
-#'#'@return a character vector containing all active packages for the session,
+#'@return a character vector containing all active packages for the session,
 #'   with their version number, under the format `pkg_vrs`.
 #'@examples
 #' \dontrun{
@@ -235,15 +235,14 @@
     
     #2.1 Is date for a later major R? STOP
 
-    if ((package_version(rv$r.using.majmin) < package_version(rv$r.need.majmin)) & 
-        (rv$r.using.majmin!=tolerate.R.version & rv$r.using.full!=tolerate.R.version)) 
+    if ((package_version(rv$r.using.majmin) < package_version(rv$r.need.majmin)) &  rv$r.using.full!=tolerate.R.version) 
       {
       message2()
       message(
         "You are using R-", rv$r.using.full, " and the current R version for the date you entered:",
         "'", date, "' was R-", rv$r.need.majmin, ".\n",
         "It is recommended that you use the matching version of R, but you may bypass this error message\n",
-        "by adding: `tolerate.R.version='",rv$r.using.majmin,"'` as an option to your groundhog.library() call.",
+        "by adding: `tolerate.R.version='",rv$r.using.full,"'` as an option to your groundhog.library() call.",
         "\n\n   ----------------- Package '", pkg, "' NOT LOADED ----------------"
       )
       exit()
