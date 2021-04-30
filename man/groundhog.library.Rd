@@ -42,9 +42,11 @@ installing binary from CRAN or MRAN and instead download source file and install
 existing package files in groundhog folder, and install anew.}
 
 \item{tolerate.R.version}{character containing an R version which groundhog will not throw
-an error for using, even if the date enter corresponds to more recent major R release.
-#'@return a character vector containing all active packages for the session,
-with their version number, under the format \code{pkg_vrs}.}
+an error for using, even if the date enter corresponds to more recent major R release.}
+}
+\value{
+a character vector containing all active packages for the session,
+with their version number, under the format \code{pkg_vrs}.
 }
 \description{
 Load, attach, and automatically install if needed, packages as available on set date

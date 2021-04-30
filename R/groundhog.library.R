@@ -331,25 +331,28 @@
         
           
 
-  #3 Reset .libpaths()
-#      #Grab existing ones  
-         orig_lib_paths <- .libPaths()
-#      #actively remove default library paths to prevent loading packages from local library
- 	      .libPaths("")  
-# 	   #return to default path upon exiting
-          on.exit(.libPaths(orig_lib_paths))
-        
-
           
        
-  #4 Update cran.toc() if needed for entered date 
+  #3 Update cran.toc() if needed for entered date 
       update_cran.toc_if.needed(date)
 
-  #5 GET SNOWBALL
+  #4 GET SNOWBALL
     snowball <- get.snowball(pkg, date, 
                              include.suggests=include.suggests, 
                              force.source=force.source)
     
+    
+    
+  
+  # Reset .libpaths()
+      #Grab existing ones  
+         orig_lib_paths <- .libPaths()
+      #actively remove default library paths to prevent loading packages from local library
+ 	      .libPaths("")  
+ 	    #Assign the set of paths to be used as libraries
+ 	      .libPaths(snowball$installation.path)
+ 	   #return to default path upon exiting
+          on.exit(.libPaths(orig_lib_paths))
 
 
   #6 CHECK FOR CONFLICT SNOWBALL <->ACTIVE PACKAGES
@@ -398,7 +401,6 @@
         if (!snowball$pkg[k] %in% base_pkg())
           {
           loadNamespace(snowball$pkg[k], lib.loc = snowball$installation.path[k])
-          .libPaths(c( snowball$installation.path[k], .libPaths() ))
           }
 
         if (snowball$pkg[k] %in% attach.all)
