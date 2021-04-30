@@ -157,8 +157,9 @@ base_pkg <- function() {
 ignore.deps_default <- function() {
   
   #Packages r-studio tends to load automatically
-      Rstudio.deps <- c("testthat", 
-        "rstudioapi",
+      Rstudio.deps <- c(
+        #"testthat", 
+        #"rstudioapi",
         "knitr",     
         "rmarkdown", 
         "xfun"       
