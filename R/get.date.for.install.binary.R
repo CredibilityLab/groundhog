@@ -20,7 +20,7 @@ get.date.for.install.binary <- function(pkg_vrs) {
     r.using.major <- R.version$major
     r.using.minor <- strsplit(R.version$minor, "\\.")[[1]][1]
 
-  #1 Find R1 and R2 (first and last dates with the current vesion of R (ignoring patch)
+  #1 Find R1 and R2 (first and last dates with the current version of R (ignoring patch)
   
     #1.1 Get all R releases
       R.toc <- toc("R") # Get R toc
@@ -58,14 +58,13 @@ get.date.for.install.binary <- function(pkg_vrs) {
       date.pkg1 <- pkg.toc[match(vrs,pkg.toc$Version),]$Published    #date when desired version was released
       date.pkg2 <- pkg.toc[match(vrs,pkg.toc$Version)+1,]$Published  #date when next version was released
       
-      #If no next release, use 'today' minus two days
+      #If no next release, use highest date in cran.toc.rds
       if (is.na(date.pkg2)) {
-          date.pkg2 <- Sys.Date()-2
+          cran.toc <- .pkgenv[["cran.toc"]]
+          date.pkg2 <- max(cran.toc$Published)   
           }
       
-      
-      
-  #3 Find range of values when package and R version match
+    #3 Find range of values when package and R version match
       #3.1 Start period
         D1 <- max(date.R1, date.pkg1)
         D2 <- min(date.R2, date.pkg2)
