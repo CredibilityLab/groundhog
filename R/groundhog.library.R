@@ -344,16 +344,26 @@
     
     
   
-  # Reset .libpaths()
-      #Grab existing ones  
+  #5 Set path to find installed packages during installation .libpaths()
+      
+      #Grab existing path(s)
          orig_lib_paths <- .libPaths()
+         
       #actively remove default library paths to prevent loading packages from local library
  	      .libPaths("")  
+ 	      
  	    #Assign the set of paths to be used as libraries
- 	      .libPaths(snowball$installation.path)
- 	   #return to default path upon exiting
-          on.exit(.libPaths(orig_lib_paths))
-
+ 	      #Create directories if they don't exist, otherwise libpath won't create it
+ 	        for (pathk in snowball$installation.path) {
+ 	          dir.create(pathk, recursive = TRUE, showWarnings = FALSE)
+ 	          }
+ 	      
+ 	      #Add all paths
+ 	       .libPaths(snowball$installation.path)
+ 	      
+ 	      #return to default path upon exiting
+           on.exit(.libPaths(orig_lib_paths))
+ 	      
 
   #6 CHECK FOR CONFLICT SNOWBALL <->ACTIVE PACKAGES
       check.snowball.conflict(snowball, force.install,ignore.deps,date)  
