@@ -87,11 +87,11 @@ get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
   pending <- get.dependencies(pkg, date, include.suggests = include.suggests) # include.suggests=TRUE means that suggested dependencies and their dependencies are installed.
 
   if (length(pending) == 0) {
-    return(data.frame(pkg = character(), dep2 = character()))
+    return(data.frame(pkg = character(), dep2 = character(),stringsAsFactors = FALSE))
   }
 
   # [b] dep12: data.frame with two columns, pkg-left, dependency-right, for snowball loading
-  dep12 <- data.frame(pkg = pkg, dep2 = pending)
+  dep12 <- data.frame(pkg = pkg, dep2 = pending, stringsAsFactors = FALSE)
 
   # 5.2 Loop over pending, adding to dep12, and both adding and subtracting from pending till it's empty
   k <- 1
