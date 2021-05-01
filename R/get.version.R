@@ -6,7 +6,7 @@ get.version <- function(pkg, date, patch = c("current", "max")) {
 
   #if it is a base package, return the installed version
     if (pkg %in% base_pkg()) {
-        ip <- data.frame(utils::installed.packages())    
+        ip <- data.frame(utils::installed.packages(), stringsAsFactors = FALSE)    
         ip.pkg <- ip[ip$Package == pkg,]
         return(ip.pkg$Version)
         }
