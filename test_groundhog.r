@@ -155,6 +155,10 @@
         #2.5 Sort
           packages <- packages[order(-packages$downloads),]
           
+        #2.5.1 drop gmailr, it creates error with message()
+          packages <- packages[packages$pkg!='gmailr',]
+  
+          
         #2.6 Keep those selected
           packages <- packages[set.of.packages,]$pkg
           
