@@ -337,13 +337,8 @@
       update_cran.toc_if.needed(date)
 
   #4 GET SNOWBALL
-    snowball <- get.snowball(pkg, date, 
-                             include.suggests=include.suggests, 
-                             force.source=force.source)
+    snowball <- get.snowball(pkg, date, include.suggests=include.suggests, force.source=force.source)
     
-    
-    
-  
   #5 Set path to find installed packages during installation .libpaths()
       
       #Grab existing path(s)
@@ -400,10 +395,10 @@
    #10.2 Get the needed DEPEND dependencies so that they are attached
       attach.all <- unique(unlist(strsplit(cran.toc.snowball$Depends, ",")))
   
-    #10.3 add package itself to attach list
+  #10.4 add package itself to attach list
       attach.all <- c(attach.all, pkg)
       
-   #10.4 Add to path and attach if needed
+   #10.5 Add to path and attach if needed
        for (k in 1:n)
         {
         
@@ -415,11 +410,11 @@
 
         if (snowball$pkg[k] %in% attach.all)
           { 
-            attached.so_far <- names(utils::sessionInfo()$otherPkgs)
+            attached.so_far <- (.packages())
             if (!snowball$pkg[k] %in% attached.so_far) 
             {
-            attachNamespace(snowball$pkg[k])           
             message1("Attaching ",snowball$pkg_vrs[k])
+            attachNamespace(snowball$pkg[k])           
             } #End if not attached
           } #End if it is in the to-attach list
       
