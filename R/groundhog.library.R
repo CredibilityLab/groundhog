@@ -1,6 +1,16 @@
-#' Load, attach, and automatically install if needed, packages as available on set date
-#'
-#'@param pkg character string or vector with name of target package(s), need not be in quotes.
+#' Load CRAN packages, and their dependencies, as current on given date 
+#' 
+#' Groundhog maintains a separate local package library where is stores 
+#' version-controlled packages, with multiple versions of the same package saved side-by-side. 
+#' The `date` argument in the `groundhog.library()` function determines
+#' the version of the package that is loaded (the most recently published version on CRAN on that date).
+#' If that version of the package is not available in the local `groundhog` library, 
+#' it is automatically installed. `groundhog.library()` thus substitutes both `library()` 
+#' and `install.packages()`. No stable changes to how R manages packages are made (e.g., to the rprofile
+#' or the local non-groundhog library folder. To discontinue relying on `groundhog` for package management, simply go back to 
+#' executing the `install.packages()` and `library()` functions.
+#'  
+#'@param pkg character string or vector with name of target package(s). Single package names need not be in quotes.
 #'@param date character string  (yyyy-mm-dd), or date value, with the date which determines the 
 #'version of the package, and all dependencies, to be loaded (and installed if needed). The most recent
 #'date accepted is 2 days prior to when the code is executed.
@@ -18,8 +28,9 @@
 #'   installing binary from CRAN or MRAN and instead download source file and install it.
 #'@param force.install logical (defaults to `FALSE`). When set to `TRUE`, will delete  
 #'   existing package files in groundhog folder, and install anew.
-#'@param tolerate.R.version character containing an R version which groundhog will not throw 
-#'   an error for using, even if the date enter corresponds to more recent major R release.  
+#'@param tolerate.R.version optional character string containing an R version which 
+#' `groundhog.library()` will not throw an error for using, even if the date entered 
+#' corresponds to more recent major R release.  
 #'@return a character vector containing all active packages for the session,
 #'   with their version number, under the format `pkg_vrs`.
 #'@examples
@@ -36,6 +47,7 @@
 #'
 #' @importFrom utils capture.output
 #'
+#' @details For more information about groundhog check out [groundhogr.com](http://groundhogr.com/org)
 #' @export
 #'
   groundhog.library <- function(

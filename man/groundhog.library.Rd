@@ -2,7 +2,7 @@
 % Please edit documentation in R/groundhog.library.R
 \name{groundhog.library}
 \alias{groundhog.library}
-\title{Load, attach, and automatically install if needed, packages as available on set date}
+\title{Load CRAN packages, and their dependencies, as current on given date}
 \usage{
 groundhog.library(
   pkg,
@@ -16,7 +16,7 @@ groundhog.library(
 )
 }
 \arguments{
-\item{pkg}{character string or vector with name of target package(s), need not be in quotes.}
+\item{pkg}{character string or vector with name of target package(s). Single package names need not be in quotes.}
 
 \item{date}{character string  (yyyy-mm-dd), or date value, with the date which determines the
 version of the package, and all dependencies, to be loaded (and installed if needed). The most recent
@@ -41,15 +41,27 @@ installing binary from CRAN or MRAN and instead download source file and install
 \item{force.install}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will delete
 existing package files in groundhog folder, and install anew.}
 
-\item{tolerate.R.version}{character containing an R version which groundhog will not throw
-an error for using, even if the date enter corresponds to more recent major R release.}
+\item{tolerate.R.version}{optional character string containing an R version which
+\code{groundhog.library()} will not throw an error for using, even if the date entered
+corresponds to more recent major R release.}
 }
 \value{
 a character vector containing all active packages for the session,
 with their version number, under the format \code{pkg_vrs}.
 }
 \description{
-Load, attach, and automatically install if needed, packages as available on set date
+Groundhog maintains a separate local package library where is stores
+version-controlled packages, with multiple versions of the same package saved side-by-side.
+The \code{date} argument in the \code{groundhog.library()} function determines
+the version of the package that is loaded (the most recently published version on CRAN on that date).
+If that version of the package is not available in the local \code{groundhog} library,
+it is automatically installed. \code{groundhog.library()} thus substitutes both \code{library()}
+and \code{install.packages()}. No stable changes to how R manages packages are made (e.g., to the rprofile
+or the local non-groundhog library folder. To discontinue relying on \code{groundhog} for package management, simply go back to
+executing the \code{install.packages()} and \code{library()} functions.
+}
+\details{
+For more information about groundhog check out \href{http://groundhogr.com/org}{groundhogr.com}
 }
 \examples{
 \dontrun{
