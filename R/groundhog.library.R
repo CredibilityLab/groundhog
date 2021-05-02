@@ -1,6 +1,6 @@
 #' Load CRAN packages, and their dependencies, as current on given date 
 #' 
-#' Groundhog maintains a separate local package library where is stores 
+#' Groundhog maintains a separate local package library where it stores 
 #' version-controlled packages, with multiple versions of the same package saved side-by-side. 
 #' The `date` argument in the `groundhog.library()` function determines
 #' the version of the package that is loaded (the most recently published version on CRAN on that date).
