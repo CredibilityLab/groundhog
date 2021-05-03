@@ -6,9 +6,10 @@
 #' the version of the package that is loaded (the most recently published version on CRAN on that date).
 #' If that version of the package is not available in the local `groundhog` library, 
 #' it is automatically installed. `groundhog.library()` thus substitutes both `library()` 
-#' and `install.packages()`. No stable changes to how R manages packages are made (e.g., to the rprofile
-#' or the local non-groundhog library folder. To discontinue relying on `groundhog` for package management, simply go back to 
-#' executing the `install.packages()` and `library()` functions.
+#' and `install.packages()`. No changes to how R manages packages are made (e.g., no change to 
+#' .libPaths(), to .Rprofile, or to R Studio global settings). 
+#' Therefore, to discontinue relying on `groundhog` for package management, all you do is go back to 
+#' executing the `install.packages()` and `library()` functions, instead of the `groundhog.library()` function.
 #'  
 #'@param pkg character string or vector with name of target package(s). Single package names need not be in quotes.
 #'@param date character string  (yyyy-mm-dd), or date value, with the date which determines the 
@@ -30,7 +31,7 @@
 #'   existing package files in groundhog folder, and install anew.
 #'@param tolerate.R.version optional character string containing an R version which 
 #' `groundhog.library()` will not throw an error for using, even if the date entered 
-#' corresponds to more recent major R release.  
+#' corresponds to a more recent major R release.  
 #'@return a character vector containing all active packages for the session,
 #'   with their version number, under the format `pkg_vrs`.
 #'@examples
@@ -40,8 +41,8 @@
 #' pkgs <- c('pwr','metafor')
 #' groundhog.library(pkgs, "2020-02-12")
 #' 
-#' #Allow using R 3.6.x despite entering a date that corresponds to R 4.0
-#' groundhog.library('rio', '2021-04-12', tolerate.R.version='3.6')
+#' #Allow using R 3.6.3 despite entering a date that corresponds to R 4.0
+#' groundhog.library('rio', '2021-04-12', tolerate.R.version='3.6.3')
 #' 
 #' }
 #'
