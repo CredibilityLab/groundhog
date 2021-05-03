@@ -2,7 +2,7 @@
 # Example
 # groundhog:::get.version("magrittr", "2018-02-12")
 
-get.version <- function(pkg, date, patch = c("current", "max")) {
+get.version <- function(pkg, date, patch = c("current")) {
 
   #if it is a base package, return the installed version
     if (pkg %in% base_pkg()) {
