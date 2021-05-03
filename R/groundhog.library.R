@@ -48,7 +48,7 @@
 #'
 #' @importFrom utils capture.output
 #'
-#' @details For more information about groundhog check out [groundhogr.com](http://groundhogr.com/org)
+#' @details For more information about groundhog check out [groundhogr.com](http://groundhogr.com)
 #' @export
 #'
   groundhog.library <- function(

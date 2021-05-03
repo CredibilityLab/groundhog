@@ -62,7 +62,7 @@ Therefore, to discontinue relying on \code{groundhog} for package management, al
 executing the \code{install.packages()} and \code{library()} functions, instead of the \code{groundhog.library()} function.
 }
 \details{
-For more information about groundhog check out \href{http://groundhogr.com/org}{groundhogr.com}
+For more information about groundhog check out \href{http://groundhogr.com}{groundhogr.com}
 }
 \examples{
 \dontrun{
