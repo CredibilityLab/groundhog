@@ -50,7 +50,7 @@ a character vector containing all active packages for the session,
 with their version number, under the format \code{pkg_vrs}.
 }
 \description{
-Groundhog maintains a separate local package library where is stores
+Groundhog maintains a separate local package library where it stores
 version-controlled packages, with multiple versions of the same package saved side-by-side.
 The \code{date} argument in the \code{groundhog.library()} function determines
 the version of the package that is loaded (the most recently published version on CRAN on that date).
