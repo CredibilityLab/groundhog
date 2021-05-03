@@ -43,7 +43,7 @@ existing package files in groundhog folder, and install anew.}
 
 \item{tolerate.R.version}{optional character string containing an R version which
 \code{groundhog.library()} will not throw an error for using, even if the date entered
-corresponds to more recent major R release.}
+corresponds to a more recent major R release.}
 }
 \value{
 a character vector containing all active packages for the session,
@@ -56,9 +56,10 @@ The \code{date} argument in the \code{groundhog.library()} function determines
 the version of the package that is loaded (the most recently published version on CRAN on that date).
 If that version of the package is not available in the local \code{groundhog} library,
 it is automatically installed. \code{groundhog.library()} thus substitutes both \code{library()}
-and \code{install.packages()}. No stable changes to how R manages packages are made (e.g., to the rprofile
-or the local non-groundhog library folder. To discontinue relying on \code{groundhog} for package management, simply go back to
-executing the \code{install.packages()} and \code{library()} functions.
+and \code{install.packages()}. No changes to how R manages packages are made (e.g., no change to
+.libPaths(), to .Rprofile, or to R Studio global settings).
+Therefore, to discontinue relying on \code{groundhog} for package management, all you do is go back to
+executing the \code{install.packages()} and \code{library()} functions, instead of the \code{groundhog.library()} function.
 }
 \details{
 For more information about groundhog check out \href{http://groundhogr.com/org}{groundhogr.com}
@@ -70,8 +71,8 @@ groundhog.library("magrittr", "2020-07-12")
 pkgs <- c('pwr','metafor')
 groundhog.library(pkgs, "2020-02-12")
 
-#Allow using R 3.6.x despite entering a date that corresponds to R 4.0
-groundhog.library('rio', '2021-04-12', tolerate.R.version='3.6')
+#Allow using R 3.6.3 despite entering a date that corresponds to R 4.0
+groundhog.library('rio', '2021-04-12', tolerate.R.version='3.6.3')
 
 }
 
