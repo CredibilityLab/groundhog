@@ -1,7 +1,7 @@
-#This version : 2021 03 11
+#This version : 2021 05 03
 
 
-#install.packages("http://groundhogr.com/xxxxx.tar.gz",repos=NULL,type='source') #change this line for the current development version
+install.packages("http://groundhogr.com/groundhog_1.4.0.tar.gz",repos=NULL,type='source') #change this line for the current development version
 
 
 # Groundhog testing is  not automatized because an r session needs to be restarted each time, 
@@ -225,11 +225,19 @@
 # or based on available packages when testing. 
     library('groundhog') 
           
-    test.groundhog(1:100)         #Install the 100 most downloaded packages   -- note, gmailr is a package that creates a conflict with message(), generating errors unrelated to groundhog
-    test.groundhog(500:525)       #install the 500-525 most downloaded packages
-    test.groundhog(-10, seed=29)  #install 10 random packages available right now for this version of R
+    test.groundhog(1:100)         #Install the 100 most downloaded packages   
+    test.groundhog(201:221)       #Install packages 201-221 most downloaded packages 
+    test.groundhog(500:525)       #install 500-525 
+    test.groundhog(-25, seed=33)  #install 10 random packages, change seed and will be different packages for different date
 
     
+    install.packages('GSAgm')
+    library("GSAgm")
+    
+    groundhog.library("GSAgm",'2021-04-05')
+    library("Modeler")
+    sessionInfo()
+    groundhog.library('Modeler',"2020-07-07")
     
 #SET 4 ABILITY TO USE DIFFERNT R VERSION (older than desired date)
     #Run this in R-3.6.3
@@ -237,6 +245,8 @@
     groundhog.library('pwr' , '2021-04-01'), tolerate.R.version = '3.6.3')
     
     
+
+
     
     
     
