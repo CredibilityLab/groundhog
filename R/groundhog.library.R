@@ -62,15 +62,27 @@
                                )
     {
 
+
+    
+       
   #0.1) Is date valid?
         validate.date(date) #Function defined in utils.R
     
-  #0.4) Set of ignorable conflicts
+  #0.2) Set of ignorable conflicts
         ignore.deps <- c(ignore.deps_default() , ignore.deps) #Add any ignore.deps explicitly stated to the default set in utils
         
-        
-  #0.5) If pkg is a vector, loop over it
-    if (exists(as.character(substitute(pkg))) && is.vector(pkg) && length(pkg)>1) {
+  #0.3) put package name in quotes if it is not an object and was not put in quotes
+        pkg.catch <- try(typeof(pkg),silent=TRUE)
+        if (class(pkg.catch)=="try-error") {
+          pkg <- substitute(pkg)
+          message2()
+          message1("     There is no object ",pkg, " in your environment, so will try loading package '",pkg,
+                   "'.\n     To avoid seeing this message when using groundhog.library(), enter package name in quotes.\n\n")  
+        } 
+          
+  #0.4) If pkg is a vector, loop over it
+    #exists(as.character(substitute(pkg))) &&
+    if (is.vector(pkg) && length(pkg)>1) {
       
         if ("groundhog" %in% pkg) {
           message("Error. May not use groundhog.library() to load groundhog.\n",
@@ -98,7 +110,9 @@
               
             } 
       } else  {
-            
+  
+  ############################################################################################
+  #Everything below this line is part of a groundhog.library() loop for each package included
             
       
     
