@@ -16,7 +16,7 @@ groundhog.library(
 )
 }
 \arguments{
-\item{pkg}{character string or vector with name of target package(s). Single package names must be in quotes.}
+\item{pkg}{character string or vector with name of target package(s). Single package names need not be in quotes.}
 
 \item{date}{character string  (yyyy-mm-dd), or date value, with the date which determines the
 version of the package, and all dependencies, to be loaded (and installed if needed). The most recent
@@ -66,17 +66,13 @@ For more information about groundhog check out \href{http://groundhogr.com}{grou
 }
 \examples{
 \dontrun{
-groundhog.library('magrittr', '2020-07-12')
+groundhog.library("magrittr", "2020-07-12")
 
-#Packages as a vector
-  pkgs <- c('pwr','metafor')
-  groundhog.library(pkgs, '2020-02-12')
-
-#Vector of package names directly into the call
-  groundhog.library(c('pwr','metafor'), '2020-02-12')
+pkgs <- c('pwr','metafor')
+groundhog.library(pkgs, "2020-02-12")
 
 #Allow using R 3.6.3 despite entering a date that corresponds to R 4.0
-   groundhog.library('rio', '2021-04-12', tolerate.R.version='3.6.3')
+groundhog.library('rio', '2021-04-12', tolerate.R.version='3.6.3')
 
 }
 
