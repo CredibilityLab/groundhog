@@ -21,6 +21,22 @@
   #Set 3 - Automatized installation of packages in random order, via function
 
 
+#Set 0 - various forms of calling packages to be loaded
+  library('groundhog')
+  groundhog.library('pwr',test.day)  #single package in quotes
+  groundhog.library(pwr,test.day)    #single package, no quotes, show warning to use ""
+  
+  #object containing a singl pagkage
+    pkg1='pwr'
+    groundhog.library(pkg1,test.day)    
+    
+  #Object containing many packages
+    pkg2=c('pwr','metafor')
+    groundhog.library(pkg2,test.day)    #single package, no quotes, show warning to use ""
+
+    
+  #Direct cal to many packages
+    groundhog.library(c('pwr','metafor'),test.day)    #single package, no quotes, show warning to use ""
 #######################################    
 #Set 1 - Error and warnings with conflicts
 
@@ -31,8 +47,10 @@
   #Install in local library an older version of pwr to create conflicts later on
     install.packages("https://cran.r-project.org/src/contrib/Archive/pwr/pwr_1.2-2.tar.gz",repos=NULL,type='source')
 
-    
+
+    #install.packages("C:/Dropbox (Penn)/git/groundhog_1.4.0.9003.tar.gz",repos=NULL,type='source')    
   
+    
   #Test conflict 1 - another version  already attached
    library(groundhog)
    library('pwr')
