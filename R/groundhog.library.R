@@ -74,7 +74,7 @@
   #2 Loop running groundhog
         for (pkgk in pkg) {
               groundhog.library.single(pkgk, date, quiet.install ,  include.suggests ,  
-                                        ignore.deps, force.source , force.install, tolerate.R.version="" )
+                                        ignore.deps, force.source , force.install, tolerate.R.version)
                 }
   
 
