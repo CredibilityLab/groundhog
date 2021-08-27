@@ -16,17 +16,26 @@
 
 
 #OUTLINE
+  #Set 0 - Various forms of calling packages to be loaded
   #Set 1 - Error and warnings with conflicts
   #Set 2 - Previously documented bugs
   #Set 3 - Automatized installation of packages in random order, via function
 
 
+
+#Date to use for testing individual packages
+    test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
+
+
+
 #Set 0 - various forms of calling packages to be loaded
-  library('groundhog')
-  groundhog.library('pwr',test.day)  #single package in quotes
-  groundhog.library(pwr,test.day)    #single package, no quotes, show warning to use ""
+
+  #Single package, with and without quotes
+    library('groundhog')
+    groundhog.library('pwr',test.day)  #quotes
+    groundhog.library(pwr,test.day)    #no quotes
   
-  #object containing a singl pagkage
+  #Object containing a single pagkage
     pkg1='pwr'
     groundhog.library(pkg1,test.day)    
     
@@ -34,14 +43,12 @@
     pkg2=c('pwr','metafor')
     groundhog.library(pkg2,test.day)    #single package, no quotes, show warning to use ""
 
-    
   #Direct cal to many packages
     groundhog.library(c('pwr','metafor'),test.day)    #single package, no quotes, show warning to use ""
+    
+    
 #######################################    
 #Set 1 - Error and warnings with conflicts
-
-  #date to use for testing individual packages
-    test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
 
 
   #Install in local library an older version of pwr to create conflicts later on
@@ -85,6 +92,7 @@
     groundhog.library('knitr',test.day)
   
   #Test conflict 6 - another version already loaded, for involving dependencies in ignore.deps
+    #install.packages('rio')
     library('groundhog')
     library('rio')
     groundhog.library('dplyr',test.day)   #Fails, then gives all 3 options

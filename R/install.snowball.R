@@ -33,9 +33,6 @@
       #1.2 Main package
          main.pkg_vrs=snowball$pkg_vrs[n.snowball]
 
-      
-      
-
       #1.3 FORCE INSTALL
           if (any(snowball$installed) & force.install) {
           #Subset of packages that are installed
@@ -96,8 +93,24 @@
                 infile  <- as.character(cran.binaries$downloaded.path[k])
                 outfile <- as.character(snowball.cran$installation.path[k])
                 message1(k,") Installing: ",snowball.cran$pkg_vrs[k])
-                #unzip
-                  utils::untar(infile ,exdir=outfile)
+                
+                
+                #Get extension
+                  ext <- tools::file_ext(infile)
+
+                
+                #if it is a zip file, unzip it 
+                  if (ext == "zip") {
+                    utils::unzip(infile, exdir=outfile)
+                    
+                #Otherwise, run untar
+                  } else {
+                    utils::untar(infile , exdir=outfile)        
+                  }
+
+                #Note: untar() works with zip files, but errors pop up in older Windows versions, this is an attempt to debug that.
+             
+
                 #delete
                   unlink(cran.binaries$downloaded.path[k])
 
@@ -200,9 +213,17 @@
               if (pos>0 ) {
                 #message 
                   message1(j2,") Installing: '",snowball.mran$pkg_vrs[k],"'")
-                #unzip
-                  utils::untar(mran.binaries$downloaded.path[k] , exdir=snowball.mran$installation.path[k])        
                 
+                #Get extension of downloaded files
+                 ext <- tools::file_ext(mran.binaries$downloaded.path[k])
+
+                #if it is a zip file, unzip it 
+                  if (ext=="zip") {
+                        utils::unzip(mran.binaries$downloaded.path[k] , exdir=snowball.mran$installation.path[k])
+                #Otherwise, run untar
+                  } else {
+                  utils::untar(mran.binaries$downloaded.path[k] , exdir=snowball.mran$installation.path[k])        
+                  }
                 #delete
                   unlink(mran.binaries$downloaded.path[k])
                   } else { 
