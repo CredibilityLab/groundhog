@@ -32,8 +32,10 @@
                 #Read existing one
                   uninstalled.conflicts <- readRDS(file_path)
               }
-            #Add new one
-              uninstalled.conflicts <- rbind(uninstalled.conflicts, new.uninstall.conflicts)
+            #Add new uninstalled package, if the uninstalled package is not already in the data.base of uninstalled packages
+              if (!remove.lib %in% uninstalled.conflicts$lib.loc) {
+                  uninstalled.conflicts <- rbind(uninstalled.conflicts, new.uninstall.conflicts)
+                  }
               
             #Confirmation
               message2()
