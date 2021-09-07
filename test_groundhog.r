@@ -1,7 +1,7 @@
 # {groundhog}  tester
 #
-#This version : 2021 05 03 
-#install.packages("http://groundhogr.com/groundhog_1.4.0.9001.tar.gz",repos=NULL,type='source') #change this line for the current development version
+#This version : 2021 09 04 
+#install.packages("http://groundhogr.com/groundhog_1.4.0.9009.tar.gz",repos=NULL,type='source', method='libcurl') #change this line for the current development version
 #(note, this testing version, 1.4.0.9001  has not yet been created, it's the next to be used)
 #To play around with code below, use the version on CRAN v1.4.0: install.packages('groundhog')
 
@@ -9,7 +9,7 @@
 #INTRODUCTION
 # Groundhog testing is  not automatized because an R session needs to be restarted 
 # after each test,  and the output carefully (humanly) evaluated. Also
-# the testing requires conflicts with local libraries and the instalation of
+# the testing requires conflicts with local libraries and the installation of
 # 100s of packages; so testing is done 'by hand', using the scripts below
 #
 ######################################################################################
@@ -26,16 +26,18 @@
 #Date to use for testing individual packages
     test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
 
+    test.day <-'2021-09-04'
 
-
+    
+    set.groundhog.folder('c:/dropbox/groundhog_folder/temp8')
 #Set 0 - various forms of calling packages to be loaded
 
   #Single package, with and without quotes
     library('groundhog')
     groundhog.library('pwr',test.day)  #quotes
     groundhog.library(pwr,test.day)    #no quotes
-  
-  #Object containing a single pagkage
+
+  #Object containing a single package
     pkg1='pwr'
     groundhog.library(pkg1,test.day)    
     
@@ -44,7 +46,7 @@
     groundhog.library(pkg2,test.day)    #single package, no quotes, show warning to use ""
 
   #Direct cal to many packages
-    groundhog.library(c('pwr','metafor'),test.day)    #single package, no quotes, show warning to use ""
+    groundhog.library(c('pwr','metafor'),test.day)    
     
     
 #######################################    
@@ -55,9 +57,6 @@
     install.packages("https://cran.r-project.org/src/contrib/Archive/pwr/pwr_1.2-2.tar.gz",repos=NULL,type='source')
 
 
-    #install.packages("C:/Dropbox (Penn)/git/groundhog_1.4.0.9003.tar.gz",repos=NULL,type='source')    
-  
-    
   #Test conflict 1 - another version  already attached
    library(groundhog)
    library('pwr')
@@ -67,7 +66,6 @@
   #Test conflict 2 - other versions of package loaded, cannot attach, later offered to uninstall 
                        #(since it is the package being called with conflict no offer to load early or ignore conflict, only to uninstall)
     library(groundhog)
-    #install.packages('pwr')
     pwr::pwr.t.test(n=50,d=.4)  #load pkg
     groundhog.library('pwr',  test.day) #Default error ctrl-shift-f10
     groundhog.library('pwr',  test.day) #2nd time, offer to uninstall, accept it and see if it works
@@ -103,24 +101,58 @@
 ########################################################################
 #SET OF TESTS 2 -  CHECKING PREVIOUSLY FOUND BUGS
     
-    
 #1) Loading but not attaching dependencies (verify one can run lmer() without lme4::)
     library('groundhog')
+    
     pkgs=c("robustlmm","R2ucare")
     groundhog.library(pkgs,test.day)
+    lmer(NA)  #should read error in formula rather than cannot find functin
     
 #2) Folder with space names
     library('groundhog')
-    set.groundhog.folder("c:/temp/another folder with spaces")
-    groundhog.library('pwr',test.day)
+    current.folder<-get.groundhog.folder()
+    #PC:  set.groundhog.folder("c:/temp/another folder with spaces")
+    #MAC: set.groundhog.folder(paste0(current.folder,'/temp groundhog folder')
+
+    groundhog.library('jsonlite',test.day)
     
     #Reset the default folder
-    set.groundhog.folder("c:/dropbox/groundhog_folder/")
+    set.groundhog.folder(current.folder)
     
-    
+
 #3) Source a script which uses groundhog with a vector of packages, used to stop executing
     source("http://groundhogr.com/source_file_for_test_groundhog.r")
     
+    
+#4) Run with option tolerate.R.Version (run this in R-3.2.5)
+    groundhog.library('pwr','2021-08-01',tolerate.R.version = '3.2.5')
+    
+    
+#ADDITIONAL OPTIONS
+
+#5) Test source version
+    library('groundhog')
+    groundhog.library('pwr','2018-08-01',tolerate.R.version = '3.2.5',force.source = TRUE)
+    
+#6) Test for re-install
+    library('groundhog')
+    groundhog.library('pwr','2018-08-01',tolerate.R.version = '3.2.5',force.install = TRUE)
+    
+#7) Test for re-install with current date
+    library('groundhog')
+    groundhog.library('pwr',test.day,force.install = TRUE)
+    
+#8) Test for re-install with current date and source
+    library('groundhog')
+    pks=c('pwr','metafor')
+    groundhog.library(pks,test.day,force.install = TRUE, force.source = TRUE)
+    
+#9) Include suggests
+    library('groundhog')
+    pks=c('pwr','rio')
+    groundhog.library(pks, "2021-08-15",include.suggests = TRUE)
+    
+#
 ########################################################################
 #SET OF TESTS 3 -  INSTALLATION OF PACKAGES IN RANDOM ORDER
   #Function 
@@ -152,7 +184,7 @@
           set.seed(seed)
     
     #If groundhoglibrary does not exist, create it
-        if (!file.exists(get.groundhog.folder())) dir.create(get.groundhog.folder())
+        if (!file.exists(get.groundhog.folder())) dir.create(get.groundhog.folder(),showWarnings = FALSE)
       
     #0 Which version of R is being used?
             r.majmin=groundhog:::get.r.majmin()              #Which R version is being used
@@ -216,7 +248,7 @@
                 )
           
           #Execute groundhog.library()
-            exec_line=paste0("groundhog.library(", pkgk, "," , "'", groundhog.day , "')") #line to execute 
+            exec_line=paste0("groundhog.library('", pkgk, "'," , "'", groundhog.day , "')") #line to execute 
             eval(parse(text=exec_line))                                              
 
           #Verify every package in snowball is active after running
@@ -244,13 +276,11 @@
       } #end of function
       
   
-    
 # Installation can be tested with most downloaded packages as of the release of R's version matching that being used
 # or based on available packages when testing. 
-    library('groundhog') 
-    test.groundhog(1:100)         #Install the 100 most downloaded packages 
-    test.groundhog(500:525)       #install the 500-525 most downloaded packages
-    test.groundhog(-10, seed=29)  #install 10 random packages available right now for this version of R
-
-    
-    
+    set.groundhog.folder("c:/dropbox/groundhog_folder/temp7")
+    groundhog.library('pwr','2021-08-15')
+    library('groundhog')
+    test.groundhog(1:10)         #Install the 100 most downloaded packages 
+    test.groundhog(500:525)        #install the 500-525 most downloaded packages
+    test.groundhog(-10, groundhog.day='2021-09-04',seed=9)  #install 10 random packages available right now for this version of R
