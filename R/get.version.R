@@ -8,7 +8,11 @@ get.version <- function(pkg, date, patch = c("current")) {
     if (pkg %in% base_pkg()) {
         ip.base     <- data.frame(utils::installed.packages(priority="base"), stringsAsFactors = FALSE)    
         ip.base.pkg <- ip.base[ip.base$Package == pkg,]
-        return(ip.base.pkg$Version)
+          
+        #if a user has a misconfigured copy of R, they may have two verson of the same base package, take the highest of them 
+          #return(ip.base.pkg$Version) #up to 2021 - 10 - 30
+        
+        return(max(ip.base.pkg$Version))
         }
     
   
