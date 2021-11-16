@@ -62,13 +62,23 @@
     #2.2 check for update
     # isTRUE() is necessary here because this will return logical(0) if the pkg
     # is not on CRAN, or if working offline (current.packages is NULL in this case).
-      #Try to read from groundhogr.com   
-          groundhog.version_cran <- tryCatch(
+      
+	  #2.2.1 Use the user agent
+			#Existing user agent
+				agent.before <- options("HTTPUserAgent")
+			#This is the ID with which the txt file is read 
+				options(HTTPUserAgent = 'groundhog_downloader')
+
+	  #2.2.2 Try to read from groundhogr.com   
+			groundhog.version_cran <- tryCatch(
           as.character(readLines("https://groundhogr.com/groundhog_version.txt")),
           warning = function(w) NULL,
           error = function(e) NULL
         )
-       
+		
+	#2.2.3 Set user agent back
+		  options(HTTPUserAgent=agent.before)
+
     #Get majmin
       if (!is.null(groundhog.version_cran)) {
           gv.using <- as.numeric(strsplit(groundhog.version_using, "\\.")[[1]])
