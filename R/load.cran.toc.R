@@ -48,12 +48,15 @@ load.cran.toc <- function(update.toc = FALSE) {
 
     .pkgenv[["missing.mran.dates"]] <- missing.mran.dates
   } else {
-    #If updating 
-		dl_times <- try(download.file(paste0(groundhogR.url, "cran.times.rds"), times.path, mode = "wb", method = "libcurl", headers = c("User-Agent" = "groundhog_downloader")))
-		dl_toc <-   try(download.file(paste0(groundhogR.url, "cran.toc.rds"), toc.path, mode = "wb", method = "libcurl", headers = c("User-Agent" = "groundhog_downloader")))
-		dl_mran <-  try(download.file(paste0(groundhogR.url, "missing.mran.dates.rds"), mran.path, mode = "wb", method = "libcurl", headers = c("User-Agent" = "groundhog_downloader")))
-		#note: force a simple user-agent because the Unix machines without r-studio give a user agent which is blocked by the groundhogr.com server
-		
+    #Have simpler standardized agent ID 
+    #     (becuase Unix machines without r-studio give a user agent which is blocked by the groundhogr.com server)
+    #     the syntax is "R/4.1.2 (windows)"
+      agent <- paste0("R/", R.version$major , ".", R.version$minor, " (",.Platform$OS.type,")")
+
+  		dl_times <- try(download.file(paste0(groundhogR.url, "cran.times.rds"), times.path, mode = "wb", method = "libcurl", headers = c("User-Agent" = agent)))
+  		dl_toc <-   try(download.file(paste0(groundhogR.url, "cran.toc.rds"), toc.path, mode = "wb", method = "libcurl", headers = c("User-Agent" = agent)))
+  		dl_mran <-  try(download.file(paste0(groundhogR.url, "missing.mran.dates.rds"), mran.path, mode = "wb", method = "libcurl", headers = c("User-Agent" = agent)))
+  		
 		
 		cran.times <- readRDS(times.path)
 		cran.toc <- readRDS(toc.path)
