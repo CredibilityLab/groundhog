@@ -100,6 +100,18 @@
                   message1("No repository for CRAN had been set, using groundhog's default: https://cloud.r-project.org")
                 } 
        
+              
+      #1.5 Assign temporary http agent (the default agent in Unix machines, not using R Studio, produce server-side error)
+              #agent at beginning
+                agent.before <- options("HTTPUserAgent")
+                
+              #assign temporary agent
+                options(HTTPUserAgent = "groundhog_downloader")
+                
+              #when exiting change it back
+                on.exit(options(HTTPUserAgent=agent.before))
+
+              
   #2 Loop running groundhog
         for (pkgk in pkg) {
               groundhog.library.single(pkgk, date, quiet.install ,  include.suggests ,  
