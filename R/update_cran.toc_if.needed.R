@@ -41,7 +41,7 @@ update_cran.toc_if.needed <- function(date) {
     message2()
     message1(
       "The date you entered, '", format(date), "' requires updating your local database\n",
-      "with the list of all CRAN package-versions (cran.toc.rds)"
+      "used by groundhog to find CRAN packages."
       )
     # Update the database
       return(load.cran.toc(TRUE))
@@ -55,8 +55,8 @@ update_cran.toc_if.needed <- function(date) {
   if (!R.using %in% tocR$Version) {
     message2()
     message1(
-      "The file cran.toc.rds,  with the list of CRAN package-versions, is older than the version of R you ",
-      "are using. That file is being updated now."
+      "The local databases used by groundhog to find CRAN packages is older\n",
+      "than the version of R you are using. Updating the databases now."
     )
 
     return(load.cran.toc(TRUE))
