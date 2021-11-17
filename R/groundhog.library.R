@@ -35,6 +35,12 @@
 #'@param repos optional character string for URL of cran mirror to use. Default is the currently set 
 #'mirror in R environment. If no mirror is set locally, and a `repos` is not provided with the 
 #'groundhog.library() call, this URL is used: "https://cloud.r-project.org"
+#'@param HTTPUserAgent optional character string for using as the HTTPUserAgent value (for various
+#'`download.file()` calls during execution). 
+#'This parameter is set temporarily, while `groundhog.library()` runs, and is then switched back
+#'to previous default value in the R session. This value is modified because in Unix machines, 
+#'when running R outside of R Studio, calls to https://groundhogr.com result in 
+#'page-not-found errors.
 #'@return a character vector containing all active packages for the session,
 #'   with their version number, under the format `pkg_vrs`.
 #'@examples
@@ -55,7 +61,8 @@
 #' @export
 #'
   groundhog.library <- function(pkg, date,  quiet.install = TRUE,  include.suggests = FALSE,  ignore.deps=c(), force.source = FALSE,
-                              force.install = FALSE, tolerate.R.version="", repos = getOption("repos"))
+                              force.install = FALSE, tolerate.R.version="", repos = getOption("repos"), 
+                              HTTPUserAgent = "groundhog_downloader")
     {
     
   #1) Validation     
@@ -103,13 +110,13 @@
               
       #1.5 Assign temporary http agent (the default agent in Unix machines, not using R Studio, produce server-side error)
               #1.5.1 agent at beginning
-                #agent.before <- options("HTTPUserAgent")
+                agent.before <- options("HTTPUserAgent")
                 
               #1.5.2 assign agent to use for all download.file() calls
-                 #options(HTTPUserAgent = HTTPUserAgent)
+                    options(HTTPUserAgent = HTTPUserAgent)
                     
               #1.5.3 when exiting change it back
-                #on.exit(options(HTTPUserAgent=agent.before))
+                on.exit(options(HTTPUserAgent=agent.before))
 
               
   #2 Loop running groundhog

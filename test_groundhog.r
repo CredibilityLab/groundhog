@@ -1,9 +1,9 @@
 # {groundhog}  tester
 #
 #This version : 2021 09 04 
-#install.packages("http://groundhogr.com/groundhog_1.5.0.9012.tar.gz",repos=NULL,type='source', method='libcurl') #change this line for the current development version
+#install.packages("http://groundhogr.com/groundhog_1.4.0.9009.tar.gz",repos=NULL,type='source', method='libcurl') #change this line for the current development version
 #(note, this testing version, 1.4.0.9001  has not yet been created, it's the next to be used)
-#To play around with code below, use the version on CRAN v1.5.0: install.packages('groundhog')
+#To play around with code below, use the version on CRAN v1.4.0: install.packages('groundhog')
 
 ######################################################################################
 #INTRODUCTION

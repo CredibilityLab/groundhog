@@ -13,7 +13,8 @@ groundhog.library(
   force.source = FALSE,
   force.install = FALSE,
   tolerate.R.version = "",
-  repos = getOption("repos")
+  repos = getOption("repos"),
+  HTTPUserAgent = "groundhog_downloader"
 )
 }
 \arguments{
@@ -49,6 +50,13 @@ corresponds to a more recent major R release.}
 \item{repos}{optional character string for URL of cran mirror to use. Default is the currently set
 mirror in R environment. If no mirror is set locally, and a \code{repos} is not provided with the
 groundhog.library() call, this URL is used: "https://cloud.r-project.org"}
+
+\item{HTTPUserAgent}{optional character string for using as the HTTPUserAgent value (for various
+\code{download.file()} calls during execution).
+This parameter is set temporarily, while \code{groundhog.library()} runs, and is then switched back
+to previous default value in the R session. This value is modified because in Unix machines,
+when running R outside of R Studio, calls to https://groundhogr.com result in
+page-not-found errors.}
 }
 \value{
 a character vector containing all active packages for the session,
