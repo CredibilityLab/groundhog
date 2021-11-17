@@ -66,10 +66,8 @@
 	  #2.2.1 Use the user agent
 			#Existing user agent
 				agent.before <- options("HTTPUserAgent")
-				
-			#This is the user agent ID with which groundhogr.com is contacted 
-				options(HTTPUserAgent  <- paste0("R/", R.version$major , ".", R.version$minor, " (",.Platform$OS.type,")")
-
+			#This is the ID with which the txt file is read 
+				options(HTTPUserAgent = 'groundhog_downloader')
 
 	  #2.2.2 Try to read from groundhogr.com   
 			groundhog.version_cran <- tryCatch(
