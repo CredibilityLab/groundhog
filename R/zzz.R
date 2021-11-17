@@ -1,7 +1,7 @@
 
-.mismatch.warning <- new.env(parent = emptyenv())
+  .mismatch.warning <- new.env(parent = emptyenv())
 
-.pkgenv <- new.env(parent = emptyenv())
+  .pkgenv <- new.env(parent = emptyenv())
 
 #'
 .onLoad <- function(libname, pkgname) {
@@ -75,13 +75,24 @@
     #2.2 check for update
     # isTRUE() is necessary here because this will return logical(0) if the pkg
     # is not on CRAN, or if working offline (current.packages is NULL in this case).
-      #Try to read from groundhogr.com   
+      #Try to read from groundhogr.com  
+          file_name <-"groundhog_version.txt"
+          file_url <- paste0("https://groundhogr.com/",file_name)
+          file_path <-paste0(get.groundhog.folder(),file_name)
+          
+        #Agent for call
+          agent <- paste0("R/", R.version$major , ".", R.version$minor, " (",.Platform$OS.type,")")
+        
+        #Download version number from groundhog server
+          dl_current_version <- try(download.file(file_url, file_path, quiet=TRUE, mode = "wb", method = "libcurl",headers = c("User-Agent" = agent)))    
+            
+        #Try to read textfile with most recent version of groundhog from groundhog's server
           groundhog.version_cran <- tryCatch(
-          as.character(readLines("https://groundhogr.com/groundhog_version.txt")),
+          as.character(readLines(file_path)),
           warning = function(w) NULL,
-          error = function(e) NULL
-        )
-       
+          error = function(e) NULL)
+        
+          
     #Get majmin
       if (!is.null(groundhog.version_cran)) {
           gv.using <- as.numeric(strsplit(groundhog.version_using, "\\.")[[1]])
@@ -101,7 +112,7 @@
             )
             }  #End mismatch in version
           } #End if !is.null()
-          } #ENd if consent==TRUE
+          } #End if consent==TRUE
       } #End on attach
     
     
