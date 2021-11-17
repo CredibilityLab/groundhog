@@ -21,6 +21,13 @@
 
   install.snowball=function(snowball, date, force.install = FALSE, force.source = FALSE, quiet.install = TRUE) 
     {
+    
+    #Use stylized agent for installing
+      agent <- paste0("R (", R.version$major , ".", R.version$minor, " ",.Platform$OS.type,")")
+      agent.before <- options("HTTPUserAgent")
+      options(HTTPUserAgent=agent)
+      on.exit(options(HTTPUserAgent=agent.before))
+    
      #####################
     #1 Preliminaries
     #####################
