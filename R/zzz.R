@@ -7,8 +7,21 @@
 .onLoad <- function(libname, pkgname) {
   .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
 
-  #Grab originally available library paths (before groundhog loaded)
-      .pkgenv[["orig_lib_paths"]] <- .libPaths()                      
+  #1. Grab originally available library paths (before groundhog loaded)
+      .pkgenv[["orig_lib_paths"]] <- .libPaths()        
+      
+  #2. See if a repos default is set, if not, set it to cloud.r-project.org so that groundhog can work without users being prompted 
+      #2.1 This is the existing repos default in user's machine
+        repos.before <- getOption("repos") 
+      #2.2 Make a copy which we edit
+        repos.now <- repos.before
+      #2.3 If the current is the empty default,  @CRAN@, assign the new default
+      if (repos.now=="@CRAN@") {
+          repos.now["CRAN"] <- "https://cloud.r-project.org"
+          options(repos = repos.now)
+          on.exit(options(repos=repos.before))
+          }
+      
     } #End of onLoad
 
 #Default parameters
@@ -93,4 +106,5 @@
     
     
       
+
  
