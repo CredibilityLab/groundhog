@@ -68,7 +68,7 @@
 				agent.before <- options("HTTPUserAgent")
 				
 			#This is the user agent ID with which groundhogr.com is contacted 
-				options(HTTPUserAgent  <- paste0("R/", R.version$major , "." , R.version$minor, " (" , .Platform$OS.type,")"))
+				options(HTTPUserAgent  <- paste0("R/", R.version$major , ".", R.version$minor, " (",.Platform$OS.type,")")
 
 
 	  #2.2.2 Try to read from groundhogr.com   
