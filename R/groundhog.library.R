@@ -32,9 +32,6 @@
 #'@param tolerate.R.version optional character string containing an R version which 
 #' `groundhog.library()` will not throw an error for using, even if the date entered 
 #' corresponds to a more recent major R release.  
-#'@param repos optional character string for URL of cran mirror to use. Default is the currently set 
-#'mirror in R environment. If no mirror is set locally, and a `repos` is not provided with the 
-#'groundhog.library() call, this URL is used: "https://cloud.r-project.org"
 #'@return a character vector containing all active packages for the session,
 #'   with their version number, under the format `pkg_vrs`.
 #'@examples
@@ -55,7 +52,7 @@
 #' @export
 #'
   groundhog.library <- function(pkg, date,  quiet.install = TRUE,  include.suggests = FALSE,  ignore.deps=c(), force.source = FALSE,
-                              force.install = FALSE, tolerate.R.version="", repos = getOption("repos"))
+                              force.install = FALSE, tolerate.R.version="" )
     {
     
   #1) Validation     
@@ -73,41 +70,13 @@
           message1("     There is no object ",pkg, " in your environment, so will try loading package '",pkg,
                    "'.\n     To avoid seeing this message when using groundhog.library(), enter package name in quotes.\n\n")  
         } 
-        
-         
-    #1.4 Assign 'repos' if it has been set explicitly in call of groundhog.library or if not set locally
-    
-          #1.4.1 Grab current repos option
-              repos.before <- getOption("repos")
-            
-          #1.4.2 if user actively selected it, that is, if repos option does not match currrent selection, 
-          #      replace it
-            if (repos != repos.before) {
-              options(repos=repos)
-              }
           
-          #1.4.3 if user did not select it, and it is not set, set a good default      
-              if (repos.before == "@CRAN@")  #@CRAN@ is the default when non has been set
-                {
-                #1. Set the cloud 'mirror' as the default and tell users
-                  options(repos = "https://cloud.r-project.org")
-                
-                #2. When execution ends, return to whatever was there before
-                  on.exit(options(repos=repos.before))
-                  
-                #3. Output
-                  message2()  #"groundhog says (in bold)
-                  message1("No repository for CRAN had been set, using groundhog's default: https://cloud.r-project.org")
-                } 
-       
   #2 Loop running groundhog
         for (pkgk in pkg) {
               groundhog.library.single(pkgk, date, quiet.install ,  include.suggests ,  
                                         ignore.deps, force.source , force.install, tolerate.R.version)
                 }
-           
-
-          
+  
 
   } #End of groundhog.library
         

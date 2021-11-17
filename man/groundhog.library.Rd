@@ -12,8 +12,7 @@ groundhog.library(
   ignore.deps = c(),
   force.source = FALSE,
   force.install = FALSE,
-  tolerate.R.version = "",
-  repos = getOption("repos")
+  tolerate.R.version = ""
 )
 }
 \arguments{
@@ -45,10 +44,6 @@ existing package files in groundhog folder, and install anew.}
 \item{tolerate.R.version}{optional character string containing an R version which
 \code{groundhog.library()} will not throw an error for using, even if the date entered
 corresponds to a more recent major R release.}
-
-\item{repos}{optional character string for URL of cran mirror to use. Default is the currently set
-mirror in R environment. If no mirror is set locally, and a \code{repos} is not provided with the
-groundhog.library() call, this URL is used: "https://cloud.r-project.org"}
 }
 \value{
 a character vector containing all active packages for the session,
