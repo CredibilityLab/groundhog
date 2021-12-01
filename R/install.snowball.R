@@ -87,7 +87,7 @@
         
       #2.2 Download all CRAN binaries
 
-          cran.binaries <- data.frame(utils::download.packages(snowball.cran$pkg, type='binary', destdir=temp_path),stringsAsFactors = FALSE)
+          cran.binaries <- data.frame(utils::download.packages(snowball.cran$pkg, type='binary', method='libcurl', destdir=temp_path),stringsAsFactors = FALSE)
           names(cran.binaries) <- c("pkg.cran","downloaded.path")
       
           
@@ -176,9 +176,9 @@
                 newer.R.3_2_0 <- utils::compareVersion(get.rversion(),"3.2.0") == 1 
                 
                 if (newer.R.3_2_0) {
-                    mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path)
+                    mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k], method='libcurl', type='binary',repos = repos.mran[k],available=ap, destdir=temp_path)
                   } else {
-                    mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k],repos = repos.mran[k],available=ap, destdir=temp_path)
+                    mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k], method='libcurl', repos = repos.mran[k],available=ap, destdir=temp_path)
                 }
             
             #If file was successfully downloaded
