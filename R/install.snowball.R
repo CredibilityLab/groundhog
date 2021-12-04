@@ -22,15 +22,8 @@
   install.snowball=function(snowball, date, force.install = FALSE, force.source = FALSE, quiet.install = TRUE) 
     {
     
-    #Use stylized agent for installing
-      agent <- paste0("R (", R.version$major , ".", R.version$minor, " ",.Platform$OS.type,")")
-      agent.before <- options("HTTPUserAgent")
-      options(HTTPUserAgent=agent)
-      on.exit(options(HTTPUserAgent=agent.before))
-    
-     #####################
+  
     #1 Preliminaries
-    #####################
     
      
       
@@ -101,16 +94,19 @@
                 outfile <- as.character(snowball.cran$installation.path[k])
                 message1(k,") Installing: ",snowball.cran$pkg_vrs[k])
                 
-                
-                #Get extension
+				
+				        #2.3.1 Verify it was downloaded
+  					      exit.if.download.failed(snowball.cran$pkg_vrs[k],infile)  #Function #19 in utils.r
+						
+                #2.3.2 Get extension
                   ext <- tools::file_ext(infile)
 
                 
-                #if it is a zip file, unzip it 
+                #2.3.3 if it is a zip file, unzip it 
                   if (ext == "zip") {
                     utils::unzip(infile, exdir=outfile)
                     
-                #Otherwise, run untar
+                #2.3.4 Otherwise, run untar
                   } else {
                     utils::untar(infile , exdir=outfile)        
                   }
@@ -327,7 +323,7 @@
                               #(turn off warnings because if something goes wrong, we try again, with warnings on)
                               #this prevents a package that actually installed successfully on the 2nd attempt, showing a warning)
                 if (quiet.install==TRUE) options(warn=-1)
-                      install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", dependencies = FALSE, quiet = quiet.install, INSTALL_opts = '--no-lock')
+                      install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", dependencies = FALSE, quiet = quiet.install, method='libcurl', INSTALL_opts = '--no-lock')
                 if (quiet.install==TRUE) options(warn=0)
               } #End if source
             
