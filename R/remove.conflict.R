@@ -153,7 +153,7 @@
             #If not there, install it
               if (!pkgk %in% installed.packages_current) 
                 {
-                utils::install.packages(pkgk,lib =libk)
+                utils::install.packages(pkgk,lib =libk, method='libcurl', )
                 }
               
           }#End for
