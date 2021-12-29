@@ -1,15 +1,44 @@
-#The groundhog.library() command runs validation and then loops over this function to actually
-#load and install the called upon pacakge
-#
-#Until version 1.4.0 this was part of a single loop inside groundhog.library() but it was split into
-#a separate function.
-##################################################################################################
+# The groundhog.library() command runs validation and then calls this function (looping if more than 1 pkg was called)
+# to install and load them
+
+#OUTLINE
+ #1 Preliminary checks
+    #1.0 Don't try to load 'groundhog'
+    #1.1 Stop if same version
+    #1.2 Attach & early return if package is loaded but not attached
+    #1.3 Mismatched package already attached  
+    #1.4 Attach mismatched version if ignore.deps is loaded but not attached (common scenario, trying to attach knitr in .rmd file)
+ #2 Check R version
+     #2.1 Is date for a later major R? STOP
+     #2.1.5 throw warning if using R that is too old, but explicitly allowingg via command 
+     #2.2 Is date for a previous major R? Warn
+   #3 Update cran.toc() if needed for entered date 
+   #4 Get Snowball
+   #5 Set path to find installed packages during installation .libpaths()
+   #6 CHECK FOR CONFLICT SNOWBALL <->ACTIVE PACKAGES
+   #7 message if installation will be necessary
+   #8 Install packages if needed
+   #9 Dropped
+   #10 Load packages & attach the requested package
+     #10.1 Load the cran.toc
+     #10.2 Get the needed DEPEND dependencies so that they are attached
+	 #10.4 add package itself to attach list
+     #10.5 Add to path and attach if needed
+   #11 Success/failure message
+    #11.1 look at loaded packages
+    #11.2 Message
+
+#############################################################################
+
+
+
 
   groundhog.library.single <-  function(pkg, date,  quiet.install ,  include.suggests , 
     ignore.deps, force.source , force.install , tolerate.R.version )
       { 
     
-      #0. Don't try to load 'groundhog'
+   #1 Preliminary checks
+       #1.0. Don't try to load 'groundhog'
         if ("groundhog" == pkg) {
           message("Error. May not use groundhog.library() to load groundhog.\n",
                   "To load the version of groundhog available on '", date, "', please use:\n",
@@ -18,22 +47,19 @@
           exit()
         } #End if groundhog is a package being called
 
-  
-    #1.0 initial check,  stop if same version
-      active=get.active()
-      
-  
-    #1.1 Get version of requested package
+    #1.1 Stop if same version
+      #Get active packages  
+        active=get.active()
+      #Get version of requested package
         vrs <- get.version(pkg, date)
         pkg_vrs <- paste0(pkg, "_", vrs)
       
-
-    #1.2 Stop if  pkg_vrs already attached
+     #Get attached packages
         attached.list= utils::sessionInfo()$otherPkgs
         attached.pkg <- names(attached.list)
         attached.vrs <- lapply(attached.list, function(x) x$Version)
         
-      #Add base packages  
+     #Get base packages  
         attached.base.pkg <- utils::sessionInfo()$basePkgs
         attached.base.vrs <- as.character(sapply(attached.base.pkg, get.version, date)) 
         attached.pkg <- c(attached.pkg, attached.base.pkg)
@@ -48,7 +74,7 @@
 
   
         
-    #1.2.5 Attach if package is loaded but not attached
+   #1.2 Attach if package is loaded but not attached
         if (pkg_vrs %in% active$pkg_vrs)
         {
           attachNamespace(pkg)
@@ -69,7 +95,7 @@
          }
         
     
-    #1.5 Attach mismatched version if ignore.deps is loaded but not attached (common scenario, trying to attach knitr in .rmd file)
+    #1.4 Attach mismatched version if ignore.deps is loaded but not attached (common scenario, trying to attach knitr in .rmd file)
        if ((pkg %in% active$pkg) & (!pkg_vrs %in%  active$pkg_vrs) & (pkg %in% ignore.deps))
         {
          #Recommended
