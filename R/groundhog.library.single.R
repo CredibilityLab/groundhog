@@ -4,37 +4,36 @@
 #OUTLINE
  #1 Preliminary checks
     #1.0 Don't try to load 'groundhog'
-    #1.1 Stop if same version
+    #1.1 Early return if same version already attached
     #1.2 Attach & early return if package is loaded but not attached
-    #1.3 Mismatched package already attached  
-    #1.4 Attach mismatched version if ignore.deps is loaded but not attached (common scenario, trying to attach knitr in .rmd file)
+    #1.3 Stop if mismatched package already attached  
+    #1.4 Attach mismatched version if ignore.deps is loaded but not attached (e.g., trying to attach knitr in .rmd file)
  #2 Check R version
      #2.1 Is date for a later major R? STOP
      #2.1.5 throw warning if using R that is too old, but explicitly allowingg via command 
      #2.2 Is date for a previous major R? Warn
-   #3 Update cran.toc() if needed for entered date 
-   #4 Get Snowball
-   #5 Set path to find installed packages during installation .libpaths()
-   #6 CHECK FOR CONFLICT SNOWBALL <->ACTIVE PACKAGES
-   #7 message if installation will be necessary
-   #8 Install packages if needed
-   #9 Dropped
-   #10 Load packages & attach the requested package
+ #3 Update cran.toc() if needed for entered date 
+ #4 Get Snowball
+ #5 Set path to find installed packages during installation .libpaths()
+ #6 CHECK FOR CONFLICT SNOWBALL <->ACTIVE PACKAGES
+ #7 message if installation will be necessary
+ #8 Install packages if needed
+ #9 Dropped
+ #10 Load packages & attach the requested package
      #10.1 Load the cran.toc
      #10.2 Get the needed DEPEND dependencies so that they are attached
-	 #10.4 add package itself to attach list
+     #10.4 add package itself to attach list
      #10.5 Add to path and attach if needed
-   #11 Success/failure message
-    #11.1 look at loaded packages
-    #11.2 Message
+ #11 Success/failure message
+     #11.1 look at loaded packages
+     #11.2 Message
 
 #############################################################################
 
 
 
-
   groundhog.library.single <-  function(pkg, date,  quiet.install ,  include.suggests , 
-    ignore.deps, force.source , force.install , tolerate.R.version )
+     ignore.deps, force.source , force.install , tolerate.R.version )
       { 
     
    #1 Preliminary checks
