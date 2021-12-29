@@ -1,16 +1,14 @@
 # {groundhog}  tester
 #
-#This version : 2021 09 04 
-install.packages("http://groundhogr.com/groundhog_1.5.0.9013.tar.gz",repos=NULL,type='source', method='libcurl') #change this line for the current development version
-#(note, this testing version, 1.4.0.9001  has not yet been created, it's the next to be used)
-#To play around with code below, use the version on CRAN v1.4.0: install.packages('groundhog')
+#This version : 2021 12 01
+install.packages("http://groundhogr.com/groundhog_1.5.0.9020.tar.gz",repos=NULL,type='source', method='libcurl') #change this line for the current development version
 
 ######################################################################################
 #INTRODUCTION
 # Groundhog testing is  not automatized because an R session needs to be restarted 
 # after each test,  and the output carefully (humanly) evaluated. Also
 # the testing requires conflicts with local libraries and the installation of
-# 100s of packages; so testing is done 'by hand', using the scripts below
+# 100s of packages; so testing is done 'by hand', using the script below
 #
 ######################################################################################
 
@@ -25,12 +23,12 @@ install.packages("http://groundhogr.com/groundhog_1.5.0.9013.tar.gz",repos=NULL,
 
 #Date to use for testing individual packages
     library('groundhog')
-      
- test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
-
+    test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
+  
+    test.day='2021-11-29'
 
     
-    set.groundhog.folder('c:/dropbox/temp81')
+    set.groundhog.folder('c:/dropbox/temp86')
 #Set 0 - various forms of calling packages to be loaded
 
   #Single package, with and without quotes
@@ -49,17 +47,16 @@ install.packages("http://groundhogr.com/groundhog_1.5.0.9013.tar.gz",repos=NULL,
       
       
   #Object containing many packages
-    agent.before <- options('HTTPUserAgent')
-    options(HTTPUserAgent='test 2')
-    options(HTTPUserAgent='test 2')
-    
-    pkg2=c('pwr','metafor')
-    groundhog.library(pkg2,test.day)    #single package, no quotes, show warning to use ""
+      pkg2=c('pwr','metafor')
+     groundhog.library(pkg2,test.day)    #single package, no quotes, show warning to use ""
 
   #Direct cal to many packages
     groundhog.library(c('pwr','metafor'),test.day)    
     
     
+    
+  #Test message for install failure, turn off wifi while testing
+    groundhog.library('rio',test.day)
 #######################################    
 #Set 1 - Error and warnings with conflicts
 
@@ -295,9 +292,9 @@ install.packages("http://groundhogr.com/groundhog_1.5.0.9013.tar.gz",repos=NULL,
   
 # Installation can be tested with most downloaded packages as of the release of R's version matching that being used
 # or based on available packages when testing. 
-    set.groundhog.folder("c:/dropbox/groundhog_folder/temp7")
+    set.groundhog.folder("c:/dropbox/temp7")
     groundhog.library('pwr','2021-08-15')
     library('groundhog')
-    test.groundhog(1:10)         #Install the 100 most downloaded packages 
+    test.groundhog(11:100)         #Install the 100 most downloaded packages 
     test.groundhog(500:525)        #install the 500-525 most downloaded packages
-    test.groundhog(-10, groundhog.day='2021-09-04',seed=9)  #install 10 random packages available right now for this version of R
+    test.groundhog(-10, groundhog.day='2021-09-04',seed=10)  #install 10 random packages available right now for this version of R
