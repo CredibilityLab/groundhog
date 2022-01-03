@@ -5,12 +5,12 @@
 
 load.cran.toc <- function(update.toc = FALSE) {
   groundhogR.url <- "https://groundhogR.com/"
-  wasabi.url <- "https://s3.wasabisys.com/groundhog/"  #backup where rds files are also saved
+  wasabi.url     <- "https://s3.wasabisys.com/groundhog/"  #backup where rds files are also saved
   
   groundhog.folder <- get.groundhog.folder()
 
   # 3.0 Ensure directory for groundhog exists
-  dir.create(groundhog.folder, showWarnings = FALSE) # Create if inexistent
+  dir.create(groundhog.folder, showWarnings = FALSE) # Create if nonexistent
 
   # 3.1 Paths two databases (toc and times:
   # LOCAL
@@ -19,7 +19,7 @@ load.cran.toc <- function(update.toc = FALSE) {
   mran.path <- file.path(groundhog.folder, "missing.mran.dates.rds")
 
   # 3.2 JUST LOAD
-  if (!update.toc) {
+  if (update.toc == FALSE) {
 
     # TOC
     if (file.exists(toc.path)) {
