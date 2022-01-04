@@ -1,7 +1,4 @@
 
-
-
-
         
  #Function 1 - get path to where sha_time[,] is saved .rds file (this file saves commits for a github,gitlab package)
   get.sha_time.rds_path<- function(git_usr_pkg)
@@ -42,18 +39,23 @@
 #-------------------------------------
     
  #Function 3 Identify remote ('github' vs 'gitlab';)
-    
        get.remote_id <- function(git_usr_pkg)
        {
+          #0 cran
+              if (basename(git_usr_pkg)==git_usr_pkg)
+              {
+                return('cran')
+              }
+         
           #1 github:  If none specified or if github specified, 
                 remote_id = ''
                 if (strpos1('::',git_usr_pkg)==-1 | strpos1('github::',git_usr_pkg)>-1 | strpos1('github.com',git_usr_pkg)>-1) {
-                  remote_id='github'
+                  return('github')
                 }
                 
           #2 gitlab: if gitlab is specified
                 if (strpos1('gitlab::',git_usr_pkg)> -1 | strpos1('gitlab.com',git_usr_pkg)>-1) {
-                  remote_id='gitlab'
+                  return('gitlab')
                 }
       
           #3 End if remote is unknown
@@ -70,7 +72,8 @@
        #get.remote_id('gitlab::pkg/er')
        #get.remote_id('https://github.com/CredibilityLab/groundhog')
        #get.remote_id('belgium::pkg/er')
-       #get.remote_id('pkg/er')
+       #get.remote_id('pkg/er')  
+       #get.remote_id('rio')    
        
        
 #-------------------------------------
@@ -132,4 +135,70 @@
    return(pkg.parsed)
     
   }
+  
+#Function 8 - Standardize remote pkg name
+  standardize.git_usr_pkg <- function(pkg)
+    {
+     #if it is cran, output the same pkg
+       if (basename(pkg)==pkg) return(pkg)
+    
+    #if not cran, process it
+     usr_pkg <- get.usr_pkg(pkg)
+     remote_id <- get.remote_id(pkg)
+     git_usr_pkg <- paste0(remote_id , "::" , usr_pkg)
+     return(git_usr_pkg)
+  }
+  
+  pkg1='rio'
+  pkg2='usr/rio'
+  pkg3='gitlab::usr/rio'
+  
+#Function 9 -  make_package take a value entered by user, pkg or usr/pkg, or git::usr/pkg and turns it into a list with all the parts
+  make.pkg_list <-function(pkg) {
+    
+    #1. Determine pkg.type ('pkg', 'user_pkg', 'git_user_pkg')
+      pkg.type='unknown'
+      if (pkg==basename(pkg))                        pkg.type='pkg'
+      if (strpos1("::",pkg)<0 & strpos1("/",pkg)>0)  pkg.type='usr_pkg'
+      if (strpos1("::",pkg)>0 & strpos1("/",pkg)>0)  pkg.type='git_usr_pkg'
+      if (pkg.type=='unknown') exit('groundhog says: "' , pkg , '"is not a valid name for a package')
+      
+      
+    #2 Create list elmeents  for package 
+      #type=pkg
+      
+      if (pkg.type=='pkg')    {
+          pkg <- pkg 
+          usr_pkg <- '' 
+          git_usr_pkg <- ''
+      }
+      
+      
+      #type==usr_pkg
+      
+        if (pkg.type=='usr_pkg') {
+          usr_pkg <- pkg
+          git_usr_pkg <- paste0('github::',user_pkg)
+          pkg     <- basename(pkg)
+        }
+      
+      
+      #type==git_usr_pkg
+      
+      if (pkg.type=='git_usr_pkg')  {
+          usr_pkg     <- strsplit(pkg,"::")[[1]][2]
+          git_usr_pkg <- paste0('github::',usr_pkg)
+          pkg         <- basename(pkg)
+          }
+      
+      
+    #3 Produce package as a namedList (see function in utils.R)
+        pkg_list <- namedList(pkg , usr_pkg , git_usr_pkg, pkg.type)
+          
+      return(pkg_list)
+      
+    }
+  
+  
+  
   

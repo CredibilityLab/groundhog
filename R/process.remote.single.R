@@ -1,7 +1,7 @@
 
 #Obtain information necessary to install a single remote package
 
-    process.remote.single <-  function(git_usr_pkg , groundhog.day,   baton=list(remotes.pending=c(), install.from=c(), sha=c(), remote.pkg_lib=NULL, rows.toc=NULL))
+    process.remote.single <-  function(git_usr_pkg , groundhog.day,   baton=list(remotes.pending=c(), install.from=c(), sha=c(), remote.pkg_lib=NULL, rows.toc=NULL, usr=c()))
     {
     #This function gets a row for toc file for a package, and passes on its obtained arguments to the next iteration
          
@@ -11,10 +11,14 @@
           pkg       <- basename(usr_pkg)
           usr       <- dirname(usr_pkg)
    
+        #0.5 add usr to batton
+          baton$usr <- c(baton$usr, usr)
+          
        #1 get sha and add to baton
           sha <- get.sha(git_usr_pkg , groundhog.day)  #this sha
-          baton$sha<-c(baton$sha , sha)              #all sha
+          baton$sha<-c(baton$sha , sha)                #all sha
             
+          
        #2 Get path to lib
           lib_remote <- get.lib_remote(git_usr_pkg , sha)
       
@@ -22,7 +26,7 @@
           #save contents in temporary file
             tmp<-file.path(get.groundhog.folder(), 'temp', paste0('description_',usr,'_',pkg,"_",sha))
             if (remote_id=='github') writeChar(remotes:::github_DESCRIPTION(usr, pkg, ref=sha),tmp)
-            if (remote_id=='gitlab') writeChar(remotes:::github_DESCRIPTION(usr, pkg, ref=sha),tmp)
+            if (remote_id=='gitlab') writeChar(remotes:::gitlab_DESCRIPTION(usr, pkg, ref=sha),tmp)
           
           #read the description file into data.frame
             description_df <- data.frame(read.dcf(tmp))
@@ -35,7 +39,7 @@
               
        #5) Turn description file into toc.row (like the rows in cran.toc.rds)
             #Ensure all columns needed for toc are in teh description_df
-              #varsnames in each dataframe
+              #var names in each dataframe
                 vars_in_toc <- c("Package","Version","Imports","Depends","Suggests","LinkingTo")
                 vars_in_des <- names(description_df)
               #if a variable is not in description, make it ''
@@ -49,11 +53,8 @@
         
         #7 Remove symbols from the dependencies text          
                 #7.1 Function that cleans
-                  clean_text <- function(x) {
-                        x=gsub("\\s*\\([^\\)]+\\)","",as.character(x)) #Kill the parenthense 
-                        x=gsub("\\n","",as.character(x))               #Kill the \n 
-          	    	      x=gsub(" ","",as.character(x))                 #Kill the space
-          	    	      x
+                  clean_text <- function(y) {
+                  return(gsub("\\s*\\([^\\)]+\\)|\\n| ","",as.character(y))) #Kill the parenthense, \n, and space
                   }
                 
                 #7.2 Apply to dependencies columns

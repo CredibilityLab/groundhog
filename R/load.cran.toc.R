@@ -55,15 +55,15 @@ load.cran.toc <- function(update.toc = FALSE) {
     #Create simple standardized user agent
       agent <- paste0("R/", R.version$major , ".", R.version$minor, " (",.Platform$OS.type,")")
     
-      dl_times <- try(download.file(paste0(groundhogR.url, "cran.times.rds"),         times.path, mode = "wb", method = "libcurl" ,headers = c("User-Agent" = agent)))
-      dl_toc <- try(download.file(paste0(groundhogR.url,   "cran.toc.rds"),           toc.path, mode = "wb", method = "libcurl",headers = c("User-Agent" = agent)))
-      dl_mran <- try(download.file(paste0(groundhogR.url,  "missing.mran.dates.rds"), mran.path, mode = "wb", method = "libcurl",headers = c("User-Agent" = agent)))
+      dl_times <- try(download.file(paste0(groundhogR.url, "cran.times.rds"),         times.path, mode = "wb", method = "libcurl" ))
+      dl_toc <- try(download.file(paste0(groundhogR.url,   "cran.toc.rds"),           toc.path, mode = "wb", method = "libcurl"))
+      dl_mran <- try(download.file(paste0(groundhogR.url,  "missing.mran.dates.rds"), mran.path, mode = "wb", method = "libcurl"))
 
 
     #If that did not work, try wasabi's backup
-      if (dl_times!=0) dl_times <- try(download.file(paste0(wasabi.url, "cran.times.rds"),        times.path, mode = "wb", method = "libcurl" ,headers = c("User-Agent" = agent)))
-      if (dl_toc!=0)   dl_toc   <- try(download.file(paste0(wasabi.url, "cran.toc.rds"),          toc.path, mode = "wb", method = "libcurl" ,headers = c("User-Agent" = agent)))
-      if (dl_mran!=0)  dl_mran  <- try(download.file(paste0(wasabi.url, "missing.mran.dates.rds"), mran.path, mode = "wb", method = "libcurl" ,headers = c("User-Agent" = agent)))
+      if (dl_times!=0) dl_times <- try(download.file(paste0(wasabi.url, "cran.times.rds"),        times.path, mode = "wb", method = "libcurl" ))
+      if (dl_toc!=0)   dl_toc   <- try(download.file(paste0(wasabi.url, "cran.toc.rds"),          toc.path, mode = "wb", method = "libcurl" ))
+      if (dl_mran!=0)  dl_mran  <- try(download.file(paste0(wasabi.url, "missing.mran.dates.rds"), mran.path, mode = "wb", method = "libcurl" ))
       
       
       cran.times <- readRDS(times.path)

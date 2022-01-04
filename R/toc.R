@@ -17,15 +17,16 @@
 #' @export
 toc <- function(pkg, dependencies = FALSE) {
 
-  if (is.null(.pkgenv[["cran.toc"]])) {
-    load.cran.toc(update.toc = FALSE)
-  }
-  cran.toc <- .pkgenv[["cran.toc"]]
+  #Load full_toc (cran.toc plus possible remotes)
+  full_toc <- get.full_toc()  
+  
+      #Note 1: parameters pkg & date are optional, without them we don't actively re-create baton
+      #Note 2: if the .env version exists, it gives that one, which is faster, if it is not availble, it loads from cran.toc.rds
 
-  if (dependencies) {
-    output <- cran.toc[cran.toc$Package == pkg, c("Version", "Published", "Imports", "Depends", "Suggests", "LinkingTo")]
+  if (dependencies==TRUE) {
+    output <- full_toc[full_toc$Package == pkg, c("Version", "Published", "Imports", "Depends", "Suggests", "LinkingTo")]
   } else {
-    output <- cran.toc[cran.toc$Package == pkg, c("Version", "Published")]
+    output <- full_toc[full_toc$Package == pkg, c("Version", "Published")]
   }
 
   if (nrow(output) == 0) {

@@ -1,11 +1,10 @@
 # Get date of binary package from MRAN, given \R version being used
 #
 get.R.pkg.date <- function(pkg_vrs, R_vrs) {
-  if (is.null(.pkgenv[["cran.toc"]])) {
-    load.cran.toc()
-  }
-
-  cran.toc <- .pkgenv[["cran.toc"]]
+  
+  #0 load cran.toc (with remotes if calling this from groundhog.library() and pkg is remote)
+    full_toc <-get.full_toc()
+  
   # 1. Get pkg from pkg_vrs
     pkg <- get.pkg(pkg_vrs)
     vrs <- get.vrs(pkg_vrs)
@@ -17,13 +16,10 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
     k.pkg <- which(pkg_vrs == paste0(cross1$Package, "_", cross1$Version))
     k.R <- which(paste0("R_", R_vrs) == paste0(cross1$Package, "_", cross1$Version))
 
-  # It's possible that cran.toc is outdated and doesn't include the required
-  # version
+  # It's possible that cran.toc is outdated and doesn't include the required R version
     if (length(k.R) == 0 | length(k.pkg) == 0) {
-      load.cran.toc(update.toc = TRUE)
-  
+      load.databases(update= TRUE)
       cross1 <- cross.toc(c(pkg, "R"))
-  
       k.pkg <- which(pkg_vrs == paste0(cross1$Package, "_", cross1$Version))
       k.R <- which(paste0("R_", R_vrs) == paste0(cross1$Package, "_", cross1$Version))
     }
@@ -55,8 +51,8 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
       }
 
       # 6.4  If end.date not yet in toc, update toc
-      if (max(cran.toc$Published) < end.date) {
-        load.cran.toc(TRUE)
+      if (max(full_toc$Published) < end.date) {
+        load.databases(update=TRUE)
       }
     } # ENd 6.2 --  if date will be found
   } # End if package came first
@@ -82,8 +78,8 @@ get.R.pkg.date <- function(pkg_vrs, R_vrs) {
       }
 
       # If end.date not yet in toc, update toc
-      if (max(cran.toc$Published) < end.date) {
-        load.cran.toc(TRUE)
+      if (max(full_toc$Published) < end.date) {
+        load.databases(TRUE)
       }
     } # There is only 1 version of R within set
   } # R with after

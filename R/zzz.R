@@ -79,12 +79,9 @@
           file_name <-"groundhog_version.txt"
           file_url <- paste0("https://groundhogr.com/",file_name)
           file_path <-paste0(get.groundhog.folder(),file_name)
-          
-        #Agent for call
-          agent <- paste0("R/", R.version$major , ".", R.version$minor, " (",.Platform$OS.type,")")
         
         #Download version number from groundhog server
-          dl_current_version <- try(download.file(file_url, file_path, quiet=TRUE, mode = "wb", method = "libcurl",headers = c("User-Agent" = agent)))    
+          dl_current_version <- try(download.file(file_url, file_path, quiet=TRUE, mode = "wb", method = "libcurl"))    
             
         #Try to read textfile with most recent version of groundhog from groundhog's server
           groundhog.version_cran <- tryCatch(

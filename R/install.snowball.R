@@ -24,7 +24,10 @@
     
   
     #1 Preliminaries
-    
+      #1.0 souce remote dummies
+          source <- snowball$from=='source'
+          remote <- snowball$from %in% c('gitlab','github')
+          source.remote <- source | remote
      
       
       #1.1 Count number of rows
@@ -57,7 +60,7 @@
             }
         
       #1.5 Directory for downloaded binaries, source files, & libraries for installed packages
-          temp_path=paste0(get.groundhog.folder()    ,"/temp")
+          temp_path <- paste0(get.groundhog.folder()    ,"/temp")
           dir.create(temp_path, recursive = TRUE, showWarnings = FALSE)
           for (k in 1:nrow(snowball))
             {
@@ -252,25 +255,28 @@
         
         
     #################################################
-    #4 INSTALL SOURCE & LOAD
+    #4 subSNOWBALL for SOURCE AND REMOTE
     ###################################################
       
-      #4.1 Any Source files remain to be installed?
-          n.source=sum(snowball$from=="source" & snowball$installed==FALSE)
-          if (n.source>0) {
+      #4.1 Any Source or Remote files remain to be installed?
+          n.source=sum(source & snowball$installed==FALSE )
+          n.remote=sum(remote & snowball$installed==FALSE )
+          if (n.source+n.remote > 0) {
             
             
       #4.2 Start clock for install feedback
-              start.time=Sys.time()
+             start.time=Sys.time()
               
       #4.3 Show message
-            message1("groundhog says: will now attempt installing ",n.source," packages from source.")
-          
+            if (n.source>0 & n.remote==0) message1("Will now attempt installing ",n.source," packages from source.")
+            if (n.source>0 & n.remote> 0) message1("Will now attempt installing ",n.source," packages from source and ",n.remote," from remote repositories (e.g., GitHub, gitlab).")
+            if (n.source==0 & n.remote> 0) message1("Will now attempt installing ",n.remote," packages from repositories (e.g., GitHub, gitlab).")
+
       #4.4 Smaller snowball to send to feedback
-            snowball.source=snowball[snowball$from=="source" & snowball$installed==FALSE,]
+            snowball.source=snowball[(remote | source) & snowball$installed==FALSE,]
             
       #4.5 Counter for snowball source
-            k.source=1
+            k.source_remote <- 1
             
       #4.6 Load list of *current* SOURCE packages
             ap_source=get.current.packages("source")
@@ -300,10 +306,10 @@
                   }
                 
         #4.10 Feedback on time to user
-                installation.feedback(k.source, date, snowball.source, start.time) 
+                installation.feedback(k.source_remote, date, snowball.source, start.time) 
                 
               #Add to counter for feedback 
-                k.source=k.source+1
+                k.source_remote=k.source_remote+1
                 
                 
         #4.11 Bypass quiet install for slow packages
@@ -343,8 +349,8 @@
             
             
             
-        #4.14 If not installed show error    
-              if (!is.pkg_vrs.installed(snowball$pkg[k], snowball$vrs[k]))
+        #4.14 If not installed show error (the check skips github package because its location is not based on pkg_vrs and we check it manually in the github addon script)
+              if (!is.pkg_vrs.installed(snowball$pkg[k], snowball$vrs[k]) & !is.lib.github(snowball$installation.path[k]))
               {
                   message("The package '",snowball$pkg_vrs[k],"' failed to install!")
                 
@@ -378,6 +384,19 @@
                     exit()
                     }
                 
+                
+        #5 IF it is remote
+            if (remote[k]==TRUE & snowball$installed[k]==FALSE )
+            {
+              #Get remote name of package with sha
+                usr_pkg_sha  <- paste0(snowball$usr[k] , "/" , snowball$pkg[k], "@", snowball$sha[k] )
+                
+              #Install it
+              if (snowball$from[k] =='gitlab') remotes::install_gitlab(usr_pkg_sha, dependencies = FALSE , lib=snowball$installation.path[k]) 
+              if (snowball$from[k] =='github') remotes::install_github(usr_pkg_sha, dependencies = FALSE , lib=snowball$installation.path[k])
+                
+              
+            }
                 
       } #End loop over snowball        
 

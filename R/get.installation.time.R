@@ -6,9 +6,9 @@
 # 
 
 get.installation.time <- function(pkg, vrs) {
-  if (is.null(.pkgenv[["cran.times"]])) {
-    load.cran.toc()
-  }
+  load.databases()
+  #Ensures the .pkgenv[[]] for the three databases are loaded
+  
   cran.times <- .pkgenv[["cran.times"]]
 
   dfk <- cran.times[cran.times$pkg_vrs == paste0(pkg, "_", vrs), ] # subset of package
