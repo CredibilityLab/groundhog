@@ -31,21 +31,19 @@
     #Note: groundhog.day  is included to guide how long to search. Github's API outputs in batches of 100 and it is a 
     #bit slow to process with jsonlite, so we do not get older sha's than necessary, stop when we read groundhog.time
     
-      update.github_sha_time <- function(git_usr_pkg, groundhog.day)
+      update.github_sha_time <- function(pkg, groundhog.day, remote_id='github', usr)
       {
       
       #0 Set local parameters
         #0.1 Groundhog time (Unix time for 1st sec of next day)
           groundhog.time <-  as.numeric(as.POSIXct(as.Date(groundhog.day)+1, format="%Y-%m-%d"))
-    
-        #0.2 remote_id
-          remote_id <- 'github'
-          
-        #0.3 usr_pkg
-          usr_pkg <- get.usr_pkg(git_usr_pkg)
+        
+        #0.2 Shorter vars
+            usr_pkg     <- paste0(usr , '/' , pkg)
+            git_usr_pkg <- paste0(remote_id, "::", usr , '/' , pkg)
         
       #1 Path to .rds file 
-          rds_path <- get.sha_time.rds_path(git_usr_pkg)         
+          rds_path <- get.sha_time.rds_path(pkg, remote_id, usr)         
           
       #2 Ensure directory exists
          if (!file.exists(dirname(rds_path))) dir.create(dirname(rds_path),showWarnings = FALSE,recursive=TRUE)
@@ -84,13 +82,13 @@
           {
             date0=as.Date(as.POSIXct(min(sha_time$time), origin="1970-01-01"))
               message("\nThe groundhog day you entered '", groundhog.day, "', is earlier than\n",
-              "when '",usr_pkg,"' was first available on " , remote_id , 
+              "when '", usr_pkg , "' was first available on " , remote_id , 
               " (first commit: '", date0,"').\n\n",
-              "This conclusion is based on data downloaded from ",remote_id," in the past, \n",
+              "This conclusion is based on data downloaded from ", remote_id, " in the past, \n",
               "if you believe it is incorrect, you can refresh that information by running:\n",
-              "refresh_commits('",git_usr_pkg,"')")
+              "refresh_commits('" , git_usr_pkg , "')")
               exit()
-          } #ENd if known first commit
+          } #End if known first commit
                 
           } #End if file already exists
            
