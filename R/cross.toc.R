@@ -1,4 +1,4 @@
-#' Show joint table of contents (toc) for multiple packages
+#' Show toc table with multiple packages
 #'
 #' @param pkgs character vector containing the package names.
 #' @param date1,date2 date range to consider (in the format "%Y-%m-%d").
@@ -22,10 +22,12 @@
 #' @export
 #'
 cross.toc <- function(pkgs, date1 = "1970-1-1", date2 = Sys.Date()) {
-  #Load cran.toc
-    full_toc <- get.full_toc(date=date2)
-  
-  toc.all <- full_toc[full_toc$Package %in% pkgs, c("Version", "Published", "Package")]
+  if (is.null(.pkgenv[["cran.toc"]])) {
+    load.cran.toc(update.toc = FALSE)
+  }
+  cran.toc <- .pkgenv[["cran.toc"]]
+
+  toc.all <- cran.toc[cran.toc$Package %in% pkgs, c("Version", "Published", "Package")]
   toc.all <- toc.all[order(toc.all$Published), ]
   # date subset
   toc.all <- toc.all[toc.all$Published > date1 & toc.all$Published < date2, ]

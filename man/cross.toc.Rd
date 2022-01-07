@@ -2,7 +2,7 @@
 % Please edit documentation in R/cross.toc.R
 \name{cross.toc}
 \alias{cross.toc}
-\title{Show joint table of contents (toc) for multiple packages}
+\title{Show toc table with multiple packages}
 \usage{
 cross.toc(pkgs, date1 = "1970-1-1", date2 = Sys.Date())
 }
@@ -20,7 +20,7 @@ A \code{data.frame} with 3 columns:
 }
 }
 \description{
-Show joint table of contents (toc) for multiple packages
+Show toc table with multiple packages
 }
 \examples{
 

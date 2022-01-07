@@ -1,54 +1,63 @@
-#' Get dependencies for one package on a given date
+#' Get dependencies for one package
 #'
-#' Get direct dependencies for one package `pkg`. 
-#' For CRAN packages it uses the date when it was published on CRAN
-#' For GitHub and Gitlab package it is based on the last commit 
-#' pushed on, or prior to the the `date`.
+#' Get direct dependencies for one package `pkg`, for the version on CRAN at the
+#' given `date`.
+#'
+#' @param pkg character. Name of the package to install
+#' @param date date (in the format "%Y-%m-%d"), Required date for the package.
+#' @param include.suggests Logical (defaults to `FALSE`. Should suggested
+#'   packages be installed?
+#' @return A character vector containing the package dependencies for `pkg`, for
+#'   the version on CRAN at `date.`
+#' @noRd
+# @examples
+# \dontrun{
+# groundhog:::get.dependencies("magrittr", "2018-02-12", include.suggests = TRUE)
+# }
+#'
+#' @seealso [get.all.dependencies()] for recursive (=indirect) dependencies
+#'
+#' @noRd
 
+get.dependencies <- function(pkg, date, include.suggests = FALSE) {
 
-  get.dependencies <- function(pkg, date, include.suggests = FALSE) {
+  update_cran.toc_if.needed(date = date)
+  cran.toc <- .pkgenv[["cran.toc"]]
 
-    full_toc <- get.full_toc()
   
-      
-  
-  #1 If a base R package, return empty character vector (cannot look up in cran.toc.rds for it is not on cran)
+  #If a base R package, return empty character vector (cannot lookup in crant.toc.rds for it is not on cran)
     if (pkg %in% base_pkg()) {
       return(as.character())
     }
   
-  #2 If a remote pkg (github, gitlab) read the 
-    remote <- FALSE
-    if (basename(pkg) != pkg) remote <- TRUE
-    
-    if (remote==TRUE) {
-      pkg=git_usr_pkg_sha;
-      
-      
-      
-    }
-    
   # Get version from date
-      vrs <- get.version(pkg, date)
+  vrs <- get.version(pkg, date)
 
   # Get dependencies if version exists
-      row <- full_toc[full_toc$Package == pkg & full_toc$Version == vrs, c("Imports", "Depends", "Suggests", "LinkingTo")]
-      dep <- c(row$Imports, row$Depends, row$LinkingTo) # merge
-      if (include.suggests) {
-        dep <- c(dep, row$Suggests) # add 'Suggests' dependencies if requested
-      }
-      dep <- unlist(strsplit(dep, ","))  # turn to array
-      dep <- unique(dep)                 # some dependencies can be listed both in Imports and LinkingTo, keep only one
+  row <- cran.toc[cran.toc$Package == pkg & cran.toc$Version == vrs, c("Imports", "Depends", "Suggests", "LinkingTo")]
+  dep <- c(row$Imports, row$Depends, row$LinkingTo) # merge
+  if (include.suggests) {
+    dep <- c(dep, row$Suggests) # add 'Suggests' dependencies if requested
+  }
+  dep <- unlist(strsplit(dep, ","))  # turn to array
+  #dep <- dep[!dep %in% base_pkg()]   # base dependencies from R
+  dep <- unique(dep)                 # some dependencies can be listed both in Imports and LinkingTo, keep only one
 
   #Drop non-cran
-    non.cran <- dep[!dep %in% full_toc$Package]
-    dep <- dep[!dep %in% non.cran]
+  non.cran <- dep[!dep %in% cran.toc$Package]
+  dep <- dep[!dep %in% non.cran]
 
+  #Give warning (commented out because this code is executed twice within a groundhog.library() call, and so it duplicates the warning)
+  #if (length(non.cran)>0) {   #This only considers non-cran dependencies which are not the packaae of interest, to avoid double reporting it
+  #  message2("groundhog.library() Warning: Missing dependencies *??!")
+  # message1("The following dependencies: '",non.cran,"' were not found on CRAN and their installation will not be attempted.")
+  # }
 
-  # These steps are normally taken care of server side but let's stay on the safe side
-    dep <- dep[dep != ""] # drop empty values
-    dep <- dep[dep != "R"] # drop R as a dependency
-    dep <- dep[!is.na(dep)] # drop NA
+  # These steps are normally taken care of server side but let's stay on the
+  # safe side
+  dep <- dep[dep != ""] # drop empty values
+  dep <- dep[dep != "R"] # drop R as a dependency
+  dep <- dep[!is.na(dep)] # drop NA
 
   return(dep)
 } # End get.dependencies()
@@ -71,13 +80,12 @@
 #seealso [get.dependencies()] for direct dependencies only
 
 get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
-  
 
 
   # 5.1. Populate the starting point with this package and its dependencies
   # [a] Vector with pending deps, for looping install
-  pending <- get.dependencies(pkg, date, include.suggests) # include.suggests=TRUE means that suggested dependencies and their dependencies are installed.
-                                                           
+  pending <- get.dependencies(pkg, date, include.suggests = include.suggests) # include.suggests=TRUE means that suggested dependencies and their dependencies are installed.
+
   if (length(pending) == 0) {
     return(data.frame(pkg = character(), dep2 = character(),stringsAsFactors = FALSE))
   }

@@ -3,9 +3,10 @@
 
 get.date.for.install.binary <- function(pkg_vrs) {
   
+  
   binary.date <- as.DateYMD("1970-01-01")
   
-  #0 Return 1970-01-01  if it is a base package, 
+  #0 REturn 1970-01-01  if it is a base package, 
     pkg <- get.pkg(pkg_vrs)
     if (pkg %in% base_pkg()) 
       {
@@ -59,8 +60,8 @@ get.date.for.install.binary <- function(pkg_vrs) {
       
       #If no next release, use highest date in cran.toc.rds
       if (is.na(date.pkg2)) {
-          full_toc <- get.full_toc()
-          date.pkg2 <- max(full_toc$Published)   
+          cran.toc <- .pkgenv[["cran.toc"]]
+          date.pkg2 <- max(cran.toc$Published)   
           }
       
     #3 Find range of values when package and R version match

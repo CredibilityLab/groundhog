@@ -2,7 +2,7 @@
 % Please edit documentation in R/groundhog.library.R
 \name{groundhog.library}
 \alias{groundhog.library}
-\title{Load CRAN, GitHub & Gitlab packages, and their dependencies, as current on given date}
+\title{Load CRAN packages, and their dependencies, as current on given date}
 \usage{
 groundhog.library(
   pkg,

@@ -27,27 +27,9 @@ get.pkg_search_paths <- function(pkg, vrs) {
   # Get rid of patch version number
   rv <- gsub("\\.\\d+(-w)?$", "", rv)
 
-  
-  #Assess origin of pkg
-    remote_id <- get.remote_id(pkg)
-    
-  #Default value
-    pkg_search_paths <- NULL
-    
-  #Cran packages 
-    if (remote_id=='cran') 
-      {
-      pkg_search_paths <- paste0(get.groundhog.folder(), "/R-", rv, "/", pkg, "_", vrs)
-      }
+  # paths
+  pkg_search_paths <- paste0(get.groundhog.folder(), "/R-", rv, "/", pkg, "_", vrs)
 
-    
-    ###>>>> HERE, NEED T FIND WAY TO PASS ON SHA, TO THE SEARCH FOR IT IS SAVED WITH IT
-  #If remote
-    if (remote_id %in% c('gitub','gitlab')) {
-      pkg_search_paths <- paste0(get.groundhog.folder(), "/R-", rv, "/_" , remote_id, 
-      
-    }
-    
   # Ensure directories exist
   return(pkg_search_paths)
 }
