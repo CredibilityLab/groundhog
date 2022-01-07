@@ -4,7 +4,14 @@
 \alias{get.snowball}
 \title{Generates dataframe with all dependencies needed to install a package, in the order they will be loaded}
 \usage{
-get.snowball(pkg, date, include.suggests = FALSE, force.source = FALSE)
+get.snowball(
+  pkg,
+  date,
+  include.suggests = FALSE,
+  force.source = FALSE,
+  remote_id = "cran",
+  usr = ""
+)
 }
 \arguments{
 \item{pkg}{character string, name of target package to load (and install if needed),}

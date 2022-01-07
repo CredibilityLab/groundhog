@@ -1,113 +1,143 @@
-# 2.0.5 Parse pkg_vrs into pkg and vrs
-get.pkg <- function(x) substr(x, 1, regexpr("_", basename(x)) - 1)
-get.vrs <- function(x) substr(x, regexpr("_", basename(x)) + 1, nchar(x))
+#This script has functions used throughout the package
 
-# Is pkg_vrs installed (within same R-minor version)?
-#
-is.pkg_vrs.installed <- function(pkg, vrs) {
-  #Assume base package is installed
-  if (pkg %in% base_pkg()) {
-    return(TRUE)
+#1  Extract package and version information from pkg_vrs
+#2  Is pkg_vrs installed (within same R-minor version)?
+#3  Format Y-M-D as date
+#4  R being used
+#5  Get R Version
+#6  Message1()
+#7  Message2()
+#8  Named list
+#9  Quit menu
+#10 exit() Stop message which does not say error
+#11 Available mran dates
+#12 Base packages
+#13 Default packages to ignore conflicts with (but gives warning)
+#14 Is this on R studio
+#15 Get major minor (but no patch) version of R
+#16 Get major minor AND patch
+#17 validate date  
+#18 Clean up prompt answer, lowercase and no quotes
+#19 Verify file was download
+#20 Check if lib is for github (possibly a legacy function)
+#21 Robust reading of text online : try_readlines ()
+#22 Turn dates to unix time
+#23 string position - simpler gregexpr for strpos  
+  
+########################################################################
+    
+
+
+#1. Exract package and version information from pkg_vrs
+  get.pkg <- function(x) substr(x, 1, regexpr("_", basename(x)) - 1)
+  get.vrs <- function(x) substr(x, regexpr("_", basename(x)) + 1, nchar(x))
+
+#2.  Is pkg_vrs installed (within same R-minor version)?
+      is.pkg_vrs.installed <- function(pkg, vrs) {
+        #Assume base package is installed
+        if (pkg %in% base_pkg()) {
+          return(TRUE)
+          } else {
+          (get.installed_path(pkg, vrs) %in% get.pkg_search_paths(pkg, vrs))
+          } #End else
+      }
+
+  
+
+#3.  Format Y-M-D as date
+  as.DateYMD <- function(x) as.Date(x, format = "%Y-%m-%d",origin='1970-01-01')
+
+#4. R beind used
+  get.rdate <- function() {
+    date <- paste0(R.version$year, "-", R.version$month, "-", R.version$day)
+    return(as.DateYMD(date))
+  }
+
+#5 Get R Version
+  get.rversion <- function() {
+    r.version <- paste0(R.version$major, ".", R.version$minor)
+    return(r.version)
+  }
+
+#6 Message1()
+  #message1() are messages that are coloured if the terminal supports it and
+  # that have a special "groundhog-msg" class that makes it possible to disable
+  # them selectively using suppressMessages(     , class = "groundhog-msg")
+  message1 <- function(..., domain = NULL, appendLF = TRUE, quiet = getOption("quiet.groundhog", default = FALSE)) {
+    if (quiet) {
+      return(invisible())
+    }
+    if (.pkgenv[["supportsANSI"]]) {
+      msg <- .makeMessage("\033[36m", ..., "\033[0m", domain = domain, appendLF = appendLF)
     } else {
-    (get.installed_path(pkg, vrs) %in% get.pkg_search_paths(pkg, vrs))
-    } #End else
-}
-
-# Format Y-M-D as date
-#
-# @param x character string containing the date in the format "%Y-%m-%d"
-#
-as.DateYMD <- function(x) as.Date(x, format = "%Y-%m-%d",origin='1970-01-01')
-
-# 2.2  R Being used
-# 2.2.1 R Date
-get.rdate <- function() {
-  date <- paste0(R.version$year, "-", R.version$month, "-", R.version$day)
-  return(as.DateYMD(date))
-}
-
-# 2.2.2 R Version
-get.rversion <- function() {
-  r.version <- paste0(R.version$major, ".", R.version$minor)
-  return(r.version)
-}
-
-# message1() are messages that are coloured if the terminal supports it and
-# that have a special "groundhog-msg" class that makes it possible to disable
-# them selectively using suppressMessages(     , class = "groundhog-msg")
-message1 <- function(..., domain = NULL, appendLF = TRUE, quiet = getOption("quiet.groundhog", default = FALSE)) {
-  if (quiet) {
-    return(invisible())
-  }
-  if (.pkgenv[["supportsANSI"]]) {
-    msg <- .makeMessage("\033[36m", ..., "\033[0m", domain = domain, appendLF = appendLF)
-  } else {
-    msg <- .makeMessage(..., domain = domain, appendLF = appendLF)
-  }
-  msg <- simpleMessage(msg)
-  msg <- structure(msg, class = c("groundhog-msg", class(msg)))
-  message(msg)
-}
-
-message2 <- function(..., domain = NULL, appendLF = TRUE, quiet = getOption("quiet.groundhog", default = FALSE)) {
-  if (quiet) {
-    return(invisible())
-  }
-  msg <- list(...)
-  if (length(msg) == 0) {
-    msg <- c("groundhog says:")
+      msg <- .makeMessage(..., domain = domain, appendLF = appendLF)
+    }
+    msg <- simpleMessage(msg)
+    msg <- structure(msg, class = c("groundhog-msg", class(msg)))
+    message(msg)
   }
 
-  if (.pkgenv[["supportsANSI"]]) {
-    msg <- .makeMessage("\033[1;36m", msg, "\033[0m", domain = domain, appendLF = appendLF)
-  } else {
-    msg <- .makeMessage(msg, domain = domain, appendLF = appendLF)
+#7 Message2()
+  message2 <- function(..., domain = NULL, appendLF = TRUE, quiet = getOption("quiet.groundhog", default = FALSE)) {
+    if (quiet) {
+      return(invisible())
+    }
+    msg <- list(...)
+    if (length(msg) == 0) {
+      msg <- c("groundhog says:")
+    }
+  
+    if (.pkgenv[["supportsANSI"]]) {
+      msg <- .makeMessage("\033[1;36m", msg, "\033[0m", domain = domain, appendLF = appendLF)
+    } else {
+      msg <- .makeMessage(msg, domain = domain, appendLF = appendLF)
+    }
+    msg <- simpleMessage(msg)
+    msg <- structure(msg, class = c("groundhog-msg", class(msg)))
+    message(msg)
   }
-  msg <- simpleMessage(msg)
-  msg <- structure(msg, class = c("groundhog-msg", class(msg)))
-  message(msg)
-}
-# 2.8 Automatically name elements in list with name of the objects in the list
+
+#8 Named list
+#Automatically name elements in list with name of the objects in the list
 # https://stackoverflow.com/questions/16951080/can-lists-be-created-that-name-themselves-based-on-input-object-names
-#' @importFrom stats setNames
-namedList <- function(...) {
-  L <- list(...)
-  snm <- sapply(substitute(list(...)), deparse)[-1]
-  if (is.null(nm <- names(L))) {
-    nm <- snm
+  namedList <- function(...) {
+      L <- list(...)
+      snm <- sapply(substitute(list(...)), deparse)[-1]
+      if (is.null(nm <- names(L))) {
+        nm <- snm
+      }
+      if (any(nonames <- nm == "")) {
+        nm[nonames] <- snm[nonames]
+      }
+      stats::setNames(L, nm)
+    }
+
+#9 Quit menu
+  quit.menu <- function(date, quiet = getOption("quiet.groundhog", default = FALSE)) {
+    if (quiet) {
+      return(invisible())
+    }
+    message1(
+      "Type 'Q', 'quit' or 'stop' to stop the script.\nAnything else to continue"
+    )
+    x <- readline("")
+    if (tolower(x) %in% c("q", "quit", "stop")) {
+      message2()
+      message1("You typed ", x, " so script stops...")
+      msg.R.switch(date)
+      exit("---")
+    } # End if quit
+  
+    message1("You typed '", x, "' the script continues...")
+  } # End quit.menu
+
+#10 exit() Stop message which does not say error
+  exit <- function(...) {
+    message1(...)
+    invokeRestart("abort")
   }
-  if (any(nonames <- nm == "")) {
-    nm[nonames] <- snm[nonames]
-  }
-  setNames(L, nm)
-}
 
-# 2.10 Quit menu
-quit.menu <- function(date, quiet = getOption("quiet.groundhog", default = FALSE)) {
-  if (quiet) {
-    return(invisible())
-  }
-  message1(
-    "Type 'Q', 'quit' or 'stop' to stop the script.\nAnything else to continue"
-  )
-  x <- readline("")
-  if (tolower(x) %in% c("q", "quit", "stop")) {
-    message2()
-    message1("You typed ", x, " so script stops...")
-    msg.R.switch(date)
-    exit("---")
-  } # End if quit
-
-  message1("You typed '", x, "' the script continues...")
-} # End quit.menu
-
-# Stop message which does not say error
-exit <- function(...) {
-  message1(...)
-  invokeRestart("abort")
-}
-
-# Function added on 2020 05 18
+#11 Available mran dates
 get.available.mran.date <- function(date0, date1) {
   missing.mran.dates <- .pkgenv[["missing.mran.dates"]]
 
@@ -134,32 +164,31 @@ get.available.mran.date <- function(date0, date1) {
   return(as.Date(mid.date, origin = "1970-01-01"))
 } # End of function
 
-base_pkg <- function() {
-  c(
-    "base",
-    "compiler",
-    "datasets",
-    "graphics",
-    "grDevices",
-    "grid",
-    "methods",
-    "parallel",
-    "splines",
-    "stats",
-    "stats4",
-    "tcltk",
-    "tools",
-    "utils"
-  )
-}
+#12 Base packages
+    base_pkg <- function() {
+      c(
+        "base",
+        "compiler",
+        "datasets",
+        "graphics",
+        "grDevices",
+        "grid",
+        "methods",
+        "parallel",
+        "splines",
+        "stats",
+        "stats4",
+        "tcltk",
+        "tools",
+        "utils"
+      )
+    }
 
-#Default pacakges to ignore conflicts with (but gives warning)
+#13 Default packages to ignore conflicts with (but gives warning)
 ignore.deps_default <- function() {
   
   #Packages r-studio tends to load automatically
       Rstudio.deps <- c(
-        #"testthat", 
-        #"rstudioapi",
         "knitr",     
         "rmarkdown", 
         "xfun"       
@@ -179,24 +208,22 @@ ignore.deps_default <- function() {
 
 
 
+#14 Is this on R studio
+  is_rstudio <- function() {
+    # More reliable than the env variable because it works as expected even when
+    # code is called from the Terminal tab in RStudio (NOT the Console).
+    identical(.Platform$GUI, "RStudio")
+  }
 
-is_rstudio <- function() {
-  # More reliable than the env variable because it works as expected even when
-  # code is called from the Terminal tab in RStudio (NOT the Console).
-  identical(.Platform$GUI, "RStudio")
-}
-
-
-
-
-
-get.r.majmin <- function() {
-   major <- as.numeric(R.version$major)
-   minor <- as.numeric(strsplit(R.version$minor, "\\.")[[1]][1])
-   majmin <- paste0(major, ".", minor)
-   return(majmin)
-   }
+#15 Get major minor (but no patch) version of R
+  get.r.majmin <- function() {
+     major <- as.numeric(R.version$major)
+     minor <- as.numeric(strsplit(R.version$minor, "\\.")[[1]][1])
+     majmin <- paste0(major, ".", minor)
+     return(majmin)
+     }
    
+#16 Get major minor pach
  get.r.majmin.release <- function()
  {
    r.majmin <- get.r.majmin()
@@ -207,10 +234,7 @@ get.r.majmin <- function() {
    return(release.date)
     }
 
- 
-	
- 
-  #Function to validate date  
+#17 validate date  
   validate.date <- function(date)
       {
       # numeric
@@ -236,7 +260,8 @@ get.r.majmin <- function() {
           }
   }#End is valid date
   
-  #Clean up prompt asnwer, lowercase and no quotes
+  
+#18 Clean up prompt answer, lowercase and no quotes
   strip.prompt <- function(x)
   {
      x <- gsub('`' ,"", x)
@@ -244,9 +269,70 @@ get.r.majmin <- function() {
      x <- gsub("'" ,"", x)
      x <- tolower(x)
      x
-     }
+  }
+  
+  
+#19 Verify file was download
+    exit.if.download.failed <- function(file.name,file.path)
+    {
+    if (!file.exists(file.path)) {
+      message2("Groundhog says: Error!")
+      message1("Attempt to download '", file.name, "' failed.")
+      message1("We recommend trying again. If the problem persists, ")
+      message1("check your internet connection. If you are connected and")
+      message1("nevertheless cannot download please check:")
+      message1("https://groundhogr.com/troubleshoot")
+      message('\ngroundhog.library() request aborted.')
+      exit()
+    }#End if path exists
+  } #End function
 
-  
+#20 Check if lib is for github
+    is.lib.github=function(lib.path) {
+      pos = regexpr('_github', lib.path)[[1]] 
+      return(pos>0) #TRUE if pos>0
+      
+      }
   
     
-    
+#21 Robust reading of text online : try_readlines ()
+
+      try_readLines <- function(url,...) {
+    out <- tryCatch(
+          {
+          readLines(con=url, warn=FALSE, ...) 
+            
+          },
+        error=function(cond) {
+            message1(paste("groundhog says: Unable to connect to :", url))
+            message1("The error generated by R:")
+            message(cond)
+            return(FALSE)
+            exit()
+        },
+        warning=function(cond) {
+            message1(paste("groundhog says: Unable to connect to :", url))
+            message1("The warning generated by R:")
+            message(cond)
+            return(FALSE)
+            exit()
+        }
+      )    
+      return(out)
+      }
+      
+      
+  
+#Function 22 - Turn dates to unix time
+      timestamp.to.time <- function(timestamp)  as.numeric(as.POSIXct(timestamp, format="%Y-%m-%dT%H:%M:%OS"))
+      date.to.time      <- function(date)       as.numeric(as.POSIXct(date,      format="%Y-%m-%d"))
+      
+
+#Function 23 - string positiong - simpler gregexpr for strpos
+      strpos1 <- function(needle, haystack) as.numeric(gregexpr(needle, haystack)[[1]])
+      
+      
+
+      
+      
+      

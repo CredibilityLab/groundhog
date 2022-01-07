@@ -1,4 +1,4 @@
-#' Load CRAN packages, and their dependencies, as current on given date 
+#' Load CRAN, GitHub & Gitlab packages, and their dependencies, as current on given date 
 #' 
 #' Groundhog maintains a separate local package library where it stores 
 #' version-controlled packages, with multiple versions of the same package saved side-by-side. 
@@ -71,7 +71,11 @@
                    "'.\n     To avoid seeing this message when using groundhog.library(), enter package name in quotes.\n\n")  
         } 
           
-  #2 Loop running groundhog
+    
+    #2 Update databases baseed on date if necessary
+        update.databases.if.needed(date = date) #this automatically loads them as well.
+                
+    #3 Loop running groundhog
         for (pkgk in pkg) {
               groundhog.library.single(pkgk, date, quiet.install ,  include.suggests ,  
                                         ignore.deps, force.source , force.install, tolerate.R.version)

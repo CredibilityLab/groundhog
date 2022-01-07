@@ -4,11 +4,13 @@
 # publication date.
 
 load.cran.toc <- function(update.toc = FALSE) {
-  groundhogR.url <- "http://groundhogR.com/"
+  groundhogR.url <- "https://groundhogR.com/"
+  wasabi.url     <- "https://s3.wasabisys.com/groundhog/"  #backup where rds files are also saved
+  
   groundhog.folder <- get.groundhog.folder()
 
   # 3.0 Ensure directory for groundhog exists
-  dir.create(groundhog.folder, showWarnings = FALSE) # Create if inexistent
+  dir.create(groundhog.folder, showWarnings = FALSE) # Create if nonexistent
 
   # 3.1 Paths two databases (toc and times:
   # LOCAL
@@ -17,7 +19,7 @@ load.cran.toc <- function(update.toc = FALSE) {
   mran.path <- file.path(groundhog.folder, "missing.mran.dates.rds")
 
   # 3.2 JUST LOAD
-  if (!update.toc) {
+  if (update.toc == FALSE) {
 
     # TOC
     if (file.exists(toc.path)) {
@@ -49,13 +51,24 @@ load.cran.toc <- function(update.toc = FALSE) {
     .pkgenv[["missing.mran.dates"]] <- missing.mran.dates
   } else {
     #If updating 
-    dl_times <- try(download.file(paste0(groundhogR.url, "cran.times.rds"), times.path, mode = "wb", method = "libcurl"))
-    dl_toc <- try(download.file(paste0(groundhogR.url, "cran.toc.rds"), toc.path, mode = "wb", method = "libcurl"))
-    dl_mran <- try(download.file(paste0(groundhogR.url, "missing.mran.dates.rds"), mran.path, mode = "wb", method = "libcurl"))
+    
+    #Create simple standardized user agent
+      agent <- paste0("R/", R.version$major , ".", R.version$minor, " (",.Platform$OS.type,")")
+    
+      dl_times <- try(download.file(paste0(groundhogR.url, "cran.times.rds"),         times.path, mode = "wb", method = "libcurl" ))
+      dl_toc <- try(download.file(paste0(groundhogR.url,   "cran.toc.rds"),           toc.path, mode = "wb", method = "libcurl"))
+      dl_mran <- try(download.file(paste0(groundhogR.url,  "missing.mran.dates.rds"), mran.path, mode = "wb", method = "libcurl"))
 
-    cran.times <- readRDS(times.path)
-    cran.toc <- readRDS(toc.path)
-    missing.mran.dates <- readRDS(mran.path)
+
+    #If that did not work, try wasabi's backup
+      if (dl_times!=0) dl_times <- try(download.file(paste0(wasabi.url, "cran.times.rds"),        times.path, mode = "wb", method = "libcurl" ))
+      if (dl_toc!=0)   dl_toc   <- try(download.file(paste0(wasabi.url, "cran.toc.rds"),          toc.path, mode = "wb", method = "libcurl" ))
+      if (dl_mran!=0)  dl_mran  <- try(download.file(paste0(wasabi.url, "missing.mran.dates.rds"), mran.path, mode = "wb", method = "libcurl" ))
+      
+      
+      cran.times <- readRDS(times.path)
+      cran.toc <- readRDS(toc.path)
+      missing.mran.dates <- readRDS(mran.path)
 
     .pkgenv[["cran.times"]] <- cran.times
     .pkgenv[["cran.toc"]] <- cran.toc
