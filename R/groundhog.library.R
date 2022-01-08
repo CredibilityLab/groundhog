@@ -59,13 +59,19 @@
     #1.1) Is date valid?
         validate.date(date) #Function defined in utils.R
    
-    #1.2) validate R
+    #1.2) Reload databases so that any changes to cran.toc are undone (previous groundhog.library() call loading remotes)
+        load.cran.toc()
+        
+    #1.3 In addition, if the day merits, update the database
+        update_cran.toc_if.needed(date) 
+
+    #1.4) validate R
         validate_R(date , tolerate.R.version)
      
-    #1.2) Set of ignorable conflicts
+    #1.5) Set of ignorable conflicts
         ignore.deps <- c(ignore.deps_default() , ignore.deps) #Add any ignore.deps explicitly stated to the default set in utils
         
-    #1.3) put package name in quotes if it is not an object and was not put in quotes
+    #1.6) put package name in quotes if it is not an object and was not put in quotes
         pkg.catch <- try(typeof(pkg),silent=TRUE)
         if (class(pkg.catch)=="try-error") {
           pkg <- as.character(substitute(pkg))
@@ -74,10 +80,17 @@
                    "'.\n     To avoid seeing this message when using groundhog.library(), enter package name in quotes.\n\n")  
         } 
           
+        
+        
   #2 Loop running groundhog
         for (pkgk in pkg) {
-              groundhog.library.single(pkgk, date, quiet.install ,  include.suggests ,  
-                                        ignore.deps, force.source , force.install)
+              #Identify as remote based on '/'package (remotes need a /)'
+                remote <- FALSE
+                if (basename(pkgk)==pkgk) remote <- TRUE
+                
+              #Process based on remote
+                  if (remote==FALSE)   groundhog.library.single(pkgk, date, quiet.install ,  include.suggests ,  ignore.deps, force.source , force.install)
+                  if (remote==TRUE)    groundhog.library.single.remote(pkgk, date, quiet.install ,  include.suggests ,  ignore.deps, force.source , force.install)
                 }
   
 
