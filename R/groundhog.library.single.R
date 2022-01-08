@@ -6,7 +6,7 @@
 ##################################################################################################
 
   groundhog.library.single <-  function(pkg, date,  quiet.install ,  include.suggests , 
-    ignore.deps, force.source , force.install , tolerate.R.version )
+    ignore.deps, force.source , force.install )
       { 
     
         
@@ -19,12 +19,8 @@
         vrs     <- get.version(pkg, date)
         pkg_vrs <- paste0(pkg, "_", vrs)
       
-        
-   
-      
-       
-  #3 Update cran.toc() if needed for entered date 
-      update_cran.toc_if.needed(date)
+      #3 Update cran.toc() if needed for entered date 
+        update_cran.toc_if.needed(date)
 
   #4 GET SNOWBALL
     snowball <- get.snowball(pkg, date, include.suggests=include.suggests, force.source=force.source)
