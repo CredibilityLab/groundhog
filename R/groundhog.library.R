@@ -85,12 +85,13 @@
   #2 Loop running groundhog
         for (pkgk in pkg) {
               #Identify as remote based on '/'package (remotes need a /)'
-                remote <- FALSE
-                if (basename(pkgk)==pkgk) remote <- TRUE
+                cran <- TRUE
+                if (basename(pkgk)!=pkgk) cran <- FALSE
                 
               #Process based on remote
-                  if (remote==FALSE)   groundhog.library.single(pkgk, date, quiet.install ,  include.suggests ,  ignore.deps, force.source , force.install)
-                  if (remote==TRUE)    groundhog.library.single.remote(pkgk, date, quiet.install ,  include.suggests ,  ignore.deps, force.source , force.install)
+                  if (cran==TRUE)   groundhog.library.single(pkgk, date, quiet.install ,  include.suggests ,  ignore.deps, force.source , force.install)
+                
+                  if (cran==FALSE)    groundhog.library.single.remote(pkgk, date, quiet.install ,  include.suggests ,  ignore.deps, force.source , force.install)
                 }
   
 
