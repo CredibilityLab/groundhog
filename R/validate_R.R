@@ -56,7 +56,7 @@
     }
     
         
-    #2.1.5 throw warning if using R that is too old, but explicitly allowingg via command 
+    #2.1.5 throw warning if using R that is too old, but explicitly allowing via command 
     if ((package_version(rv$r.using.majmin) < package_version(rv$r.need.majmin)) & 
         (rv$r.using.majmin==tolerate.R.version | rv$r.using.full==tolerate.R.version)) {
           message2()

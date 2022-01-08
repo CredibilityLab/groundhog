@@ -248,5 +248,3 @@ get.r.majmin <- function() {
 
   
   
-    
-    
