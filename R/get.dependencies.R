@@ -21,7 +21,7 @@
 
 get.dependencies <- function(pkg, date, include.suggests = FALSE) {
 
-  update_cran.toc_if.needed(date = date)
+  update_cran.toc_if.needed(date = date) #also loads the cran.toc if not yet loaded
   cran.toc <- .pkgenv[["cran.toc"]]
 
   
