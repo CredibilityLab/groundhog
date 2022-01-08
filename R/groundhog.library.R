@@ -58,7 +58,10 @@
   #1) Validation     
     #1.1) Is date valid?
         validate.date(date) #Function defined in utils.R
-    
+   
+    #1.2) validate R
+        validate_R(date , tolerate.R.version)
+     
     #1.2) Set of ignorable conflicts
         ignore.deps <- c(ignore.deps_default() , ignore.deps) #Add any ignore.deps explicitly stated to the default set in utils
         
@@ -74,7 +77,7 @@
   #2 Loop running groundhog
         for (pkgk in pkg) {
               groundhog.library.single(pkgk, date, quiet.install ,  include.suggests ,  
-                                        ignore.deps, force.source , force.install, tolerate.R.version)
+                                        ignore.deps, force.source , force.install)
                 }
   
 
