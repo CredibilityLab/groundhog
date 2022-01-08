@@ -1,5 +1,5 @@
 
-    validate.pkg_vrs <- function(pkg, date,ignore.deps)
+    validate.pkg_vrs <- function(pkg, vrs, date, ignore.deps)
     { 
     
 
@@ -18,7 +18,7 @@
       
   
     #1.1 Get version of requested package
-        vrs <- get.version(pkg, date)
+        #vrs <- get.version(pkg, date)
         pkg_vrs <- paste0(pkg, "_", vrs)
       
 

@@ -5,25 +5,27 @@
 #a separate function.
 ##################################################################################################
 
-  groundhog.library.single <-  function(pkg, date,  quiet.install ,  include.suggests , 
-    ignore.deps, force.source , force.install )
+  groundhog.library.single <-  function(pkg, date,  quiet.install ,  include.suggests , ignore.deps, force.source , force.install )
       { 
     
         
-      #0 Date and R validated in groundhog.library()
+  #0 Date and R validated in groundhog.library()
       
-      #1 Validate pkg
-        validate.pkg_vrs(pkg, date, ignore.deps)
     
-      #2 Get pkg_vrs
-        vrs     <- get.version(pkg, date)
-        pkg_vrs <- paste0(pkg, "_", vrs)
+  #1 Get pkg_vrs
+      vrs     <- get.version(pkg, date)
+      pkg_vrs <- paste0(pkg, "_", vrs)
+  
       
-      #3 Update cran.toc() if needed for entered date 
-        update_cran.toc_if.needed(date)
+  #2 Validate pkg
+      validate.pkg_vrs(pkg, vrs, date, ignore.deps)
+                      
+          
+  #3 Update cran.toc() if needed for entered date 
+      update_cran.toc_if.needed(date)
 
   #4 GET SNOWBALL
-    snowball <- get.snowball(pkg, date, include.suggests=include.suggests, force.source=force.source)
+      snowball <- get.snowball(pkg, date, include.suggests=include.suggests, force.source=force.source)
     
   #5 Set path to find installed packages during installation .libpaths()
       
