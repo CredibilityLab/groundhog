@@ -9,6 +9,9 @@
 
   #Grab originally available library paths (before groundhog loaded)
       .pkgenv[["orig_lib_paths"]] <- .libPaths()                      
+      
+  #Load databases so any function run will have them available
+      load.cran.toc()
     } #End of onLoad
 
 #Default parameters
