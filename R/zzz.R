@@ -12,6 +12,7 @@
       
   #Load databases so any function run will have them available
       load.cran.toc()
+      
     } #End of onLoad
 
 #Default parameters

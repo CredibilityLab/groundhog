@@ -1,5 +1,5 @@
 #The groundhog.library() command runs validation and then loops over this function to actually
-#load and install the called upon pacakge
+#load and install the called upon package
 #
 #Until version 1.4.0 this was part of a single loop inside groundhog.library() but it was split into
 #a separate function.

@@ -19,6 +19,7 @@
 
 get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE) {
 
+  
   # 1) Get dependencies
   dep12 <- get.all.dependencies(pkg, date, include.suggests = include.suggests)
 
@@ -28,6 +29,7 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
   # In each loop we take all dependencies without dependencies and add them to the sequence of installation
   # Do until all dependencies have been assigned an order (so dep12 is empty)
   while (nrow(dep12) > 0) {
+    
     k <- k + 1
     indep.rows <- !(dep12$dep2 %in% dep12$pkg) ## Find dependencies without dependencies  TRUE/FALSE vector
     

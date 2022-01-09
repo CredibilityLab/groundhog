@@ -248,3 +248,7 @@ get.r.majmin <- function() {
 
   
   
+#Function 23 - string positiong - simpler gregexpr for strpos
+      strpos1 <- function(needle, haystack) as.numeric(gregexpr(needle, haystack)[[1]])
+      
+      
