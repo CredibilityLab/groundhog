@@ -90,8 +90,7 @@
                 
               #Process based on remote
                   if (cran==TRUE)   groundhog.library.single(pkgk, date, quiet.install ,  include.suggests ,  ignore.deps, force.source , force.install)
-                
-                  if (cran==FALSE)    groundhog.library.single.remote(pkgk, date, quiet.install ,  include.suggests ,  ignore.deps, force.source , force.install)
+                  if (cran==FALSE)  groundhog.library.single.remote(pkgk, date, quiet.install ,  include.suggests ,  ignore.deps, force.source , force.install)
                 }
   
 
