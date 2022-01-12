@@ -48,11 +48,11 @@
     #6.1 look at loaded packages
       active <- get.active()
       
-    #6.2 Message
-        #Package not loaded
+   
+    #6.3 If package did not succeed to load, message
             if (!pkg %in% active$pkg) 
                   {
-                  message("groundhog says: FAILED to load '", pkg_vrs,"'")
+                  exit("groundhog says: FAILED to load '", pkg_vrs,"'")
                   }
       
         #Unexpected version loaded
@@ -71,4 +71,9 @@
               "The version included in base R is always loaded, regardless of the date entered.")
     }
             
+    #Return vector with attached & remote packages added from this snowball
+      snowball.remotes <- snowball[snowball$sha!='',]
+      snowball.remotes$attached <- (snowball.remotes$pkg %in% attach.all)
+
+      return(snowball.remotes)
   } #ENd of function
