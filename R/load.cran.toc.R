@@ -12,7 +12,7 @@ load.cran.toc <- function(update.toc = FALSE) {
     wasabi.url     <- "https://s3.wasabisys.com/groundhog/"  #backup where rds files are also saved
   
   
-  #Local gorundhog
+  #Local groundhog
     groundhog.folder <- get.groundhog.folder()
 
   #Ensure directory for groundhog exists
@@ -55,6 +55,8 @@ load.cran.toc <- function(update.toc = FALSE) {
 
     .pkgenv[["missing.mran.dates"]] <- missing.mran.dates
     } else {
+      
+    #UPDATE FILE, THEN LOAD
       
     #If updating, try groundhogr.com
       dl_times <- try(download.file(paste0(groundhogR.url, "cran.times.rds"),         times.path, mode = "wb", method = "libcurl" ))

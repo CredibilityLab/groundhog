@@ -47,7 +47,7 @@
                if (is.null(.pkgenv[['git2r_pull']])) assign("git2r_pull", pull, envir = .pkgenv)
                #This will only run the 1st time the git2r package is run, because after it will find it as assigned and skip 
 
-            #Re-assign locally the  variable              
+            #Re-assign locally the function              
                git2r_pull <- .pkgenv[['git2r_pull']]   
             
             #Use the git2r_pull function with its new name
@@ -55,6 +55,8 @@
 
             #Update catalog
                 save.clone_catalog_update(pkgk,remote_idk,usrk) #Function 2 below
+                
+                
                 return(TRUE)
             }
             
