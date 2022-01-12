@@ -59,9 +59,11 @@
     #1.1) Is date valid?
         validate.date(date) #Function defined in utils.R
    
-    #1.2) Reload databases so that any changes to cran.toc are undone (previous groundhog.library() call loading remotes)
-        load.cran.toc()
-        
+    #1.2) Reload databases if necessary and change them back on existr  so that any changes to cran.toc are undone (previous groundhog.library() call loading remotes)
+        if (is.null(.pkgenv[['cran.toc']])) load.cran.toc()
+        cran.toc.pure <- .pkgenv[['cran.toc']]
+        on.exit(.pkgenv[['cran.toc']] <- cran.toc.pure)
+    
     #1.3 In addition, if the day merits, update the database
         update_cran.toc_if.needed(date) 
 
