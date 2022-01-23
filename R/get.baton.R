@@ -38,6 +38,11 @@
             #3.3 read the raw description file
                 dir_path <- paste0(get.groundhog.folder() , "/git_clones/" , remote_id)
                 clone_path <- paste0(dir_path , "/", usr, "_" ,pkg)
+        				gitr2_lookup <- .pkgenv[['git2r_lookup']]
+        				gitr2_content<- .pkgenv[['git2r_content']]
+        				gitr2_tree  <-  .pkgenv[['git2r_tree']]
+
+                #description_raw <-git2r_content(git2r_tree(git2r_lookup(clone_path, sha))["DESCRIPTION"])
                 description_raw <-content(tree(lookup(clone_path, sha))["DESCRIPTION"])
                 
             #3.4  save contents in temporary file
@@ -127,7 +132,7 @@
             baton <- get.baton.single(pkgk , date, remote_id, usr=usrk, baton=baton)
         
          #3.4 Fuse if something goes wrong and loop keeps going
-            if (k>3) break
+            if (k>200) break
         }
         
         return(baton)
