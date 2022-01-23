@@ -16,14 +16,48 @@
 #'}
 #' @export
 
+######################################################################################
+#Outline
+#
+#0  If snowball already exists early return it  
+#1 Get dependencies
+#2 Produce  dep12  (topographical sort) to get order of installation
+#3 Add pkg at the end
+#4 Get the version of each package
+#5 Make Snowball table with: installed | CRAN | MRAN | TARBALL | INSTALLATION TIME
+#6 Turn to data frame 
+######################################################################################
 
-get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FALSE) {
 
+get.snowball <- function(pkg, date, include.suggests) {
+
+    #0  If snowball already exists early return it  
+    
+        #Path to snowball
+            snowball_dir <- paste0(get.groundhog.folder() , '/snowballs' )
+            
+        #Snowbal with and without suggests are different snowballs, so two possible rds files for any given pkg date
+            if (include.suggests==FALSE) snowball_file <- paste0(pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
+            if (include.suggests==TRUE)  snowball_file <- paste0(pkg , "_" ,  gsub( "-", "_" , date) , '_with_suggests.rds')  
+        #Final path    
+            snowball_path <- file.path(snowball_dir, snowball_file)
+            
+        #Create snowball directory if it does not exist
+            if (!file.exists(snowball_dir)) dir.create(snowball_dir,recursive=TRUE, showWarnings = FALSE)  
+            
+        #If snowball has been saved, load and return it, but delete it so that if it fails next time it won't be here
+            if (file.exists(snowball_path)) {
+                snowball <- readRDS(snowball_path)
+                unlink(snowball_path)
+                return(snowball)
+              } 
+            
   
-  # 1) Get dependencies
+  
+  # 1 Get dependencies
   dep12 <- get.all.dependencies(pkg, date, include.suggests = include.suggests)
 
-  # 2) process dep12  (topographical sort) to get order of installation
+  # 2 Produce  dep12  (topographical sort) to get order of installation
   k <- 0 # counter of iterations attempting to sort
   indep <- c()
   # In each loop we take all dependencies without dependencies and add them to the sequence of installation
@@ -56,7 +90,7 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
   # - else, install from MRAN if possible
   # - else, install from source
 
-    snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs) # 5.1 Installed?  TRUE/FALSE
+    snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs)
 
   # Vector with paths
     snowball.installation.path <- mapply(get.pkg_search_paths, snowball.pkg, snowball.vrs)
@@ -85,13 +119,13 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
     snowball.MRAN.date <- as.DateYMD(snowball.MRAN.date)
 
   # IF force.source==TRUE then all packages will come from source, else, figure out where from
-  if (force.source) {
-    snowball.from <- rep_len("source", length(snowball.pkg))
-  } else {
-    snowball.MRAN <- snowball.MRAN.date != "1970-01-01"
-    snowball.from <- ifelse(snowball.MRAN, "MRAN", "source") # MRAN if available, if not source
-    snowball.from <- ifelse(snowball.CRAN, "CRAN", snowball.from) # Replace MRAN if CRAN is available and using most recent version of R
-  }
+  #if (force.source) {
+  #  snowball.from <- rep_len("source", length(snowball.pkg))
+  #} else {
+  snowball.MRAN <- snowball.MRAN.date != "1970-01-01"
+  snowball.from <- ifelse(snowball.MRAN, "MRAN", "source") # MRAN if available, if not source
+  snowball.from <- ifelse(snowball.CRAN, "CRAN", snowball.from) # Replace MRAN if CRAN is available and using most recent version of R
+  #}
     
   
       
@@ -103,7 +137,7 @@ get.snowball <- function(pkg, date, include.suggests = FALSE, force.source = FAL
   adjustment <- 2.5 # install times in CRAN's page are systematically too long, this is an initial adjustment factor
   snowball.time <- pmax(round(snowball.time / adjustment, 0), 1)
 
-  # data.frame()
+#6 data.frame()
   snowball <- data.frame(
     "pkg" = snowball.pkg,
     "vrs" = snowball.vrs,
