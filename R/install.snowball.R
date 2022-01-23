@@ -406,11 +406,15 @@
             }
                 
           #Add the one that was just installed to the .libPath()
-          .libPaths(c(snowball$installation.path[k] , .libPaths()))
+          #.libPaths(c(snowball$installation.path[k] , .libPaths()))
+          
+          #Load it
+            loadNamespace(package=snowball$pkg[k], lib.loc = snowball$installation.path[k])
                 
       } #End loop over snowball        
-          library(remotes)
           
+          
+
       
 
   } #end of function
