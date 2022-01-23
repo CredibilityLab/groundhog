@@ -42,26 +42,61 @@
   } #End of function 2
   
 
+#Function 2.1 - load and localize needed fucntions of git2r
+  load.git2r <- function(groundhog.day)
+  {
+    #Load the function
+      load.pkg_utility('git2r' , groundhog.day)
+    #Create local names to the needed functions
+      if (is.null(.pkgenv[['git2r_pull']]))    assign("git2r_pull",    pull, envir = .pkgenv)
+      if (is.null(.pkgenv[['git2r_clone']]))   assign("git2r_clone",   clone, envir = .pkgenv)
+      if (is.null(.pkgenv[['git2r_commits']])) assign("git2r_commits", commits, envir = .pkgenv)
+      if (is.null(.pkgenv[['git2r_content']])) assign("git2r_content", content, envir = .pkgenv)
+      if (is.null(.pkgenv[['git2r_lookup']]))  assign("git2r_lookup",  lookup, envir = .pkgenv)
+
+  }
+  
   
   
   
   #----------------------------------------------------
 
+  
+  
     
   #Function 3 - get sha_time data frame from clone commits
       get.sha_time <- function(pkg, date, remote_id, usr)
       {
+        
+      #Check if sha_time file exists, and sandwiches the date, in which case we just output that without reading clone itself
+        #Path to file
+          sha_path <- paste0(get.groundhog.folder(),"/sha_times/", remote_id,"_" ,usr,"_",pkg,".rds")
+         
+        #Load it and return the data.file if it was saved at a date that sandwiches the date being requested
+          if (file.exists(sha_path))
+              {
+              #Read the sha_time
+                sha_time <- readRDS(sha_path)
+                
+              #If highest commit date is higher than requested date, we can use existing sha_time, preventing git2r loading
+                 if (max(sha_time$time)>date.to.time(date)) {
+                    return(sha_time)
+                  } #ENd if date is sandwiched
+              } #End if file exists
+              
+          
        #Ensure clone exists
          validate.clone_date (pkg, date, remote_id, usr)
         
        #Ensure we have git2r
-          load.pkg_utility('git2r' , date)  
+          load.git2r(date)  
         
        #Path for the clone
           clone_path <- get.clone_path (pkg, usr, remote_id) 
 
-       #Use 'git2r' command 'commits' to read all commits      
-          all_commits <- commits(repo=clone_path , time=TRUE)
+       #Use 'git2r' command 'commits' to read all commits 
+          git2r_commits <- .pkgenv[['git2r_commits']]
+          all_commits <- git2r_commits(repo=clone_path , time=TRUE)
 
       #Loop extracting time and sha
         commit.time = commit.sha = c()
@@ -70,8 +105,19 @@
            commit.sha[k]  <- all_commits[[k]]$sha
         }
         
+      
       #Create data.frame sha_time  
         sha_time <- data.frame(sha=commit.sha, time=commit.time)
+        
+      #Save sha time
+        if (!file.exists(dirname(sha_path))) {
+          dir.create(dirname(sha_path),recursive = TRUE,showWarnings = FALSE)
+        }
+        
+        #Save the sha_time
+          saveRDS(sha_time , sha_path)
+        
+        
         return(sha_time)
       }  
     
@@ -150,12 +196,11 @@
         } #End get.remote_id
        
  
-    
-      
+
 #Function 9 -  make_package take a value entered by user, pkg or usr/pkg, or git::usr/pkg and turns it into a list with all the parts
   make.pkg_list <-function(pkg) {
     
-    #0 REmote id
+    #0 Remote id
         remote_id <- get.remote_id(pkg)
   
     #1. Determine pkg.type ('pkg', 'user_pkg', 'git_user_pkg')
@@ -183,6 +228,7 @@
           usr_pkg <- pkg
           git_usr_pkg <- paste0('github::',usr_pkg)
           pkg     <- basename(pkg)
+          git    <- 'github'
         }
       
       
