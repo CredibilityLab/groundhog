@@ -8,21 +8,36 @@
 
 
 check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) {
-  #1 Get sets of packages that are treated differently 
-      #1.1 Ignore conflicts (cannot bypass default set, hardcoded in utils.R, 'ignore.deps_default()', but can add to it)
-        ignore.deps <- c(ignore.deps_default(), ignore.deps)    #add any packages explicitly set by user
-      
-      #1.2 Active packages
-        active <- get.active()
-    
-  #2 short name for package being installed/loaded
+  
+  #1 short name for package being installed/loaded
         requested_pkg_vrs <- snowball$pkg_vrs[length(snowball$pkg_vrs)]
         requested_pkg     <- snowball$pkg[length(snowball$pkg_vrs)]
+  
+  #2 Get sets of packages that are treated differently 
+      #2.1 Ignore conflicts (cannot bypass default set, hardcoded in utils.R, 'ignore.deps_default()', but can add touri_simonsohn_uso it)
+        ignore.deps <- c(ignore.deps_default(), ignore.deps)    #add any packages explicitly set by user
+      
+       
+      #2.2 Active packages
+        active <- get.active()
+        
+      #2.3 Read paths
+         paths  <- get.groundhog_libpaths()  
+         ip   <- data.frame(installed.packages(paths))
+         paths.pkg_vrs <- paste0(ip$Package,"_",ip$Version)
+           
+            #Note: groundhog_libpaths is a vector with all libraries available in .libPaths() that are in the groundhog.folder
+         
+      #2.4 Combine
+          session.pkg_vrs <- unique(c(active$pkg_vrs, paths.pkg_vrs))
+          session.pkg    <-  as.character(sapply(session.pkg_vrs, function(x) { strsplit(x,"_")}[[1]][1]))
+
+
 
   #3 Force Install:  any package that needs to be *installed* is loaded?
     #separate check from because even SAME version created conflict
       if (force.install) {
-        conflict.pkg <- (snowball$pkg %in% active$pkg) 
+        conflict.pkg <- (snowball$pkg %in% session.pkg) 
         if (any(conflict.pkg)) {
           message2()
           message(
@@ -39,29 +54,43 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
   
   #4 Create conflict set 
     #These are packages that are needed and have a conflict with an active one
-      conflict.needed     <- snowball$pkg_vrs[!(snowball$pkg_vrs %in% active$pkg_vrs) & (snowball$pkg %in% active$pkg) & (!snowball$pkg %in% ignore.deps)]
-      conflict.needed.pkg <- snowball$pkg    [!(snowball$pkg_vrs %in% active$pkg_vrs) & (snowball$pkg %in% active$pkg) & (!snowball$pkg %in% ignore.deps)]
+      conflict.needed     <- snowball$pkg_vrs[!(snowball$pkg_vrs %in% session.pkg_vrs) & (snowball$pkg %in% session.pkg) & (!snowball$pkg %in% ignore.deps)]
+      conflict.needed.pkg <- snowball$pkg    [!(snowball$pkg_vrs %in% session.pkg_vrs) & (snowball$pkg %in% session.pkg) & (!snowball$pkg %in% ignore.deps)]
       conflict.needed <- sort(conflict.needed)
       
      
       
     #These are packages that are active and have a conflict with a needed one (do not include packages in ignore.deps)
-      conflict.active     <- active$pkg_vrs[!(active$pkg_vrs %in% snowball$pkg_vrs) & (active$pkg %in% snowball$pkg) & (!active$pkg %in% ignore.deps)]
-      conflict.active.pkg <- active$pkg    [!(active$pkg_vrs %in% snowball$pkg_vrs) & (active$pkg %in% snowball$pkg) & (!active$pkg %in% ignore.deps)]
+      conflict.active     <- session.pkg_vrs[!(session.pkg_vrs %in% snowball$pkg_vrs) & (session.pkg %in% snowball$pkg) & (!session.pkg %in% ignore.deps)]
+      conflict.active.pkg <- session.pkg    [!(session.pkg_vrs %in% snowball$pkg_vrs) & (session.pkg %in% snowball$pkg) & (!session.pkg %in% ignore.deps)]
       conflict.active     <- sort(conflict.active)
 
   #5 Generate variables with counts and list of packages in conflict
-    n.conflict <- length(conflict.needed)
-    n.needed <- nrow(snowball)
+      n.conflict <- length(conflict.needed)
+      n.needed   <- nrow(snowball)
 
   #6 Paste the package(s), which are vectors, into a string
-    conflict.needed.string <- paste(conflict.needed, collapse = ",  ") # put a , between packages
-    conflict.active.string <- paste(conflict.active, collapse = ",  ")
+      conflict.needed.string <- paste(conflict.needed, collapse = ",  ") # put a , between packages
+      conflict.active.string <- paste(conflict.active, collapse = ",  ")
 
 
   #If conflict found
       if (n.conflict > 0 ) {
   
+        
+    #6.1 Conflict with a remote package loaded earlier
+        if (any(conflict.needed.pkg %in% .pkgenv[['remote_packages']]))
+        {
+         message2()
+         message1("Some package(s) that '" , requested_pkg_vrs , "' needs to load were previously loaded from a non-CRAN",
+                  "repository (for example, from GitHub). If you are OK using that version instead of the one\n",
+                  "'" , requested_pkg , "' is expecting, re-run the groundhog.library() command including the option\n",
+                  "'ignore.deps=c(" ,  paste0(.pkgenv[['remote_packages']],callapse=', '), "'\n",
+                  "If you do not wish to use the already loaded version(s), restart the R Session to unload all packages\n",
+                  "(In R Studio that is CTRL/CMD-SHIFT-F10).")
+          
+        }
+        
     #6.5 Read from and save to conflict cookie to detect repeated failures      
       #Read last conflict cookie
           cookie_path <- paste0(get.groundhog.folder(),"/package_conflict.txt")
@@ -76,17 +105,25 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
           
    #7 Show general message
          message2()
-         message1(n.conflict, " of the ", n.needed, " packages needed for attaching '", requested_pkg_vrs, "' are currently loaded,",
-               " but not with the version that is needed.\n",
-              "Loaded: ",conflict.active.string,"\n",
-              "Needed: ",conflict.needed.string,"\n\n",
+         message1(n.conflict, " of the ", n.needed, " packages needed for '", requested_pkg_vrs, "' have a version conflict with\n",
+                  "a package already in your current R session.\n\n",
+              "   Current: ",conflict.active.string,"\n",
+              "   Needed:  ",conflict.needed.string,"\n\n",
               "To solve this: restart the R session. Note: you will need to do 'library(groundhog)' again.\n\n",
               "In R Studio press: CTRL/CMD-SHIFT-F10")
-         message("The package '", requested_pkg_vrs,"' was *NOT* attached")
+         
+        #Add message if dates mismatch across groundhog library calls
+         if (length(.pkgenv[['hogdays']])>1) {
+            message("\n\nWarning: you have used different groundhog days (dates) across groundhog.library() calls, \n",
+                    "this may be causing the conflict of versions.") 
+            message("\nDates you have used: ",paste0(.pkgenv[['hogdays']],collapse=' , '))
+          }
+         
+         message("\nThe package '", requested_pkg_vrs,"' was *NOT* attached")
        
     
-  #8 Show fix, workaround message if same failure less than 5 minutes ago and not loading the conflicting package
-        if (last_conflict<5 & requested_pkg == last_conflict.pkg)
+  #8 Show fix, workaround message if same failure less than 5 minutes ago and not loading the conflicting package adn only 1 date was used
+        if (last_conflict<5 & requested_pkg == last_conflict.pkg & (length(.pkgenv[['hogdays']])==1))
         {
           #Example of dependency with conflict to avoid
              dep.example <- ifelse(conflict.active.pkg[1] == requested_pkg, conflict.active.pkg[2], conflict.active.pkg[1] )
@@ -105,7 +142,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                   "\n\n",
                   "YOU RECENTLY GOT THIS MESSAGE, SO A BIT MORE INFO:\n",
                   "If you get this message even after restarting the R session, the packages(s) generating\n",
-                  "the conflict are being reloaded automatically. The most common scenario is R Studio\n",
+                  "the conflict are being called on automatically. The most common scenario is R Studio\n",
                   "loading the packages behind the scenes before you run the groundhog.library() command.\n",
                   "For instance, R Studio often loads packages referred elsewhere in a script with the\n",
                   "<pkg>:: operator (e.g., load 'dplyr' if it finds dplyr::filter() ).\n",
@@ -124,7 +161,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                   #Option 1 
                   "- Solution for the less common case of improperly documented packages: Use groundhog to \n",
                   "  explicitly load the conflicting dependency first e.g., run:\n", 
-                  "  groundhog.library('",dep.example, "','" , date , "')  before groundhog.library('", requested_pkg , "',' " , date , "').\n"
+                  "  groundhog.library('",dep.example, "','" , date , "')  before groundhog.library('", requested_pkg , "','" , date , "').\n"
                   )
                     
           #2. Ignore
@@ -213,7 +250,8 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                       "(" , conflict.ignored.pkg , ")", " are in the set for which conflicts are tolerated either because\n",
                       "they are often loaded automatically (e.g., by R Studio) from your local R library, and/or are \n",
                       "'recommended' packages by R and thus version control can be attained by using the version of R matching\n",
-                      "the date you entered.\n\n",
+                      "the date you entered, or you previously loaded those a version of those packages from a remote\n",
+                      "repository (e.g. github).\n\n",
                       "You may want to try a session restart (in R Studio: SHIFT-CTRL-F10) to remove the conflict and \n",
                       "enable loading the desired version but the problem may persist.\n",
                       "At that point you may either tolerate imperfect version control or resolve the issue by changing how \n",
