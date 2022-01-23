@@ -7,11 +7,11 @@
 .onLoad <- function(libname, pkgname) {
   .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
 
-  #Grab originally available library paths (before groundhog loaded)
-      .pkgenv[["orig_lib_paths"]] <- .libPaths()                      
-      
+    
   #Load databases so any function run will have them available
       load.cran.toc()
+      
+        #This function will copy from the install folder to the groundhog_folder the files if they do not exist
       
     } #End of onLoad
 
@@ -53,7 +53,16 @@
       
         #Create the folder (when running groundhog.library() this will signal consent was given)
           dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
-
+          
+        #Flag this folder as the groundhog folder for being able to discern libpaths that are here vs not
+          id.path<-file.path(get.groundhog.folder() , "groundhog.flag.rds")
+          
+          if (!file.exists(id.path))  {
+              dir.create(dirname(id.path),recursive = TRUE,showWarnings = FALSE)
+              saveRDS('This is the groundhog folder', id.path)
+              }
+        
+        #Report versions being used
           groundhog.version_using <- as.character(packageVersion("groundhog"))
           r.using.full= get.rversion() 
           packageStartupMessage ("Loaded 'groundhog' (version:",packageVersion('groundhog'),  ") using R-" ,r.using.full) 
