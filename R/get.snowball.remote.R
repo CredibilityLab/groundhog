@@ -4,14 +4,17 @@
 #generates a snowball using the defatul get.snowball() function
 #
 
-  get.snowball.remote<-function(pkg,date,remote_id, usr)
+  get.snowball.remote<-function(pkg,date,remote_id, usr,include.suggests)
   {
 
   #1  If snowball already exists early return it  
     
         #Path to snowball
             snowball_dir <- paste0(get.groundhog.folder() , '/snowballs/' , remote_id )
-            snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
+           
+             if (include.suggests==FALSE)  snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
+             if (include.suggests==TRUE)  snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '_with_suggests.rds')  
+  
             snowball_path <- file.path(snowball_dir, snowball_file)
       
         #Create snowball directory if it does not exist
@@ -25,7 +28,7 @@
        valid_clone <- validate.clone_date(pkg, date,remote_id ,usr)
     
   #3 Get baton (information on remote and its remote dependencies)  'get.baton.R'
-      baton<-get.baton(pkg,date,remote_id,usr)
+       baton<-get.baton(pkg,date,remote_id,usr)
       
   #4 Modify cran toc removing other versions of the remote packages, and adding new ones with date 1970-01-01
     #load cran.toc locally  
@@ -42,7 +45,7 @@
       
       
   #5 Get snowball from modified cran.toc
-      snowball <- get.snowball(pkg,date)
+      snowball <- get.snowball(pkg,date,include.suggests)
       
 
   #6 Modify snowball's row with remote packages
@@ -58,7 +61,7 @@
           
           for (j in 1:n.remotes)  
           {
-            if (nrow(installed.packages(baton$installation_path))>0) {
+            if (nrow(utils::installed.packages(baton$installation_path))>0) {
               remote.installed[j] <- TRUE
             }#End if installed
             }#End for loop
