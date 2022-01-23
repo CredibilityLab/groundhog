@@ -1,15 +1,15 @@
 #This script has functions used throughout the package
 
-#1  Extract package and version information from pkg_vrs
-#2  Is pkg_vrs installed (within same R-minor version)?
-#3  Format Y-M-D as date
-#4  R being used
-#5  Get R Version
-#6  Message1()
-#7  Message2()
-#8  Named list
-#9  Quit menu
-#10 exit() Stop message which does not say error
+#1  get.pkg(), get.vsr()   : Extract package and version information from pkg_vrs
+#2  is.pkg_vrs.installed() : Is pkg_vrs installed (within same R-minor version)?
+#3  as.DateYMD             : Format Y-M-D as date
+#4  get.rdate()            : Date for R being used
+#5  get.rversion()         : Get R Version major:minor:patch
+#6  message1()             : regular font
+#7  message2()             : Bold
+#8  namedList()            : automatically name object in list 
+#9  quit.menu()            : prompt to quit call upon mismatch of dates
+#10 exit()                 : Stop message which does not say error
 #11 Available mran dates
 #12 Base packages
 #13 Default packages to ignore conflicts with (but gives warning)
@@ -22,8 +22,10 @@
 #20 Check if lib is for github (possibly a legacy function)
 #21 Robust reading of text online : try_readlines ()
 #22 Turn dates to unix time
-#23 string position - simpler gregexpr for strpos  
-  
+#23 strpos1()                - string position - simpler gregexpr for strpos  
+#24 get.groundhog_libpaths() - get subset of paths in libPath() that belong to groundhog
+#25 Compare two sets of pkg_vrs vectors, obtaining text report of any mismatches 
+
 ########################################################################
     
 
@@ -331,8 +333,66 @@ ignore.deps_default <- function() {
 #Function 23 - string positiong - simpler gregexpr for strpos
       strpos1 <- function(needle, haystack) as.numeric(gregexpr(needle, haystack)[[1]])
       
-      
+#Function 24 - get groundhog libpathcs
+      get.groundhog_libpaths<-function()
+      {
+        paths <- .libPaths()
+        
+        #Up 2 and 3 folders
+          up2 <- dirname(dirname(paths))
+          up3 <- dirname(up2)
+          
+        #If up2 or up3 contain groundhog.flag.rds then this is in groundhogfodler
+          is.groundhog <- (file.exists(file.path(up2,'groundhog.flag.rds')) | file.exists(file.path(up3,'groundhog.flag.rds')))
+        
+        #Return subset which is groundhog
+          groundhog_libpaths <- paths[ is.groundhog ]
+          return(groundhog_libpaths)        
+        }
 
       
       
+   
       
+#Function 25 Compare versions, showing versions that actively mismatch 
+      get.mismatched_versions_report <- function (found.pkg_vrs, need.pkg_vrs)
+      {
+      #Rename
+        pkg_vrs1<-unique(found.pkg_vrs)
+        pkg_vrs2<-unique(need.pkg_vrs)
+        
+      #sort
+        pkg_vrs1 <- sort(pkg_vrs1)
+        pkg_vrs2 <- sort(pkg_vrs2)
+        
+      #Extract pkg
+        pkg1   <-  as.character(sapply(pkg_vrs1, function(x) { strsplit(x,"_")}[[1]][1]))
+        pkg2   <-  as.character(sapply(pkg_vrs2, function(x) { strsplit(x,"_")}[[1]][1]))
+  
+      #Pkg in 1 list that are in the other 
+        pkg1.in2 <- pkg1 %in% pkg2
+        pkg2.in1 <- pkg2 %in% pkg1
+        
+      #Subset only if the pkg matches
+        pkg1 <- pkg1[pkg1.in2]  
+        pkg2 <- pkg2[pkg2.in1]  
+        pkg_vrs1 <- pkg_vrs1[pkg1.in2]  
+        pkg_vrs2 <- pkg_vrs2[pkg2.in1]  
+        
+      #Mismatches
+        mismatch <- pkg_vrs1 != pkg_vrs2
+        
+      #Report mismatches
+        if (sum(mismatch)==0) return('')
+        if (sum(mismatch)>0) {
+          msg <- paste0(
+                  "Found:\n",paste0(pkg_vrs1,collapse = ' , '),"\n\n",
+                  "Needed:\n",paste0(pkg_vrs2,collapse = ' , ')
+                  )
+          
+          return(msg)
+        }
+        
+      }
+      
+
