@@ -61,7 +61,7 @@
           
           for (j in 1:n.remotes)  
           {
-            if (nrow(utils::installed.packages(baton$installation_path))>0) {
+            if (nrow(utils::installed.packages(baton$installation_path[j]))>0) {
               remote.installed[j] <- TRUE
             }#End if installed
             }#End for loop
