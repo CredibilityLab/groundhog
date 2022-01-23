@@ -1,5 +1,4 @@
 
-  
     validate.clone_date <- function(pkgk, datek, remote_idk, usrk)
     {
     
@@ -41,15 +40,9 @@
             if (local_git_exists==TRUE) {
               
             #Ensure we got 'git2r' package loaded to interact with git clone
-                load.pkg_utility('git2r' , datek)  
-              
-            #Assign git2r's functino pull to an environment with  new unmaskable name
-               if (is.null(.pkgenv[['git2r_pull']])) assign("git2r_pull", pull, envir = .pkgenv)
-               #This will only run the 1st time the git2r package is run, because after it will find it as assigned and skip 
-
-            #Re-assign locally the function              
-               git2r_pull <- .pkgenv[['git2r_pull']]   
-            
+                load.git2r(datek)  
+                git2r_pull <- .pkgenv[['git2r_pull']]
+                
             #Use the git2r_pull function with its new name
                 pull_result <- git2r_pull(clone_path) 
 
@@ -68,23 +61,18 @@
            
           
             #4.1 Ensure  'git2r' is loaded
-                load.pkg_utility('git2r' , datek)  #remote.functions.R - Function 10
+                load.git2r(datek)  #remote_functions.R - Function 2.1
           
             #4.2 Save locally the function we need, clone, with an unmaskable name
-                if (is.null(.pkgenv[['git2r_clone']])) assign("git2r_clone", clone, envir = .pkgenv)
-            
+                git2r_clone <- .pkgenv[['git2r_clone']]
             
             #4.2 Clone github repository
             
               #Path to local clone
                   git_path <- paste0('https://' , remote_idk , ".com/" , usrk , "/" , pkgk)
-                  
-              
+                
               #Clone it
-                  #Get previousy saved git2r function for cloning (this prevents masking by packages loaded, e.g., devtools masks pull)
-                    git2r_clone <- .pkgenv[['git2r_clone']]
-                  #Use it
-                    git2r_clone(git_path, clone_path)
+                  git2r_clone(git_path, clone_path)
             
           } #End if local_git_exists
           
