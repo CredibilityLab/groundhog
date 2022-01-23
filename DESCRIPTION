@@ -1,5 +1,5 @@
 Package: groundhog
-Title: Very Simple Version-Control for CRAN, GitHub and Gitlab Packages 
+Title: The Simplest Solution to Version-Control for CRAN Packages 
 Version: 1.5.0.9050
 Authors@R: c(
     person(given = "Uri",
@@ -13,19 +13,15 @@ Authors@R: c(
            email = "hugo.gruson+R@normalesup.org",
            comment = c(ORCID = "0000-0002-4094-1476"))
     )
-Description: Make R scripts that rely on CRAN, GitHub & Gitlab packages reproducible, 
-	by ensuring that every time a given script is run, the same version of the originally used 
-	packages and dependencies are loaded, regardless of where (which computer) and when the script is run. 
-	In contrast with the default behavior by R, which is to rely on whichever version of package the 
-	user running the script happens to have installed. 
-	Version control is achieved with the new command 'groundhog.library()', which replaced the base command 
-	'library()'. The date determines which version of the package is installed. For CRAN packages groundhog 
-	loads (and installs if needed) the the most advanced version of the package (and all its dependencies) 
-	available on CRAN on that date.	
-	For GitHub and Gitlab packages, groundhog loads the package including only commits written up to that date.	
-	
-URL: https://groundhogr.com/, https://GitHub.com/CredibilityLab/groundhog
-BugReports: https://GitHub.com/CredibilityLab/groundhog/issues
+Description: Make R scripts that rely on packages reproducible, by ensuring that
+    every time a given script is run, the same version of the used packages are
+    loaded (instead of whichever version the user running the script happens to
+    have installed). This is achieved by using the new command
+    groundhog.library() instead of the base command library(), and including a
+    date in the call. The date is used to call on the same version of the
+    package every time (the most recent version available on CRAN at that date).
+URL: https://groundhogr.com/, https://github.com/CredibilityLab/groundhog
+BugReports: https://github.com/CredibilityLab/groundhog/issues
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
