@@ -42,27 +42,12 @@
       
 
     #3 Check if entire snowball is available 
-  
-      #3.1 pkg_vrs in lib_paths
-          #Get subset of paths in libPath which are from groundhog 
-            groundhog_libpaths <- get.groundhog_libpaths()
-             
-          #See which packages are installed there 
-            ip <- data.frame(installed.packages(groundhog_libpaths))
-            
-          #Combine pkg_vrs
-           libs.pkg_vrs <- paste0(ip$Package , "_", ip$Version)
-       
-      #3.2 active
+     
+      #3.1 active
          active <- get.active()                          
- 
-       
-      #3.3 available is both
-       available.pkg_vrs <- c(libs.pkg_vrs, active$pkg_vrs)
-         
-       
-      #3.4 Counts of mismatches
-          snowball.match <- snowball$pkg_vrs %in% available.pkg_vrs | snowball$pkg %in% base_pkg() | snowball$pkg %in% ignore.deps
+    
+      #3.2 Counts of mismatches
+          snowball.match <- snowball$pkg_vrs %in% active$pkg_vrs  | snowball$pkg %in% base_pkg() | snowball$pkg %in% ignore.deps
           
             #There is an or stateent so taht base packages are not checked against available ones becuase
             #Those have their own library structure
