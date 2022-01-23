@@ -25,10 +25,14 @@
        
     #2.1 Read paths
        paths  <- get.groundhog_libpaths()
-       paths.pkg_vrs <- basename(paths)
-       paths.pkg     <-  as.character(sapply(paths.pkg_vrs, function(x) { strsplit(x,"_")}[[1]][1]))
-        
+       ip <-          data.frame(installed.packages(paths))
+       paths.pkg_vrs <- paste0(ip$Package,"_",ip$Version)
+       paths.pkg <-  ip$Package
       
+       session.pkg_vrs <- c(paths.pkg_vrs , active$pkg_vrs)
+       session.pkg     <- c(paths.pkg     , active$pkg)
+       
+       
     #2.2 Read attached
         attached.list= utils::sessionInfo()$otherPkgs
         attached.pkg <- names(attached.list)
@@ -60,15 +64,26 @@
                     "To solve this: restart the R session. Note: you will need to do 'library(groundhog)' again.\n\n",
                     "In R Studio press: CTRL/CMD-SHIFT-F10"
                     )
+           
+           
+        #Add message if dates mismatch across groundhog library calls
+         if (length(.pkgenv[['hogdays']])>1) {
+            message("groundhog says: Warning! You have used different groundhog days (dates) across groundhog.library() calls, \n",
+                    "this may be causing the conflict of versions.") 
+            message("\nDates you have used: ",paste0(.pkgenv[['hogdays']],collapse=' , '))
+            message("Check your script and use a single groundhog day across all calls.")
+          }
+           
+           
           message("\nThe package '", pkg_vrs,"' was *NOT* attached")
           exit()
          }
         
     
     #4.2 Attach mismatched version if ignore.deps is loaded but not attached (common scenario, trying to attach knitr in .rmd file)
-       if ((pkg %in% active$pkg | pkg %in% paths.pkg) &                         #pkg matches
-           ((!pkg_vrs %in%  active$pkg_vrs) & (!pkg_vrs %in% paths.pkg_vrs))    #pkg_vrs does not
-            & (pkg %in% ignore.deps))                                           #in ignoreable conflict list.
+       if ((pkg %in% session.pkg) &                         #pkg matches
+           (!pkg_vrs %in%  session.pkg_vrs) & 
+           (pkg %in% ignore.deps))                          #in ignoreable conflict list.
         {
            
         #Attach it 
