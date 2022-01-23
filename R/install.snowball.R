@@ -21,10 +21,7 @@
 
   install.snowball=function(snowball, date, force.install = FALSE, force.source = FALSE, quiet.install = TRUE) 
     {
-    #0 add libpat
-    
-    .libPaths(snowball$installation.path)
-  
+   
     #1 Preliminaries
       #1.0 souce remote dummies
           source <- snowball$from=='source'
@@ -253,13 +250,10 @@
 
         } #End if any MRAN files found
 
-        
-        
-        
-    #################################################
-    #4 LOOP OVER SNOWBALL, LOADING CRAN/MRAN AND INSTALLING SOURCE & REMOTE
-    ###################################################
-      
+
+  ##################################################################################################
+    #4 LOOP OVER SNOWBALL INSTALLING SOURCE & REMOTE IF ANY, AND ADDING TO LIBPATH
+
       #4.1 Any Source or Remote files remain to be installed?
           n.source=sum(source & snowball$installed==FALSE )
           n.remote=sum(remote & snowball$installed==FALSE )
@@ -406,14 +400,19 @@
                 clone_path <- get.clone_path(pkg=snowball$pkg[k], usr=snowball$usr[k], remote_id=snowball$from[k]) 
                 
               #Install it
-                remotes_install_git(clone_path,  dependencies = FALSE , lib=snowball$installation.path[k], ref=snowball$sha[k])
+                remotes_install_git(clone_path,  dependencies = FALSE , lib=snowball$installation.path[k], ref=snowball$sha[k], INSTALL_opts = '--no-lock')
                 #ref is the sha indicating which version is installed
               
             }
                 
+          #Add the one that was just installed to the .libPath()
+          .libPaths(c(snowball$installation.path[k] , .libPaths()))
+                
       } #End loop over snowball        
+          library(remotes)
+          
+      
 
   } #end of function
        
-  
   
