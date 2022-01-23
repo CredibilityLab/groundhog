@@ -107,8 +107,22 @@ set.groundhog.folder <- function(path) {
     path <- trimws(path)
     cat(path, file = path_file_storing_groundhog_library_location)
   
+  #Create groundhog
+    dir.create(path, showWarnings = FALSE, recursive = TRUE)
+
+    
+  #Add flag
+      #Flag this folder as the groundhog folder for being able to discern libpaths that are here vs not
+          id.path<-file.path(path , "groundhog.flag.rds")
+          
+          if (!file.exists(id.path))  {
+              saveRDS('This is the groundhog folder', id.path)
+              }
+    
+    
   #Assign it to the live environment
     Sys.setenv(GROUNDHOG_FOLDER = path)
+ 
     
   #Show message
     message1("The groundhog folder path is now:\n",path)
