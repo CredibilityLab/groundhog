@@ -55,22 +55,37 @@
                               force.install = FALSE, tolerate.R.version="" )
     {
     
+    
+
   #1) Validation     
     #1.1) Is date valid?
         validate.date(date) #Function defined in utils.R
    
     #1.2) Reload databases if necessary and change them back on existr  so that any changes to cran.toc are undone (previous groundhog.library() call loading remotes)
         if (is.null(.pkgenv[['cran.toc']])) load.cran.toc()
-        cran.toc.pure <- .pkgenv[['cran.toc']]
-        on.exit(.pkgenv[['cran.toc']] <- cran.toc.pure)
+       
+    #1.3) When existing refresh libpath and cran.toc
+        
+        #Save vector with library paths available before groundhog run, will put them first afterwards
+            libPaths.before <- .libPaths()
+        
+        on.exit({
+              #Read cran toc again
+                 .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
+              
+              #Resort libpaths putting paths available before grundhog was used before groundhog  
+                #all_paths <- .libPaths()
+                #new_paths <- all_paths[ !all_paths %in% libPaths.before]
+                .libPaths(libPaths.before)
+              })
     
-    #1.3 In addition, if the day merits, update the database
+    #1.4 In addition, if the day merits, update the database
         update_cran.toc_if.needed(date) 
 
-    #1.4) validate R
+    #1.5) validate R
         validate_R(date , tolerate.R.version)
      
-    #1.5) Set of ignorable conflicts
+    #1.6) Set of ignorable conflicts
         ignore.deps <- c(ignore.deps_default() , ignore.deps) #Add any ignore.deps explicitly stated to the default set in utils
         
     #1.6) put package name in quotes if it is not an object and was not put in quotes
@@ -82,6 +97,15 @@
                    "'.\n     To avoid seeing this message when using groundhog.library(), enter package name in quotes.\n\n")  
         } 
           
+    #1.7 Add groundhog.day to hogdays to alert of possible different days used in a snowball.conflict
+        if (!is.null(.pkgenv[['hogdays']])) {
+            .pkgenv[['hogdays']] <- unique(c(date, .pkgenv[['hogdays']]))
+          
+          } else {
+          
+            .pkgenv[['hogdays']]<- date
+        
+          }
         
         
   #2 Loop running groundhog
@@ -96,5 +120,6 @@
                 }
   
 
+ 
   } #End of groundhog.library
         
