@@ -73,9 +73,7 @@
               #Read cran toc again
                  .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
               
-              #Resort libpaths putting paths available before grundhog was used before groundhog  
-                #all_paths <- .libPaths()
-                #new_paths <- all_paths[ !all_paths %in% libPaths.before]
+              #Return libpath
                 .libPaths(libPaths.before)
               })
     
