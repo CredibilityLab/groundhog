@@ -19,13 +19,13 @@ load.cran.toc <- function(update.toc = FALSE) {
     #Names of files
       files.rds = c('cran.toc.rds' , 'cran.times.rds' , 'missing.mran.dates.rds' , 'git.toc.rds')
 
-      
+
   #3 Loop checking file exist, downloading if necessary, and assigning to .pkgenv
           for (rdsk in files.rds)
           {
           #See if file exists
             in.path <- file.exists(file.path(gf ,rdsk))              #in groundhog.folder()
-            in.pkg  <-file.exists(system.file("cran.toc.rds", package = "groundhog"))  #in inst folder for groundhog
+            in.pkg  <-file.exists(system.file(rdsk, package = "groundhog"))  #in inst folder for groundhog
           
           #Case 1: in.pkg but not in path, copy it locally (but not being updated, to avoid wasteful copy )
             if (in.path==FALSE & in.pkg==TRUE & update.toc==FALSE) {
@@ -33,19 +33,23 @@ load.cran.toc <- function(update.toc = FALSE) {
               }
             
           #Case 2:  neither exists or if was asked for update, download
+            in.path <- file.exists(file.path(gf ,rdsk))              #redo the check to catch errors
+
+            
             if ((in.path==FALSE & in.pkg==FALSE) | update.toc==TRUE) {
             #Download groundhog
-                dl <- try(download.file(paste0(groundhogR.url, rdsk), paste(gf, rdsk) , mode = "wb", method = "libcurl" ))
+                dl <- try(download.file(paste0(groundhogR.url, rdsk), file.path(gf, rdsk) , mode = "wb", method = "libcurl" ))
             
                 #If downlaod failed, try  wasabi's backup
                   if (dl!=0) {
-                      dl2 <- try(download.file(paste0(wasabi.url, rdsk), paste(gf, rdsk),times.path, mode = "wb", method = "libcurl" ))
+                      dl2 <- try(download.file(paste0(wasabi.url, rdsk), file.path(gf, rdsk), mode = "wb", method = "libcurl" ))
                       if (dl2!=0) stop('Error.\nGroundhog says: could not download "', rdsk, "'")
                     }
               } #End case 2
             
-          #Read it locally
-             .pkgenv[[rdsk]] <- readRDS(file.path(gf,rdsk))
+          #Read it locally, droping the .rds part of the name ('cran.toc.rds' -> 'cran.toc')
+              dfk <- gsub(".rds","",rdsk)
+             .pkgenv[[dfk]] <- readRDS(file.path(gf,rdsk))
           }
     
   
