@@ -12,23 +12,31 @@
         #Path to snowball
             snowball_dir <- paste0(get.groundhog.folder() , '/snowballs/' , remote_id )
            
-             if (include.suggests==FALSE)  snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
+             if (include.suggests==FALSE) snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
              if (include.suggests==TRUE)  snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '_with_suggests.rds')  
   
             snowball_path <- file.path(snowball_dir, snowball_file)
       
         #Create snowball directory if it does not exist
             if (!file.exists(snowball_dir)) dir.create(snowball_dir,recursive=TRUE, showWarnings = FALSE)  
+            
+        #If snowball file exists, return it
             if (file.exists(snowball_path)) {
                 snowball <- readRDS(snowball_path)
                 return(snowball)
-              } 
-            
-  #2 Verify clone exists and is up to date 
+            } 
+
+  #2 Verify clone exists and is up to date  (this happens regardless of presence in git.toc)
        valid_clone <- validate.clone_date(pkg, date,remote_id ,usr)
     
   #3 Get baton (information on remote and its remote dependencies)  'get.baton.R'
        baton<-get.baton(pkg,date,remote_id,usr)
+       
+          #This will inclue sha values and dependencies
+          #sha is obtained from git.toc if available (daily check on tracked packages, else from sha_time, local clone)
+          #The reason to keep the git.toc is taht a commit can be pushed months after its official creation date
+          #producing reproducibility issues.
+       
       
   #4 Modify cran toc removing other versions of the remote packages, and adding new ones with date 1970-01-01
     #load cran.toc locally  
