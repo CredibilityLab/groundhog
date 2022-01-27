@@ -9,7 +9,7 @@
 
     
   #Load databases so any function run will have them available
-      load.cran.toc()
+      #load.cran.toc()
       
         #This function will copy from the install folder to the groundhog_folder the files if they do not exist
       
