@@ -25,7 +25,7 @@
        
     #2.1 Read paths
        paths  <- get.groundhog_libpaths()
-       ip <-          data.frame(installed.packages(paths))
+       ip <-          data.frame(utils::installed.packages(paths))
        paths.pkg_vrs <- paste0(ip$Package,"_",ip$Version)
        paths.pkg <-  ip$Package
       
@@ -87,7 +87,8 @@
         {
            
         #Attach it 
-          library(pkg , character.only = TRUE )
+		  attachNamespace(pkg)
+
              
         #Make local variable with name of pkg_vrs already loaded oralready in libpath creating conflict
              available.pkg_vrs <- ifelse(pkg  %in% active$pkg, active$pkg_vrs[active$pkg==pkg] , paths.pkg_vrs[paths.pkg==pkg])

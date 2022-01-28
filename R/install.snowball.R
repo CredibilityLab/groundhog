@@ -389,19 +389,17 @@
               #Load remotes
                 load.pkg_utility('remotes',date)
               
-              #Assign remotes install_git to environemnt fucntion to make it unmaskable 
-               if (is.null(.pkgenv[['remotes_install_git']])) assign("remotes_install_git", install_git , envir = .pkgenv)
-               #This will only run the 1st time the remotes package is run, because after it will find it as assigned and skip 
-
+               
             #Re-assign locally the  variable              
-               remotes_install_git <- .pkgenv[['remotes_install_git']]   
-            
+              
               #Location where the clone is
                 clone_path <- get.clone_path(pkg=snowball$pkg[k], usr=snowball$usr[k], remote_id=snowball$from[k]) 
                 
               #Install it
-                remotes_install_git(clone_path,  dependencies = FALSE , lib=snowball$installation.path[k], ref=snowball$sha[k], INSTALL_opts = '--no-lock')
-                #ref is the sha indicating which version is installed
+               # remotes_install_git(clone_path,  dependencies = FALSE , lib=snowball$installation.path[k], ref=snowball$sha[k], INSTALL_opts = '--no-lock')
+                remotes::install_git(clone_path,  dependencies = FALSE , lib=snowball$installation.path[k], ref=snowball$sha[k], INSTALL_opts = '--no-lock')
+               
+                 #ref is the sha indicating which version is installed
               
             }
                 

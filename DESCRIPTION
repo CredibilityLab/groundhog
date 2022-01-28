@@ -22,6 +22,8 @@ Description: Make R scripts that rely on packages reproducible, by ensuring that
     package every time (the most recent version available on CRAN at that date).
 URL: https://groundhogr.com/, https://github.com/CredibilityLab/groundhog
 BugReports: https://github.com/CredibilityLab/groundhog/issues
+Depends: utils
+Suggests: git2r, remotes
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

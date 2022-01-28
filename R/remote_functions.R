@@ -47,21 +47,21 @@
   
 
 #Function 2.1 - load and localize needed fucntions of git2r
-  load.git2r <- function(groundhog.day)
-  {
+
+    load.git2r <- function(groundhog.day)
+    {
+    
+
     #Load the function
       load.pkg_utility('git2r' , groundhog.day)
     #Create local names to the needed functions
-      if (is.null(.pkgenv[['git2r_pull']]))    assign("git2r_pull",    pull, envir = .pkgenv)
-      if (is.null(.pkgenv[['git2r_clone']]))   assign("git2r_clone",   clone, envir = .pkgenv)
-      if (is.null(.pkgenv[['git2r_commits']])) assign("git2r_commits", commits, envir = .pkgenv)
-      if (is.null(.pkgenv[['git2r_content']])) assign("git2r_content", content, envir = .pkgenv)
-      if (is.null(.pkgenv[['git2r_lookup']]))  assign("git2r_lookup",  lookup, envir = .pkgenv)
-      if (is.null(.pkgenv[['git2r_tree']]))    assign("git2r_tree",    lookup, envir = .pkgenv)
-  
-  
-
-  }
+      #if (is.null(.pkgenv[['git2r_pull']]))    assign("git2r_pull",    pull, envir = .pkgenv)
+      # if (is.null(.pkgenv[['git2r_clone']]))   assign("git2r_clone",   clone, envir = .pkgenv)
+      # if (is.null(.pkgenv[['git2r_commits']])) assign("git2r_commits", commits, envir = .pkgenv)
+      # if (is.null(.pkgenv[['git2r_content']])) assign("git2r_content", content, envir = .pkgenv)
+      # if (is.null(.pkgenv[['git2r_lookup']]))  assign("git2r_lookup",  lookup, envir = .pkgenv)
+      # if (is.null(.pkgenv[['git2r_tree']]))    assign("git2r_tree",    tree, envir = .pkgenv)
+    }
   
   
   
@@ -102,8 +102,9 @@
           clone_path <- get.clone_path (pkg, usr, remote_id) 
 
        #Use 'git2r' command 'commits' to read all commits 
-          git2r_commits <- .pkgenv[['git2r_commits']]
-          all_commits <- git2r_commits(repo=clone_path , time=TRUE)
+          #git2r_commits <- .pkgenv[['git2r_commits']]
+          #all_commits <- git2r_commits(repo=clone_path , time=TRUE)
+          all_commits <- git2r::commits(repo=clone_path , time=TRUE)
 
       #Loop extracting time and sha
         commit.time = commit.sha = c()
@@ -264,7 +265,7 @@
   {
   
   #Full name of remote needle
-     git_pkg_usr <- paste0(remote_idk , "_" , usrk , "_" ,pkgk)
+     git_pkg_usrk <- paste0(remote_idk , "_" , usrk , "_" ,pkgk)
 
   #Look for that full name in git.toc 
       git.toc <- .pkgenv[['git.toc']]
@@ -272,7 +273,7 @@
  
       
   #If it does not exist on git toc, return "add_it"
-      git.toc.pkg <- subset(git.toc, git_pkg_usr==git_pkg_usrk)
+      git.toc.pkg <- subset(git.toc, git_pkg_usrk==git_pkg_usrk)
       if (nrow(git.toc.pkg)==0) return('add_this_remote_to_toc')
  
   #Most recent row before this date

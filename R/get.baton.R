@@ -53,7 +53,7 @@
                         # and that the one from sha time is lower ranked, so happened later, this means the git.toc missed the update
                         # could happen if server in groundhog is not updating correctly. Then we trust the local clone
                         # that is, we turst the commit time, rather than our inferred push date
-                        sha <- sha.from_sha_time
+                        sha <- sha.from.sha_time
                         }    #End if position is lower
                         }    #End if valid sha value obtained from git.toc (nchar=40)
             
@@ -87,12 +87,7 @@
             #3.3 read the raw description file
                 dir_path <- paste0(get.groundhog.folder() , "/git_clones/" , remote_id)
                 clone_path <- paste0(dir_path , "/", usr, "_" ,pkg)
-        				git2r_lookup <- .pkgenv[['git2r_lookup']]
-        				git2r_content<- .pkgenv[['git2r_content']]
-        				git2r_tree  <-  .pkgenv[['git2r_tree']]
-
-                #description_raw <-git2r_content(git2r_tree(git2r_lookup(clone_path, sha))["DESCRIPTION"])
-                description_raw <-content(tree(lookup(clone_path, sha))["DESCRIPTION"])
+                description_raw <-git2r::content(git2r::tree(git2r::lookup(clone_path, sha))["DESCRIPTION"])
                 
             #3.4  save contents in temporary file
                 tmp<-file.path(get.groundhog.folder(), 'temp', paste0('description_',usr,'_',pkg,"_",sha))

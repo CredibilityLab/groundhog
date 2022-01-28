@@ -42,8 +42,9 @@
     install.snowball(snowball,       date=date,      force.install = force.install, force.source = force.source, quiet.install = quiet.install)
   
  
-  #8 Library() call
-    library(pkg,character.only=TRUE)
+  #8 Attach it
+     attachNamespace(pkg)
+
 
   #9 Verify (check target is attached and full snowball pkg_vrs is loaded or in libpath)
      verified <- verify.snowball.loaded(snowball, ignore.deps)  

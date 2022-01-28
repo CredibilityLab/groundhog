@@ -25,7 +25,8 @@
              #2.2 This same pkg_date loaded only     : attach it 
             
               if (git_usr_pkg_date %in% .pkgenv[['remotes.loaded']]) {
-                    library(pkg)   
+                   attachNamespace(pkg)
+   
                    #Verify it was attacged
                     if (!pkg %in% .packages()) message("Failed to load '",pkg,"'")
                 
@@ -66,7 +67,9 @@
         install.snowball(snowball, date)
 
     #5 Attach pkg
-        library(pkg, character.only = TRUE)
+       attachNamespace(pkg)
+
+
     
     #6 verify snowball loaded
         verified <- verify.snowball.loaded(snowball,ignore.deps)  
@@ -91,7 +94,7 @@
    #8 Add package_date to .envpkg vector of loaded remotes to prevent conflicts not idnetified by vrs 
       
         #8.1 Snowball subset for remote rows
-          snowball.remotes <- subset(snowball,sha!='')
+          snowball.remotes <- subset(snowball,snowball$sha!='')
         
         #8.2 Attached remotes
           attached.list <- utils::sessionInfo()$otherPkgs # pkgs in attached

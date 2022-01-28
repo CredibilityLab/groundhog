@@ -8,11 +8,8 @@
   .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
 
     
-  #Load databases so any function run will have them available
-      #load.cran.toc()
-      
-        #This function will copy from the install folder to the groundhog_folder the files if they do not exist
-      
+
+
     } #End of onLoad
 
 #Default parameters
@@ -51,6 +48,8 @@
             if (consent == TRUE)
             {
       
+              
+              
         #Create the folder (when running groundhog.library() this will signal consent was given)
           dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
           
@@ -60,7 +59,11 @@
           if (!file.exists(id.path))  {
               dir.create(dirname(id.path),recursive = TRUE,showWarnings = FALSE)
               saveRDS('This is the groundhog folder', id.path)
-              }
+          }
+          
+        #Load toc files
+          load.cran.toc()    
+
         
         #Report versions being used
           groundhog.version_using <- as.character(packageVersion("groundhog"))

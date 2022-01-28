@@ -12,13 +12,12 @@
           clone_catalog <- readRDS(clone_catalog_path)
           } else {
           clone_catalog <- data.frame(remote_id=character(0), usr=character(0), pkg = character(0), last.saved =character(0))            
-          
           }
       
           
       #1 If a clone exists and it is saved after validate date, return TRUE, as in, already updated
            #Row of catalog for this pkg, if any
-                clone_catalog_row <- subset(clone_catalog, pkg==pkgk & usr==usrk & remote_id==remote_idk)
+                clone_catalog_row <- subset(clone_catalog, clone_catalog$pkg==pkgk & clone_catalog$usr==usrk & clone_catalog$remote_id==remote_idk)
                 
             #If there is at least one row, and it it later than date, then return TRUE
                 if (nrow(clone_catalog_row)>0 && max(clone_catalog_row$last.saved) > datek) 
@@ -41,10 +40,9 @@
               
             #Ensure we got 'git2r' package loaded to interact with git clone
                 load.git2r(datek)  
-                git2r_pull <- .pkgenv[['git2r_pull']]
                 
             #Use the git2r_pull function with its new name
-                pull_result <- git2r_pull(clone_path) 
+                pull_result <- git2r::pull(clone_path) 
 
             #Update catalog
                 save.clone_catalog_update(pkgk,remote_idk,usrk) #Function 2 below
@@ -64,7 +62,7 @@
                 load.git2r(datek)  #remote_functions.R - Function 2.1
           
             #4.2 Save locally the function we need, clone, with an unmaskable name
-                git2r_clone <- .pkgenv[['git2r_clone']]
+               # git2r_clone <- .pkgenv[['git2r_clone']]
             
             #4.2 Clone github repository
             
@@ -72,7 +70,7 @@
                   git_path <- paste0('https://' , remote_idk , ".com/" , usrk , "/" , pkgk)
                 
               #Clone it
-                  git2r_clone(git_path, clone_path)
+                  git2r::clone(git_path, clone_path)
             
           } #End if local_git_exists
           
@@ -88,7 +86,7 @@
               } else { 
 
               exit ("Groundhog says: Error.\n",
-                    "Unable to connect to ",remote_idk, " to obtain files for the '",usr,"/",pkg,"' package.\n",
+                    "Unable to connect to ",remote_idk, " to obtain files for the '",usrk,"/",pkgk,"' package.\n",
                     "Check spelling of package, your internet connection, and/or visit http://groundhogR.com/troubleshoot\n")
                 
               }  #End of if local exists

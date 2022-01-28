@@ -5,8 +5,6 @@
 #'version of the package, and all dependencies, to be loaded (and installed if needed).
 #'@param include.suggests logical, defaults to `FALSE`. When set to `TRUE`, includes
 #'   dependencies classified in the DESCRIPTION file as `suggested`.
-#'@param force.source logical (defaults to `FALSE`). When set to `TRUE`, will not attempt 
-#'   installing binary from CRAN or MRAN and instead download source file and install it.
 #'@return a dataframe with all packages that need to be installed, their version , whether they are installed, where 
 #'to obtain them if not locally available (CRAN vs MRAN), which date to use for MRAN, 
 #'installation time from source (in seconds), and local path for storage

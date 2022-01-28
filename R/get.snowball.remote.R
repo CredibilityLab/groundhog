@@ -43,7 +43,7 @@
       cran.toc <- .pkgenv[['cran.toc']]
     
     #drop the remote packages from cran.toc
-      cran.toc <- subset(cran.toc, !Package %in% baton$rows.toc$Package)
+      cran.toc <- subset(cran.toc, !cran.toc$Package %in% baton$rows.toc$Package)
       
     #add the remote versions
       cran.toc <- rbind(baton$rows.toc,  cran.toc)

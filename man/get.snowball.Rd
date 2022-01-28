@@ -14,9 +14,6 @@ version of the package, and all dependencies, to be loaded (and installed if nee
 
 \item{include.suggests}{logical, defaults to \code{FALSE}. When set to \code{TRUE}, includes
 dependencies classified in the DESCRIPTION file as \code{suggested}.}
-
-\item{force.source}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will not attempt
-installing binary from CRAN or MRAN and instead download source file and install it.}
 }
 \value{
 a dataframe with all packages that need to be installed, their version , whether they are installed, where
