@@ -39,7 +39,7 @@
             if (local_git_exists==TRUE) {
               
             #Ensure we got 'git2r' package loaded to interact with git clone
-                load.git2r(datek)  
+                load.pkg_utility('git2r',datek)  
                 
             #Use the git2r_pull function with its new name
                 pull_result <- git2r::pull(clone_path) 
@@ -59,12 +59,11 @@
            
           
             #4.1 Ensure  'git2r' is loaded
-                load.git2r(datek)  #remote_functions.R - Function 2.1
+                load.pkg_utility('git2r',datek)  
+				
+					#remote_functions.R - Function 2
           
-            #4.2 Save locally the function we need, clone, with an unmaskable name
-               # git2r_clone <- .pkgenv[['git2r_clone']]
-            
-            #4.2 Clone github repository
+			#4.2 Clone github repository
             
               #Path to local clone
                   git_path <- paste0('https://' , remote_idk , ".com/" , usrk , "/" , pkgk)

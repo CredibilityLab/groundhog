@@ -5,7 +5,6 @@
 #Function 5 Get lib for remote install of the package
 #Function 6 Identify remote ('github' vs 'gitlab';)
 #Function 7 make_package take a value entered by user, pkg or usr/pkg, or git::usr/pkg and turns it into a list with all the parts
-#Function 8 Get sha from git.toc
 
 
 #----------------------------------------------------------------
@@ -26,7 +25,7 @@
   {
        if (! pkg_utility %in% .packages()) {
           
-              #Explain to user which version of 'git2r' is being used
+              #Explain to user which version of 'pkg' (e.g., git2r) is being used
                 message2()
                 message1("To proceed we need to load the package '", pkg_utility, "'.\n",
                   "It will now be loaded by 'groundhog', loading its version available on CRAN on\n",
@@ -46,30 +45,6 @@
   } #End of function 2
   
 
-#Function 2.1 - load and localize needed fucntions of git2r
-
-    load.git2r <- function(groundhog.day)
-    {
-    
-
-    #Load the function
-      load.pkg_utility('git2r' , groundhog.day)
-    #Create local names to the needed functions
-      #if (is.null(.pkgenv[['git2r_pull']]))    assign("git2r_pull",    pull, envir = .pkgenv)
-      # if (is.null(.pkgenv[['git2r_clone']]))   assign("git2r_clone",   clone, envir = .pkgenv)
-      # if (is.null(.pkgenv[['git2r_commits']])) assign("git2r_commits", commits, envir = .pkgenv)
-      # if (is.null(.pkgenv[['git2r_content']])) assign("git2r_content", content, envir = .pkgenv)
-      # if (is.null(.pkgenv[['git2r_lookup']]))  assign("git2r_lookup",  lookup, envir = .pkgenv)
-      # if (is.null(.pkgenv[['git2r_tree']]))    assign("git2r_tree",    tree, envir = .pkgenv)
-    }
-  
-  
-  
-  
-  #----------------------------------------------------
-
-  
-  
     
   #Function 3 - get sha_time data frame from clone commits
       get.sha_time <- function(pkg, date, remote_id, usr)
@@ -96,14 +71,12 @@
          validate.clone_date (pkg, date, remote_id, usr)
         
        #Ensure we have git2r
-          load.git2r(date)  
+          load.pkg_utility('git2r',date)
         
        #Path for the clone
           clone_path <- get.clone_path (pkg, usr, remote_id) 
 
-       #Use 'git2r' command 'commits' to read all commits 
-          #git2r_commits <- .pkgenv[['git2r_commits']]
-          #all_commits <- git2r_commits(repo=clone_path , time=TRUE)
+       #Read all commits 
           all_commits <- git2r::commits(repo=clone_path , time=TRUE)
 
       #Loop extracting time and sha
@@ -260,38 +233,6 @@
   }
   
 
-#Function 8 Get sha from git.toc
-  get.sha.from.git.toc<-function(pkgk, datek,remote_idk, usrk )
-  {
-  
-  #Full name of remote needle
-     git_pkg_usrk <- paste0(remote_idk , "_" , usrk , "_" ,pkgk)
-
-  #Look for that full name in git.toc 
-      git.toc <- .pkgenv[['git.toc']]
-      git.toc$git_pkg_usrk <- with(git.toc, paste0(remote_id , "_" , usr , "_" ,pkg))
- 
-      
-  #If it does not exist on git toc, return "add_it"
-      git.toc.pkg <- subset(git.toc, git_pkg_usrk==git_pkg_usrk)
-      if (nrow(git.toc.pkg)==0) return('add_this_remote_to_toc')
- 
-  #Most recent row before this date
-      #sha times before this date
-        git.toc.pkg <- subset(git.toc.pkg, date<datek)
-      if (nrow(git.toc.pkg)==0) return("toc_starts_later")
-      #The last before this date
-        if (nrow(git.toc.pkg)>0) 
-        {
-         #Which of those rows has teh lowest date
-            k.max <- which.max(git.toc.pkg$date)
-            
-        #Return that sha
-            sha <- git.toc.pkg$sha[k.max]
-            return(sha)  
-    } #End of whether sha is found
-            
-  } #End of function 10
  
   
   

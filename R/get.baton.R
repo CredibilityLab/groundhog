@@ -1,7 +1,7 @@
 
 #This script contains two functions,
 #1) Get baton.single extracts information about a remote package from its description file
-#2) Get baton loops chasing all remotes found as dependencies untli there are none left
+#2) Get baton loops chasing all remotes found as dependencies until there are none left
 
 
 
@@ -16,59 +16,9 @@
          baton$usr <- c(baton$usr, usr)
          baton$install.from <- c(baton$install.from, remote_id) 
                 
-        #1. Get sha & append to baton
-            
-          #1.1 Try getting sha from git.toc
-            sha.from.git.toc <- get.sha.from.git.toc(pkgk=pkg, datek=date, remote_idk = remote_id, usrk=usr)
-            
-                    #See function 8 in functions_remote.R
-                #Wee look for the sha in the git.toc and if not found, we get msg that says whether
-                #git.toc does have it, but starting later, or whether it is not there yet
-
-     
-           #1.2 Get it also from clone (as precuation in case the git toc is not working
-            sha.from.sha_time <- get.sha(pkg,date,remote_id ,usr)
-              
-            
-          #1.3 Which of the sah to use?
-              #If git.toc is not 40 characters long, us sha_time
-                if (nchar(sha.from.git.toc) != 40) sha <-sha.from.sha_time
-              
-                
-                if (nchar(sha.from.git.toc) == 40) {
-                    #Assume we will take git.toc  
-                      sha <- sha.from.git.toc
-                    
-                #Unless we think the server may not be updating push times correctly
-                      
-                   #if git.toc is in sha_time, and it appears earlier in time (so further down in sha_time)
-                   #than the sha from sha time (would happen if git.toc missed an update) 
-                      sha_time <- get.sha_time (pkg, date, remote_id, usr)
-                      
-                      pos.toc      <- which(sha_time$sha == sha.from.git.toc)  
-                      pos.sha_time <- which(sha_time$sha == sha.from.sha_time)  
-                      
-                      if (pos.sha_time < pos.toc) {
-                        #Here find that sha_time and git.toc are giving different sha values (otherwise position is identical)
-                        # and that the one from sha time is lower ranked, so happened later, this means the git.toc missed the update
-                        # could happen if server in groundhog is not updating correctly. Then we trust the local clone
-                        # that is, we turst the commit time, rather than our inferred push date
-                        sha <- sha.from.sha_time
-                        }    #End if position is lower
-                        }    #End if valid sha value obtained from git.toc (nchar=40)
-            
-            
-          #1.3 If answer is to add to toc, we add name of pkg to server so next daily update starts tracking it
-            if (sha.from.git.toc=="add_this_remote_to_toc")
-                {
-                #Add to list on server of pkgs to add to git.toc
-                  URL <- paste0('https://groundhogr.com/new_remote.php?remote_id=',remote_id,"&usr=",usr,"&pkg=",pkg)
-                  readLines(URL)  
-                }
-          
-            
-        #1.4 Add sha to baton$sha
-          baton$sha <- c(baton$sha , sha)    
+      #1. Get sha & append to baton
+            sha <- get.sha(pkg,date,remote_id ,usr)
+            baton$sha <- c(baton$sha , sha)    
 
         
       #2 Get installation path and add to baton
@@ -88,6 +38,11 @@
                 dir_path <- paste0(get.groundhog.folder() , "/git_clones/" , remote_id)
                 clone_path <- paste0(dir_path , "/", usr, "_" ,pkg)
                 description_raw <-git2r::content(git2r::tree(git2r::lookup(clone_path, sha))["DESCRIPTION"])
+                
+                
+                  #note:
+                  #git2r is in the suggests, but preferred usage is to load it using groundhog() to avoid version conflicts
+                  #for users who are using git2r elsewhere in their session
                 
             #3.4  save contents in temporary file
                 tmp<-file.path(get.groundhog.folder(), 'temp', paste0('description_',usr,'_',pkg,"_",sha))
