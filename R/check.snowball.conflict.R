@@ -9,12 +9,17 @@
 
 check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) {
   
+  
+  #0 Message used a few times below
+      msg_F10 <- "You may remove all loaded packages restarting the R session.\nIn R Studio press: CTRL/CMD-SHIFT-F10"
+  
+  
   #1 short name for package being installed/loaded
         requested_pkg_vrs <- snowball$pkg_vrs[length(snowball$pkg_vrs)]
         requested_pkg     <- snowball$pkg[length(snowball$pkg_vrs)]
   
   #2 Get sets of packages that are treated differently 
-      #2.1 Ignore conflicts (cannot bypass default set, hardcoded in utils.R, 'ignore.deps_default()', but can add touri_simonsohn_uso it)
+      #2.1 Ignore conflicts (cannot bypass default set, hardcoded in utils.R, 'ignore.deps_default()', but can add to it)
         ignore.deps <- c(ignore.deps_default(), ignore.deps)    #add any packages explicitly set by user
       
        
@@ -58,7 +63,6 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
       conflict.needed.pkg <- snowball$pkg    [!(snowball$pkg_vrs %in% session.pkg_vrs) & (snowball$pkg %in% session.pkg) & (!snowball$pkg %in% ignore.deps)]
       conflict.needed <- sort(conflict.needed)
       
-     
       
     #These are packages that are active and have a conflict with a needed one (do not include packages in ignore.deps)
       conflict.active     <- session.pkg_vrs[!(session.pkg_vrs %in% snowball$pkg_vrs) & (session.pkg %in% snowball$pkg) & (!session.pkg %in% ignore.deps)]
@@ -76,21 +80,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
 
   #If conflict found
       if (n.conflict > 0 ) {
-  
-        
-    #6.1 Conflict with a remote package loaded earlier
-        if (any(conflict.needed.pkg %in% .pkgenv[['remote_packages']]))
-        {
-         message2()
-         message1("Some package(s) that '" , requested_pkg_vrs , "' needs to load were previously loaded from a non-CRAN",
-                  "repository (for example, from GitHub). If you are OK using that version instead of the one\n",
-                  "'" , requested_pkg , "' is expecting, re-run the groundhog.library() command including the option\n",
-                  "'ignore.deps=c(" ,  paste0(.pkgenv[['remote_packages']],callapse=', '), "'\n",
-                  "If you do not wish to use the already loaded version(s), restart the R Session to unload all packages\n",
-                  "(In R Studio that is CTRL/CMD-SHIFT-F10).")
-          
-        }
-        
+      
     #6.5 Read from and save to conflict cookie to detect repeated failures      
       #Read last conflict cookie
           cookie_path <- paste0(get.groundhog.folder(),"/package_conflict.txt")
@@ -108,22 +98,68 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
          message1(n.conflict, " of the ", n.needed, " packages needed for '", requested_pkg_vrs, "' have a version conflict with\n",
                   "a package already in your current R session.\n\n",
               "   Current: ",conflict.active.string,"\n",
-              "   Needed:  ",conflict.needed.string,"\n\n",
-              "To solve this: restart the R session. Note: you will need to do 'library(groundhog)' again.\n\n",
-              "In R Studio press: CTRL/CMD-SHIFT-F10")
+              "   Needed:  ",conflict.needed.string,"\n\n")
+			  
+	#7.1 Add notice about remotes already loaded
+        #Find remotes in the snowball
+           snowball.remotes <- subset(snowball, from %in% c('github','gitlab'))
+      
+        #See if any of the conflicts involve them    
+            flag.conflict_needed_remote <- conflict.active.pkg %in% snowball.remotes$pkg
+            
+        #See if any of the conflicts involve already loaded remotes
+            flag.conflict_active_remote <- any(conflict.active.pkg %in% .pkgenv[['remote_packages']])
+    
+           
+      #msg for conflict with needed remote
+       if (flag.conflict_active_remote==TRUE)
+        {
+         message1("The package(s) ",conflict.active[conflict.needed.pkg %in% .pkgenv[['remote_packages']]],
+			  	  " were not obtained from CRAN. \n",
+				  "This may mean you cannot avoid this version conflict. The solution is to simply allow it.\n",
+				  "Rerun groundhog.library() with the option: ",
+              "'ignore.deps=c(" ,  
+                    paste0(conflict.active.pkg[conflict.active.pkg %in% .pkgenv[['remote_packages']]],collapse=', '),
+                ")' \n\n")
+           }
+			  #msg for conflict with active remote
+      
+          if (flag.conflict_needed_remote==TRUE)
+          {
+            message1("The package(s) ",conflict.needed[conflict.needed.pkg %in% snowball.remotes$pkg],
+			  	  " are not on CRAN. \n",
+				  "This may mean you cannot avoid this version conflict. The solution is to simply allow it.\n",
+				  "Rerun groundhog.library() with the option: ",
+              "'ignore.deps=c(" ,  
+                    paste0(conflict.needed[conflict.needed.pkg %in% snowball.remotes$pkg],collapse=', '),
+                ")' \n\n")
+          }
+
+            
+      #Add 'alterantively' before F10 if a msg about ignore.deps was shown before
+        if (flag.conflict_needed_remote | flag.conflict_active_remote) message1("Alternatively, if you think you can avoid the conflict:")
+     
          
-        #Add message if dates mismatch across groundhog library calls
+	#7.3  Refresh F10
+	      message1(msg_F10)
+         
+  #7.4 Add message if dates mismatch across groundhog library calls
          if (length(.pkgenv[['hogdays']])>1) {
             message("\n\nWarning: you have used different groundhog days (dates) across groundhog.library() calls, \n",
-                    "this may be causing the conflict of versions.") 
+                    "this may be causing the conflict of versions. If you again load packages using different dates\n",
+					"the problem may persist.") 
             message("\nDates you have used: ",paste0(.pkgenv[['hogdays']],collapse=' , '))
           }
-         
+       
+	 #7.5 red failure message  
          message("\nThe package '", requested_pkg_vrs,"' was *NOT* attached")
        
     
-  #8 Show fix, workaround message if same failure less than 5 minutes ago and not loading the conflicting package adn only 1 date was used
-        if (last_conflict<5 & requested_pkg == last_conflict.pkg & (length(.pkgenv[['hogdays']])==1))
+  #8 Show fix, workaround message if same failure less than 5 minutes ago and not loading the conflicting package adn only 1 date was used and no package conflict is with remote
+        if (last_conflict<5 & 
+					requested_pkg == last_conflict.pkg & 
+					(length(.pkgenv[['hogdays']])==1) & 
+					(!any(conflict.needed.pkg %in% .pkgenv[['remote_packages']])))
         {
           #Example of dependency with conflict to avoid
              dep.example <- ifelse(conflict.active.pkg[1] == requested_pkg, conflict.active.pkg[2], conflict.active.pkg[1] )
