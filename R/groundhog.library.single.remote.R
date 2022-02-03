@@ -39,10 +39,9 @@
                 
               if (pkg %in% active$pkg) {
               
-                msg <- paste0('Groundhog says, warning!\n', 
-                              'A version of the package "',pkg, '" is already loaded and it may or may not match \n', 
-                              'the version as available on "',date,'". To ensure the version for that date is used \n', 
-                              'you should restart the R session (CTRL/CMD-SHIFT F10 in R-Studio) and run this command,\n',
+                msg <- paste0('A version of the package "',pkg, '" is already loaded and it may or may not match \n', 
+                              "the version as available on '",remote_id, "' on '",date,"'. To ensure the version for that date is used \n", 
+                              'restart the R session (CTRL/CMD-SHIFT F10 in R-Studio) and run this command,\n',
                               'again.')
                 message(msg)
                 exit()

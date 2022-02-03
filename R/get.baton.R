@@ -31,18 +31,18 @@
               validate.clone_date(pkg, date, remote_id, usr)
               
             #3.2 Load git2r
-                #  https://github.com/ropensci/git2r/issues/255   --  reading description with git2r
                 load.pkg_utility('git2r' , date)
 
             #3.3 read the raw description file
+                #  https://github.com/ropensci/git2r/issues/255   --  reading description with git2r
                 dir_path <- paste0(get.groundhog.folder() , "/git_clones/" , remote_id)
                 clone_path <- paste0(dir_path , "/", usr, "_" ,pkg)
                 description_raw <-git2r::content(git2r::tree(git2r::lookup(clone_path, sha))["DESCRIPTION"])
                 
                 
                   #note:
-                  #git2r is in the suggests, but preferred usage is to load it using groundhog() to avoid version conflicts
-                  #for users who are using git2r elsewhere in their session
+                  #git2r is in the suggests in DESCRIPTION , but preferred usage is to load it using groundhog() 
+                  #to avoid version conflicts for users who are using git2r elsewhere in their session
                 
             #3.4  save contents in temporary file
                 tmp<-file.path(get.groundhog.folder(), 'temp', paste0('description_',usr,'_',pkg,"_",sha))

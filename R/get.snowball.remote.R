@@ -26,16 +26,13 @@
                 return(snowball)
             } 
 
-  #2 Verify clone exists and is up to date  (this happens regardless of presence in git.toc)
+  #2 Verify clone exists and is up to date 
        valid_clone <- validate.clone_date(pkg, date,remote_id ,usr)
     
   #3 Get baton (information on remote and its remote dependencies)  'get.baton.R'
        baton<-get.baton(pkg,date,remote_id,usr)
        
-          #This will inclue sha values and dependencies
-          #sha is obtained from git.toc if available (daily check on tracked packages, else from sha_time, local clone)
-          #The reason to keep the git.toc is taht a commit can be pushed months after its official creation date
-          #producing reproducibility issues.
+          #This will incluee sha values and dependencies
        
       
   #4 Modify cran toc removing other versions of the remote packages, and adding new ones with date 1970-01-01
