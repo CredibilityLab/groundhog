@@ -29,12 +29,17 @@ toc <- function(pkg, dependencies = FALSE) {
   }
 
   if (nrow(output) == 0) {
+		#Date to include in example
+			date.example <- Sys.Date()-15
+	
     message2()
     message1(
       "There is no package '", pkg, "' in our database of all CRAN packages ever posted.\n",
       "   Keep in mind that:\n",
       "    1. package names are cAsE seNsiTive\n",
-      "    2. Only CRAN packages can be loaded via groundhog (not github or bioconductor)"
+      "    2. By default requested packages are looked for only on CRAN\n",
+	  "    3. To load a 'GitHub' or 'Gitlab' package you need to include\n",
+	  "       the directory, e.g., groundhog.library('github::crsh/papaja','",date.example,"')"
     )
     exit()
   }
