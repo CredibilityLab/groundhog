@@ -69,7 +69,7 @@
                   git_path <- paste0('https://' , remote_idk , ".com/" , usrk , "/" , pkgk)
                 
               #Clone it
-                  git2r::clone(git_path, clone_path)
+                  try(git2r::clone(git_path, clone_path),silent=TRUE)
             
           } #End if local_git_exists
           
@@ -84,10 +84,11 @@
 
               } else { 
 
-              exit ("Groundhog says: Error.\n",
-                    "Unable to connect to ",remote_idk, " to obtain files for the '",usrk,"/",pkgk,"' package.\n",
-                    "Check spelling of package, your internet connection, and/or visit http://groundhogR.com/troubleshoot\n")
-                
+              message ("Groundhog says: ",
+                    "Unable to connect to '",remote_idk, "' to obtain files for the '",usrk,"/",pkgk,"' package.\n",
+                    "Check spelling of package, make sure it is available on '",remote_idk, "',  check your internet connection,\n",
+					"and/or visit http://groundhogR.com/troubleshoot\n")
+                exit()
               }  #End of if local exists
 
           
