@@ -19,18 +19,9 @@
 
     
      
-  #2 Read Active & libPaths 
+  #2 Read Active  
     #2.1 Read active
        active <- get.active()
-       
-    #2.1 Read paths
-       paths  <- get.groundhog_libpaths()
-       ip <-          data.frame(utils::installed.packages(paths))
-       paths.pkg_vrs <- paste0(ip$Package,"_",ip$Version)
-       paths.pkg <-  ip$Package
-      
-       session.pkg_vrs <- c(paths.pkg_vrs , active$pkg_vrs)
-       session.pkg     <- c(paths.pkg     , active$pkg)
        
        
     #2.2 Read attached
@@ -81,8 +72,8 @@
         
     
     #4.2 Attach mismatched version if ignore.deps is loaded but not attached (common scenario, trying to attach knitr in .rmd file)
-       if ((pkg %in% session.pkg) &                         #pkg matches
-           (!pkg_vrs %in%  session.pkg_vrs) & 
+       if ((pkg %in% active$pkg) &                         #pkg matches
+           (!pkg_vrs %in%  active$pkg_vrs) & 
            (pkg %in% ignore.deps))                          #in ignoreable conflict list.
         {
            

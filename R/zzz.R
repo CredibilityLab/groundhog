@@ -28,11 +28,10 @@
             answer <- readline()
             answer <- gsub("'", "", answer)  #kill the ' if entered
 
-            if (toupper(answer)=="OK")
-             {
-             consent <- TRUE
-            }
-         } #End if consent == FALSE
+            if (toupper(answer)=="OK") {
+              consent <- TRUE
+              }
+              } #End if consent == FALSE
         
       # If No consent, die
           if (consent == FALSE)
@@ -41,21 +40,14 @@
           }
         
       #Proceed only if consent exists
-            if (consent == TRUE)
-            {
+          if (consent == TRUE)
+          {
               #Create the folder (when running groundhog.library() this will signal consent was given)
                 dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
+               
                 
-              #Flag this folder as the groundhog folder for being able to discern libpaths that are here vs not
-                id.path<-file.path(get.groundhog.folder() , "groundhog.flag.rds")
-                
-                if (!file.exists(id.path))  {
-                    dir.create(dirname(id.path),recursive = TRUE,showWarnings = FALSE)
-                    saveRDS('This is the groundhog folder', id.path)
-                }
-                
-              #Load toc files
-                load.cran.toc()    
+      #Load toc files
+          load.cran.toc()    
 
         
         #Report versions being used

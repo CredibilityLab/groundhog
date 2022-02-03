@@ -26,23 +26,12 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
       #2.2 Active packages
         active <- get.active()
         
-      #2.3 Read paths
-         paths  <- get.groundhog_libpaths()  
-         ip   <- data.frame(installed.packages(paths))
-         paths.pkg_vrs <- paste0(ip$Package,"_",ip$Version)
-           
-            #Note: groundhog_libpaths is a vector with all libraries available in .libPaths() that are in the groundhog.folder
-         
-      #2.4 Combine
-          session.pkg_vrs <- unique(c(active$pkg_vrs, paths.pkg_vrs))
-          session.pkg    <-  as.character(sapply(session.pkg_vrs, function(x) { strsplit(x,"_")}[[1]][1]))
-
 
 
   #3 Force Install:  any package that needs to be *installed* is loaded?
     #separate check from because even SAME version created conflict
       if (force.install) {
-        conflict.pkg <- (snowball$pkg %in% session.pkg) 
+        conflict.pkg <- (snowball$pkg %in% active$pkg) 
         if (any(conflict.pkg)) {
           message2()
           message(
@@ -59,14 +48,14 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
   
   #4 Create conflict set 
     #These are packages that are needed and have a conflict with an active one
-      conflict.needed     <- snowball$pkg_vrs[!(snowball$pkg_vrs %in% session.pkg_vrs) & (snowball$pkg %in% session.pkg) & (!snowball$pkg %in% ignore.deps)]
-      conflict.needed.pkg <- snowball$pkg    [!(snowball$pkg_vrs %in% session.pkg_vrs) & (snowball$pkg %in% session.pkg) & (!snowball$pkg %in% ignore.deps)]
+      conflict.needed     <- snowball$pkg_vrs[!(snowball$pkg_vrs %in% active$pkg_vrs) & (snowball$pkg %in% active$pkg) & (!snowball$pkg %in% ignore.deps)]
+      conflict.needed.pkg <- snowball$pkg    [!(snowball$pkg_vrs %in% active$pkg_vrs) & (snowball$pkg %in% active$pkg) & (!snowball$pkg %in% ignore.deps)]
       conflict.needed <- sort(conflict.needed)
       
       
     #These are packages that are active and have a conflict with a needed one (do not include packages in ignore.deps)
-      conflict.active     <- session.pkg_vrs[!(session.pkg_vrs %in% snowball$pkg_vrs) & (session.pkg %in% snowball$pkg) & (!session.pkg %in% ignore.deps)]
-      conflict.active.pkg <- session.pkg    [!(session.pkg_vrs %in% snowball$pkg_vrs) & (session.pkg %in% snowball$pkg) & (!session.pkg %in% ignore.deps)]
+      conflict.active     <- active$pkg_vrs[!(active$pkg_vrs %in% snowball$pkg_vrs) & (active$pkg %in% snowball$pkg) & (!active$pkg %in% ignore.deps)]
+      conflict.active.pkg <- active$pkg    [!(active$pkg_vrs %in% snowball$pkg_vrs) & (active$pkg %in% snowball$pkg) & (!active$pkg %in% ignore.deps)]
       conflict.active     <- sort(conflict.active)
 
   #5 Generate variables with counts and list of packages in conflict
@@ -115,8 +104,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
        if (flag.conflict_active_remote==TRUE)
         {
          message1("The package(s) ",conflict.active[conflict.needed.pkg %in% .pkgenv[['remote_packages']]],
-			  	  " were not obtained from CRAN. \n",
-				  "This may mean you cannot avoid this version conflict. The solution is to simply allow it.\n",
+			  	  " was/were not obtained from CRAN. A simple solution is simply allow this version conflict.\n",
 				  "Rerun groundhog.library() with the option: ",
               "'ignore.deps=c(" ,  
                     paste0(conflict.active.pkg[conflict.active.pkg %in% .pkgenv[['remote_packages']]],collapse=', '),
@@ -127,11 +115,10 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
           if (flag.conflict_needed_remote==TRUE)
           {
             message1("The package(s) ",conflict.needed[conflict.needed.pkg %in% snowball.remotes$pkg],
-			  	  " are not on CRAN. \n",
-				  "This may mean you cannot avoid this version conflict. The solution is to simply allow it.\n",
+			  	  " is/are not on CRAN. A simple solution is to simply allow this version conflict.\n",
 				  "Rerun groundhog.library() with the option: ",
               "'ignore.deps=c(" ,  
-                    paste0(conflict.needed[conflict.needed.pkg %in% snowball.remotes$pkg],collapse=', '),
+                    paste0(conflict.needed.pkg[conflict.needed.pkg %in% snowball.remotes$pkg],collapse=', '),
                 ")' \n\n")
           }
 
@@ -282,7 +269,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
               message1(
                       "A different version of at least one of the needed packages is already loaded, \n",
                       "this usually would terminate the groundhog.library() call and you would be asked\n",
-                      "to restart the R Session, but the package(s) involved:\n",
+                      "to restart the R session, but the package(s) involved:\n",
                       "(" , conflict.ignored.pkg , ")", " are in the set for which conflicts are tolerated either because\n",
                       "they are often loaded automatically (e.g., by R Studio) from your local R library, and/or are \n",
                       "'recommended' packages by R and thus version control can be attained by using the version of R matching\n",

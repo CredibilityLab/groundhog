@@ -333,22 +333,22 @@ ignore.deps_default <- function() {
 #Function 23 - string positiong - simpler gregexpr for strpos
       strpos1 <- function(needle, haystack) as.numeric(gregexpr(needle, haystack)[[1]])
       
-#Function 24 - get groundhog libpathcs
-      get.groundhog_libpaths<-function()
-      {
-        paths <- .libPaths()
-        
-        #Up 2 and 3 folders
-          up2 <- dirname(dirname(paths))
-          up3 <- dirname(up2)
-          
-        #If up2 or up3 contain groundhog.flag.rds then this is in groundhogfodler
-          is.groundhog <- (file.exists(file.path(up2,'groundhog.flag.rds')) | file.exists(file.path(up3,'groundhog.flag.rds')))
-        
-        #Return subset which is groundhog
-          groundhog_libpaths <- paths[ is.groundhog ]
-          return(groundhog_libpaths)        
-        }
+#Function 24 - get groundhog libpaths (abandoned)
+     # get.groundhog_libpaths<-function()
+     # {
+     #   paths <- .libPaths()
+     #   
+     #   #Up 2 and 3 folders
+     #     up2 <- dirname(dirname(paths))
+     #     up3 <- dirname(up2)
+     #     
+     #   #If up2 or up3 contain groundhog.flag.rds then this is in groundhogfodler
+     #    is.groundhog <- (file.exists(file.path(up2,'groundhog.flag.rds')) | file.exists(file.path(up3,'groundhog.flag.rds')))
+     #   
+     #   #Return subset which is groundhog
+     #     groundhog_libpaths <- paths[ is.groundhog ]
+     #     return(groundhog_libpaths)        
+     #   }
 
       
       
@@ -396,3 +396,6 @@ ignore.deps_default <- function() {
       }
       
 
+#Function 26 - replace base library
+      base.library <- base::library
+      
