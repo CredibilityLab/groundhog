@@ -17,7 +17,7 @@ load.cran.toc <- function(update.toc = FALSE) {
       dir.create(gf, showWarnings = FALSE, recursive = TRUE) 
   
     #Names of files
-      files.rds = c('cran.toc.rds' , 'cran.times.rds' , 'missing.mran.dates.rds' , 'git.toc.rds')
+      files.rds = c('cran.toc.rds' , 'cran.times.rds' , 'missing.mran.dates.rds' )
 
 
   #3 Loop checking file exist, downloading if necessary, and assigning to .pkgenv
