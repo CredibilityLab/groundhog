@@ -66,7 +66,8 @@
         install.snowball(snowball, date)
 
     #5 Attach pkg
-       attachNamespace(pkg)
+       #attachNamespace(pkg)
+        base.library(pkg, character.only=TRUE)
 
 
     
@@ -101,22 +102,21 @@
           
         #8.3 Available remotes
             #Get subset of paths in libPath which are from groundhog 
-              groundhog_libpaths <- get.groundhog_libpaths()
+            #  groundhog_libpaths <- get.groundhog_libpaths()
                
             #See which packages are installed there 
-              ip <- data.frame(utils::installed.packages(groundhog_libpaths))
+             # ip <- data.frame(utils::installed.packages(groundhog_libpaths))
             
             #Combine pkg_vrs
-             libs.pkg <- ip$Package
+             #libs.pkg <- ip$Package
        
         #8.4 active
             active <- get.active()                          
   
-       #8.5 available is active+lib
-           available.pkg <- c(libs.pkg, active$pkg)
+       
         
         #8.6 Classify remotes as attached or available
-            loaded   <- snowball.remotes$pkg %in% available.pkg
+            loaded   <- snowball.remotes$pkg %in% active$pkg
             attached <- snowball.remotes$pkg %in% attached.pkg 
             loaded <- ifelse(attached==TRUE, FALSE, loaded)     #if attached, don't count as loaded
             

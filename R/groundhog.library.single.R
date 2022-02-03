@@ -43,7 +43,8 @@
   
  
   #8 Attach it
-     attachNamespace(pkg)
+     #attachNamespace(pkg)
+      base.library(pkg, character.only=TRUE)
 
 
   #9 Verify (check target is attached and full snowball pkg_vrs is loaded or in libpath)
