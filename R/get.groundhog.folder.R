@@ -111,15 +111,6 @@ set.groundhog.folder <- function(path) {
     dir.create(path, showWarnings = FALSE, recursive = TRUE)
 
     
-  #Add flag
-      #Flag this folder as the groundhog folder for being able to discern libpaths that are here vs not
-          id.path<-file.path(path , "groundhog.flag.rds")
-          
-          if (!file.exists(id.path))  {
-              saveRDS('This is the groundhog folder', id.path)
-              }
-    
-    
   #Assign it to the live environment
     Sys.setenv(GROUNDHOG_FOLDER = path)
  
