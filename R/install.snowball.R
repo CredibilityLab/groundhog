@@ -22,6 +22,24 @@
   install.snowball=function(snowball, date, force.install = FALSE, force.source = FALSE, quiet.install = TRUE) 
     {
    
+    #0 Check if MRAN is down
+      #Assume not
+        mran.is.down <- FALSE
+  
+      #See if we have a text file saying it is down saved within the last 5 hours    
+        mran.is.down_path <-file.path(get.groundhog.folder(),'mran.is.down.txt')
+        
+      #If a file exists it checks if it is less than 5 hours old, in which case we assume MRAN is down
+        if (file.exists(mran.is.down_path) && as.numeric((Sys.time()-file.info(mran.is.down_path)$ctime))<5) {
+            mran.is.down <- TRUE
+          }
+    
+      #If MRAN is down, install from source instead of MRAN 
+        if (mran.is.down==TRUE ) {
+            snowball$from <- ifelse(snowball$from=='MRAN' & snowball$installed==FALSE,'source',snowball$from)
+            }
+    
+        
     #1 Preliminaries
       #1.0 souce remote dummies
           source <- snowball$from=='source'
@@ -59,7 +77,7 @@
             }
         
       #1.5 Directory for downloaded binaries, source files, & libraries for installed packages
-          temp_path <- paste0(get.groundhog.folder()    ,"/temp")
+          temp_path <- paste0(get.groundhog.folder() ,"/temp")
           dir.create(temp_path, recursive = TRUE, showWarnings = FALSE)
           for (k in 1:nrow(snowball))
             {
@@ -155,7 +173,27 @@
       #3.5 Verify the binary being served is the one we want
             #Get the available packages on that date
               ap <- utils::available.packages(utils::contrib.url (repos.mran[k],'binary'))
-  
+              
+            #If ap is empty we did not get any packages from MRAN, it may be down, save the file taht tells groundhog
+              #not to try mran again within 5 hours 
+              if (nrow(ap)==0) {
+                  
+                  #Save file that indicated mran is down for the next five hours
+                    write(Sys.time(),mran.is.down_path)
+                  
+                  #Message
+                    message("\n\n\nGroundhog says:")
+                    message("We were unable to connect to the MRAN server. We won't attempt to connect again for the next 5 hours.")
+                    message("   ---  Please rerun the groundhog.library() command you just run and we will install from source instead  ---")
+                    exit()
+                
+                  #Restart the function, now that the mran.is.down_path exists, it will not try to do mran.
+                    #on.exit(install.snowball(snowball, date, force.install, force.source,quiet.install))
+                    #exit()
+                    
+                    }  #End MRAN
+                  
+              
               ap.df <- data.frame(ap, stringsAsFactors = FALSE)                       
               ap.pkg <- ap.df[ap.df$Package==snowball.mran$pkg[k],]
               
@@ -184,15 +222,14 @@
                       mran.binaries[k,] <-mran.binaries_rowk  
             #If file did not download 
                   } else {
+                   #Make not that this file did not succeed, and let's say MRAN is down
                     good.mran.file[k] <- FALSE 
+                    mran.is.down      <- TRUE
+                    write(Sys.time(),mran.is.down_path)
                   } 
             #IF file was not the right version
-            } else {
-              good.mran.file[k] <- FALSE 
-            } #End else for whether if binary asked for is on available.packages
-              
-           
-            } #End loop over MRAN binaries
+            } 
+      } #End loop over MRAN binaries
 
           
           
@@ -257,7 +294,7 @@
       #4.1 Any Source or Remote files remain to be installed?
           n.source=sum(source & snowball$installed==FALSE )
           n.remote=sum(remote & snowball$installed==FALSE )
-          if (n.source+n.remote > 0) {
+          if (n.source + n.remote > 0) {
             
             
       #4.2 Start clock for install feedback
@@ -396,7 +433,6 @@
                 clone_path <- get.clone_path(pkg=snowball$pkg[k], usr=snowball$usr[k], remote_id=snowball$from[k]) 
                 
               #Install it
-               # remotes_install_git(clone_path,  dependencies = FALSE , lib=snowball$installation.path[k], ref=snowball$sha[k], INSTALL_opts = '--no-lock')
                 remotes::install_git(clone_path,  dependencies = FALSE , lib=snowball$installation.path[k], ref=snowball$sha[k], INSTALL_opts = '--no-lock')
                
                  #ref is the sha indicating which version is installed
