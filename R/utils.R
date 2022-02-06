@@ -10,13 +10,13 @@
 #8  namedList()            : automatically name object in list 
 #9  quit.menu()            : prompt to quit call upon mismatch of dates
 #10 exit()                 : Stop message which does not say error
-#11 Available mran dates
-#12 Base packages
-#13 Default packages to ignore conflicts with (but gives warning)
+#11 get.available.mran.date: Available mran dates
+#12 base_pkg()             : Output vector with all base packages
+#13 ignore.deps_default()  :  Default packages to ignore conflicts with (but gives warning)
 #14 Is this on R studio
 #15 Get major minor (but no patch) version of R
 #16 Get major minor AND patch
-#17 validate date  
+#17 validate.daate()  - validate date  
 #18 Clean up prompt answer, lowercase and no quotes
 #19 Verify file was download
 #20 Check if lib is for github (possibly a legacy function)
@@ -25,12 +25,14 @@
 #23 strpos1()                - string position - simpler gregexpr for strpos  
 #24 get.groundhog_libpaths() - get subset of paths in libPath() that belong to groundhog
 #25 Compare two sets of pkg_vrs vectors, obtaining text report of any mismatches 
+#26 base.libary()           : Copy library() to use when finalizaing loading a pkg
+#27 Validate.tf
 
 ########################################################################
     
 
 
-#1. Exract package and version information from pkg_vrs
+#1. get.pkg get.vrs -  Exract package and version information from pkg_vrs
   get.pkg <- function(x) substr(x, 1, regexpr("_", basename(x)) - 1)
   get.vrs <- function(x) substr(x, regexpr("_", basename(x)) + 1, nchar(x))
 
@@ -239,27 +241,30 @@ ignore.deps_default <- function() {
 #17 validate date  
   validate.date <- function(date)
       {
+       msg=paste0("\ngroundhog says: The date you entered '", date,"', is not valid.\n",
+                "Please use the 'yyyy-mm-dd' format"
+          )
+    
       # numeric
-        bad.date <- 0
          if (is.numeric(date)) {
-          bad.date <- 1
+          message(msg)
+          exit()
         }
  
       # correct format
         d <- try(as.Date(date, format="%Y-%m-%d"))
-          if("try-error" %in% class(d) || is.na(d)) {
-            bad.date <- 1
+          if ("try-error" %in% class(d) || is.na(d)) {
+              message(msg)
+               exit()
           }
             
-      #If bad date die 
-          if (bad.date==1) {
-            message(
-                "\ngroundhog says: error!\n",
-                "The date you entered '", date,"', is not valid.\n",
-                "Please use the 'yyyy-mm-dd' format"
-                  )
+      #The format check does not verify that the day is at most 2 charcters long,  (e.g., it accepts 2022-01-109)
+        d.parts <- strsplit(date,"-")[[1]]     #split date by '-
+        if (nchar(d.parts[3])>2) {
+            message(msg)
             exit()
           }
+   
   }#End is valid date
   
   
@@ -398,4 +403,18 @@ ignore.deps_default <- function() {
 
 #Function 26 - replace base library
       base.library <- base::library
+      
+#Function 27
+    #Validate arguments
+    
+      #27.1 TRUE/FALSE
+        validate.TF <- function(x)
+          {
+            if (isTRUE(x) | isFALSE(x)) {
+              
+               return() } else {
+                message('groundhog says: "' , substitute(x) , '" can only be TRUE or FALSE')
+                 exit()
+               }
+        }
       
