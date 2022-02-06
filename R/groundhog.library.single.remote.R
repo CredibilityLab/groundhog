@@ -141,7 +141,7 @@
             snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
             snowball_path <- file.path(snowball_dir, snowball_file)
           #Delete
-            if (file.exists(snowball_path)) unlike(snowball_path)
+            if (file.exists(snowball_path)) unlink(snowball_path)
 
             
         #9.2 Catalog
