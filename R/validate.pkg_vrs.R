@@ -78,7 +78,7 @@
         {
            
         #Attach it 
-		  base.library(pkg)
+		     base.library(pkg) #utils.R function 27
 
              
         #Make local variable with name of pkg_vrs already loaded oralready in libpath creating conflict
