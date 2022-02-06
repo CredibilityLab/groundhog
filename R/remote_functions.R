@@ -23,7 +23,9 @@
 #Function 2 Load a package needed for remote installation (e.g., git2r)
   load.pkg_utility <- function(pkg_utility , groundhog.day)
   {
-       if (! pkg_utility %in% .packages()) {
+
+        ip <- utils::installed.packages()
+       if (! pkg_utility %in% c(.packages(),ip)) {
           
               #Explain to user which version of 'pkg' (e.g., git2r) is being used
                 message2()
@@ -40,7 +42,11 @@
            if (! pkg_utility %in% .packages()) {
              exit("groundhog says: Error. Could not load '" , pkg_utility, "'.")
             } #End of final check that git2r is now available
+        
+          #Now remove it since we don't need it loaded
+            #unloadNamespace(pkg_utility)
             
+          
       } #End if pkg_utility not loaded
   } #End of function 2
   
