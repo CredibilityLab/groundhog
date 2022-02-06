@@ -84,10 +84,10 @@
 
               } else { 
 
-              message ("Groundhog says: ",
+              message ("\nGroundhog says: ",
                     "Unable to connect to '",remote_idk, "' to obtain files for the '",usrk,"/",pkgk,"' package.\n",
-                    "Check spelling of package, make sure it is available on '",remote_idk, "',  check your internet connection,\n",
-					"and/or visit http://groundhogR.com/troubleshoot\n")
+                    "Check spelling of package, make sure it is available on '",remote_idk, "', check your internet connection,\n",
+				          	"and/or visit http://groundhogR.com/troubleshoot\n")
                 exit()
               }  #End of if local exists
 
