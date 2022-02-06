@@ -20,11 +20,11 @@ The version of groundhog here on GitHub is experimental, and allows working also
 This version is expeirmental and may undergo backwards incompatible changes. It may also include typos and silly bugs.
 Once the version is considered mature it will be sent to CRAN and become v2.0.0. 
 
-To use this experimental version, V1.5.0.9050, 
+To use this experimental version, V1.5.0.9050, install it with the package 'remotes'
 remotes::install_github('CredibilityLab/groundhog')
 
 And then use the same groundhog.library() command to load (installling when necessary) packages from CRAN, GitHub or Gitlab.
-groundhog.library('crsh/papaja','2022-01-01') 
+groundhog.library('crsh/papaja','2022-01-01')  #example installing/loading the package papaja only available on GitHub
 
 
 **Testing**
