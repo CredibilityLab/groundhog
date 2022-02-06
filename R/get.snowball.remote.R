@@ -7,6 +7,11 @@
   get.snowball.remote<-function(pkg,date,remote_id, usr,include.suggests)
   {
 
+    
+        #Validate date and include suggests
+            validate.TF(include.suggests)
+            validate.date(date)
+
   #1  If snowball already exists early return it  
     
         #Path to snowball
