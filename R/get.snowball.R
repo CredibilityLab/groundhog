@@ -27,8 +27,13 @@
 ######################################################################################
 
 
-get.snowball <- function(pkg, date, include.suggests) {
+get.snowball <- function(pkg, date, include.suggests=FALSE) {
 
+    #Validate date and include suggests
+            validate.TF(include.suggests)
+            validate.date(date)
+
+  
     #0  If snowball already exists early return it  
     
         #Path to snowball
