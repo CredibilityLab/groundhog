@@ -25,9 +25,9 @@
              #2.2 This same pkg_date loaded only     : attach it 
             
               if (git_usr_pkg_date %in% .pkgenv[['remotes.loaded']]) {
-                   attachNamespace(pkg)
+                   base.library(pkg)
    
-                   #Verify it was attacged
+                   #Verify it was attached
                     if (!pkg %in% .packages()) message("Failed to load '",pkg,"'")
                 
                     message1("groundhog says: the package ('", pkg_list$usr_pkg, "'), for ;",date,"', was loaded, now it is also attached.")
@@ -49,29 +49,25 @@
   
     #3 Get snowball
         snowball <- get.snowball.remote(pkg, date, remote_id, usr,include.suggests=include.suggests)
-
-      #3.1 Force source 
-        if (force.source==TRUE) {
-          snowball$from <- ifelse(snowball$sha!='', 'source', snowball$from)
-        }      
-        
-      #3.2 Force install
-        if (force.install==TRUE) snowball$installed=FALSE
-
+  
+        #3.1 Force source 
+          if (force.source==TRUE) {
+            snowball$from <- ifelse(snowball$sha!='', 'source', snowball$from)
+          }      
+          
+        #3.2 Force install
+          if (force.install==TRUE) snowball$installed=FALSE
 
     #4 Check snowball conflict
         check.snowball.conflict(snowball, force.install,ignore.deps,date)  
 
-    #4 install snowball (install will only happen if needed, this function also adds to  .libPath())
+    #5 install snowball (install will only happen if needed, this function also adds to  .libPath())
         install.snowball(snowball, date)
 
-    #5 Attach pkg
-       #attachNamespace(pkg)
-        base.library(pkg, character.only=TRUE)
+    #6 Attach pkg
+        base.library(pkg, character.only=TRUE) #utils. function 26
 
-
-    
-    #6 verify snowball loaded
+    #7 verify snowball loaded
         verified <- verify.snowball.loaded(snowball,ignore.deps)  
  
       
@@ -86,9 +82,14 @@
           snowball_dir <- paste0(get.groundhog.folder() , '/snowballs/' , remote_id )
           snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
           snowball_path <- file.path(snowball_dir, snowball_file)
+          
+        #Update  what is installed in the snowball
+          ip<-data.frame(utils::installed.packages(snowball$installation.path))
+          snowball$installed <- snowball$pkg %in% ip$Package
+  
+          
           snowball$installed <- TRUE
           saveRDS(snowball, snowball_path, version = 2)
-          
          
              
    #8 Add package_date to .envpkg vector of loaded remotes to prevent conflicts not idnetified by vrs 
@@ -99,23 +100,13 @@
         #8.2 Attached remotes
           attached.list <- utils::sessionInfo()$otherPkgs # pkgs in attached
           attached.pkg  <-names(attached.list)
-          
-        #8.3 Available remotes
-            #Get subset of paths in libPath which are from groundhog 
-            #  groundhog_libpaths <- get.groundhog_libpaths()
-               
-            #See which packages are installed there 
-             # ip <- data.frame(utils::installed.packages(groundhog_libpaths))
-            
-            #Combine pkg_vrs
-             #libs.pkg <- ip$Package
+     
        
         #8.4 active
             active <- get.active()                          
-  
-       
+
         
-        #8.6 Classify remotes as attached or available
+        #8.6 Classify remotes as attached or loaded
             loaded   <- snowball.remotes$pkg %in% active$pkg
             attached <- snowball.remotes$pkg %in% attached.pkg 
             loaded <- ifelse(attached==TRUE, FALSE, loaded)     #if attached, don't count as loaded
@@ -138,7 +129,41 @@
               if (!is.null(.pkgenv[['remote_packages']]))  .pkgenv[['remote_packages']]  <- c(snowball.remotes$pkg,.pkgenv[['remote_packages']])
 
     
-      }#End if verified
+      }#End if verified is true
+        
+        
+    #9 If something failed, delete all saved information that may cause problem to be unfixable (snowball, catalog, sha_time)
+        if (verified==FALSE)
+        {
+        #9.1 Snowball
+           #Path to snowball
+            snowball_dir <- paste0(get.groundhog.folder() , '/snowballs/' , remote_id )
+            snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
+            snowball_path <- file.path(snowball_dir, snowball_file)
+          #Delete
+            if (file.exists(snowball_path)) unlike(snowball_path)
+
+            
+        #9.2 Catalog
+            #path
+              clone_catalog_path <- file.path(get.groundhog.folder() , 'clone_catalog.rds')
+              
+            #read it
+              catalog <- readRDS(clone_catalog_path)
+                      
+            #Drop all rows with remote packages from this call
+              catalog.use_pkg  <- paste0(catalog$usr , "_" , catalog$pkg)                   #[1] usr_pkg in the catalog
+              snowball.usr_pkg <- paste0(snowball.remotes$usr, "_", snowball.remotes$pkg)   #[2] usr_pkg in this snowball (subset of remots)
+              catalog <- catalog[!catalog.use_pkg %in% snowball.usr_pkg, ]                  #Only keep [1] which are not in [2]  
+         
+        #9.3 Sha time
+             sha_path <- paste0(get.groundhog.folder(),"/sha_times/", remote_id,"_" ,usr,"_",pkg,".rds")
+             if (file.exists(sha_path)) unlink(sha_path)
+              
+              
+          
+        } #END if validation did not work
+        
         
 } #End of function
 
