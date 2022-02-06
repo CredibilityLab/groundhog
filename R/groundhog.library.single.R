@@ -43,20 +43,22 @@
   
  
   #8 Attach it
-     #attachNamespace(pkg)
-      base.library(pkg, character.only=TRUE)
+        base.library(pkg, character.only=TRUE)
 
-
+      #and add it to the libpath       
+       .libPaths(c(.libPaths(), snowball$installation.path[nrow(snowball)]))
+      
   #9 Verify (check target is attached and full snowball pkg_vrs is loaded or in libpath)
      verified <- verify.snowball.loaded(snowball, ignore.deps)  
  
       
-  #10 If verified, save
+  #10 If verified and no ignore deps used, save snowball
      if (verified==TRUE) { 
      
-      #10.1 Update that everything is installed in the snowball
-					snowball$installed<-TRUE
-							   
+      #10.1 Update  what is installed in the snowball
+          ip<-data.frame(utils::installed.packages(snowball$installation.path))
+          snowball$installed <- snowball$pkg %in% ip$Package
+          
 			 #10.2 Path to snowball
 							snowball_dir <- paste0(get.groundhog.folder() , '/snowballs' )
 							snowball_file <- paste0(pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
@@ -68,5 +70,10 @@
 				} #End if snowball exists
      } #End if verified         
 
+  #11 If not verified, delete snowball
+      if (verified==FALSE) {
+        if (file.exists(snowball_path)) file.remove(snowball_path)
+      }
+     
   } #End of groundhog.library.single() function
 
