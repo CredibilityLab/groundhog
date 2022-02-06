@@ -86,7 +86,7 @@
       
         #1.6 Original selection, in for one source file we modify it temporarily, we return to this value
           quiet.install.original <- quiet.install
-          
+        
     #####################
     #2 CRAN
     #####################
@@ -174,6 +174,7 @@
             #Get the available packages on that date
               ap <- utils::available.packages(utils::contrib.url (repos.mran[k],'binary'))
               
+          #Check MRAN down
             #If ap is empty we did not get any packages from MRAN, it may be down, save the file taht tells groundhog
               #not to try mran again within 5 hours 
               if (nrow(ap)==0) {
@@ -186,21 +187,19 @@
                     message("We were unable to connect to the MRAN server. We won't attempt to connect again for the next 5 hours.")
                     message("   ---  Please rerun the groundhog.library() command you just run and we will install from source instead  ---")
                     exit()
-                
-                  #Restart the function, now that the mran.is.down_path exists, it will not try to do mran.
-                    #on.exit(install.snowball(snowball, date, force.install, force.source,quiet.install))
-                    #exit()
-                    
-                    }  #End MRAN
+              }#End MRAN
                   
               
-              ap.df <- data.frame(ap, stringsAsFactors = FALSE)                       
-              ap.pkg <- ap.df[ap.df$Package==snowball.mran$pkg[k],]
+            #Format available packages as data.frame
+                ap.df <- data.frame(ap, stringsAsFactors = FALSE) 
               
-              
+            #Get row with target pkg
+                ap.pkg <- ap.df[ap.df$Package==snowball.mran$pkg[k],]
+                
+                
             #If there is a match for that pkg_vrs, get it
-            if (nrow(ap.pkg)>0 && ap.pkg$Version == snowball.mran$vrs[k])
-            {
+              if (nrow(ap.pkg)>0 && ap.pkg$Version == snowball.mran$vrs[k])
+              {
             #Add to downloaded counter
               j1 <- j1 + 1
             #Message
@@ -228,11 +227,14 @@
                     write(Sys.time(),mran.is.down_path)
                   } 
             #IF file was not the right version
-            } 
+              } else {
+                #If not found, then it is a bad mran pkg
+                good.mran.file[k] <- FALSE
+                snowball$from[k] <- 'source'
+              }
+                
       } #End loop over MRAN binaries
 
-          
-          
                   
       #3.4 Unzip them 
         #Message
@@ -241,7 +243,8 @@
       
         #Reset counter
           j2 <- 0 
-  
+        
+
         for (k in 1:nrow(snowball.mran)) {
 
             
@@ -280,7 +283,7 @@
                 
                   #Update snowball to get this package from source instead
                       sk=match(snowball.mran$pkg_vrs[k],snowball$pkg_vrs)  #package number in snowball
-                      snowball$from[sk]="source"
+                      snowball$from[k]="source"
                   } #End if !good.mran
               }#End loop over mran
           message1() #skip a line for next message
@@ -289,11 +292,16 @@
 
 
   ##################################################################################################
-    #4 LOOP OVER SNOWBALL INSTALLING SOURCE & REMOTE IF ANY, AND ADDING TO LIBPATH
-
+    #4 LOOP OVER SNOWBALL INSTALLING SOURCE & REMOTE IF ANY,  ADDING TO LIBPATH and loading
+        
+      #4.0 update sourre T/F vector,  in case a failed installations became source for backup
+        source <- snowball$from == 'source'
+        
       #4.1 Any Source or Remote files remain to be installed?
-          n.source=sum(source & snowball$installed==FALSE )
-          n.remote=sum(remote & snowball$installed==FALSE )
+        
+        
+          n.source <- sum(source & snowball$installed==FALSE )
+          n.remote <- sum(remote & snowball$installed==FALSE )
           if (n.source + n.remote > 0) {
             
             
@@ -342,12 +350,12 @@
                 installation.feedback(k.source_remote, date, snowball.source, start.time) 
                 
               #Add to counter for feedback 
-                k.source_remote=k.source_remote+1
+                k.source_remote <- k.source_remote+1
                 
                 
         #4.11 Bypass quiet install for slow packages
-                seconds=snowball$installation.time[k]
-                minutes=round(seconds/60,0)
+                seconds <- snowball$installation.time[k]
+                minutes <- round(seconds/60,0)
                 
                
                 if (snowball$installation.time[k]>120 & quiet.install==TRUE) {
@@ -452,5 +460,5 @@
       
 
   } #end of function
-       
+
   
