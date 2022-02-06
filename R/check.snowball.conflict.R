@@ -19,7 +19,9 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
         requested_pkg     <- snowball$pkg[length(snowball$pkg_vrs)]
   
   #2 Get sets of packages that are treated differently 
-      #2.1 Ignore conflicts (cannot bypass default set, hardcoded in utils.R, 'ignore.deps_default()', but can add to it)
+      #2.0 Verify ignore deps 
+        
+        #2.1 Ignore conflicts (cannot bypass default set, hardcoded in utils.R, 'ignore.deps_default()', but can add to it)
         ignore.deps <- c(ignore.deps_default(), ignore.deps)    #add any packages explicitly set by user
       
        
@@ -91,10 +93,10 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
 			  
 	#7.1 Add notice about remotes already loaded
         #Find remotes in the snowball
-           snowball.remotes <- subset(snowball, from %in% c('github','gitlab'))
+           snowball.remotes <- subset(snowball, snowball$from %in% c('github','gitlab'))
       
         #See if any of the conflicts involve them    
-            flag.conflict_needed_remote <- conflict.active.pkg %in% snowball.remotes$pkg
+            flag.conflict_needed_remote <- any(conflict.active.pkg %in% snowball.remotes$pkg)
             
         #See if any of the conflicts involve already loaded remotes
             flag.conflict_active_remote <- any(conflict.active.pkg %in% .pkgenv[['remote_packages']])
@@ -103,10 +105,9 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
       #msg for conflict with needed remote
        if (flag.conflict_active_remote==TRUE)
         {
-         message1("The package(s) ",conflict.active[conflict.needed.pkg %in% .pkgenv[['remote_packages']]],
-			  	  " was/were not obtained from CRAN. A simple solution is simply allow this version conflict.\n",
-				  "Rerun groundhog.library() with the option: ",
-              "'ignore.deps=c(" ,  
+            message1("Because the conflict involves packages not on CRAN, you may want to just allow the version conflict.\n",
+				             "To do that: rerun groundhog.library() with the option: ",
+                    "'ignore.deps=c(" ,  
                     paste0(conflict.active.pkg[conflict.active.pkg %in% .pkgenv[['remote_packages']]],collapse=', '),
                 ")' \n\n")
            }
@@ -114,12 +115,11 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
       
           if (flag.conflict_needed_remote==TRUE)
           {
-            message1("The package(s) ",conflict.needed[conflict.needed.pkg %in% snowball.remotes$pkg],
-			  	  " is/are not on CRAN. A simple solution is to simply allow this version conflict.\n",
-				  "Rerun groundhog.library() with the option: ",
-              "'ignore.deps=c(" ,  
-                    paste0(conflict.needed.pkg[conflict.needed.pkg %in% snowball.remotes$pkg],collapse=', '),
-                ")' \n\n")
+            message1("Because the conflict involves packages not on CRAN, you may want to just allow the version conflict.\n",
+				             "To do that: rerun groundhog.library() with the option: ",
+                      "ignore.deps=c(" ,  
+                    paste0(dQuote(conflict.needed.pkg[conflict.needed.pkg %in% snowball.remotes$pkg]),collapse=', '),
+                ") \n\n")
           }
 
             
@@ -145,8 +145,10 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
   #8 Show fix, workaround message if same failure less than 5 minutes ago and not loading the conflicting package adn only 1 date was used and no package conflict is with remote
         if (last_conflict<5 & 
 					requested_pkg == last_conflict.pkg & 
-					(length(.pkgenv[['hogdays']])==1) & 
-					(!any(conflict.needed.pkg %in% .pkgenv[['remote_packages']])))
+          flag.conflict_needed_remote==FALSE &  #Don't sugggest uninstalling if remote conflict
+          flag.conflict_active_remote==FALSE &  #Same concept, in one case the loaded is remote in the other
+					(length(.pkgenv[['hogdays']])==1)) 
+            
         {
           #Example of dependency with conflict to avoid
              dep.example <- ifelse(conflict.active.pkg[1] == requested_pkg, conflict.active.pkg[2], conflict.active.pkg[1] )
