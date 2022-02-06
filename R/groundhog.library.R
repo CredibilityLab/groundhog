@@ -55,38 +55,58 @@
                               force.install = FALSE, tolerate.R.version="" )
     {
     
-    
 
   #1) Validation     
+    #1.0 if ignore deps is not empty, check that it is already loaded
+       if (length(ignore.deps)>0) {
+         if (!all(ignore.deps %in% .packages())) {
+           message("\nGroundhog says: Error.\nAll packages included in the ignore.deps() option must be loaded prior to running\n",
+                   "groundhog.library(), but the following is/are not: ",
+                    paste0(dQuote(ignore.deps [!ignore.deps %in% .packages()]), collapse=" ,"))
+           exit()
+          } #End if some are not loaded
+          } #End if ignore.deps() are requested
+    
     #1.1) Is date valid?
         validate.date(date) #Function defined in utils.R
    
     #1.2) Reload databases if necessary and change them back on existr  so that any changes to cran.toc are undone (previous groundhog.library() call loading remotes)
         if (is.null(.pkgenv[['cran.toc']])) load.cran.toc()
        
-    #1.3) When existing refresh libpath and cran.toc
         
-        #Save vector with library paths available before groundhog run, will put them first afterwards
-            libPaths.before <- .libPaths()
-        
-        on.exit({
-              #Read cran toc again
-                 .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
-              
-              #Return libpath
-                .libPaths(libPaths.before)
-              })
+    #1.3) #Clear libpath
+          .libPaths("")    
     
-    #1.4 In addition, if the day merits, update the database
+
+    #1.4) Verify options are T/F (utils.R - function 27)
+          validate.TF(include.suggests)
+          validate.TF(force.source)
+          validate.TF(force.install)
+
+              
+    #2) On Exit refresh libpath and cran.toc
+          #Save vector with library paths available before groundhog run, will put them first afterwards
+            libPaths.before <- .libPaths()
+          
+          #On exit:
+            on.exit({
+                    #Read cran toc again
+                       .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
+                    
+                    #Return libpath
+                      .libPaths(libPaths.before)
+                    })
+    
+    #3 If the day merits, update the database
         update_cran.toc_if.needed(date) 
 
-    #1.5) validate R
+    #4 validate R
         validate_R(date , tolerate.R.version)
      
-    #1.6) Set of ignorable conflicts
+    #5 Set of ignorable conflicts
         ignore.deps <- c(ignore.deps_default() , ignore.deps) #Add any ignore.deps explicitly stated to the default set in utils
         
-    #1.6) put package name in quotes if it is not an object and was not put in quotes
+    #6 put package name in quotes if it is not an object and was not put in quotes
         pkg.catch <- try(typeof(pkg),silent=TRUE)
         if (class(pkg.catch)=="try-error") {
           pkg <- as.character(substitute(pkg))
@@ -95,7 +115,7 @@
                    "'.\n     To avoid seeing this message when using groundhog.library(), enter package name in quotes.\n\n")  
         } 
           
-    #1.7 Add groundhog.day to hogdays to alert of possible different days used in a snowball.conflict
+    #7 Add groundhog.day to hogdays to alert of possible different days used in a snowball.conflict
         if (!is.null(.pkgenv[['hogdays']])) {
             .pkgenv[['hogdays']] <- unique(c(date, .pkgenv[['hogdays']]))
           
@@ -106,7 +126,7 @@
           }
         
         
-  #2 Loop running groundhog
+  #8 Loop running groundhog
         for (pkgk in pkg) {
               #Identify as remote based on '/'package (remotes need a /)'
                 cran <- TRUE
