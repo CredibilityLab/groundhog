@@ -415,7 +415,7 @@ ignore.deps_default <- function() {
       #27.1 TRUE/FALSE
         validate.TF <- function(x)
           {
-            if (isTRUE(x) | isFALSE(x)) {
+            if (x==TRUE | x==FALSE) {
               
                return() } else {
                 message('groundhog says: "' , substitute(x) , '" can only be TRUE or FALSE')
