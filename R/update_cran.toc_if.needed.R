@@ -56,8 +56,8 @@ update_cran.toc_if.needed <- function(date) {
       if (!R.using %in% tocR$Version) {
         message2()
         message1(
-          "The file cran.toc.rds,  with the list of CRAN package-versions, is older than the version of R you ",
-          "are using. That file is being updated now."
+          "The local database with all package-versions available on CRAN \n",
+		  "is older than the version of R you are using. That file is being updated now."
         )
 
         return(load.cran.toc(TRUE))
