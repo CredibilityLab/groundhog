@@ -16,7 +16,7 @@
 #14 Is this on R studio
 #15 Get major minor (but no patch) version of R
 #16 Get major minor AND patch
-#17 validate.daate()  - validate date  
+#17 validate.date()  - validate date  
 #18 Clean up prompt answer, lowercase and no quotes
 #19 Verify file was download
 #20 Check if lib is for github (possibly a legacy function)
@@ -239,32 +239,37 @@ ignore.deps_default <- function() {
     }
 
 #17 validate date  
-  validate.date <- function(date)
+  validate.date <- function(entered_date)
       {
-       msg=paste0("\ngroundhog says: The date you entered '", date,"', is not valid.\n",
+       msg=paste0("\ngroundhog says: The date you entered '", entered_date,"', is not valid.\n",
                 "Please use the 'yyyy-mm-dd' format"
           )
     
+       
+              
+      #The format check does not verify that the day is at most 2 charcters long,  (e.g., it accepts 2022-01-109)
+       if (is.character(entered_date)) { 
+       d.parts <- strsplit(entered_date,"-")[[1]]     #split date by '-
+        if (nchar(d.parts[3])>2) {
+            message(msg)
+            exit()
+        }
+       }
+   
+       
       # numeric
-         if (is.numeric(date)) {
+         if (is.numeric(entered_date)) {
           message(msg)
           exit()
         }
  
       # correct format
-        d <- try(as.Date(date, format="%Y-%m-%d"))
+        d <- try(as.Date(entered_date, format="%Y-%m-%d"))
           if ("try-error" %in% class(d) || is.na(d)) {
               message(msg)
                exit()
           }
-            
-      #The format check does not verify that the day is at most 2 charcters long,  (e.g., it accepts 2022-01-109)
-        d.parts <- strsplit(date,"-")[[1]]     #split date by '-
-        if (nchar(d.parts[3])>2) {
-            message(msg)
-            exit()
-          }
-   
+     
   }#End is valid date
   
   

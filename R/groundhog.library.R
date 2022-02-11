@@ -74,7 +74,9 @@
         if (is.null(.pkgenv[['cran.toc']])) load.cran.toc()
        
         
-    #1.3) #Clear libpath
+    #1.3) #Clear libpath to prevent loading dependencies from local library
+          .pkgenv[["orig_lib_paths"]] <- .libPaths()
+
           .libPaths("")    
     
 
@@ -86,16 +88,19 @@
               
     #2) On Exit refresh libpath and cran.toc
           #Save vector with library paths available before groundhog run, will put them first afterwards
-            libPaths.before <- .libPaths()
-          
+            
+      
           #On exit:
             on.exit({
                     #Read cran toc again
                        .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
                     
                     #Return libpath
-                      .libPaths(libPaths.before)
+                      .libPaths(.pkgenv[["orig_lib_paths"]])
                     })
+            
+    #2.5 Drop pre-existing libpaths        
+        .libPaths('')
     
     #3 If the day merits, update the database
         update_cran.toc_if.needed(date) 

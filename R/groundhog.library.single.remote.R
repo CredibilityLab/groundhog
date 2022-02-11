@@ -25,7 +25,7 @@
              #2.2 This same pkg_date loaded only     : attach it 
             
               if (git_usr_pkg_date %in% .pkgenv[['remotes.loaded']]) {
-                   base.library(pkg)
+                   base.library(pkg, character.only=TRUE)
    
                    #Verify it was attached
                     if (!pkg %in% .packages()) message("Failed to load '",pkg,"'")

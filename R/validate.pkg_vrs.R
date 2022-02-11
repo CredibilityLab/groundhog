@@ -78,7 +78,7 @@
         {
            
         #Attach it 
-		     base.library(pkg) #utils.R function 27
+		     base.library(pkg, character.only=TRUE, lib.loc=c(.libPaths(), .pkgenv[["orig_lib_paths"]])) #utils.R function 27
 
              
         #Make local variable with name of pkg_vrs already loaded oralready in libpath creating conflict
@@ -88,7 +88,7 @@
           message1("groundhog says: succesfully attached '" , pkg , "'")
           message("\ngroundhog says: Warning!\n", 
                    "'", pkg, "' was already loaded and it is now attached,\n",
-                  "BUT the version previously available and just attached ('" ,active$pkg_vrs , "')\n",
+                  "BUT the version previously available and just attached ('" ,active$pkg_vrs[active$pkg==pkg] , "')\n",
                   "does not match the version for '" , date, "' ('", pkg_vrs , "').\n",
                   "To attach the desired version you can try restarting the R session.\n\n",
                   "In R Studio press: CTRL/CMD-SHIFT-F10\n\n",

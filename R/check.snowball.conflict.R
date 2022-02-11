@@ -147,20 +147,18 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
 					requested_pkg == last_conflict.pkg & 
           flag.conflict_needed_remote==FALSE &  #Don't sugggest uninstalling if remote conflict
           flag.conflict_active_remote==FALSE &  #Same concept, in one case the loaded is remote in the other
-					(length(.pkgenv[['hogdays']])==1)) 
+					(length(.pkgenv[['hogdays']])<2)) 
             
         {
           #Example of dependency with conflict to avoid
              dep.example <- ifelse(conflict.active.pkg[1] == requested_pkg, conflict.active.pkg[2], conflict.active.pkg[1] )
 
-          #Assess if any packages in conflict are alway locally available suggesting came from local library
+          #Assess if any packages in conflict are always locally available suggesting came from local library
                 original_lib_path <- .pkgenv[["orig_lib_paths"]]
                 install.packages_current <- data.frame(utils::installed.packages(noCache = FALSE, lib.loc = original_lib_path), stringsAsFactors = FALSE)
                 installed.pkg_vrs <- paste0(install.packages_current$Package,"_",install.packages_current$Version)
                 remove.set <- (installed.pkg_vrs %in% conflict.active)
                 
-               
-               
                 
           #General introduction to the problem
             msg.repeat.conflict.header <-paste0(
