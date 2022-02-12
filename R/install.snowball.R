@@ -30,8 +30,9 @@
         mran.is.down_path <-file.path(get.groundhog.folder(),'mran.is.down.txt')
         
       #If a file exists it checks if it is less than 5 hours old, in which case we assume MRAN is down
-        if (file.exists(mran.is.down_path) && as.numeric((Sys.time()-file.info(mran.is.down_path)$ctime))<5) {
+        if (file.exists(mran.is.down_path) && as.numeric(Sys.time() - file.mtime(mran.is.down_path)) < 5*60) {
             mran.is.down <- TRUE
+            
           }
     
       #If MRAN is down, install from source instead of MRAN 
