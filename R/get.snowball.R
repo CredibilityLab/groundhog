@@ -27,7 +27,7 @@
 ######################################################################################
 
 
-get.snowball <- function(pkg, date, include.suggests=FALSE) {
+get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE) {
 
     #Validate date and include suggests
             validate.TF(include.suggests)
@@ -39,9 +39,11 @@ get.snowball <- function(pkg, date, include.suggests=FALSE) {
         #Path to snowball
             snowball_dir <- paste0(get.groundhog.folder() , '/snowballs' )
             
-        #Snowbal with and without suggests are different snowballs, so two possible rds files for any given pkg date
+        #Snowball with and without suggests are different snowballs, so two possible rds files for any given pkg date
             if (include.suggests==FALSE) snowball_file <- paste0(pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
             if (include.suggests==TRUE)  snowball_file <- paste0(pkg , "_" ,  gsub( "-", "_" , date) , '_with_suggests.rds')  
+        
+            
         #Final path    
             snowball_path <- file.path(snowball_dir, snowball_file)
             
@@ -93,8 +95,12 @@ get.snowball <- function(pkg, date, include.suggests=FALSE) {
   # - else, install from MRAN if possible
   # - else, install from source
 
+  #Installed?
     snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs)
 
+  #Over-rule it if requested to install all
+    if (force.install==TRUE) snowball.installed<-FALSE
+    
   # Vector with paths
     snowball.installation.path <- mapply(get.pkg_search_paths, snowball.pkg, snowball.vrs)
 
