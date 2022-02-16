@@ -4,7 +4,7 @@
 #generates a snowball using the defatul get.snowball() function
 #
 
-  get.snowball.remote<-function(pkg,date,remote_id, usr,include.suggests)
+  get.snowball.remote<-function(pkg,date,remote_id, usr,include.suggests, force.install)
   {
 
     
@@ -55,7 +55,7 @@
       
       
   #5 Get snowball from modified cran.toc
-      snowball <- get.snowball(pkg,date,include.suggests)
+      snowball <- get.snowball(pkg,date,include.suggests=include.suggests, force.install=force.install)
       
 
   #6 Modify snowball's row with remote packages
