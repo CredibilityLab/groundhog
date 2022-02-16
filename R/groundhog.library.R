@@ -51,8 +51,9 @@
 #' @details For more information about groundhog check out [groundhogr.com](http://groundhogr.com)
 #' @export
 #'
-  groundhog.library <- function(pkg, date,  quiet.install = TRUE,  include.suggests = FALSE,  ignore.deps=c(), force.source = FALSE,
-                              force.install = FALSE, tolerate.R.version="" )
+  groundhog.library <- function(pkg, date,  quiet.install = TRUE,  include.suggests = FALSE,  
+                            ignore.deps=c(), force.source = FALSE,
+                            force.install = FALSE, tolerate.R.version = "" )
     {
     
 
@@ -77,7 +78,7 @@
     #1.3) #Clear libpath to prevent loading dependencies from local library
           .pkgenv[["orig_lib_paths"]] <- .libPaths()
 
-          .libPaths("")    
+          #.libPaths("")    
     
 
     #1.4) Verify options are T/F (utils.R - function 27)
