@@ -48,15 +48,13 @@
               }
   
     #3 Get snowball
-        snowball <- get.snowball.remote(pkg, date, remote_id, usr,include.suggests=include.suggests)
+        snowball <- get.snowball.remote(pkg, date, remote_id, usr,include.suggests=include.suggests,force.install=force.install)
   
         #3.1 Force source 
           if (force.source==TRUE) {
             snowball$from <- ifelse(snowball$sha!='', 'source', snowball$from)
           }      
           
-        #3.2 Force install
-          if (force.install==TRUE) snowball$installed=FALSE
 
     #4 Check snowball conflict
         check.snowball.conflict(snowball, force.install,ignore.deps,date)  

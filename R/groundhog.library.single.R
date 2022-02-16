@@ -20,7 +20,7 @@
 
       
   #4 GET SNOWBALL
-      snowball <- get.snowball(pkg=pkg , date=date , include.suggests=include.suggests)
+      snowball <- get.snowball(pkg=pkg , date=date , include.suggests=include.suggests, force.install=force.install)
     
       if (force.source==TRUE)  snowball$from='source'
       if (force.install==TRUE) snowball$installed=FALSE
