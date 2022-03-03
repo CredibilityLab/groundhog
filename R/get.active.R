@@ -38,3 +38,25 @@ get.active <- function() {
 }
 
 
+get.attached <- function()
+{
+  #Non-base
+     attached.list <- c(utils::sessionInfo()$otherPkgs)
+     attached.pkg <- names(attached.list)
+     attached.vrs <-  lapply(attached.list, function(x) x$Version)
+
+  #Base 
+     base.pkg <- utils::sessionInfo()$basePkgs
+     base.vrs <- as.character(sapply(base.pkg, get.version, date))
+ 
+ #Combine
+     pkg <- c(attached.pkg, base.pkg)
+     vrs <- c(attached.vrs, base.vrs)
+     pkg_vrs <- paste0(pkg, "_", vrs) # merge to pkg_vrs
+
+   df <- data.frame(pkg, pkg_vrs, stringsAsFactors = FALSE)
+   
+   return(df)
+}
+
+
