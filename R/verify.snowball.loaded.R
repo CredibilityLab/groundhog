@@ -4,6 +4,11 @@
   verify.snowball.loaded<-function(snowball, ignore.deps)
   {
     
+    #0 Get active
+      active <- get.active()
+    
+  
+    
     #1 Extract pkg vrs of target pkg from snowball
       n <- nrow(snowball)
       pkg     <- snowball$pkg[n]  
@@ -13,29 +18,26 @@
     #2 Did target package attach 
         
         #2.0 Get Attached packages info
-          attached.list <- utils::sessionInfo()$otherPkgs # pkgs in attached
-          attached.pkg  <-names(attached.list)
-          attached.vrs <- lapply(attached.list, function(x) x$Version)
-          attached.pkg_vrs <- paste0(attached.pkg, "_", attached.vrs)  
+          attached<-get.attached() #in get.active.R
          
             
         #2.1 Pkg not attached
-          if (!pkg %in% attached.pkg) {
+          if (!pkg %in% attached$pkg) {
               message("groundhog says: FAILED to load '", pkg_vrs,"'")
               exit()
               }
     
         #2.2 Unexpected version attached
-                if ((pkg %in% attached.pkg) & (!pkg_vrs %in% attached.pkg_vrs))
+                if ((pkg %in% attached$pkg) & (!pkg_vrs %in% attached$pkg_vrs))
                       {
                       message("groundhog says: WARNING, loaded unexpected version of '", pkg, "'\n",
                              "expected: '", pkg_vrs, "'\n",
-                             "loaded  : '", attached.pkg_vrs[attached.pkg == pkg], "'\n")
+                             "loaded  : '", attached$pkg_vrs[attached$pkg == pkg], "'\n")
                       exit()
                       }
        
         #2.3 Successfully attached pkg_vrs
-            if (pkg_vrs %in% attached.pkg_vrs)
+            if (pkg_vrs %in% attached$pkg_vrs)
               {
               message1("Succesfully attached '", pkg_vrs,"'")
               } 
