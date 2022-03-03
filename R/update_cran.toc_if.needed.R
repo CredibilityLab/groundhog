@@ -31,22 +31,23 @@ update_cran.toc_if.needed <- function(date) {
       }
     
       cran.toc <- .pkgenv[["cran.toc"]]
+      
+      
+      
+# 3 If user wants  a newer date than available, or if their version of R is newer than that in cran.toc.rds - update it.
+  cran.toc$Published <- as.DateYMD(cran.toc$Published) # Convert cran.toc $Published, to a date variable
+  max.date <- max(cran.toc$Published) # Most recent date in CRAN
 
-  # 3 If user wants  a newer date than when cran.toc was last saved locally, update it
-      #3.1 Get date when file was saved locally
-        cran.toc.path <- file.path(get.groundhog.folder() , 'cran.toc.rds')
-        file.date <- file.info(cran.toc.path)$ctime
-        file.date <- as.DateYMD(file.date)
-      #3.2 Compare to requested date
-        if (file.date < date) {
-          message2()
-          message1(
-            "The date you entered, '", format(date), "' requires updating your local database\n",
-            "with the list of all CRAN package-versions (cran.toc.rds)"
-            )
-          # Update the database
-            return(load.cran.toc(TRUE))
-        }
+  # 4 Compare most recent to entered date
+  if (max.date < date) {
+    message2()
+    message1(
+      "The date you entered, '", format(date), "' requires updating your local database\n",
+      "with the list of all CRAN package-versions (cran.toc.rds)"
+      )
+    # Update the database
+      return(load.cran.toc(TRUE))
+  }
 
   # 4 Update if the  version of R being used is newer than that in cran.toc.rds
       # Get version of R being used
