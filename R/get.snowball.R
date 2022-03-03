@@ -5,6 +5,8 @@
 #'version of the package, and all dependencies, to be loaded (and installed if needed).
 #'@param include.suggests logical, defaults to `FALSE`. When set to `TRUE`, includes
 #'   dependencies classified in the DESCRIPTION file as `suggested`.
+#'@param force.install logical, defaults to `FALSE`. When set to `TRUE`, the column `installed`
+#'in the generated snowball is set FALSE for all packages, causing them to be installed even if already installed.
 #'@return a dataframe with all packages that need to be installed, their version , whether they are installed, where 
 #'to obtain them if not locally available (CRAN vs MRAN), which date to use for MRAN, 
 #'installation time from source (in seconds), and local path for storage

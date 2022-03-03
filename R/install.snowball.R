@@ -197,7 +197,7 @@
             #Get row with target pkg
                 ap.pkg <- ap.df[ap.df$Package==snowball.mran$pkg[k],]
                 
-                
+            
             #If there is a match for that pkg_vrs, get it
               if (nrow(ap.pkg)>0 && ap.pkg$Version == snowball.mran$vrs[k])
               {
@@ -231,7 +231,8 @@
               } else {
                 #If not found, then it is a bad mran pkg
                 good.mran.file[k] <- FALSE
-                snowball$from[k] <- 'source'
+                snowball$from[snowball$pkg==snowball.mran$pkg[k]] <- 'source'
+                
               }
                 
       } #End loop over MRAN binaries

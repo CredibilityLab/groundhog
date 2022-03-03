@@ -14,6 +14,9 @@ version of the package, and all dependencies, to be loaded (and installed if nee
 
 \item{include.suggests}{logical, defaults to \code{FALSE}. When set to \code{TRUE}, includes
 dependencies classified in the DESCRIPTION file as \code{suggested}.}
+
+\item{force.install}{logical, defaults to \code{FALSE}. When set to \code{TRUE}, the column \code{installed}
+in the generated snowball is set FALSE for all packages, causing them to be installed even if already installed.}
 }
 \value{
 a dataframe with all packages that need to be installed, their version , whether they are installed, where
