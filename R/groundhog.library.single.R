@@ -49,7 +49,7 @@
        .libPaths(c(.libPaths(), snowball$installation.path[nrow(snowball)]))
       
   #9 Verify (check target is attached and full snowball pkg_vrs is loaded or in libpath)
-     verified <- verify.snowball.loaded(snowball, ignore.deps)  
+        verified <- verify.snowball.loaded(snowball, ignore.deps)  
  
       
   #10 If verified and no ignore deps used, save snowball
@@ -57,7 +57,7 @@
      
       #10.1 Update  what is installed in the snowball
           ip<-data.frame(utils::installed.packages(snowball$installation.path))
-          snowball$installed <- snowball$pkg %in% ip$Package
+          snowball$installed <- (snowball$pkg %in% ip$Package | snowball$pkg %in% utils::sessionInfo()$basePkgs) #if in packages or in base.packages
           
 			 #10.2 Path to snowball
 							snowball_dir <- paste0(get.groundhog.folder() , '/snowballs' )
