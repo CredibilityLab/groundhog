@@ -1,6 +1,17 @@
   groundhog.library.single.remote <-  function(pkg, date,  quiet.install ,  include.suggests , ignore.deps, force.source , force.install )
   { 
     #0 Note that Date and R validated in groundhog.library()
+      #Do not accept force.soure or force.install
+          if (force.source==TRUE) {
+            message("When installing remote packages, like '",pkg, "' the 'force.source' option may not be set to TRUE")
+            exit()
+          }
+    
+       if (force.install==TRUE) {
+            message("When installing remote packages, like '",pkg, "' the 'force.install' option may not be set to TRUE")
+            exit()
+          }
+    
   
     #1 Process pkg-->usr, remote_id
         pkg_list<-make.pkg_list(pkg)
