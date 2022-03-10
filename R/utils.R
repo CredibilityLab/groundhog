@@ -170,24 +170,11 @@ get.available.mran.date <- function(date0, date1) {
 
 #12 Base packages
     base_pkg <- function() {
-      c(
-        "base",
-        "compiler",
-        "datasets",
-        "graphics",
-        "grDevices",
-        "grid",
-        "methods",
-        "parallel",
-        "splines",
-        "stats",
-        "stats4",
-        "tcltk",
-        "tools",
-        "utils"
-      )
+     .pkgenv[['base_pkg']]    #assigned on zzz, base packages based on installed.packages(priority='base')
     }
 
+    
+        
 #13 Default packages to ignore conflicts with (but gives warning)
 ignore.deps_default <- function() {
   
