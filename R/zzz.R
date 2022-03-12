@@ -1,16 +1,24 @@
 
-.mismatch.warning <- new.env(parent = emptyenv())
-.pkgenv <- new.env(parent = emptyenv())
+  #.mismatch.warning <- new.env(parent = emptyenv()) #No longer used it seems
 
 
-#'
+
+#Create package environment
+  .pkgenv <- new.env(parent = emptyenv())
+
+#Empty paths for groundhog loaded packages
+  .pkgenv[['groundhog.paths']] <- c(character())
+
+#installed base packages
+  .pkgenv[['base_pkg']] <- data.frame(installed.packages(priority = 'base'))$Package
+    
+  
+
+#Check support of colors? (legacy function perhaps)
 .onLoad <- function(libname, pkgname) {
   
-    #Check support of colors
     .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
   
-    #installed base packages
-      .pkgenv[['base_pkg']] <- data.frame(installed.packages(priority = 'base'))$Package
     
     } #End of onLoad
 
