@@ -28,12 +28,12 @@
        if (! pkg_utility %in% c(.packages(),ip)) {
           
               #Explain to user which version of 'pkg' (e.g., git2r) is being used
-                message2()
-                message1("To proceed we need to load the package '", pkg_utility, "'.\n",
-                  "It will now be loaded by 'groundhog', loading its version available on CRAN on\n",
-                  "on the date '", groundhog.day , "'. If you want to use a different version\n",
-                  "of '", pkg_utility, "' you may load it via library() or via groundhog.library(),\n",
-                  "using a different date, before running the command you just run.\n")
+                #message2()
+                #message1("To proceed we need to load the package '", pkg_utility, "'.\n",
+                  #"It will now be loaded by 'groundhog', loading its version available on CRAN on\n",
+                  #"on the date '", groundhog.day , "'. If you want to use a different version\n",
+                  #"of '", pkg_utility, "' you may load it via library() or via groundhog.library(),\n",
+                  #"using a different date, before running the command you just run.\n")
           
           #Attempt to load via groundhog  
             groundhog.library(pkg_utility, groundhog.day)
