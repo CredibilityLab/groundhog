@@ -5,8 +5,13 @@
 
 #'
 .onLoad <- function(libname, pkgname) {
-  .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
-
+  
+    #Check support of colors
+    .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
+  
+    #installed base packages
+      .pkgenv[['base_pkg']] <- data.frame(installed.packages(priority = 'base'))$Package
+    
     } #End of onLoad
 
 
