@@ -410,3 +410,45 @@ ignore.deps_default <- function() {
                }
         }
       
+        
+#Function 28 - Prompt to OK saving a .txt file showing the prompt has been shown
+    prompt.ok <- function(prompt_name , msg, days_till_shown_again) {
+      
+      #File path to message cookie
+        msg.cookie.path <- file.path(get.groundhog.folder(), paste0("warnings_shown/" , prompt_name, ".txt"))
+        
+        if (file.exists(msg.cookie.path)) {  
+      
+          #How many days since it was created
+            create.time <- file.info(msg.cookie.path)$ctime
+            days <- difftime(Sys.time() , create.time, units='days')
+          
+          #If less than K days, stop
+            if (days<days_till_shown_again)  return(invisible())
+            
+          #if more, delete the cookie file
+            if (days>days_till_shown_again)  unlink(msg.cookie.path)
+            
+            }
+    
+          #Save cookie
+            if (!file.exists(dirname(msg.cookie.path))) dir.create(dirname(msg.cookie.path))
+            write.csv(Sys.time() , msg.cookie.path)
+            
+          #Show the warning
+            message2()
+            message(msg)
+            message()
+            message1("This warning will not be shown again within ", days_till_shown_again, " days.")
+            text.answer <-readline(prompt = "Type OK to proceed, anything else to stop >")
+            
+          
+          
+      #Check prompt
+      if (tolower(text.answer)!="ok") {
+          message("You did not type OK, call aborted.")
+          exit()
+          }
+      
+      }  
+  

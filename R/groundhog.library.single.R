@@ -13,7 +13,11 @@
   #2 Validate pkg
       validation<-validate.pkg_vrs(pkg, vrs, date, ignore.deps)
       if (validation=='already_attached') return(TRUE)
-          
+  
+    #2.5 Warnings?
+      pkg_specific.warnings(pkg)   #see pkg_specific.warnings.R
+      
+        #Some packages get warnings. for example 'foreach' prompts user to get assistance to incorportate groundhbog.
       
   #3 Update cran.toc() if needed for entered date 
       update_cran.toc_if.needed(date)
