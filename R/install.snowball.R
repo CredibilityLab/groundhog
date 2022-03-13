@@ -56,6 +56,8 @@
 
       #1.3 FORCE INSTALL
           if (any(snowball$installed) & force.install) {
+            
+            
           #Subset of packages that are installed
               snowball.installed <- snowball[snowball$installed, ]
               
@@ -299,6 +301,12 @@
       #4.0 update sourre T/F vector,  in case a failed installations became source for backup
         source <- snowball$from == 'source'
         
+      #4.0.5 workaround, if base say it is installed
+          snowball$installed = ifelse(snowball$pkg %in% base_pkg(),TRUE, snowball$installed)
+        
+              #Base packages would re-appear as not installed when force.install=TRUE
+              #This hard codes them bck to TRUE
+          
       #4.1 Any Source or Remote files remain to be installed?
         
         
@@ -332,12 +340,11 @@
           {
         
             
-
         #4.8 Install source 
             if (snowball$from[k]=='source' & snowball$installed[k]==FALSE )
               {
               
-                    
+       
         #4.9 If needed version is there, get source from current
                 if (snowball$pkg_vrs[k] %in% ap_source$pkg_vrs) 
                   {
