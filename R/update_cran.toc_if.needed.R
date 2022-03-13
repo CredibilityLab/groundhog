@@ -10,8 +10,10 @@
 
 
 update_cran.toc_if.needed <- function(date) {
+  
+  
   # 1 Format entered date by user
-  date <- as.DateYMD(date)
+    date <- as.DateYMD(date)
 
   # Stop if date is in the future
       if (date > Sys.Date() - 2) {
@@ -49,16 +51,16 @@ update_cran.toc_if.needed <- function(date) {
       return(load.cran.toc(TRUE))
   }
 
-  # 4 Update if the  version of R being used is newer than that in cran.toc.rds
+  # 4 Update if the  version of R being used is newer than that in cran.toc.rds AND cran toc is older than 2 days
       # Get version of R being used
-      R.using <- get.rversion()
-      tocR <- toc("R")
-      # If not in cran.toc, update
-      if (!R.using %in% tocR$Version) {
+        R.using <- get.rversion()
+        tocR <- toc("R")
+      # If not in cran.toc, and the cran.toc date is more than 2 days old
+        if (!R.using %in% tocR$Version && max.date<  Sys.Date()-2) {
         message2()
         message1(
           "The local database with all package-versions available on CRAN \n",
-		  "is older than the version of R you are using. That file is being updated now."
+		      "is older than the version of R you are using. That file is being updated now."
         )
 
         return(load.cran.toc(TRUE))
