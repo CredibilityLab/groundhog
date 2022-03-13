@@ -93,14 +93,12 @@
 
               
     #2) On Exit refresh libpath and cran.toc
-          #Save vector with library paths available before groundhog run, will put them first afterwards
-            
-      
-          #On exit:
+          
             on.exit({
-                    #Read cran toc again
+                    #Read cran toc again to undo any changes with remote
                        .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
                     
+                       
                     #Return libpath
                       .libPaths(.pkgenv[["orig_lib_paths"]])
                     })
