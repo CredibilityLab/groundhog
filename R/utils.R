@@ -25,8 +25,9 @@
 #23 strpos1()                - string position - simpler gregexpr for strpos  
 #24 get.groundhog_libpaths() - get subset of paths in libPath() that belong to groundhog
 #25 Compare two sets of pkg_vrs vectors, obtaining text report of any mismatches 
-#26 base.libary()           : Copy library() to use when finalizaing loading a pkg
+#26 base.libary()           : Copy library() to use when finalizing loading a pkg
 #27 Validate.tf
+#28 Prompt with OK, saving a .txt file to suppress prompt within x days
 
 ########################################################################
     

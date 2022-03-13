@@ -40,14 +40,14 @@ load.cran.toc <- function(update.toc = FALSE) {
             #Download groundhog
                 dl <- try(download.file(paste0(groundhogR.url, rdsk), file.path(gf, rdsk) , mode = "wb", method = "libcurl" ))
             
-                #If downlaod failed, try  wasabi's backup
+                #If download failed, try  wasabi's backup
                   if (dl!=0) {
                       dl2 <- try(download.file(paste0(wasabi.url, rdsk), file.path(gf, rdsk), mode = "wb", method = "libcurl" ))
                       if (dl2!=0) stop('Error.\nGroundhog says: could not download "', rdsk, "'")
                     }
               } #End case 2
             
-          #Read it locally, droping the .rds part of the name ('cran.toc.rds' -> 'cran.toc')
+          #Read it locally, dropping the .rds part of the name ('cran.toc.rds' -> 'cran.toc')
               dfk <- gsub(".rds","",rdsk)
              .pkgenv[[dfk]] <- readRDS(file.path(gf,rdsk))
           }

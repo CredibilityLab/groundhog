@@ -6,7 +6,6 @@
 
 
 
-
 check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) {
   
   
@@ -30,7 +29,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
         
 
 
-  #3 Force Install:  any package that needs to be *installed* is loaded?
+  #3 Force Install: is any package that needs to be *installed* is loaded?
     #separate check from because even SAME version created conflict
       if (force.install) {
         conflict.pkg <- (snowball$pkg %in% active$pkg) 
