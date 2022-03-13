@@ -69,6 +69,11 @@
           } #End if ignore.deps() are requested
     
     #1.1) Is date valid?
+        date.catch <- try(typeof(date),silent=TRUE)
+        if (class(date.catch)=="try-error") {
+          message("The object entered for the date in groundhog.library(), '" , as.character(substitute(date)) ,"', does not exist.")
+          exit()
+        }
         validate.date(date) #Function defined in utils.R
    
     #1.2) Reload databases if necessary and change them back on existr  so that any changes to cran.toc are undone (previous groundhog.library() call loading remotes)
