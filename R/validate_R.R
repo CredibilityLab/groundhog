@@ -18,29 +18,25 @@
             rv <- r.version.check(date) 
             if (package_version(max(R.toc$Version)) < package_version(rv$r.using.majmin))
               {
-              message("groundhog says:")
-              message("The version of R you are using, 'R-" , rv$r.using.full, "' is not in the groundhog database.")
-              message("You can temporarily add it. This is a work-around intended for testing groundhog with R versions\n",
-                      "that have not yet been released. You should not consider this script reproducible.\n",
-                      "To write reproducible R code please use an already released version of R instead. \n\n",
-                      "Type OK to temporarily add ", rv$r.using.full , " to your local groundhog database\n",
-                      " (it will be added as if it were released 2 days ago, and when you restart the R session it will be removed).")
-              text <- readline("Enter OK to add, anything else to stop >")
               
-              #If say OK, add row to database temporarily
-                if (tolower(text)=="ok")
-                {
-                  row <- data.frame(Package="R",Version=rv$r.using.full,Published = two.days.ago, Imports="",Depends="",Suggests="",LinkingTo="")
-                  .pkgenv[["cran.toc"]] <- rbind(.pkgenv[["cran.toc"]], row)
-                } else {
-              #Else, end
-                  message("Your typed '" , text, "!=OK, groundhog.library() request will terminate here.")
-                  exit()
-                 } #end else
+            #Show message that R-dev is being temporarily added
+              msg_rdev <- paste0("The version of R you are using, 'R-" , rv$r.using.full, "', is not in the groundhog database of R releases.\n",
+                                "Assuming this is because you are using an R-dev version for testing purposes, the version 'R-" , rv$r.using.full, "'\n",
+                                "will be added to the local database as if it was an official version released 2 days ago.\n",
+                                "This temporary modification is undone when the R session is restarted.")
+              
+            #Show an ok prompt with function 28 in utils.R
+              prompt.ok(prompt_name='r_dev' , msg = msg_rdev, days_till_shown_again=1)
+              
+                              
+           #Add r-dev to cran.toc
+              row <- data.frame(Package="R",Version=rv$r.using.full,Published = two.days.ago, Imports="",Depends="",Suggests="",LinkingTo="")
+              .pkgenv[["cran.toc"]] <- rbind(.pkgenv[["cran.toc"]], row)
+               
               } #End if version not in cran.toc even after update
             }   #End if version not in cran.toc before update
     
-    #2.1 Is date for a later major R? STOP
+    #3 Is date for a later major R? STOP
 
     if ((package_version(rv$r.using.majmin) < package_version(rv$r.need.majmin)) &  rv$r.using.full!=tolerate.R.version) 
       {
@@ -56,7 +52,7 @@
     }
     
         
-    #2.1.5 throw warning if using R that is too old, but explicitly allowing via command 
+    #4 throw warning if using R that is too old, but explicitly allowing via command 
     if ((package_version(rv$r.using.majmin) < package_version(rv$r.need.majmin)) & 
         (rv$r.using.majmin==tolerate.R.version | rv$r.using.full==tolerate.R.version)) {
           message2()
@@ -72,7 +68,7 @@
 
         
     
-    #2.2 Is date for a previous major R? Warn
+    #5 Is date for a previous major R? Warn
     
       if (package_version(rv$r.using.majmin) > package_version(rv$r.need.majmin)) {
           
