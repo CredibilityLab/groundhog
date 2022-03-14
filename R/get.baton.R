@@ -11,11 +11,11 @@
                                   baton=list(remotes.pending=c(), install.from=c(), sha=c(), installation_path =NULL, rows.toc=NULL, usr=c())
                                   )
       {
-       
       #0 Add remote_id and usr to baton
          baton$usr <- c(baton$usr, usr)
          baton$install.from <- c(baton$install.from, remote_id) 
-                
+         
+         
       #1. Get sha & append to baton
             sha <- get.sha(pkg,date,remote_id ,usr)
             baton$sha <- c(baton$sha , sha)    
@@ -25,7 +25,7 @@
          installation_path.k <- get.installation_path_remote(pkg , date, remote_id, usr)  #see remote_functions.R
          baton$installation_path <- c(baton$installation_path,installation_path.k )
          
-        
+
       #3 Read description in local clone
             #3.1 Create/Update clone if needed 
               validate.clone_date(pkg, date, remote_id, usr)
@@ -54,9 +54,28 @@
             #3.6   delete temporary file
                  unlink(tmp)
           
+           #3.7 Drop missing rows (poorly formatted DESCRIPTION files generate NA in many fields)
+                 d <- description_df
+                 keep.rows <- ifelse(!is.na(d$Package) && d$Package==pkg && !is.na(d$Title) & !is.na(d$Description) & !is.na(d$Version),TRUE,FALSE) 
+                    
+                    #Some description files include the wrong name of the package, for example the package
+                    #carmen-maria-hernandez/coexnetwork  has its description file call the package SuCoNets. Do not allow.
+
+  
+                 
+                 description_df <-description_df[keep.rows==TRUE,]
+           
+            #3.8 Exit if invalid description file
+                 if (nrow(description_df)!=1) {
+                   message2()
+                   message1("The DESCRIPTION file for package '", pkg , "' is invalidly formatted. Installation aborted.")
+                   exit()
+                  }
+                 
        #4) Find remotes dependencies in the DESCRIPTION of this remote package 
-            new.remotes <- description_df$Remotes
+                new.remotes <- description_df$Remotes
             
+                
        #5) Produce row of toc (for cran.toc)
             #Ensure all columns needed for toc are in the description_df
               #var names in each data.frame
@@ -83,7 +102,7 @@
                 #7.2 Apply to dependencies columns
                   row.toc[,c('Depends','Imports','Suggests','LinkingTo')] <- clean_text( row.toc[,c('Depends','Imports','Suggests','LinkingTo')])
  
-        
+            
                       
         #8 append to rows if it exists, otherwise rows=row
               if (!is.null(baton$rows.toc))  {
