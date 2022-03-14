@@ -17,8 +17,8 @@
          
          
       #1. Get sha & append to baton
-            sha <- get.sha(pkg,date,remote_id ,usr)
-            baton$sha <- c(baton$sha , sha)    
+         sha <- get.sha(pkg,date,remote_id ,usr)
+         baton$sha <- c(baton$sha , sha)    
 
         
       #2 Get installation path and add to baton
@@ -121,7 +121,9 @@
         #10 Remove the remote we just installed
             usr_pkg <- paste0(usr,"/",pkg)  #it is entered as usr/pkg so create that value to look up
             baton$remotes.pending <-baton$remotes.pending [!baton$remotes.pending %in% usr_pkg] 
-      
+          
+        #11 Some remote DESCRIPTION files mess up their own names:
+            #baton$rows.toc$Package=pkg
              
       return(baton)  
      }
