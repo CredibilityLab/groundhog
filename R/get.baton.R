@@ -40,6 +40,7 @@
                 description_raw <-git2r::content(git2r::tree(git2r::lookup(clone_path, sha))["DESCRIPTION"])
                 
                 
+                
                   #note:
                   #git2r is in the suggests in DESCRIPTION , but preferred usage is to load it using groundhog() 
                   #to avoid version conflicts for users who are using git2r elsewhere in their session
@@ -47,23 +48,23 @@
             #3.4  save contents in temporary file
                 tmp<-file.path(get.groundhog.folder(), 'temp', paste0('description_',usr,'_',pkg,"_",sha))
                 writeLines(description_raw, tmp)
-            
+                
             #3.5 read the description file into data.frame with read.dcf
                  description_df <- data.frame(read.dcf(tmp))
             
-            #3.6   delete temporary file
+            #3.6 If more than one row assume it is not a dcf file
+                 if (nrow(description_df) > 1)
+                 {
+                   
+                  description_df <- read.desc2(tmp)   #function 29 in utils.R
+                   
+                 }
+                 
+                 
+            #3.7   delete temporary file
                  unlink(tmp)
           
-           #3.7 Drop missing rows (poorly formatted DESCRIPTION files generate NA in many fields)
-                 d <- description_df
-                 keep.rows <- ifelse(!is.na(d$Package) && d$Package==pkg && !is.na(d$Title) & !is.na(d$Description) & !is.na(d$Version),TRUE,FALSE) 
-                    
-                    #Some description files include the wrong name of the package, for example the package
-                    #carmen-maria-hernandez/coexnetwork  has its description file call the package SuCoNets. Do not allow.
-
-  
-                 
-                 description_df <-description_df[keep.rows==TRUE,]
+         
            
             #3.8 Exit if invalid description file
                  if (nrow(description_df)!=1) {

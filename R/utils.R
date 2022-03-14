@@ -453,3 +453,32 @@ ignore.deps_default <- function() {
       
       }  
   
+#29 Read non dcf DESCRIPTION file saves to data.fraem
+          read.desc2 = function(filepath) {
+            
+            #Row to be generated, starts as empty list
+              row=list()
+            
+            #Start the connection
+              con = file(filepath, "r")
+            #While not empty, read the line
+              while ( TRUE ) {
+              line = readLines(con, n = 1)
+                  if ( length(line) == 0 ) {
+                  break
+                  }
+            #Split based on ":"
+                  line_split <- strsplit(line,":")
+            #Grab field and value
+                  field<-trimws(line_split[[1]][1])
+                  value<-trimws(line_split[[1]][2])
+            #Save as list element
+                  row[[field]]<-value
+              }
+            #Close connection
+                  close(con)
+                  
+            #Turn list to data.frame
+                  return(data.frame(row))
+                }
+    

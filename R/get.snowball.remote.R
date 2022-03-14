@@ -37,7 +37,7 @@
   #3 Get baton (information on remote and its remote dependencies)  'get.baton.R'
        baton<-get.baton(pkg,date,remote_id,usr)
        
-          #This will incluee sha values and dependencies
+          #This will include sha values and dependencies
        
       
   #4 Modify cran toc removing other versions of the remote packages, and adding new ones with date 1970-01-01
