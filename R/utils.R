@@ -139,6 +139,12 @@
 #10 exit() Stop message which does not say error
   exit <- function(...) {
     message1(...)
+    
+     #Read cran toc again to undo any changes with remote
+        .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
+                    
+    #Return libpath
+        .libPaths(.pkgenv[["orig_lib_paths"]])
     invokeRestart("abort")
   }
 
