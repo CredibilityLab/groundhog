@@ -459,8 +459,21 @@
           #Add the one that was just installed to the .libPath()
             .libPaths(c(snowball$installation.path[k] , .libPaths()))
           
-          #Load it
-            loadNamespace(package=snowball$pkg[k], lib.loc = snowball$installation.path[k])
+          #Verify package exists (if not base)
+              if (!snowball$pkg[k] %in% base_pkg())
+              {
+                #Get available packages in this subfolder of groundhog.folder() with the path to package
+                  ap1 <- data.frame(installed.packages( snowball$installation.path[k]))
+                
+                #If less than 1 pacakge, die
+                  if (nrow(ap1) < 1) {
+                      message("\n\n ---- Groundhog Says, Error: The package '", snowball$pkg[k] , "' failed to install --- ")
+                  exit()
+                }
+              }
+              
+          #Load it 
+            loadNamespace(package=snowball$pkg[k], lib.loc =)
                 
       } #End loop over snowball        
           

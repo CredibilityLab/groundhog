@@ -39,8 +39,6 @@
                 clone_path <- paste0(dir_path , "/", usr, "_" ,pkg)
                 description_raw <-git2r::content(git2r::tree(git2r::lookup(clone_path, sha))["DESCRIPTION"])
                 
-                
-                
                   #note:
                   #git2r is in the suggests in DESCRIPTION , but preferred usage is to load it using groundhog() 
                   #to avoid version conflicts for users who are using git2r elsewhere in their session

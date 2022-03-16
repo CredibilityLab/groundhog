@@ -39,6 +39,23 @@
        
           #This will include sha values and dependencies
        
+  #3.5 Verify requested name of package was obtained
+       if (!pkg %in% baton$rows.toc$Package) {
+         
+         #Last row in the baton has name of DESCRIPTION pkg on its own
+           pkg_self_name <- baton$rows.toc[1,]$Package
+         
+         message2()
+         message1("The package you requested, '" , usr , "/" , pkg , "' appears to be misconfigued on  ", remote_id,".")
+         message1("Specifically, the package available from 'https://" ,remote_id , ".com/",usr , "/" , pkg , "'")
+         message1("referes to itself as '" , pkg_self_name, "'. ")
+         message1("You could try running:")
+		 message1("groundhog.library('",usr , "/" , pkg_self_name,"' , '",date,"')\n")
+         message("\   ---  Error. '",pkg,"' was not installed  ---")
+         exit()
+       }
+       
+       
       
   #4 Modify cran toc removing other versions of the remote packages, and adding new ones with date 1970-01-01
     #load cran.toc locally  
