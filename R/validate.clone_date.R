@@ -65,6 +65,9 @@
           
 			#4.2 Clone github repository
             
+              #Create folder if it does not exist
+                  if (!file.exists(clone_path)) dir.create(clone_path,recursive=TRUE)
+            
               #Path to local clone
                   git_path <- paste0('https://' , remote_idk , ".com/" , usrk , "/" , pkgk)
                 
