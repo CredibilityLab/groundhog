@@ -321,7 +321,7 @@
       #4.3 Show message
             if (n.source>0 & n.remote==0) message1("Will now attempt installing ",n.source," packages from source.")
             if (n.source>0 & n.remote> 0) message1("Will now attempt installing ",n.source," packages from source and ",n.remote," from remote repositories (e.g., GitHub, gitlab).")
-            if (n.source==0 & n.remote> 0) message1("Will now attempt installing ",n.remote," packages from repositories (e.g., GitHub, gitlab).")
+            if (n.source==0 & n.remote> 0) message1("Will now attempt installing ",n.remote," packages from a git repository (GitHub or GitLab).")
 
       #4.4 Smaller snowball to send to feedback
             snowball.source=snowball[(remote | source) & snowball$installed==FALSE,]
