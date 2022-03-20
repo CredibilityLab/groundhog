@@ -26,7 +26,7 @@ groundhog.library('crsh/papaja','2022-01-01')  #example installing/loading the p
 
 **Major changes in v1.9.9.999 (versus v.1.5.0 on CRAN)***
 1) Install/load packages from GitHub & GitLab, not just CRAN
-2) Built in switch that if MRAN is down, installs everything from CRAN for next 5 hours (using source, instead of MRAN, for older packages)
+2) Built in switch that if MRAN is down, installs everything from CRAN for next 5 hours (using source, instead of MRAN binaries, for older packages)
 3) Speed increase for loading packages
 
 
