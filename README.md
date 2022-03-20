@@ -17,7 +17,7 @@ The in-development version may undergo backwards incompatible changes, and proba
 Once it seems to be ready, it will be sent to CRAN and become v2.0.0. Aiming for April 2022. 
 
 To use this in-development version:
-remotes::install_github('CredibilityLab/groundhog')
+`remotes::install_github('CredibilityLab/groundhog')`
 
 
 **Major changes in v1.9.9.999 (versus v.1.5.0 on CRAN)***
@@ -31,4 +31,4 @@ remotes::install_github('CredibilityLab/groundhog')
 
 
 **Testing**
-Because testing groundhog requires installing packages, restarting R sessions, evaluating multiple outcomes of an installation attempt, and artificially creating conflicts between groundhog's library and the local library, testing is not automatized via 'testthat' but rather conducted via a manually run script that is executed on a Windows, Mac and Unix machines. The testing involves:(1) generating the full set of possible conflicts between local and groundhog packages (e.g., attempting to attach a different version of a package that is already loaded, vs already attached), (2) proceeding to uninstall conflicts that are discovered, (3) listing those conflicts, (4) reinstalling them, and lastly (5) installing large numbers of packages (>100) in random order. The test script is kept outside the package but you can see it in the main folder above: test_groundhog.r
+Because testing groundhog requires installing packages, restarting R sessions, evaluating multiple outcomes of an installation attempt, and artificially creating conflicts between groundhog's library and the local library, testing is not automatized via 'testthat' but rather conducted via a manually run script that is executed on a Windows, Mac and Unix machines. The testing involves:(1) generating the full set of possible conflicts between local and groundhog packages (e.g., attempting to attach a different version of a package that is already loaded, vs already attached), (2) proceeding to uninstall conflicts that are discovered, (3) listing those conflicts, (4) reinstalling them, and lastly (5) installing large numbers of packages (>100) in random order. The test script is kept outside the package but you can see it in the main folder above: `test_groundhog.r`
