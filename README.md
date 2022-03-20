@@ -27,7 +27,7 @@ To use this in-development version:
    
    example:   `groundhog.library('crsh/papaja','2022-01-01')` 
    
-3) Built in switch that if MRAN is down, installs everything from CRAN for next 5 hours (using source, instead of MRAN binaries, for older packages)
+3) Built in switch that if MRAN is down, installs everything from CRAN for next 5 hours (using source files from CRAN, instead of binaries from MRAN, for older packages)
 4) Speed increase for loading packages
 
 
