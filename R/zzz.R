@@ -69,9 +69,9 @@
           r.using.full= get.rversion() 
           packageStartupMessage ("Loaded 'groundhog' (version:",packageVersion('groundhog'),  ") using R-" ,r.using.full) 
           packageStartupMessage (
-                  "Path to folder where downloaded packages are saved: '",get.groundhog.folder(),
-                  "'.\nTo change its location: 'set.groundhog.folder(<path>)'\n",
-                  "     >>> If you encounter errors using groundhog: https://groundhogR.com/troubleshooting"
+                 # "Path to folder where downloaded packages are saved: '",get.groundhog.folder(),
+                 #  "'.\nTo change its location: 'set.groundhog.folder(<path>)'\n",
+                  "  Learn about groundhog, and report any issues, at https://groundhogR.com/"
                    )
         
     #2.2 check for update
