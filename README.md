@@ -24,6 +24,7 @@ To use this in-development version:
 1) Install/load packages from GitHub & GitLab, not just CRAN
 
    syntax:   `groundhog.library(usr/pkg,date)` 
+   
    example:   `groundhog.library('crsh/papaja','2022-01-01')` 
    
 3) Built in switch that if MRAN is down, installs everything from CRAN for next 5 hours (using source, instead of MRAN binaries, for older packages)
