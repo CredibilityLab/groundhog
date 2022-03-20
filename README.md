@@ -13,21 +13,21 @@ For information about groundhog, check out the blogpost announcing it (http://da
 
 CRAN contains the officially released versions of groundhog. Here on github is the in-development version.
 
-The version of groundhog on CRAN (v1.5.0)  works with CRAN packages only.
-The in-development version (v1.9.9.9999) also allows loading and installling packages from GiHub and GitLab packages.
 The in-development version may undergo backwards incompatible changes, and probably includes many (instead of few) typos and silly bugs.
 Once it seems to be ready, it will be sent to CRAN and become v2.0.0. Aiming for April 2022. 
 
-To use this in-development version, V1.9.9.9999:
+To use this in-development version:
 remotes::install_github('CredibilityLab/groundhog')
 
-And then use the same groundhog.library() command to load (installling when necessary) packages from CRAN, GitHub or Gitlab.
-groundhog.library('crsh/papaja','2022-01-01')  #example installing/loading the package papaja only available on GitHub
 
 **Major changes in v1.9.9.999 (versus v.1.5.0 on CRAN)***
 1) Install/load packages from GitHub & GitLab, not just CRAN
-2) Built in switch that if MRAN is down, installs everything from CRAN for next 5 hours (using source, instead of MRAN binaries, for older packages)
-3) Speed increase for loading packages
+
+   syntax:   `groundhog.library(usr/pkg,date)` 
+   example:   `groundhog.library('crsh/papaja','2022-01-01')` 
+   
+3) Built in switch that if MRAN is down, installs everything from CRAN for next 5 hours (using source, instead of MRAN binaries, for older packages)
+4) Speed increase for loading packages
 
 
 **Testing**
