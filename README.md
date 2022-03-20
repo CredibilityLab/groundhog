@@ -17,10 +17,10 @@ On github, here, you will find development versions.
 
 The version of groundhog on CRAN (v1.5.0) only works with CRAN packages.
 The version of groundhog here on GitHub is experimental, and allows working also with GitHub and Gitlab packages.
-This version is expeirmental and may undergo backwards incompatible changes. It may also include typos and silly bugs.
-Once the version is considered mature it will be sent to CRAN and become v2.0.0. 
+This github version of groundhog may undergo backwards incompatible changes, include typos and silly bugs.
+Once the version is considered ready, it will be sent to CRAN and become v2.0.0. 
 
-To use this experimental version, V1.9.9.9999, install it with the package 'remotes'
+To use this experimental version, V1.9.9.9999:
 remotes::install_github('CredibilityLab/groundhog')
 
 And then use the same groundhog.library() command to load (installling when necessary) packages from CRAN, GitHub or Gitlab.
