@@ -450,7 +450,7 @@
                 clone_path <- get.clone_path(pkg=snowball$pkg[k], usr=snowball$usr[k], remote_id=snowball$from[k]) 
                 
               #Install it
-                remotes::install_git(clone_path,  dependencies = FALSE , lib=snowball$installation.path[k], ref=snowball$sha[k], INSTALL_opts = '--no-lock')
+                remotes::install_local(clone_path,  dependencies = FALSE , lib=snowball$installation.path[k], ref=snowball$sha[k], INSTALL_opts = '--no-lock')
                
                  #ref is the sha indicating which version is installed
               
