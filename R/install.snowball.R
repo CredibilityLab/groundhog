@@ -75,8 +75,8 @@
           } # End #1.4
 
       # 1.4. FORCE SOURCE
-          if (force.source || .Platform$pkgType == "source") {
-            snowball$from <- "source"
+           if (force.source || .Platform$pkgType == "source") {
+            snowball$from <- ifelse(remote, snowball$from, 'source')
             }
         
       #1.5 Directory for downloaded binaries, source files, & libraries for installed packages
