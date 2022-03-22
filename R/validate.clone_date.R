@@ -72,7 +72,7 @@
                   git_path <- paste0('https://' , remote_idk , ".com/" , usrk , "/" , pkgk)
                 
               #Clone it
-                  try(git2r::clone(git_path, clone_path),silent=TRUE)
+                  try(git2r::clone(git_path, clone_path),silent=FALSE)
             
           } #End if local_git_exists
           

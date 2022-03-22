@@ -4,10 +4,15 @@
 #2) Get baton loops chasing all remotes found as dependencies until there are none left
 
 
+#0 Function that cleans
+                  clean_text <- function(y) {
+                  return(gsub("\\s*\\([^\\)]+\\)|\\n| ","",as.character(y))) #Kill the parenthense, \n, and space
+                  }
+
 
 #Function 1 - Process single remote, adding results to baton
 
-     get.baton.single <- function (pkg, date, remote_id, usr, 
+     get.baton.single <- function (pkg, date, remote_id, usr, include.suggests,
                                   baton=list(remotes.pending=c(), install.from=c(), sha=c(), installation_path =NULL, rows.toc=NULL, usr=c())
                                   )
       {
@@ -75,6 +80,36 @@
                 new.remotes <- description_df$Remotes
             
                 
+          #4.1 Drop suggested remotes if include.suggests=FALSE
+                if (include.suggests==FALSE)
+                {
+                #Turn string to vector with all remotes
+                  new.remotes.vector <- unlist(strsplit(new.remotes,","))
+                  
+
+                #Split pkg_usr becuase suggest column only has pkg, not usr
+                  new.remotes.vector_pkg <- sapply(strsplit(new.remotes.vector,"/") , "[" ,2)
+                  new.remotes.vector_usr <- sapply(strsplit(new.remotes.vector,"/") , "[" ,1)
+                  
+                #Clean suggest as vector
+                  suggest_temp <- description_df$Suggests
+                  suggest_temp <- clean_text(suggest_temp)
+                  suggest.vector <-unlist(strsplit(suggest_temp,","))
+                  
+                #Drop remotes that are suggested 
+                  keep <- !new.remotes.vector_pkg %in% suggest.vector
+                  
+                  #If no remotes survive, make empty vector
+                    if (sum(keep)==0) new.remotes=c()
+                  
+                  #If some survive, recreate the cell with the packages that are not suggested
+                    if (sum(keep)>0) {
+                      new.remotes <- paste0(new.remotes.vector_usr[keep] , "/" , new.remotes.vector_pkg[keep], collapse=',')
+                      }#End if sum(keep)>0
+                  
+                }# End if include.suggests==FALSE
+                
+                
        #5) Produce row of toc (for cran.toc)
             #Ensure all columns needed for toc are in the description_df
               #var names in each data.frame
@@ -93,13 +128,7 @@
               row.toc$Published <- as.Date('1970-01-01')
         
         #7 Remove symbols from the dependencies text          
-                #7.1 Function that cleans
-                  clean_text <- function(y) {
-                  return(gsub("\\s*\\([^\\)]+\\)|\\n| ","",as.character(y))) #Kill the parenthense, \n, and space
-                  }
-                
-                #7.2 Apply to dependencies columns
-                  row.toc[,c('Depends','Imports','Suggests','LinkingTo')] <- clean_text( row.toc[,c('Depends','Imports','Suggests','LinkingTo')])
+              row.toc[,c('Depends','Imports','Suggests','LinkingTo')] <- clean_text( row.toc[,c('Depends','Imports','Suggests','LinkingTo')])
  
             
                       
@@ -129,11 +158,11 @@
 #----------------------------------------------------------------------------------
      
   #Function 2 - Loop over the pending remotes   
-     get.baton <- function(pkg, date, remote_id, usr)
+     get.baton <- function(pkg, date, remote_id, usr,include.suggests)
     {
           
       #1 Start baton with  target  remote
-        baton <- get.baton.single(pkg , date, remote_id, usr)
+        baton <- get.baton.single(pkg , date, remote_id, usr,include.suggests)
       
       #4 Loop creating additional entries onto the same baton for remote dependencies
         k <- 0
@@ -148,7 +177,7 @@
             usrk <- dirname(baton$remotes.pending[1])
             
           #3.3 Make the new snowball and pass on the baton
-            baton <- get.baton.single(pkgk , date, remote_id, usr=usrk, baton=baton)
+            baton <- get.baton.single(pkgk , date, remote_id, usr=usrk, baton=baton,include.suggests = include.suggests )
         
          #3.4 Fuse if something goes wrong and loop keeps going
             if (k>200) break

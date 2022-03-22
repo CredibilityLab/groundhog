@@ -35,7 +35,7 @@
        valid_clone <- validate.clone_date(pkg, date,remote_id ,usr)
     
   #3 Get baton (information on remote and its remote dependencies)  'get.baton.R'
-       baton<-get.baton(pkg,date,remote_id,usr)
+       baton<-get.baton(pkg,date,remote_id,usr,include.suggests)
        
           #This will include sha values and dependencies
        
