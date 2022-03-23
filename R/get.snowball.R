@@ -32,6 +32,7 @@
 get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE) {
 
     #Validate date and include suggests
+            date <- as.DateYMD(date)
             validate.TF(include.suggests)
             validate.date(date)
 
@@ -64,9 +65,13 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
   # 1 Get dependencies
   dep12 <- get.all.dependencies(pkg, date, include.suggests = include.suggests)
 
+
+  
   # 2 Produce  dep12  (topographical sort) to get order of installation
-  k <- 0 # counter of iterations attempting to sort
-  indep <- c()
+  
+    k <- 0 # counter of iterations attempting to sort
+    indep <- c()
+    
   # In each loop we take all dependencies without dependencies and add them to the sequence of installation
   # Do until all dependencies have been assigned an order (so dep12 is empty)
   while (nrow(dep12) > 0) {
@@ -126,7 +131,7 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
 
   
     snowball.CRAN <- snowball.pkg_vrs %in% get.current.packages("binary")$pkg_vrs
-    snowball.MRAN.date <- as.Date(sapply(snowball.pkg_vrs, get.date.for.install.binary), origin = "1970-01-01") # 5.3 Binary date in MRAN?
+    snowball.MRAN.date <- as.Date(sapply(snowball.pkg_vrs, get.date.for.install.binary,date=date), origin = "1970-01-01") # 5.3 Binary date in MRAN?
     snowball.MRAN.date <- as.DateYMD(snowball.MRAN.date)
 
   # IF force.source==TRUE then all packages will come from source, else, figure out where from
