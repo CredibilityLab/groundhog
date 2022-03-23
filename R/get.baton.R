@@ -81,7 +81,7 @@
             
                 
           #4.1 Drop suggested remotes if include.suggests=FALSE
-                if (include.suggests==FALSE)
+                if (include.suggests==FALSE && !is.null(new.remotes) && regexpr(',',new.remotes)>1) 
                 {
                 #Turn string to vector with all remotes
                   new.remotes.vector <- unlist(strsplit(new.remotes,","))
