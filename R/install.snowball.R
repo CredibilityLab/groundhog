@@ -104,10 +104,10 @@
         
       #2.2 Download all CRAN binaries
           if (getRversion()>"3.3") {
-            cran.binaries <- data.frame(utils::download.packages(snowball.cran$pkg, type='binary', destdir=temp_path, quiet=TRUE, method='libcurl'),stringsAsFactors = FALSE)
+            cran.binaries <- data.frame(utils::download.packages(snowball.cran$pkg, type='binary', destdir=temp_path,  method='libcurl'),stringsAsFactors = FALSE)
           } else {
 
-            cran.binaries <- data.frame(utils::download.packages(snowball.cran$pkg, type='binary', destdir=temp_path, quiet=TRUE),stringsAsFactors = FALSE)
+            cran.binaries <- data.frame(utils::download.packages(snowball.cran$pkg, type='binary', destdir=temp_path),stringsAsFactors = FALSE)
           }
           names(cran.binaries) <- c("pkg.cran","downloaded.path")
       
@@ -219,9 +219,9 @@
                 
                 
                 if (getRversion()>"3.3") {
-                    mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path, quiet=TRUE,method='libcurl')
+                    mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path, method='libcurl')
                   } else {
-                    mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path, quiet=TRUE,)
+                    mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path)
                     
                     }
                   
