@@ -24,9 +24,9 @@ load.cran.toc <- function(update.toc = FALSE) {
           for (rdsk in files.rds)
           {
           #See if file exists
-            in.path <- file.exists(file.path(gf ,rdsk))              #in groundhog.folder()
-            in.pkg  <-file.exists(system.file(rdsk, package = "groundhog"))  #in inst folder for groundhog
-          
+            in.path <- file.exists(file.path(gf ,rdsk))                      #in groundhog.folder()
+            #in.pkg  <-file.exists(system.file(rdsk, package = "groundhog"))  #in inst folder for groundhog
+			in.pkg <- FALSE
           #Case 1: in.pkg but not in path, copy it locally (but not being updated, to avoid wasteful copy )
             if (in.path==FALSE & in.pkg==TRUE & update.toc==FALSE) {
               file.copy  (system.file(rdsk, package = "groundhog") , file.path(gf, rdsk))
