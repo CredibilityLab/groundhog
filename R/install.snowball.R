@@ -38,7 +38,8 @@
       #If MRAN is down, install from source instead of MRAN 
         if (mran.is.down==TRUE ) {
             snowball$from <- ifelse(snowball$from=='MRAN' & snowball$installed==FALSE,'source',snowball$from)
-            message1('groundhog says: MRAN is believed to be down, so will install from source instead.')
+            message1('groundhog says: MRAN is believed to be down, so will install from source instead (much slower).')
+			message1('              --  if you want groundhog to try MRAN again, run `mran.is.up() --')
             }
     
         
@@ -491,8 +492,8 @@
               }
               
           #Load it 
-            loadNamespace(package=snowball$pkg[k], lib.loc =)
-                
+             loadNamespace(package=snowball$pkg[k], lib.loc =snowball$installation.path)
+             
       } #End loop over snowball        
           
           

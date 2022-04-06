@@ -82,9 +82,7 @@
         
     #1.3) #Clear libpath to prevent loading dependencies from local library
           .pkgenv[["orig_lib_paths"]] <- .libPaths()
-
-          #.libPaths("")    
-    
+ 
 
     #1.4) Verify options are T/F (utils.R - function 27)
           validate.TF(include.suggests)
@@ -97,15 +95,15 @@
             on.exit({
                     #Read cran toc again to undo any changes with remote
                        .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
-                    
                        
                     #Return libpath
                       .libPaths(.pkgenv[["orig_lib_paths"]])
+                      
                     })
             
-    #2.5 Drop pre-existing libpaths        
+    #2.5) Drop pre-existing libpaths
         .libPaths('')
-    
+            
     #3 If the day merits, update the database
         update_cran.toc_if.needed(date) 
 
@@ -135,7 +133,12 @@
           }
         
         
-  #8 Loop running groundhog
+    
+  #8 Empty temp folder if it has any packages installed with install.package()
+        #move_temp.pkg() #Utils.R, function #30 - moves any files from temporary path to default path 
+        
+        
+  #9 Loop running groundhog
         for (pkgk in pkg) {
               #Identify as remote based on '/'package (remotes need a /)'
                 cran <- TRUE

@@ -3,12 +3,11 @@
 
   verify.snowball.loaded<-function(snowball, ignore.deps)
   {
-    
+
     #0 Get active
       active <- get.active()
     
-  
-    
+
     #1 Extract pkg vrs of target pkg from snowball
       n <- nrow(snowball)
       pkg     <- snowball$pkg[n]  
@@ -20,7 +19,7 @@
         #2.0 Get Attached packages info
           attached<-get.attached() #in get.active.R
          
-            
+
         #2.1 Pkg not attached
           if (!pkg %in% attached$pkg) {
               message("groundhog says: FAILED to load '", pkg_vrs,"'")
@@ -45,12 +44,23 @@
 
     #3 Check if entire snowball is available 
      
-      #3.1 active
-         active <- get.active()                          
+      
     
+      #3.2 linked (paths in libPaths())
+
+        #linked.pkg_vrs <- basename(.libPaths())      
+        #linked.pkg <- get.pkg(linked.pkg_vrs)
+        #linked <- data.frame(pkg=linked.pkg , pkg_vrs = linked.pkg_vrs)
+       
+      #3.3 add linked to active
+        #active <- rbind(active, linked)
+        
+        
+       
       #3.2 Counts of mismatches
           snowball.match <- snowball$pkg_vrs %in% active$pkg_vrs  | snowball$pkg %in% base_pkg() | snowball$pkg %in% ignore.deps
-          
+  
+        
             #There is an or stateent so taht base packages are not checked against available ones becuase
             #Those have their own library structure
           
@@ -82,8 +92,8 @@
   #12 Message on base pkg
           
           if (pkg %in% base_pkg()) {
-            message("Note: the package '", pkg, "' is part of base R.\n",
-              "The version included in base R is always loaded, regardless of the date entered.")
+            message1("Note: the package '", pkg, "' is part of base R.\n" ,  
+			         "Version '" , getRversion() , "' is loaded regardless of date entered.")
           }
 							
   
