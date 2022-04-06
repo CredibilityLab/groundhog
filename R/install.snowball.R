@@ -389,9 +389,9 @@
                               #this prevents a package that actually installed successfully on the 2nd attempt, showing a warning)
                 if (quiet.install==TRUE) options(warn=-1)
                       if (getRversion()>"3.3") {
-                          install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", dependencies = FALSE, quiet = quiet.install, method='libcurl', INSTALL_opts = '--no-lock')
+                          utils::install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", dependencies = FALSE, quiet = quiet.install, method='libcurl', INSTALL_opts = '--no-lock')
                       } else {
-                          install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", dependencies = FALSE, quiet = quiet.install, INSTALL_opts = '--no-lock')
+                          utils::install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", dependencies = FALSE, quiet = quiet.install, INSTALL_opts = '--no-lock')
                       }
                 if (quiet.install==TRUE) options(warn=0)
               } #End if source
@@ -406,7 +406,7 @@
                 quiet.install==TRUE)
                   {
                   message1("Will try again, now showing all installation output.")
-                  install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", 
+                  utils::install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", 
                                       dependencies = FALSE, quiet = FALSE, INSTALL_opts = '--no-lock')
                   }
             
@@ -482,7 +482,7 @@
               if (!snowball$pkg[k] %in% base_pkg())
               {
                 #Get available packages in this subfolder of groundhog.folder() with the path to package
-                  ap1 <- data.frame(installed.packages( snowball$installation.path[k]))
+                  ap1 <- data.frame(utils::installed.packages( snowball$installation.path[k]))
                 
                 #If less than 1 pacakge, die
                   if (nrow(ap1) < 1) {
