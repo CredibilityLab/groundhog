@@ -61,12 +61,10 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
               } 
             
   
-  
   # 1 Get dependencies
   dep12 <- get.all.dependencies(pkg, date, include.suggests = include.suggests)
 
 
-  
   # 2 Produce  dep12  (topographical sort) to get order of installation
   
     k <- 0 # counter of iterations attempting to sort
@@ -89,8 +87,14 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
         break
     }
   }
-  # 3) Add pkg at the end
-  snowball.pkg <- c(indep, pkg)
+
+    #2.5 Drop base packages for those will be loaded explictly by library() command
+      indep <- indep[!indep %in% base_pkg()]
+      
+    
+    # 3) Add pkg at the end
+      snowball.pkg <- c(indep, pkg)
+
 
   # 4) Get the version of each package
     snowball.vrs <- vapply(snowball.pkg, get.version, date, FUN.VALUE = character(1)) 
