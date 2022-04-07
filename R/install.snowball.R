@@ -38,7 +38,8 @@
       #If MRAN is down, install from source instead of MRAN 
         if (mran.is.down==TRUE ) {
             snowball$from <- ifelse(snowball$from=='MRAN' & snowball$installed==FALSE,'source',snowball$from)
-            message1('groundhog says: MRAN is believed to be down, so will install from source instead.')
+              message1('groundhog says: MRAN seems to be down. Will install from source (much slower).')
+			        message1('           --  To give MRAN another try, run `mran.is.up() --')
             }
     
         
@@ -483,7 +484,7 @@
                 #Get available packages in this subfolder of groundhog.folder() with the path to package
                   ap1 <- data.frame(installed.packages( snowball$installation.path[k]))
                 
-                #If less than 1 pacakge, die
+                #If less than 1 package, die
                   if (nrow(ap1) < 1) {
                       message("\n\n ---- Groundhog Says, Error: The package '", snowball$pkg[k] , "' failed to install --- ")
                   exit()
@@ -491,7 +492,7 @@
               }
               
           #Load it 
-            loadNamespace(package=snowball$pkg[k], lib.loc =)
+             loadNamespace(package=snowball$pkg[k], lib.loc =snowball$installation.path)
                 
       } #End loop over snowball        
           
