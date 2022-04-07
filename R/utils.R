@@ -144,10 +144,8 @@
         .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
                     
     #Return libpath
-        .libPaths(.pkgenv[["orig_lib_paths"]]) 
-        
-    #Do a 'quit' 
-        invokeRestart("abort")
+        .libPaths(.pkgenv[["orig_lib_paths"]])
+    invokeRestart("abort")
   }
 
 #11 Available mran dates
@@ -489,6 +487,4 @@ ignore.deps_default <- function() {
             #Turn list to data.frame
                   return(data.frame(row))
                 }
-
     
-          

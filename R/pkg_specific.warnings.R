@@ -5,12 +5,13 @@
 
 pkg_specific.warnings <- function(pkg)
   {
+  
   #1 Set of packages with some warning
       all_pkgs_with_warnings <- c('foreach')
-
+      
   #2 if pkg does not belong to set of packages with warnings, stop with early return
       if (!pkg %in% all_pkgs_with_warnings) return(invisible())
-
+  
   
   #3. Messages
       msg=days=list()
@@ -23,7 +24,7 @@ pkg_specific.warnings <- function(pkg)
   
         days[['foreach']] <- 90
         
-
+          
     
   #4 Show warning with a prompt to continue -  function 28 in utils.R
       prompt.ok(prompt_name = 'pkg_foreach' , msg=msg[[pkg]], days_till_shown_again = days[[pkg]])    

@@ -1,4 +1,6 @@
 
+  #.mismatch.warning <- new.env(parent = emptyenv()) #No longer used it seems
+
 
 
 #Create package environment
@@ -9,8 +11,8 @@
 
 #installed base packages
   .pkgenv[['base_pkg']] <- data.frame(installed.packages(priority = 'base'))$Package
+    
   
-
 
 #Check support of colors? (legacy function perhaps)
 .onLoad <- function(libname, pkgname) {
@@ -20,10 +22,6 @@
     
     } #End of onLoad
 
-
-
-  #Save the name of the package that is currently used to save by default
-          .pkgenv[['lib.default']] <- .libPaths()[1]
 
     
 #2. Attaching 
@@ -60,14 +58,13 @@
               #Create the folder (when running groundhog.library() this will signal consent was given)
                 dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
                
-              
                 
       #Load toc files
           load.cran.toc()    
-  
 
-          
-      #Report versions being used
+        
+
+        #Report versions being used
           groundhog.version_using <- as.character(packageVersion("groundhog"))
           r.using.full= get.rversion() 
           packageStartupMessage ("Loaded 'groundhog' (version:",packageVersion('groundhog'),  ") using R-" ,r.using.full) 
@@ -102,9 +99,7 @@
             )
             }  #End mismatch in version
           } #End if !is.null()
-          } #End if consent==TRUE
-        
-        
+          } #ENd if consent==TRUE
       } #End on attach
     
     

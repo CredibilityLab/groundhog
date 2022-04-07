@@ -4,10 +4,6 @@
   validate.pkg_vrs <- function(pkg, vrs, date, ignore.deps)
   { 
   
-    
-  # -1 If base pkg, stop
-    if (pkg %in% base_pkg()) return('')
-    
   #0 Merge pkg_vrs
     pkg_vrs <- paste0(pkg, "_", vrs)
   
@@ -19,7 +15,7 @@
                 "meta.groundhog('" ,  date , "')"
                  )
         exit()
-        } #End if groundhog
+        } #End if groundhogd
 
     
      
@@ -31,7 +27,13 @@
     #2.2 Read attached
         attached.list= utils::sessionInfo()$otherPkgs
         attached.pkg <- names(attached.list)
-        attached.vrs <- unlist(lapply(attached.list, function(x) x$Version))
+        attached.vrs <- lapply(attached.list, function(x) x$Version)
+        
+      #Add base packages  
+        attached.base.pkg <- utils::sessionInfo()$basePkgs
+        attached.base.vrs <- as.character(sapply(attached.base.pkg, get.version, date)) 
+        attached.pkg <- c(attached.pkg, attached.base.pkg)
+        attached.vrs <- c(attached.vrs, attached.base.vrs)
         attached.pkg_vrs <- paste0(attached.pkg , "_" , attached.vrs)
         
   #3 Early return if already attached

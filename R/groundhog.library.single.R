@@ -4,43 +4,36 @@
     
         
   #0 Date and R validated in groundhog.library()
-
-    
-
+  
   #1 Get pkg_vrs
       vrs     <- get.version(pkg, date)
       pkg_vrs <- paste0(pkg, "_", vrs)
   
-
+      
   #2 Validate pkg
       validation<-validate.pkg_vrs(pkg, vrs, date, ignore.deps)
       if (validation=='already_attached') return(TRUE)
-
-
   
     #2.5 Warnings?
       pkg_specific.warnings(pkg)   #see pkg_specific.warnings.R
-
-
-        #Some packages get warnings. for example 'foreach' prompts user to get assistance to incorporate groundhog.
+      
+        #Some packages get warnings. for example 'foreach' prompts user to get assistance to incorportate groundhbog.
       
   #3 Update cran.toc() if needed for entered date 
       update_cran.toc_if.needed(date)
 
-
+      
   #4 GET SNOWBALL
       snowball <- get.snowball(pkg=pkg , date=date , include.suggests=include.suggests, force.install=force.install)
-
-
-      
+    
       if (force.source==TRUE)  snowball$from='source'
       if (force.install==TRUE) snowball$installed=FALSE
       
-  
+      
   #5 CHECK FOR CONFLICT SNOWBALL <-> AVAILABLE PACKAGES
       check.snowball.conflict(snowball, force.install,ignore.deps,date)  
-
-
+    
+        
   #6 message if installation will be necessary
     need.to.install.total <- sum(!snowball$installed)
     if (need.to.install.total > 0) {
@@ -50,35 +43,19 @@
     
     
   #7 Install packages if needed, add and groundhog libpaths for each package
-      #7.1 If all installed, just add the paths
-      if (all(snowball$installed)) {
-        
-        #If all installed, add the paths then load them
-            .libPaths(c(snowball$installation.path, .libPaths()))
-            sapply(snowball$pkg,loadNamespace)
-          
-          
-            } else {
-    
-        #Else, run install snowball which will install and then do the paths and load namespaced within the final loop
-            install.snowball(snowball,       date=date,      force.install = force.install, force.source = force.source, quiet.install = quiet.install)
-             }
-
-    
-      #8 Attach it
+    install.snowball(snowball,       date=date,      force.install = force.install, force.source = force.source, quiet.install = quiet.install)
+  
+ 
+  #8 Attach it
         base.library(pkg, character.only=TRUE)
-
 
       #and add it to the libpath       
        .libPaths(c(.libPaths(), snowball$installation.path[nrow(snowball)]))
-   
-       
-
+      
   #9 Verify (check target is attached and full snowball pkg_vrs is loaded or in libpath)
         verified <- verify.snowball.loaded(snowball, ignore.deps)  
+ 
       
-
-
   #10 If verified and no ignore deps used, save snowball
      if (verified==TRUE) { 
      
@@ -91,11 +68,9 @@
 							snowball_file <- paste0(pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
 							snowball_path <- file.path(snowball_dir, snowball_file)
 					  
-				   
+					   
 						if (!file.exists(snowball_path)) {
 						  saveRDS(snowball, snowball_path, version = 2)
-						  
-
 				} #End if snowball exists
      } #End if verified         
 
@@ -103,8 +78,6 @@
       if (verified==FALSE) {
         if (file.exists(snowball_path)) file.remove(snowball_path)
       }
-
-
-
+     
   } #End of groundhog.library.single() function
 
