@@ -51,8 +51,8 @@
       #3.2 Counts of mismatches
           snowball.match <- snowball$pkg_vrs %in% active$pkg_vrs  | snowball$pkg %in% base_pkg() | snowball$pkg %in% ignore.deps
           
-            #There is an or stateent so taht base packages are not checked against available ones becuase
-            #Those have their own library structure
+            #There is an or statement so that base packages are not checked against available ones because
+            #those have their own library structure
           
           n.mismatch <- sum (!snowball.match) 
           n <- nrow(snowball)
@@ -82,8 +82,8 @@
   #12 Message on base pkg
           
           if (pkg %in% base_pkg()) {
-            message("Note: the package '", pkg, "' is part of base R.\n",
-              "The version included in base R is always loaded, regardless of the date entered.")
+               message1("Note: '", pkg, "' is included with R-" , getRversion() , ".")
+               message1("That version is loaded regardless of date entered.")
           }
 							
   
