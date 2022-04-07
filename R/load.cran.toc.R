@@ -38,11 +38,11 @@ load.cran.toc <- function(update.toc = FALSE) {
             
             if ((in.path==FALSE & in.pkg==FALSE) | update.toc==TRUE) {
             #Download groundhog
-                dl <- try(download.file(paste0(groundhogR.url, rdsk), file.path(gf, rdsk) , mode = "wb", method = "libcurl" ))
+                dl <- try(utils::download.file(paste0(groundhogR.url, rdsk), file.path(gf, rdsk) , mode = "wb", method = "libcurl" ))
             
                 #If download failed, try  wasabi's backup
                   if (dl!=0) {
-                      dl2 <- try(download.file(paste0(wasabi.url, rdsk), file.path(gf, rdsk), mode = "wb", method = "libcurl" ))
+                      dl2 <- try(utils::download.file(paste0(wasabi.url, rdsk), file.path(gf, rdsk), mode = "wb", method = "libcurl" ))
                       if (dl2!=0) stop('Error.\nGroundhog says: could not download "', rdsk, "'")
                     }
               } #End case 2
