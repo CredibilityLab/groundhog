@@ -442,7 +442,7 @@ ignore.deps_default <- function() {
     
           #Save cookie
             if (!file.exists(dirname(msg.cookie.path))) dir.create(dirname(msg.cookie.path))
-            utils::write.csv(Sys.time() , msg.cookie.path)
+            write.csv(Sys.time() , msg.cookie.path)
             
           #Show the warning
             message2()

@@ -53,7 +53,7 @@
 #'
   groundhog.library <- function(pkg, date,  quiet.install = TRUE,  include.suggests = FALSE,  
                             ignore.deps=c(), force.source = FALSE,
-                            force.install = FALSE, tolerate.R.version = "")
+                            force.install = FALSE, tolerate.R.version = "" )
     {
     
 
@@ -132,11 +132,11 @@
         
           }
         
-    
-    
-  
         
-      
+    
+  #8 Empty temp folder if it has any packages installed with install.package()
+        #move_temp.pkg() #Utils.R, function #30 - moves any files from temporary path to default path 
+        
         
   #9 Loop running groundhog
         for (pkgk in pkg) {
@@ -145,7 +145,7 @@
                 if (basename(pkgk)!=pkgk) cran <- FALSE
                 
               #Process based on remote
-                  if (cran==TRUE)   groundhog.library.single       (pkgk, date, quiet.install ,  include.suggests ,  ignore.deps, force.source , force.install)
+                  if (cran==TRUE)   groundhog.library.single(pkgk, date, quiet.install ,  include.suggests ,  ignore.deps, force.source , force.install)
                   if (cran==FALSE)  groundhog.library.single.remote(pkgk, date, quiet.install ,  include.suggests ,  ignore.deps, force.source , force.install)
                 }
   

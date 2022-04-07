@@ -1,5 +1,5 @@
 
-  groundhog.library.single <-  function(pkg, date,   quiet.install ,  include.suggests , ignore.deps, force.source , force.install )
+  groundhog.library.single <-  function(pkg, date,  quiet.install ,  include.suggests , ignore.deps, force.source , force.install )
   { 
     
         
@@ -61,7 +61,7 @@
             } else {
     
         #Else, run install snowball which will install and then do the paths and load namespaced within the final loop
-            install.snowball(snowball,       date=date,  force.install = force.install, force.source = force.source, quiet.install = quiet.install)
+            install.snowball(snowball,       date=date,      force.install = force.install, force.source = force.source, quiet.install = quiet.install)
              }
 
     
