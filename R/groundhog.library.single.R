@@ -43,7 +43,19 @@
     
     
   #7 Install packages if needed, add and groundhog libpaths for each package
-    install.snowball(snowball,       date=date,      force.install = force.install, force.source = force.source, quiet.install = quiet.install)
+      
+    
+    #If all installed, load directly 
+      if (all(snowball$installed)) {
+            .libPaths(c(snowball$installation.path, .libPaths()))
+            sapply(snowball$pkg,loadNamespace)
+          
+          
+            } else {
+              
+    #Else, run install snowball which will install and then do the paths and load namespaced within the final loop
+            install.snowball(snowball,       date=date,      force.install = force.install, force.source = force.source, quiet.install = quiet.install)
+             }
   
  
   #8 Attach it
