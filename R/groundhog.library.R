@@ -55,8 +55,7 @@
                             ignore.deps=c(), force.source = FALSE,
                             force.install = FALSE, tolerate.R.version = "" )
     {
-    
-
+     
   #1) Validation     
     #1.0 if ignore deps is not empty, check that it is already loaded
        if (length(ignore.deps)>0) {
@@ -80,11 +79,10 @@
         if (is.null(.pkgenv[['cran.toc']])) load.cran.toc()
        
         
-    #1.3) #Clear libpath to prevent loading dependencies from local library
-          .pkgenv[["orig_lib_paths"]] <- .libPaths()
-
-          #.libPaths("")    
-    
+    #1.3) Save default libpaths to return to it after exiting
+        if (!exists("orig_lib_paths",envir=.pkgenv)) {
+              .pkgenv[["orig_lib_paths"]] <- .libPaths()
+           }
 
     #1.4) Verify options are T/F (utils.R - function 27)
           validate.TF(include.suggests)
@@ -98,9 +96,9 @@
                     #Read cran toc again to undo any changes with remote
                        .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
                     
-                       
                     #Return libpath
                       .libPaths(.pkgenv[["orig_lib_paths"]])
+					            
                     })
             
     #2.5 Drop pre-existing libpaths        
