@@ -1,4 +1,4 @@
-#' Load CRAN packages, and their dependencies, as current on given date 
+#' Load, and install when needed, CRAN, GitHub, and GitLab packages as current on given date 
 #' 
 #' Groundhog maintains a separate local package library where it stores 
 #' version-controlled packages, with multiple versions of the same package saved side-by-side. 
