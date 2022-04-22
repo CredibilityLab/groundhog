@@ -284,6 +284,6 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
              
   #9 Return
      invisible(list(packages.needed=conflict.needed, packages.active=conflict.active))
-     #exit()
+     exit()
   } # End if some conflict found
 } # End function
