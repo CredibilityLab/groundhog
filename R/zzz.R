@@ -70,6 +70,18 @@
           packageStartupMessage ("Loaded 'groundhog' (version:",packageVersion('groundhog'),  ") using R-" ,r.using.full) 
           packageStartupMessage ("Tips and troubleshooting: https://groundhogR.com")
         
+        
+        #If library packages are disabled announce it
+            local_library <- .libPaths()[1]
+            all_packages <- list.files(local_library)
+            disabled <- regexpr('_DISABLED', all_packages) >0
+            disabled_packages <- all_packages[disabled]
+            n <- length(disabled_packages)
+            if (n>0) packageStartupMessage("\nREMINDER: you have disabled ",n," packages from your local\n",
+                                          "(non-groundhog) library. Run 'enable.local()' to re-enable them.")
+    
+
+          
     #2.2 check for update
     # isTRUE() is necessary here because this will return logical(0) if the pkg
     # is not on CRAN, or if working offline (current.packages is NULL in this case).

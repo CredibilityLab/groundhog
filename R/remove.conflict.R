@@ -33,15 +33,17 @@
                   uninstalled.conflicts <- readRDS(file_path)
               }
             #Add new uninstalled package, if the uninstalled package is not already in the data.base of uninstalled packages
-              if (!remove.lib %in% uninstalled.conflicts$lib.loc) {
-                  uninstalled.conflicts <- rbind(uninstalled.conflicts, new.uninstall.conflicts)
-                  }
+              add_row <- !new.uninstall.conflicts$lib.loc %in% uninstalled.conflicts$lib.loc              #indicator this is a new uninstalled pkg
+              uninstalled.conflicts <- rbind(uninstalled.conflicts, new.uninstall.conflicts[add_row,])    #add pkg name
+               
+            #Remove repeats
+               
               
             #Confirmation
               message2()
               message1(
                     "Type OK to uninstall the following packages from your local non-groundhog library:",
-                    paste0(new.uninstall.conflicts$Package,sep=" ")
+                    paste0(new.uninstall.conflicts$Package,collapse=", ")
                       )
               text.answer <-readline(prompt = "Type OK to proceed, anything else to stop >")
               if (tolower(text.answer)!="ok") {
@@ -57,7 +59,7 @@
               message2()
               message1(
                     "Uninstalling the following packages from your non-groundhog library:\n",
-                    paste0(remove.pkg, sep=' '),
+                    paste0(remove.pkg, collapse=', '),
                     "\n\n",
                     "Recall that you can reinstall all packages uninstalled this way with: 'groundhog::reinstalled.conflicts()'\n\n",
                     "You will need to restart the R session for the uninstallation to take effect\n",
