@@ -21,30 +21,40 @@
 #Function 1 - Disable
     disable.local <- function() {
      
-      # Find current default path
+      #1 Find current default path
          local_library <- .libPaths()[1]
          
-      #Get all package and file names
+      #2 Get all package and file names
          all_packages <- list.files(local_library)
        
-      #Drop those already  disabled 
-         disabled <- regexpr('_DISABLED', all_packages) >0
+          
+      #3 See if the new name, dropping _DISABLED, is already available
+            duplicate <- paste0(all_packages,"_DISABLED") %in% all_packages
+            
+      #4 Delete a package if it has an existing  disabled version already
+            unlink(file.path(local_library,all_packages[duplicate]), recursive = TRUE)
+        
+      #5 Drop from those already  disabled 
+          all_packages <- all_packages[!duplicate]
+            
+         disabled  <- regexpr('_DISABLED', all_packages) >0 #this pkg is disabled
+
          all_packages <- all_packages[!disabled]
          n <- length(all_packages) - 1
       
-      #If there are pkgs to be disabled
+      #6 If there are pkgs to be disabled
         if (n>0)
           {
       
-      #Drop groundhog
+      #7 Drop groundhog
           all_but_groundhog <- all_packages [all_packages != "groundhog"]
                                                  
-       #Disable them
+       #8 Disable them
           disabled <- file.rename(file.path(local_library, all_but_groundhog) , 
                             file.path(local_library, paste0(all_but_groundhog,"_DISABLED")))
           
            
-      #7 Confirm it worked
+      #Confirm it worked
             #Get all package and file names
               all_packages <- list.files(local_library)
           
@@ -57,7 +67,7 @@
           if (n.left>0)  message1("groundhog says: " , n-n.left, " (out of ",n," total) packages in the local library, '",local_library,"', have been disabled")
         
                 
-      #8 early return  
+      #Early return  
           return(invisible(local_library))
               
       } #End if more than 0 packages
@@ -66,7 +76,7 @@
       #9 If only 1 pkg, just message
              if (n ==0)
                 {
-                message1("groundhog says: all packages in the local library, '", local_library, "', are already disabled.")
+                message1("groundhog says:\nall packages in the local library, '", local_library, "', are already disabled.")
                 return(invisible(local_library))  
               } #End if only groundhog is left
 
@@ -104,20 +114,29 @@
         }
     
     #5 enable any disabled packages
-       #5.1 Remake names without  _DISABLED in tjhem
-            enabled_packages<- gsub("_DISABLED", "", disabled_packages)
+       #5.1 Remake names without  _DISABLED in them
+            disabled_packages_new.name <- gsub("_DISABLED", "", disabled_packages)
         
-       #5.2 Rename files
-           enabled <- file.rename(file.path(local_library, disabled_packages) , 
-                                  file.path(local_library, enabled_packages))
-          n.enabled <- length(enabled)
+       #5.2 See if the new name, dropping _DISABLED, is already available
+            duplicate <- disabled_packages_new.name %in% all_packages
+            n.dup <- sum(duplicate)
+       #5.3 Delete the disabled version if the enabled version already exists
+            unlink(file.path(local_library, disabled_packages[duplicate]), recursive = TRUE)
+       
+            
+       #5.4 Rename remaining files
+            enabled <- file.rename(file.path(local_library, disabled_packages[!duplicate]) , 
+                                   file.path(local_library, disabled_packages_new.name[!duplicate]))
+           n.enabled <- length(enabled)
      
               
     #3.5 success
-         if (n.enabled>0)   message1(n," packages in the local library, '",local_library,"' were re-enabled.")
-         if (n.enabled==0)  message ("Somethign went wrong. No package was enabled in the local library.",
-                                     "\nVisit https://groundhogr.com/troubleshooting for help")
-
+         message1(n.enabled," packages in the local library, '",local_library,"', were re-enabled.")
+         if (n.dup>0) {
+        message("note: you had ",n.dup, " package(s) which had been disabled, but had then been re-installed.\n",
+                "Because an enabled version already existed, the disabled version(s) were deleted rather than enabled.")
+         } 
+          
          return(invisible(TRUE))  
 
   }
