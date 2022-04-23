@@ -1,4 +1,4 @@
-#' Avoid package version conflicts by temporarily disabling packages in the local (non-groundhog) library
+#' Disable all packages in your local (non-groundhog) library to avoid conflicts when loading via groundhog.library()
 #' 
 #' To avoid version conflicts between the version of the package `groundhog` is trying
 #' to load, and the version R Studio loads automatically from the local library, you can
@@ -86,7 +86,7 @@
 
     
     
-#' Avoid package version conflicts by temporarily disabling packages in the local (non-groundhog) library
+#' Re-enable previously disabled packages in your local (non-groundhog) library
 #' 
 #' This function reverses the actions taken by `disable.local()`
 #' @seealso [disable.local()]
@@ -133,9 +133,12 @@
     #3.5 success
          message1(n.enabled," packages in the local library, '",local_library,"', were re-enabled.")
          if (n.dup>0) {
-        message("note: you had ",n.dup, " package(s) which had been disabled, but had then been re-installed.\n",
-                "Because an enabled version already existed, the disabled version(s) were deleted rather than enabled.")
-         } 
+        #message("note: you had ",n.dup, " package(s) which had been disabled, but had then been re-installed.\n",
+        #        "Because an enabled version already existed, the disabled version(s) were deleted rather than enabled.")
+        
+        #too verbose, not really needed
+           
+            } 
           
          return(invisible(TRUE))  
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/disable.local.R
 \name{enable.local}
 \alias{enable.local}
-\title{Avoid package version conflicts by temporarily disabling packages in the local (non-groundhog) library}
+\title{Re-enable previously disabled packages in your local (non-groundhog) library}
 \usage{
 enable.local()
 }

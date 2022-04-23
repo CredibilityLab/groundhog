@@ -2,7 +2,7 @@
 % Please edit documentation in R/disable.local.R
 \name{disable.local}
 \alias{disable.local}
-\title{Avoid package version conflicts by temporarily disabling packages in the local (non-groundhog) library}
+\title{Disable all packages in your local (non-groundhog) library to avoid conflicts when loading via groundhog.library()}
 \usage{
 disable.local()
 }
