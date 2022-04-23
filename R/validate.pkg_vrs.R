@@ -35,7 +35,7 @@
         
   #3 Early return if already attached
             if (pkg_vrs %in% attached.pkg_vrs) {
-                  message1("groundhog says: the package you requested ('", pkg_vrs, "') is already attached.")
+                  message1("The package '", pkg_vrs, "' was already attached.")
                   return('already_attached')  
             }
                 
