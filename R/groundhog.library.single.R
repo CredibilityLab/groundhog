@@ -8,8 +8,8 @@
   #1 Get pkg_vrs
       vrs     <- get.version(pkg, date)
       pkg_vrs <- paste0(pkg, "_", vrs)
+
   
-      
   #2 Validate pkg
       validation<-validate.pkg_vrs(pkg, vrs, date, ignore.deps)
       if (validation=='already_attached') return(TRUE)
@@ -83,7 +83,23 @@
 					   
 						if (!file.exists(snowball_path)) {
 						  saveRDS(snowball, snowball_path, version = 2)
-				} #End if snowball exists
+						  } #End if snowball exists
+							
+							
+				#10.3 Localize pkgs in the snowball 
+					localizable <- c('foreach','doParallel','iterators')
+					snowball.localizable <- snowball[snowball$pkg %in% localizable,]
+				  n.local <-nrow(snowball.localizable)	
+
+          if (n.local>0)
+          {
+					for (k in 1:n.local)
+					  {
+					  localize.pkg(snowball.localizable$pkg_vrs[k])
+
+					  } #End for
+          }   #End if
+							
      } #End if verified         
 
   #11 If not verified, delete snowball
