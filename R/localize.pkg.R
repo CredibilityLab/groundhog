@@ -39,7 +39,7 @@
                   recursive = TRUE)          #include all files
         
      
-      message1("groundhog says: copied  '",pkg_vrs, "' to local (non-groundhog) folder.")
+      message1("Copied  '",pkg_vrs, "' to local (non-groundhog) folder.")
     
   }
   

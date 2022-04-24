@@ -65,8 +65,9 @@
       
           if (n.left==0) message1("groundhog says: " , n, " packages in the local library, '",local_library,"', have been disabled")
           if (n.left>0)  message1("groundhog says: " , n-n.left, " (out of ",n," total) packages in the local library, '",local_library,"', have been disabled")
-        
-                
+          message("\n   -> You may want to restart your R session now (in R Studio: CTRL/CMD-SHIFT-F10).")
+          message("                     Then run `library('groundhog')` again.")
+
       #Early return  
           return(invisible(local_library))
               
