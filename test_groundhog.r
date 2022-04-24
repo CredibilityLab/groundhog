@@ -1,10 +1,11 @@
 # {groundhog}  tester
 #
-#This version : 2021 09 04 
-#install.packages("http://groundhogr.com/groundhog_1.4.0.9009.tar.gz",repos=NULL,type='source', method='libcurl') #change this line for the current development version
-#(note, this testing version, 1.4.0.9001  has not yet been created, it's the next to be used)
-#To play around with code below, use the version on CRAN v1.4.0: install.packages('groundhog')
+#This version : 2022 04 24
 
+#Install most recent version of groundhog
+  remotes::install_github("CredibilityLab/groundhog")
+
+  
 ######################################################################################
 #INTRODUCTION
 # Groundhog testing is  not automatized because an R session needs to be restarted 
@@ -28,8 +29,8 @@
 
     test.day <-'2021-09-04'
 
-    
-    set.groundhog.folder('c:/dropbox/groundhog_folder/temp8')
+    library('groundhog')
+    set.groundhog.folder('c:/temp_testing_groundhog')
 #Set 0 - various forms of calling packages to be loaded
 
   #Single package, with and without quotes
@@ -70,6 +71,8 @@
     groundhog.library('pwr',  test.day) #Default error ctrl-shift-f10
     groundhog.library('pwr',  test.day) #2nd time, offer to uninstall, accept it and see if it works
     
+    disable.local()
+    sessionInfo()
     see.unistalled.conflicts()
     reinstall.conflicts()
     
