@@ -160,12 +160,12 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
         # If at least one of them can be removed
                 if (sum(remove.set)>0 )  {
                    message1("It's likely the packages creating the conflicts are being loaded automatically.\n",
-                          "\n-->  A simple solution: run  `disable.local()`\n",
+                          "\n-->  A simple solution: run  `disable.packages()`\n",
                 				  "\n  This will disable all packages in your local (non-groundhog) library.\n"  ,
                 				  "  If at any time you want to go back to using those packages (e.g., using `library()`),\n",
                 				  "  you just run `enable.local()` and all packages will instantaneously be available again.\n\n",
                 				  "  For other solutions see https://groundohgr.com/conflicts")
-                  message("\nAgain, the simple solution is `disable.local()`")
+                  message("\nAgain, the simple solution is `disable.packages()`")
                 }
                       
            
