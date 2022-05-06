@@ -19,8 +19,9 @@
  
 
 
-  install.snowball=function(snowball, date, force.install = FALSE, force.source = FALSE, quiet.install = TRUE) 
-    {
+  install.snowball=function(snowball, date, force.install = FALSE, 
+                            force.source = FALSE, quiet.install = TRUE,
+                            install.only=FALSE)     {
    
     #0 Check if MRAN is down
       #Assume not
@@ -467,18 +468,13 @@
                 
               #Install it
                   remotes::install_git(clone_path,  dependencies = FALSE , lib=snowball$installation.path[k], ref=snowball$sha[k], INSTALL_opts = '--no-lock')
-
                      #ref is the sha indicating which version is installed
-               
-                
-               
-              
             }
                 
-          #Add the one that was just installed to the .libPath()
+        #6 Add the one that was just installed to the .libPath()
             .libPaths(c(snowball$installation.path[k] , .libPaths()))
           
-          #Verify package exists (if not base)
+        #7 Verify package exists (if not base)
               if (!snowball$pkg[k] %in% base_pkg())
               {
                 #Get available packages in this subfolder of groundhog.folder() with the path to package
@@ -491,13 +487,14 @@
                 }
               }
               
-          #Load it 
+        #8 Load the package
+           if (install.only==FALSE) {
              loadNamespace(package=snowball$pkg[k], lib.loc =snowball$installation.path)
-                
+             .pkgenv[['groundhog_loaded_pkgs']] <- c(.pkgenv[['groundhog_loaded_pkgs']],snowball$pkg_vrs[k]
+           }
+            
       } #End loop over snowball        
           
-          
-
       
 
   } #end of function

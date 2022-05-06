@@ -18,7 +18,9 @@
 .onLoad <- function(libname, pkgname) {
   
     .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
-  
+    .pkgenv[['default_libpath']] <-  .libPaths()
+    .pkgenv[['groundhog_loaded_pkgs']] <- c()
+
     
     } #End of onLoad
 
@@ -72,14 +74,15 @@
         
         
         #If library packages are disabled announce it
-            local_library <- .libPaths()[1]
-            all_packages <- list.files(local_library)
-            disabled <- regexpr('_DISABLED', all_packages) >0
-            disabled_packages <- all_packages[disabled]
-            n <- length(disabled_packages)
-            if (n>0) packageStartupMessage("\nREMINDER: you have disabled ",n," packages from your local\n",
-                                          "(non-groundhog) library. Run 'enable.local()' to re-enable them.")
-    
+            # local_library <- .libPaths()[1]
+            # all_packages <- list.files(local_library)
+            # disabled <- regexpr('_DISABLED', all_packages) >0
+            # disabled_packages <- all_packages[disabled]
+            # n <- length(disabled_packages)
+            # if (n>0) packageStartupMessage("\nREMINDER: you previously disabled ",n," packages, probably in order to avoid conflicts\n",
+            #                                "when loading packages 'groundhog.library()'\n",
+            #                                "While not recommended, if you want to re-enable those packages, run 'enable.packages()'")
+            # 
 
           
     #2.2 check for update
