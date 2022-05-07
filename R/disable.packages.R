@@ -29,11 +29,12 @@
 
 
 #Function 1 - Disable
-    disable.packages <- function(packages) {
+    disable.packages <- function(packages , disable.quietly=FALSE) {
     
       #1 Get packages in all paths except last, which is the base R path
-         local_library <- .libPaths()[1:(length(.libPaths)-1)]
-      
+         local_library <-   .pkgenv[['default_libpath']][ -length(.pkgenv[['default_libpath']])]
+         
+
       #2 Set of packages
           pkg_current   <- list.files(local_library)
           pkg <- gsub("_DISABLED", "", pkg_current)
@@ -45,8 +46,7 @@
          packages_df <- all_df[all_df$pkg!="groundhog",]
         
       #3.5 if all packages are disabled end here
-         if (sum(packages_df$disabled) == nrow(packages_df))
-          {
+         if (sum(packages_df$disabled) == nrow(packages_df) && disable.quietly==FALSE) {
            message1("All ",nrow(packages_df)," user-installed packages are already disabled.")
            return(invisible(TRUE))
           }
@@ -55,25 +55,25 @@
       #4 If packages is specified, subset
           if (!missing(packages)) {
           #4.1 Subset
-            packages_df <- packages_df[packages_df$pkg %in% packages,]
+            packages_df <- packages_df[packages_df$pkg %in% packages & packages_df$disabled==FALSE,]
           
-          #4.2 Warnings
+          #4.2 Not included
+            if (nrow(packages_df)==0) {
+              #Say not available
+                if (disable.quietly==FALSE ) {
+                  message1("The requested package(s) are not currently enabled ")
+                }
+              
+              return(FALSE)
+              }
             
-             #4.2.1 Groundhog is to be excluded
-                  if ('groundhog' %in% packages) {
-                  message("Warning: You requested 'groundhog' to be disabled. Request respectfully denied.")
-                  }
+          #4.3 Warnings
             
-              #4.2.2 Not installed
-                  fixed.packages <- list.files(.libPaths()[length(.libPaths())])  #packages in the last element of .libPaths
-
-                  not.installed <- packages[(!packages %in% all_df$pkg)]
-                  if (length(not.installed)>0)
-                  {
-                  message("Warning: these packages were not found among user-installed packages, so they cannot be disabled: ",
-                          paste0('"', not.installed, sep='"',collapse=', '))  
-                    
+             #4.3.1 Groundhog is to be excluded
+                  if ('groundhog' %in% packages && disable.quietly==FALSE) {
+                    message("Warning: You requested 'groundhog' to be disabled. Request respectfully denied.")
                   }
+                  
           } #End of #4
       
          
@@ -81,11 +81,11 @@
          #5.1 See if a package to be disabled already has a disabled version
             disabled_has.enabled.version <- packages_df$disabled==TRUE & (packages_df$pkg %in% packages_df$pkg[packages_df$disabled==FALSE])
               
-        #5.2 Delete the file
+        #5.2 Delete the enabled version
               unlink(packages_df$path[disabled_has.enabled.version], recursive = TRUE)
         
-        #5.3  Drop from database
-          packages_df <- packages_df[!disabled_has.enabled.version,]
+        #5.3 Drop from database
+             packages_df <- packages_df[!disabled_has.enabled.version,]
           
       #6 Keep only packages that still need to be disabled
           packages_df <- packages_df[packages_df$disabled==FALSE,]
@@ -95,12 +95,15 @@
           
       #7 Message with success
           n=sum(disabled)
+          
+          if (disable.quietly==FALSE)
+          {
           if (n==1) message1("groundhog says: 1 package has been disabled")
           if (n!=1) message1("groundhog says: ",n," packages have been disabled")
 
           message("\n   -> You should restart your R session now (in R Studio: CTRL/CMD-SHIFT-F10).")
           message("                     Then run `library('groundhog')` again.")
-
+          }
       #Early return  
           return(invisible(TRUE))
        
@@ -119,7 +122,7 @@
      enable.packages <- function(packages) {
     
       #1 Get packages in all paths except last, which is the base R path
-         local_library <- .libPaths()[1:(length(.libPaths)-1)]
+         local_library <-   .pkgenv[['default_libpath']][1:(length(.pkgenv[['default_libpath']])-1)]
       
       #2 Set of packages
           pkg_current   <- list.files(local_library)
@@ -139,43 +142,32 @@
           }
            
          
-      #4 If packages is specified, subset
-          if (!missing(packages)) {
-          #4.1 Subset
-            packages_df <- packages_df[packages_df$pkg %in% packages,]
-          
-          #4.2 Warnings
-            
-             #4.2.1 Groundhog is to be excluded
-                  if ('groundhog' %in% packages) {
-                  message("Warning: You requested 'groundhog' to be enabled, request respectfully ignored.")
-                  }
-            
-              #4.2.2 Not installed
-                  fixed.packages <- list.files(.libPaths()[length(.libPaths())])  #packages in the last element of .libPaths
-
-                  not.installed <- packages[(!packages %in% all_df$pkg)]
-                  if (length(not.installed)>0)
-                  {
-                  message("Warning: these packages were not found among user-installed packages, so they cannot be enabled: ",
-                          paste0('"', not.installed, sep='"',collapse=', '))  
-                    
-                  }
-          } #End of #4
-      
+    
+  
+     #5 if packages are both enabeld and disabled delete the enabled ones
          
-      #5 Avoid name collisions
-         #5.1 See if a package to be enabled already has an enabled version
+         
+              
+     #5 Avoid name collisions
+         #5.1 See if an already enabled  package  has a disabled version
             disabled_has.enabled.version <- packages_df$disabled==TRUE & (packages_df$pkg %in% packages_df$pkg[packages_df$disabled==FALSE])
               
-        #5.2 Delete the disabled file
-            unlink(packages_df$path[disabled_has.enabled.version], recursive = TRUE)
+        #5.2 Delete the enabled version
+              unlink(packages_df$path[disabled_has.enabled.version], recursive = TRUE)
         
-        #5.3  Drop from database
-            packages_df <- packages_df[!disabled_has.enabled.version,]
+        #5.3 Drop from database
+             packages_df <- packages_df[!disabled_has.enabled.version,]
           
-      #6 Keep only packages that still need to be enabled
-            packages_df <- packages_df[packages_df$disabled==TRUE,]
+      #6 Keep only packages that still need to be disabled
+          packages_df <- packages_df[packages_df$disabled==FALSE,]
+         
+      #6 If there are pkgs to be disabled
+          disabled <- file.rename(packages_df$path , paste0(packages_df$path,"_DISABLED"))
+          
+         
+         
+         
+         
          
       #7 If there are pkgs to be enabled, go for it
           enabled <- file.rename(packages_df$path , 
