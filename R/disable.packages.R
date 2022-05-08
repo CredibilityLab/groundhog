@@ -6,13 +6,10 @@
 #' reversible, but if you rely on groundhog to load packages you may not need to ever reverse it.
 #' To re-enable all packages simply  run `enable.packages()`
 #' 
-#' @param packages (optional) character vector with name of packages to be disabled. If left blank,
-#' all user-installed packages are disabled.
 
 #'@examples
 #' \dontrun{
 #' disable.packages()
-#' disable.packages('dplyr')
 #' }
 #' @details
 #' Packages installed with `install.packages()` are saved in directories with the name of the package.
@@ -29,7 +26,7 @@
 
 
 #Function 1 - Disable
-    disable.packages <- function(packages , disable.quietly=FALSE) {
+    disable.packages <- function(disable.quietly=FALSE) {
     
       #1 Get packages in all paths except last, which is the base R path
          local_library <-   .pkgenv[['default_libpath']][ -length(.pkgenv[['default_libpath']])]
@@ -51,30 +48,15 @@
            return(invisible(TRUE))
           }
            
-         
-      #4 If packages is specified, subset
-          if (!missing(packages)) {
-          #4.1 Subset
-            packages_df <- packages_df[packages_df$pkg %in% packages & packages_df$disabled==FALSE,]
-          
-          #4.2 Not included
-            if (nrow(packages_df)==0) {
-              #Say not available
-                if (disable.quietly==FALSE ) {
-                  message1("The requested package(s) are not currently enabled ")
-                }
-              
-              return(FALSE)
-              }
+     
+     #4 Warnings
             
-          #4.3 Warnings
-            
-             #4.3.1 Groundhog is to be excluded
+          #4.1 Groundhog is to be excluded
                   if ('groundhog' %in% packages && disable.quietly==FALSE) {
                     message("Warning: You requested 'groundhog' to be disabled. Request respectfully denied.")
                   }
                   
-          } #End of #4
+            } #End of #4
       
          
       #5 Avoid name collisions
