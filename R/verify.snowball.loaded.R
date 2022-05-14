@@ -63,7 +63,7 @@
          
          if (n.mismatch>0) {
           message("WARNING\n",
-                  "The package '",pkg_vrs,"' depends on ", n, " other pacakges.\n",
+                  "The package '",pkg_vrs,"' depends on ", n, " other packages.\n",
                   "Groundhog should have obtained the versions of those packages as\n",
                   "available on the entered date. However, the final check identified that ", n.mismatch, "\n",
                   "of them were obtained for a version which does not match.\n",
