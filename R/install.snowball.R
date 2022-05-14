@@ -253,7 +253,7 @@
       #3.4 Unzip them 
         #Message
           if (j1 >  0) message2("groundhog says: found ",j1," packages in MRAN, will install them now.")
-          if (j1 == 0) message2("groundhog says: did not find any pacakges in MRAN")
+          if (j1 == 0) message2("groundhog says: did not find any packages in MRAN")
       
         #Reset counter
           j2 <- 0 
@@ -490,7 +490,7 @@
         #8 Load the package
            if (install.only==FALSE) {
              loadNamespace(package=snowball$pkg[k], lib.loc =snowball$installation.path)
-             .pkgenv[['groundhog_loaded_pkgs']] <- c(.pkgenv[['groundhog_loaded_pkgs']],snowball$pkg_vrs[k]
+             .pkgenv[['groundhog_loaded_pkgs']] <- c(.pkgenv[['groundhog_loaded_pkgs']] , snowball$pkg_vrs[k])
            }
             
       } #End loop over snowball        
