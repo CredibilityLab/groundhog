@@ -79,7 +79,7 @@
             "|   you either keep this date and switch to that version of R, or you keep \n",
             "|   the version of R you are using but switch the date to between\n",
             "|   '" , min.date , "' and '" , max.date , "'.\n|\n",
-            "|   You may bypass this R-version check by adding: `tolerate.R.version='",rv$r.using.full,"'\n",
+            "|   You may bypass this R-version check by adding: tolerate.R.version='",rv$r.using.full,"'\n",
             "|   as an option in your groundhog.library() call.\n",
             "|   Please enter 'OK' to confirm you have read this message.")
       answer<-infinite.prompt(txt,'ok')
