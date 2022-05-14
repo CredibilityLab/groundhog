@@ -17,11 +17,13 @@
 #Check support of colors? (legacy function perhaps)
 .onLoad <- function(libname, pkgname) {
   
+    #Setup pkg variable values
     .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
     .pkgenv[['default_libpath']] <-  .libPaths()
     .pkgenv[['groundhog_loaded_pkgs']] <- c()
 
-    
+   
+         
     } #End of onLoad
 
 
@@ -64,8 +66,6 @@
       #Load toc files
           load.cran.toc()    
 
-        
-
         #Report versions being used
           groundhog.version_using <- as.character(packageVersion("groundhog"))
           r.using.full= get.rversion() 
@@ -83,7 +83,11 @@
             #                                "when loading packages 'groundhog.library()'\n",
             #                                "While not recommended, if you want to re-enable those packages, run 'enable.packages()'")
             # 
-
+          
+      #Delete to be purged packages, if any (put here with disable.packages())
+            packages_df <- get.packages_df() #utils.R #Function 33
+            purge_df <- subset(packages_df, packages_df$purged==TRUE)
+            if (nrow(purge_df)>0) unlink(purge_df$path , recursive = TRUE)   
           
     #2.2 check for update
     # isTRUE() is necessary here because this will return logical(0) if the pkg
