@@ -1,5 +1,6 @@
 
-  groundhog.library.single <-  function(pkg, date,  quiet.install ,  include.suggests , ignore.deps, force.source , force.install )
+  groundhog.library.single <-  function(pkg, date,  quiet.install ,  
+                                include.suggests , ignore.deps, force.source , force.install )
   { 
     
         
@@ -31,7 +32,7 @@
       
       
   #5 CHECK FOR CONFLICT SNOWBALL <-> AVAILABLE PACKAGES
-      check.snowball.conflict(snowball, force.install,ignore.deps,date)  
+      check.snowball.conflict(snowball=snowball, force.install=force.install ,ignore.deps=ignore.deps, date=date)  
     
         
   #6 message if installation will be necessary
@@ -58,12 +59,12 @@
              }
   
  
-  #8 Attach it
-        base.library(pkg, character.only=TRUE)
-
+  #8 library() it
+      base.library(pkg, character.only=TRUE)
+  
       #and add it to the libpath       
-       .libPaths(c(.libPaths(), snowball$installation.path[nrow(snowball)]))
-      
+        .libPaths(c(.libPaths(), snowball$installation.path[nrow(snowball)]))
+
   #9 Verify (check target is attached and full snowball pkg_vrs is loaded or in libpath)
         verified <- verify.snowball.loaded(snowball, ignore.deps)  
  
@@ -86,8 +87,10 @@
 						  } #End if snowball exists
 							
 							
-				#10.3 Localize pkgs in the snowball 
+				#10.3 Localize special pkgs in the snowball 
+							
 					localizable <- c('foreach','doParallel','iterators')
+					
 					snowball.localizable <- snowball[snowball$pkg %in% localizable,]
 				  n.local <-nrow(snowball.localizable)	
 
