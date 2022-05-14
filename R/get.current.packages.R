@@ -27,7 +27,7 @@ get.current.packages <- function(type) {
         error = function(e) NULL)
 		
         if (is.null(current.packages)) {
-			#Make empty available pacakges if offline or if older version of R being used to current packages is not available.	
+			#Make empty available packages if offline or if older version of R being used to current packages is not available.	
 			current.packages <- data.frame(Package="", Version="")
 			
         }

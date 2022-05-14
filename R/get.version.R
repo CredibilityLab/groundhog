@@ -38,7 +38,7 @@ get.version <- function(pkg, date, patch = c("current")) {
           last.toc.date <- max(cran.toc$Published, na.rm = TRUE)
           if (date > last.toc.date) {
             exit(
-                "The index of CRAN pacakges ends on ", last.toc.date,
+                "The index of CRAN packages ends on ", last.toc.date,
                 " which is before the date you entered: ", date, ".\n"
                 )
             
