@@ -2,13 +2,9 @@
 % Please edit documentation in R/disable.packages.R
 \name{disable.packages}
 \alias{disable.packages}
-\title{Disable packages previously installed without groundhog to avoid conflicts when loading via groundhog}
+\title{Disable packages installed without groundhog, to avoid conflicts when loading via groundhog}
 \usage{
-disable.packages(packages)
-}
-\arguments{
-\item{packages}{(optional) character vector with name of packages to be disabled. If left blank,
-all user-installed packages are disabled.}
+disable.packages(disable.quietly = FALSE, skip.prompt = FALSE)
 }
 \description{
 To avoid version conflicts between the version of the package \code{groundhog} is trying
@@ -30,7 +26,6 @@ and they are again loadable by R Studio and by users with the \code{library()} c
 \examples{
 \dontrun{
 disable.packages()
-disable.packages('dplyr')
 }
 }
 \seealso{

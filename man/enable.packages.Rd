@@ -2,7 +2,7 @@
 % Please edit documentation in R/disable.packages.R
 \name{enable.packages}
 \alias{enable.packages}
-\title{Re-enable previously disabled packages in your local (non-groundhog) library}
+\title{Re-enable previously disabled packages in your non-groundhog library}
 \usage{
 enable.packages(packages)
 }
