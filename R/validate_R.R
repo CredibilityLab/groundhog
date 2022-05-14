@@ -6,27 +6,34 @@
     #1 Check R version
       rv <- r.version.check(date) # Get version of r being used and needed
     
-    #2 If using version of R too advance for groundhog
+    #2 If using version of R that is more advanced than most advanced in cran.toc.rds
       R.toc <- toc("R")
       if (package_version(max(R.toc$Version)) < package_version(rv$r.using.majmin))
           {
           #two days ago
             two.days.ago <- Sys.Date()-2
+            
           #update temporarily cran.toc.if needed
             max.date <- (max(.pkgenv[["cran.toc"]]$Published))
             if (max.date < two.days.ago) load.cran.toc(update.toc = TRUE)
-            rv <- r.version.check(date) 
+          
+          #get R version again  
+            rv <- r.version.check(date)
+            
+          #If version being used is newer than newest
             if (package_version(max(R.toc$Version)) < package_version(rv$r.using.majmin))
               {
               
             #Show message that R-dev is being temporarily added
-              msg_rdev <- paste0("The version of R you are using, 'R-" , rv$r.using.full, "', is not in the groundhog database of R releases.\n",
-                                "Assuming this is because you are using an R-dev version for testing purposes, the version 'R-" , rv$r.using.full, "'\n",
-                                "will be added to the local database as if it was an official version released 2 days ago.\n",
-                                "This temporary modification is undone when the R session is restarted.")
+              txt <- paste0("|IMPORTANT\n",
+                            "|   The version of R you are using, 'R-" , rv$r.using.full, "', is not included\n",
+                            "|   in groundhog's database of R releases. Assuming this is because you are using\n",
+                            "|   an R-dev version for testing purposes, the version 'R-" , rv$r.using.full, "'\n",
+                            "|   will be temporarily added to your local database as if it was released 2 days ago.\n",
+                            "|   This  modification will be undone when the R session is restarted.\n",
+                            "|   Type OK to confirm you read this message.")
               
-            #Show an ok prompt with function 28 in utils.R
-              prompt.ok(prompt_name='r_dev' , msg = msg_rdev, days_till_shown_again=1)
+                infinite.prompt(txt,'ok')
               
                               
            #Add r-dev to cran.toc
@@ -36,99 +43,49 @@
               } #End if version not in cran.toc even after update
             }   #End if version not in cran.toc before update
     
-    #3 Is date for a later major R? STOP
-
-    if ((package_version(rv$r.using.majmin) < package_version(rv$r.need.majmin)) &  rv$r.using.full!=tolerate.R.version) 
+    #3 If R needed does not match R using, and was not authorized
+      if (package_version(rv$r.using.majmin) != package_version(rv$r.need.majmin) &&  rv$r.using.full!=tolerate.R.version) 
       {
-      message2()
-      message(
-        "You are using R-", rv$r.using.full, " and the current R version for the date you entered:",
-        "'", date, "' was R-", rv$r.need.majmin, ".\n",
-        "It is recommended that you use the matching version of R, but you may bypass this error message\n",
-        "by adding: `tolerate.R.version='",rv$r.using.full,"'` as an option to your groundhog.library() call.",
-        "\n\n   ----------------- Package(s) NOT LOADED ----------------"
-      )
-      exit()
-    }
-    
         
-    #4 throw warning if using R that is too old, but explicitly allowing via command 
-    if ((package_version(rv$r.using.majmin) < package_version(rv$r.need.majmin)) & 
-        (rv$r.using.majmin==tolerate.R.version | rv$r.using.full==tolerate.R.version)) {
-          message2()
-          message(
-           "You are using R-", rv$r.using.full, " and the current R version for the data you entered:",
-           "'", date, "' was R-", rv$r.need.majmin, ".\n",
-           "Usually this results in an error and groundhog stops processing the request, but\n",
-           "you are receiving only a warning because you explicitly allowed version 'R-", tolerate.R.version, "'.\n"
-          )
-            
-            
-         }
+      #3.1 Find date range for R-using
+        #Subset of R.toc with current version   
+          R.toc.current <-subset(R.toc, as.numeric(regexpr(rv$r.using.majmin, R.toc$Version) )==1)
 
-        
-    
-    #5 Is date for a previous major R? Warn
-    
-      if (package_version(rv$r.using.majmin) > package_version(rv$r.need.majmin)) {
-          
-         #Path to text file to keep track if warning already shown
-            cookie_path <- paste0(get.groundhog.folder(),"/warning_r_mismatch.txt")
-        
-          #Path to full text of code submitted that we amay want to execute (code interrupted by prompt)
-            all.text_path <-paste0(get.groundhog.folder(),"/all_text_mismatch_r.txt")
-        
-            
-          #How long since last warning?
-            since_warning <- 31  #assume 30 minutes , i.e., show warnings
-            if (file.exists(cookie_path)) since_warning <- difftime(Sys.time(),file.info(cookie_path)$mtime,units='mins')
-			      
-          #If >24 show warnings
-          if (since_warning>30)
+        #To avoid breaking errors, if the version were not to be found, simply give a warnin
+          if (nrow(R.toc.current)==0)
           {
-          #Update cookie to indicate warning has been shown now
-            unlink(cookie_path)
-
-          #Show warning
-
-          message2()
-          message1(
-            "You are using R-", rv$r.using.full, ", but on ","'", date, "' the current version was R-", rv$r.need.majmin, ".\n",
-            "Old packages can take longer to install, and old code in general and old packages\n",
-            "in particular can give different results, or not run at all, in newer R versions.\n",
-            "You may want to either change the date you entered or the version of R you use.\n",
-            " - To change the date, choose something after '",get.r.majmin.release(),"'\n",
-            " - For instructions to run older versions of R (e.g. R-",rv$r.need.full, "), see http://groundhogr.com/many\n\n")
+            message('Warning: was not able to find dates for current version of R being used.')
+            return(FALSE)
+          }
           
-          #While loop for readline to avoid submitted code to be interpreted as the answer
-            len.answer <- 0
-            text <-''
-            j <- 1 #counter of times message is shown
-            while (strip.prompt(text)!="x" & strip.prompt(text)!="ok")  
-            {
-              prompt.text <- paste0("Type 'OK' to ignore this warning about the date entered, or type 'X' to stop >")
-              text <- readline(prompt.text)
-              if (strip.prompt(text) !="ok" & strip.prompt(text) != "x") {
-                    
-                  message(j , ") You answered: '", text , "'") 
-                  message("   To ensure you are actively answering, only 'OK' and 'X' are accepted as responses\n")
-                  j<-j+1 #Add to counter of msgs rejected
-                } #end if
-            } #End while
-          
+        #First and last date in that subset
+            min.date <- min(R.toc.current$Published)    
+            max.date <- max(R.toc.current$Published)
             
-          #If they press stop, don't load/install package
-            if (strip.prompt(text)=="x") {
-              message("You typed 'X'. Stopped.")
-              exit()
+        #If using the latest version of R, make max.date two days ago
+            if (max.date==max(R.toc$Published)) 
+              {
+              max.date <- Sys.Date() - 2
               } else {
-              message1("OK. We will continue. This warning will not be shown again within 30 minutes.\n")
-              write("1",cookie_path)
+        #Else, use the date of the next release (found as the lowest published date coming after the set for this version)
+               max.date <- min(R.toc$Published[R.toc$Published > max.date])-1
+              }
             
-              } #End else
-          } #Showed warnings
         
-          
+      txt <- paste0(
+            "|IMPORTANT\n",
+            "|   You are using R-", rv$r.using.full, ", but the version of R current for \n",
+            "|   the entered date, '", date, "', is R-", rv$r.need.majmin, ". It is recommended that\n",
+            "|   you either keep this date and switch to that version of R, or you keep \n",
+            "|   the version of R you are using but switch the date to between\n",
+            "|   '" , min.date , "' and '" , max.date , "'.\n|\n",
+            "|   You may bypass this R-version check by adding: `tolerate.R.version='",rv$r.using.full,"'\n",
+            "|   as an option in your groundhog.library() call.\n",
+            "|   Please enter 'OK' to confirm you have read this message.")
+      answer<-infinite.prompt(txt,'ok')
+      exit()
       }
+    
+   
       
-    }#End function
+    } #End function
