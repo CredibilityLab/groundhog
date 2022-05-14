@@ -1,4 +1,4 @@
-#' Disable packages previously installed without groundhog to avoid conflicts when loading via groundhog
+#' Disable packages installed without groundhog, to avoid conflicts when loading via groundhog
 #' 
 #' To avoid version conflicts between the version of the package `groundhog` is trying
 #' to load, and the version R Studio loads automatically from the local library, you can
@@ -26,66 +26,76 @@
 
 
 #Function 1 - Disable
-    disable.packages <- function(disable.quietly=FALSE) {
+    disable.packages <- function(disable.quietly=FALSE,skip.prompt=FALSE) {
     
-      #1 Get packages in all paths except last, which is the base R path
-         local_library <-   .pkgenv[['default_libpath']][ -length(.pkgenv[['default_libpath']])]
+       
+      #1 Set of packages installed locally
+          packages_df <- get.packages_df() #utils.R #Function 33
          
-
-      #2 Set of packages
-          pkg_current   <- list.files(local_library)
-          pkg <- gsub("_DISABLED", "", pkg_current)
-          path  <- list.files(local_library,full.names=TRUE)
-          disabled <- regexpr('_DISABLED', pkg_current) >0
-          all_df <-data.frame(pkg, pkg_current, path,disabled)
-          
-      #3 Start with all packages except 'groundhog'
-         packages_df <- all_df[all_df$pkg!="groundhog",]
-        
-      #3.5 if all packages are disabled end here
-         if (sum(packages_df$disabled) == nrow(packages_df) && disable.quietly==FALSE) {
-           message1("All ",nrow(packages_df)," user-installed packages are already disabled.")
+      #2 Count disabled
+              n.disabled <-sum(packages_df$disabled)
+              n.total    <- nrow(packages_df)
+              
+      #4 if all packages are disabled end here
+         if (n.disabled == n.total  && disable.quietly==FALSE) {
+           message1("All " , n.total , " user-installed packages are disabled.")
            return(invisible(TRUE))
           }
            
-     
-     #4 Warnings
-            
-          #4.1 Groundhog is to be excluded
-                  if ('groundhog' %in% packages && disable.quietly==FALSE) {
-                    message("Warning: You requested 'groundhog' to be disabled. Request respectfully denied.")
-                  }
-                  
-            } #End of #4
-      
-         
-      #5 Avoid name collisions
-         #5.1 See if a package to be disabled already has a disabled version
-            disabled_has.enabled.version <- packages_df$disabled==TRUE & (packages_df$pkg %in% packages_df$pkg[packages_df$disabled==FALSE])
+      #4.5 Warning if there already are disabled packages
+          if (n.disabled > 0)
+          {
+            txt<-paste0(
+                "|DECISION:\n",
+                "|   Groundhog says: You already had disabled some packages. \n",
+                "|   While those packages can be re-enabled with `enable.packages()`,\n",
+                "|   any additional packages you disable will be uninstalled\n",
+                "|   (you can always re-install them). Type 'OK' to continue and\n",
+                "|   uninstall the conflicting package(s), or 'x' to stop.")
+            answer<-infinite.prompt(txt,c('ok','x'))
+            if (answer=='x') return(invisible(FALSE))
+          }
+    
+      #5 rename files
+          enabled_df <- packages_df[packages_df$disabled==FALSE,]
+          old <- enabled_df$path
               
-        #5.2 Delete the enabled version
-              unlink(packages_df$path[disabled_has.enabled.version], recursive = TRUE)
-        
-        #5.3 Drop from database
-             packages_df <- packages_df[!disabled_has.enabled.version,]
+        #5.1 If there already R disabled packages _PURGE the new ones
+          purged = disabled = FALSE  #TF array with outcome
           
-      #6 Keep only packages that still need to be disabled
-          packages_df <- packages_df[packages_df$disabled==FALSE,]
-         
-      #6 If there are pkgs to be disabled
-          disabled <- file.rename(packages_df$path , paste0(packages_df$path,"_DISABLED"))
+          if (n.disabled >0) 
+            {
+              new <- paste0(enabled_df$path,"_PURGE")
+              purged   <- file.rename(old , new)
+            }
           
-      #7 Message with success
-          n=sum(disabled)
-          
+        #5.2 If there are no packages disabled, disable all the new ones 
+          if (n.disabled == 0) 
+            {
+              new <- paste0(enabled_df$path,"_DISABLED")
+              disabled   <- file.rename(old , new)
+            }
+    
+    
+      #6 Message with outcome
           if (disable.quietly==FALSE)
           {
+          n <- sum(disabled) + sum(purged)
           if (n==1) message1("groundhog says: 1 package has been disabled")
           if (n!=1) message1("groundhog says: ",n," packages have been disabled")
 
-          message("\n   -> You should restart your R session now (in R Studio: CTRL/CMD-SHIFT-F10).")
-          message("                     Then run `library('groundhog')` again.")
-          }
+        #Infinite prompt
+          if (skip.prompt==FALSE)
+          {
+            txt<-paste0("|IMPORTANT:\n",
+                "|   Groundhog says: to complete this process you must restart the R Session.\n",
+                "|   In R Studio: CMD/CTRL-SHFT-F10")
+          
+          infinite.prompt(txt,"stop")
+          }#End if skip prompt==FALSE
+          
+         
+          } #ENd if disable quietly
       #Early return  
           return(invisible(TRUE))
        
@@ -93,7 +103,7 @@
 
   
     
-#' Re-enable previously disabled packages in your local (non-groundhog) library
+#' Re-enable previously disabled packages in your non-groundhog library
 #' 
 #' This function reverses the actions taken by `disable.packages()`
 #' @seealso [disable.packages()]
@@ -104,62 +114,51 @@
      enable.packages <- function(packages) {
     
       #1 Get packages in all paths except last, which is the base R path
-         local_library <-   .pkgenv[['default_libpath']][1:(length(.pkgenv[['default_libpath']])-1)]
-      
-      #2 Set of packages
-          pkg_current   <- list.files(local_library)
-          pkg <- gsub("_DISABLED", "", pkg_current)
-          path  <- list.files(local_library,full.names=TRUE)
-          disabled <- regexpr('_DISABLED', pkg_current) >0
-          all_df <-data.frame(pkg, pkg_current, path,disabled)
-          
-      #3 Start with all packages except 'groundhog'
-         packages_df <- all_df[all_df$pkg!="groundhog",]
+        packages_df <- get.packages_df() #utils.R #Function 33
+
         
-      #3.5 if all packages are disabled end here
-         if (sum(packages_df$disabled) == 0)
+      #2 if no package is disabled, end here
+         n.total <- nrow(packages_df)
+         n.disabled <- sum(packages_df$disabled) 
+         n.purged   <- sum(packages_df$purged) 
+         if (n.disabled + n.purged== 0)
           {
            message1("All ",nrow(packages_df)," user-installed packages are already enabled.")
            return(invisible(TRUE))
           }
            
-         
-    
-  
-     #5 if packages are both enabeld and disabled delete the enabled ones
-         
-         
-              
-     #5 Avoid name collisions
-         #5.1 See if an already enabled  package  has a disabled version
-            disabled_has.enabled.version <- packages_df$disabled==TRUE & (packages_df$pkg %in% packages_df$pkg[packages_df$disabled==FALSE])
-              
-        #5.2 Delete the enabled version
-              unlink(packages_df$path[disabled_has.enabled.version], recursive = TRUE)
-        
-        #5.3 Drop from database
-             packages_df <- packages_df[!disabled_has.enabled.version,]
+      #3 purge new packages
+          enabled_df <- packages_df[packages_df$disabled==FALSE & packages_df$purged==FALSE,]
           
-      #6 Keep only packages that still need to be disabled
-          packages_df <- packages_df[packages_df$disabled==FALSE,]
-         
-      #6 If there are pkgs to be disabled
-          disabled <- file.rename(packages_df$path , paste0(packages_df$path,"_DISABLED"))
-          
-         
-         
-         
-         
-         
-      #7 If there are pkgs to be enabled, go for it
-          enabled <- file.rename(packages_df$path , 
-                                 file.path(dirname(packages_df$path), packages_df$pkg))  #Drop _DISABLED from name
-          
-      #8 Message with success
-          n=sum(enabled)
-          if (n==1) message1("groundhog says: 1 package has been enabled")
-          if (n!=1) message1("groundhog says: ",n," packages have been enabled")
+          if (nrow(enabled_df)>0) {
+            old <- enabled_df$path
+            new <- paste0(old,"_PURGE")
+            purged <- file.rename(old,new)
+          }
+       
+      #4 enable the disable 
 
+          #4.1 Subset of packges_df with disabled ones
+             disabled_df <- subset(packages_df, packages_df$disabled==TRUE)
+    
+          #4.2 Rename them all
+             old <- disabled_df$path 
+             new <- file.path(dirname(disabled_df$path), disabled_df$pkg)
+             enabled <- file.rename(old, new)   
+             
+      #5 Message with success
+            n <- sum(enabled)
+            if (n==1) message1("1 package has been enabled")
+            if (n!=1) message1(n," packages have been enabled")
+  
+            
+            txt<-paste0("|IMPORTANT:\n",
+                        "|   Groundhog says: to complete this process you must restart the R Session.\n",
+                        "|   In R Studio: CMD/CTRL-SHFT-F10\n")
+            infinite.prompt(txt,"stop")
+          
+            
+               
       #Early return  
           return(invisible(TRUE))
        
