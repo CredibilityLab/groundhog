@@ -1,24 +1,24 @@
 #This script has functions used throughout the package
 
-#1  get.pkg(), get.vsr()   : Extract package and version information from pkg_vrs
-#2  is.pkg_vrs.installed() : Is pkg_vrs installed (within same R-minor version)?
-#3  as.DateYMD             : Format Y-M-D as date
-#4  get.rdate()            : Date for R being used
-#5  get.rversion()         : Get R Version major:minor:patch
-#6  message1()             : regular font
-#7  message2()             : Bold
-#8  namedList()            : automatically name object in list 
-#9  quit.menu()            : prompt to quit call upon mismatch of dates
-#10 exit()                 : Stop message which does not say error
+#1  get.pkg(), get.vsr()     : Extract package and version information from pkg_vrs
+#2  is.pkg_vrs.installed()   : Is pkg_vrs installed (within same R-minor version)?
+#3  as.DateYMD               : Format Y-M-D as date
+#4  get.rdate()              : Date for R being used
+#5  get.rversion()           : Get R Version major:minor:patch
+#6  message1()               : regular font
+#7  message2()               : Bold
+#8  namedList()              : automatically name object in list 
+#9  quit.menu()              : prompt to quit call upon mismatch oR0f dates
+#10 exit()                   : Stop message which does not say error
 #11 get.available.mran.date: Available mran dates
-#12 base_pkg()             : Output vector with all base packages
-#13 ignore.deps_default()  :  Default packages to ignore conflicts with (but gives warning)
+#12 base_pkg()                : Output vector with all base packages
+#13 ignore.deps_default()     :  Default packages to ignore conflicts with (but gives warning)
 #14 Is this on R studio
-#15 Get major minor (but no patch) version of R
-#16 Get major minor AND patch
-#17 validate.date()  - validate date  
-#18 Clean up prompt answer, lowercase and no quotes
-#19 Verify file was download
+#15 get.r.majmin              : Get major minor (but no patch) version of R
+#16 get.r.majmin.release()    : Get major minor AND patch
+#17 validate.date()           : Validate date  
+#18 strip.prompt)_            : Clean up prompt answer, lowercase and no quotes
+#19 exit.if.download.failed() : Verify file was download
 #20 Check if lib is for github (possibly a legacy function)
 #21 Robust reading of text online : try_readlines ()
 #22 Turn dates to unix time
@@ -28,7 +28,10 @@
 #26 base.libary()           : Copy library() to use when finalizing loading a pkg
 #27 Validate.tf
 #28 Prompt with OK, saving a .txt file to suppress prompt within x days
-
+#31 pasteQC()  -  paste a vector separating elements by quots  c('a','b','c')-->  string: '"a","b","c"'
+#32 infinite.promopt() ask the same question until a valid answer is provided
+#33 get.packages_df  -  data.frame with installed packages in local library
+#34 sandwich.library() - turn a string containing library calls into a vector of pkg names
 ########################################################################
     
 
@@ -183,7 +186,9 @@ get.available.mran.date <- function(date0, date1) {
     
         
 #13 Default packages to ignore conflicts with (but gives warning)
-ignore.deps_default <- function() {
+  ignore.deps_default <- function() return(c())
+
+  ignore.deps_default____OLD <- function() {
   
   #Packages r-studio tends to load automatically
       Rstudio.deps <- c(
@@ -200,6 +205,7 @@ ignore.deps_default <- function() {
       ignore.deps <- c(Rstudio.deps, recommended.pkgs)
     
   #Return
+      ignore.deps<-c()
       return(ignore.deps)
            
     }
@@ -468,4 +474,66 @@ ignore.deps_default <- function() {
             #Turn list to data.frame
                   return(data.frame(row))
                 }
+    
+          
+
+
+#31 pasteQC
+    pasteQC<-function(x)
+      {
+      paste0("'", paste0(x ,collapse="', '"),"'")
+    }
+    
+    
+#32 infinite.prompt
+    
+    infinite.prompt <- function(text_msg, valid_answers)
+      {
+      answer=''
+      while (!tolower(answer) %in% valid_answers)
+      {
+        message (text_msg)
+        answer <-readline(prompt = "|   >")
+        } #end while
+        return(answer)
+    } #End prompt    
+
+    
+    
+#33 get.packages_df  -  data.frame with installed packages in local library
+    get.packages_df <- function()
+      {
+      local_library <-   .pkgenv[['default_libpath']][1:(length(.pkgenv[['default_libpath']])-1)]
+      pkg_current   <- list.files(local_library)
+      pkg <- gsub("_DISABLED", "", pkg_current)
+      pkg <- gsub("_PURGE", "", pkg)
+      path  <- list.files(local_library,full.names=TRUE)
+      disabled <- regexpr('_DISABLED', pkg_current) >0
+      purged <- regexpr('_PURGE', pkg_current) >0
+      all_df <-data.frame(pkg, pkg_current, path,disabled,purged)
+      packages_df <- all_df[all_df$pkg!="groundhog",]
+      return(packages_df)
+    }
+      
+    
+#34 sandwich.library() - turn a string containing library calls into a vector of pkg names
+    sandwich.library <- function(x) {
+      #1. Early return if 'library' not found
+      
+        #If x is a vector
+          if (length(x)>1) return(x)
+      
+        #If string does not contain library or require
+          if (as.numeric((regexpr('library\\(', x))==-1 & regexpr('require\\(', x))==-1) return(x)
+      
+      #2. Process assuming it does contain library or require otherwise 
+          x <- gsub("library\\(","",x)
+          x <- gsub("require\\(","",x)
+          x <- gsub("\\)","",x)
+          x <- gsub("'","",x)
+          x <- gsub("\n"," ",x)
+          x <- strsplit(x," ")[[1]]
+          x <- x[x!=""]
+          return(x)
+        } #ENd of function
     
