@@ -21,7 +21,8 @@
 
   install.snowball=function(snowball, date, force.install = FALSE, 
                             force.source = FALSE, quiet.install = TRUE,
-                            install.only=FALSE)     {
+                            install.only=FALSE, skip.remotes=FALSE, 
+                            recycle.files=FALSE)     {
    
     #0 Check if MRAN is down
       #Assume not
@@ -93,6 +94,13 @@
         #1.6 Original selection, in for one source file we modify it temporarily, we return to this value
           quiet.install.original <- quiet.install
         
+          
+      #1.7 Drop remotes if install.only==TRUE
+          #if (install.only==TRUE) {
+          #  snowball <- snowball[!snowball$from %in% c('github','gitlab') ,]
+          #}
+          
+          
     #####################
     #2 CRAN
     #####################
@@ -141,7 +149,7 @@
                     utils::untar(infile , exdir=outfile)        
                   }
 
-                #Note: untar() works with zip files, but errors pop up in older Windows versions, this is an attempt to debug that.
+                #Note: untar() works with zip files, but errors pop up in older Windows versions
              
 
                 #delete
@@ -176,7 +184,13 @@
           j1 <- 0 #Counter for actually downloaded files
           
           for (k in 1:n.mran) {
-            
+        
+    #3.4.5 Download if we are not recylcing or the file is not here
+    mran.path.k <- file.path(temp_path, snowball.mran$pkg[k])
+    if (recycle.files==FALSE || (recycle.files==TRUE & !file.exists(mran.path.k)) )
+    {              
+              
+                
             #Dummy to identify if a problem is found and move file to source
               good.mran.file[k] <- TRUE   
             
@@ -216,16 +230,13 @@
               message1(j1,") Downloading: '",snowball.mran$pkg_vrs[k],"' from MRAN")
     
             #Download it from MRAN
-              #Specify binary explicitly if R>3.2.0, but not otherwise as it generates errors
               #Is R being used newer than 3.2.0?
-                
-                
                 if (getRversion()>"3.3") {
                     mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path, method='libcurl')
                   } else {
+                #IF R is 3.2 or older
                     mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path)
-                    
-                    }
+                  }
                   
               
             
@@ -246,6 +257,8 @@
                 snowball$from[snowball$pkg==snowball.mran$pkg[k]] <- 'source'
                 
               }
+                
+       } #End if recycling
                 
       } #End loop over MRAN binaries
 
@@ -284,7 +297,7 @@
                   utils::untar(mran.binaries$downloaded.path[k] , exdir=snowball.mran$installation.path[k])        
                   }
                 #delete
-                  unlink(mran.binaries$downloaded.path[k])
+                  if (recycle.files==FALSE) unlink(mran.binaries$downloaded.path[k])
                   } else { 
                 #if the name of the file does not match despite passing available.packages check, bad file
                       good.mran.file[k] <- FALSE
@@ -312,7 +325,7 @@
         source <- snowball$from == 'source'
         
       #4.0.5 workaround, if base say it is installed
-          snowball$installed = ifelse(snowball$pkg %in% base_pkg(),TRUE, snowball$installed)
+          snowball$installed <- ifelse(snowball$pkg %in% base_pkg(),TRUE, snowball$installed)
         
               #Base packages would re-appear as not installed when force.install=TRUE
               #This hard codes them bck to TRUE
@@ -322,6 +335,9 @@
         
           n.source <- sum(source & snowball$installed==FALSE )
           n.remote <- sum(remote & snowball$installed==FALSE )
+          
+          if (skip.remotes==TRUE) n.remote <-0
+          
           if (n.source + n.remote > 0) {
             
             
@@ -334,13 +350,13 @@
             if (n.source==0 & n.remote> 0) message1("Will now attempt installing ",n.remote," packages from a git repository (GitHub or GitLab).")
 
       #4.4 Smaller snowball to send to feedback
-            snowball.source=snowball[(remote | source) & snowball$installed==FALSE,]
+            snowball.source <- snowball[(remote | source) & snowball$installed==FALSE,]
             
       #4.5 Counter for snowball source
             k.source_remote <- 1
             
       #4.6 Load list of *current* SOURCE packages
-            ap_source=get.current.packages("source")
+            ap_source <- get.current.packages("source")
             
           }      
         
@@ -451,15 +467,12 @@
                 
         #5 IF it is remote
                 
-            if (remote[k]==TRUE & snowball$installed[k]==FALSE )
+            if (remote[k]==TRUE & snowball$installed[k]==FALSE  & skip.remotes==FALSE)
             {
               
               #Load remotes
                 load.pkg_utility('remotes',date)
-              
-               
-            #Re-assign locally the  variable              
-              
+
               #Location where the clone is
                 clone_path <- get.clone_path(pkg=snowball$pkg[k], usr=snowball$usr[k], remote_id=snowball$from[k]) 
               
@@ -472,8 +485,9 @@
             }
                 
         #6 Add the one that was just installed to the .libPath()
-            .libPaths(c(snowball$installation.path[k] , .libPaths()))
+            #.libPaths(c(snowball$installation.path[k] , .libPaths()))
           
+
         #7 Verify package exists (if not base)
               if (!snowball$pkg[k] %in% base_pkg())
               {
