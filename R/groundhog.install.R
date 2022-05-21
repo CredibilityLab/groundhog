@@ -3,16 +3,16 @@
 
 
 
-  groundhog.install<-  function(pkg, date)
+  groundhog.install<-  function(snowball)
   { 
   #1 Get vrs
-      vrs     <- get.version(pkg, date)
+     # vrs     <- get.version(pkg, date)
 
   #2 Update cran.toc() if needed for entered date 
-      update_cran.toc_if.needed(date)
+      #update_cran.toc_if.needed(date)
 
   #3 Get snowball
-      snowball <- get.snowball(pkg=pkg , date=date , include.suggests=FALSE, force.install=FALSE)
+      #snowball <- get.snowball(pkg=pkg , date=date , include.suggests=FALSE, force.install=FALSE)
 
   #4 message if installation will be necessary
     need.to.install.total <- sum(!snowball$installed)
