@@ -106,9 +106,8 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
   #8 Show general message
          msg <- paste0("|PROBLEM.\n",
                 "|    Groundhog says:\n",
-                "|    ", n.conflict, " of the ", n.needed, " packages needed for '",
-                requested_pkg_vrs, "' have a version conflict with\n",
-                "|    a package already in your current R session.")
+                "|    ", n.conflict, " of the ", n.needed, " packages needed for '",requested_pkg_vrs, "' have a version conflict\n",
+                "|    with packages already in your current R session.")
 			  
 	 #9 Add notice about remotes already loaded
       #9.1 Find remotes in the snowball
@@ -171,10 +170,16 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                 #13.1 disable                
                   disable.packages(disable.quietly = FALSE, skip.prompt=TRUE)
 
-                #13.2 Installs the full snowball for the target pkg
-                  message1("Verifying all packages needed are installed.")
-                  groundhog.install(requested_pkg , date)  #install full snowball, populated from the target pkg 
-
+                #13.2 MSG : will install snowball
+                  message1("Verifying all needed packages are installed.")
+                  
+                #13.3 Install snowball
+                 # groundhog.install(snowball)  #install full snowball, populated from the target pkg 
+                  install.snowball(snowball,date=date,install.only = TRUE, skip.remotes=TRUE)
+                  
+                #13.3 Drop any remotes from the snowball
+                    #snowball <- snowball[!snowball$from %in% c('github','gitlab') ,]
+                  
                 #13.3 Localize the snowball
                   message1("Copying needed packages from groundhog to the local library.")
                   localize.snowball(snowball, localize.quietly=TRUE)
