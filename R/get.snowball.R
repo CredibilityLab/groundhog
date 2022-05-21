@@ -98,9 +98,15 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
 
 
   # 4) Get the version of each package
-    snowball.vrs <- vapply(snowball.pkg, get.version, date, FUN.VALUE = character(1)) 
+    #snowball.vrs <- vapply(snowball.pkg, get.version, date, FUN.VALUE = character(1)) 
+    snowball.vrs<-c()
+    for (k in 1:length(snowball.pkg)) {
+      snowball.vrs[k]=as.character(get.version(snowball.pkg[k],date=date))
+      }
     snowball.pkg_vrs <- paste0(snowball.pkg, "_", snowball.vrs)
 
+    
+    
   # 5 Snowball table, with installed | CRAN | MRAN | TARBALL | INSTALLATION TIME
 
   # - Install from CRAN if possible
