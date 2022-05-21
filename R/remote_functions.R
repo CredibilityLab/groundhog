@@ -36,7 +36,8 @@
                   #"using a different date, before running the command you just run.\n")
           
           #Attempt to load via groundhog  
-            groundhog.library(pkg_utility, groundhog.day)
+          
+            groundhog.library(pkg_utility, groundhog.day,tolerate.R.version = get.rversion()) #Always accept different versions here
           
          #Final check giving error if it failed
            if (! pkg_utility %in% .packages()) {
