@@ -34,6 +34,7 @@
   #5 CHECK FOR CONFLICT SNOWBALL <-> AVAILABLE PACKAGES
       check.snowball.conflict(snowball=snowball, force.install=force.install ,ignore.deps=ignore.deps, date=date)  
     
+  
         
   #6 message if installation will be necessary
     need.to.install.total <- sum(!snowball$installed)
@@ -45,10 +46,18 @@
     
   #7 Install packages if needed, add and groundhog libpaths for each package
       
+      for (pathk in snowball$installation.path) {
+        if (!file.exists(pathk))  {
+          dir.create(pathk,recursive=TRUE,showWarnings = FALSE)
+        }
+      }
+    
+    
+      .libPaths(c(snowball$installation.path, .libPaths()))
+
     
     #If all installed, load directly 
       if (all(snowball$installed)) {
-            .libPaths(c(snowball$installation.path, .libPaths()))
             sapply(snowball$pkg,loadNamespace)
           
           

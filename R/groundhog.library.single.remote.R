@@ -1,7 +1,7 @@
   groundhog.library.single.remote <-  function(pkg, date,  quiet.install ,  include.suggests , ignore.deps, force.source , force.install )
   { 
     #0 Note that Date and R validated in groundhog.library()
-      #Do not accept force.soure or force.install
+      #Do not accept force.source or force.install
           if (force.source==TRUE) {
             message("When installing remote packages, like '",pkg, "' the 'force.source' option may not be set to TRUE")
             exit()
@@ -20,7 +20,7 @@
         pkg <- pkg_list$pkg
         git <- pkg_list$remote_id
         
-    #2 Check if conflict with already loaded remote package (unlike CRAN pkg_vrs here we must use the *date*)
+    #2 Check if conflict with already loaded remote package (unlike CRAN pkg_vrs here we must use the *date*, version number is not enough)
         
           #Full identifier of pkg called: remote, usr, pkg, date. ('github::crsh/papaja_2021_10-01')
                 git_usr_pkg_date<-paste0(git  , "_", usr, "_", pkg ,"_", gsub("-","_",date))
@@ -31,36 +31,24 @@
                     message1("groundhog says: the package '", pkg_list$usr_pkg, "', for '",date,"', is already attached.")
                     return(TRUE)
               }
-              
-            
-             #2.2 This same pkg_date loaded only     : attach it 
-            
-              if (git_usr_pkg_date %in% .pkgenv[['remotes.loaded']]) {
-                   base.library(pkg, character.only=TRUE)
-   
-                   #Verify it was attached
-                    if (!pkg %in% .packages()) message("Failed to load '",pkg,"'")
-                
-                    message1("groundhog says: the package ('", pkg_list$usr_pkg, "'), for ;",date,"', was loaded, now it is also attached.")
-                    return(TRUE)
-              }
              
-            #2.3 Different pkg_date loaded              : stop
+            #2.3 Different pkg_date loaded              
               active <- get.active()
-                
               if (pkg %in% active$pkg) {
               
-                msg <- paste0('A version of the package "',pkg, '" is already loaded and it may or may not match \n', 
-                              "the version as available on '",remote_id, "' on '",date,"'. To ensure the version for that date is used \n", 
-                              'restart the R session (CTRL/CMD-SHIFT F10 in R-Studio) and run this command,\n',
-                              'again.')
-                message(msg)
+                msg <- paste0("|IMPORTANT\n",
+                              "|    A version of the package '",pkg, "' is already loaded and it may or may not match \n", 
+                              "|    the version available on '",remote_id, "' on '",date,"'.\n",
+                              "|    Restart the R session (CTRL/CMD-SHIFT F10 in R-Studio) and try again\n",
+                              "|    If the problem persist visit https://groundhogR.com/conflict for further suggestions",
+                              "|    Type 'OK' to confirm you have read this message")
+                infinite.prompt(msg,'ok')
                 exit()
               }
-  
+
     #3 Get snowball
         snowball <- get.snowball.remote(pkg, date, remote_id, usr,include.suggests=include.suggests,force.install=force.install)
-  
+
         #3.1 Force source 
           if (force.source==TRUE) {
             snowball$from <- ifelse(snowball$sha!='', 'source', snowball$from)
@@ -70,9 +58,21 @@
     #4 Check snowball conflict
         check.snowball.conflict(snowball, force.install,ignore.deps,date)  
 
+     for (pathk in snowball$installation.path) {
+        if (!file.exists(pathk))  {
+          dir.create(pathk,recursive=TRUE,showWarnings = FALSE)
+        }
+      }
+    
+    
+      .libPaths(c(snowball$installation.path, .libPaths()))
+    
+        
     #5 install snowball (install will only happen if needed, this function also adds to  .libPath())
-        install.snowball(snowball, date)
+        install.snowball(snowball, date,recycle.files=TRUE)
 
+        
+        
     #6 Attach pkg
         base.library(pkg, character.only=TRUE) #utils. function 26
 
@@ -84,7 +84,7 @@
       if (verified==TRUE) 
       { 
         
-        #Reminder that verison is not enough
+        #Reminder that version is not enough
          message1( "(version current on '", remote_id , "' on '", date,"')"  )
          
         #Path to snowball
