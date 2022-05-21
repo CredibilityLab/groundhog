@@ -57,9 +57,10 @@
 #Function that loops localizing all files in a snowball
   localize.snowball <- function(snowball, localize.quietly)
     {
+    k=1
     for (pkg_vrs.k in snowball$pkg_vrs)
     {
-    
+    cat('...',k)
     localize.pkg(pkg_vrs.k, localize.quietly=localize.quietly)
     }
   }
