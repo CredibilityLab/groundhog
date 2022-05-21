@@ -45,13 +45,15 @@
          #Last row in the baton has name of DESCRIPTION pkg on its own
            pkg_self_name <- baton$rows.toc[1,]$Package
          
-         message2()
-         message1("The package you requested, '" , usr , "/" , pkg , "' appears to be misconfigued on  ", remote_id,".")
-         message1("Specifically, the package available from 'https://" ,remote_id , ".com/",usr , "/" , pkg , "'")
-         message1("referes to itself as '" , pkg_self_name, "'. ")
-         message1("You could try running:")
-		 message1("groundhog.library('",usr , "/" , pkg_self_name,"' , '",date,"')\n")
-         message("\   ---  Error. '",pkg,"' was not installed  ---")
+         txt<-paste0(
+                 "|PROBLEM\n",
+                 "|   Groundhog says: The package you requested, '" , usr , "/" , pkg , "'\n",
+                 "|   appears to be misconfigured on ", remote_id,".\n",
+                 "|   Specifically, the package available from 'https://" ,remote_id , ".com/",usr , "/" , pkg , "'\n",
+                 "|   referes to itself as '" , pkg_self_name, "'. \n",
+                 "|   You could try running:  groundhog.library('",usr , "/" , pkg_self_name,"' , '",date,"')\n",
+        		     "|   Type OK to confirm you have read this message.")
+         answer <- infinite.prompt(txt,'ok')
          exit()
        }
        
