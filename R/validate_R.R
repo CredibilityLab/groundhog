@@ -3,6 +3,7 @@
     validate_R <-function(date, tolerate.R.version)
       {
 
+      
     #1 Check R version
       rv <- r.version.check(date) # Get version of r being used and needed
     
@@ -44,8 +45,12 @@
             }   #End if version not in cran.toc before update
     
     #3 If R needed does not match R using, and was not authorized
-      if (package_version(rv$r.using.majmin) != package_version(rv$r.need.majmin) &&  rv$r.using.full!=tolerate.R.version) 
+
+      if (package_version(rv$r.using.majmin) != package_version(rv$r.need.majmin) &&  (!rv$r.using.full == tolerate.R.version) )
       {
+        
+        message('rv using full:',rv$r.using.full)
+        message('tolerate.R.version:',tolerate.R.version)
         
       #3.1 Find date range for R-using
         #Subset of R.toc with current version   
@@ -82,10 +87,9 @@
             "|   You may bypass this R-version check by adding: tolerate.R.version='",rv$r.using.full,"'\n",
             "|   as an option in your groundhog.library() call.\n",
             "|   Please enter 'OK' to confirm you have read this message.")
-      answer<-infinite.prompt(txt,'ok')
+      #answer<-infinite.prompt(txt,'ok')
       exit()
+      } else {
+       return(invisible(TRUE))
       }
-    
-   
-      
     } #End function
