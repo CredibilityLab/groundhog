@@ -77,11 +77,11 @@
                   }
                  
        #4) Find remotes dependencies in the DESCRIPTION of this remote package 
-                new.remotes <- description_df$Remotes
-            
-                
+                new.remotes <- as.character(description_df$Remotes)
+                # new.remotes <- description_df$Remotes
+
           #4.1 Drop suggested remotes if include.suggests=FALSE
-                if (include.suggests==FALSE && !is.null(new.remotes) && regexpr(',',new.remotes)>1) 
+                if (include.suggests==FALSE && !is.null(new.remotes) && length(new.remotes) > 0 && regexpr(',',new.remotes)>1) 
                 {
                 #Turn string to vector with all remotes
                   new.remotes.vector <- unlist(strsplit(new.remotes,","))
@@ -127,11 +127,15 @@
             #(note, all other packages with same name will be dropped from when making the snowball)
               row.toc$Published <- as.Date('1970-01-01')
         
-        #7 Remove symbols from the dependencies text          
-              row.toc[,c('Depends','Imports','Suggests','LinkingTo')] <- clean_text( row.toc[,c('Depends','Imports','Suggests','LinkingTo')])
- 
+
+              
+        #7 Remove symbols from the dependencies text        
+              row.toc$Depends<-clean_text(row.toc$Depends)
+              row.toc$Imports<-clean_text(row.toc$Imports)
+              row.toc$Suggests<-clean_text(row.toc$Suggests)
+              row.toc$LinkingTo<-clean_text(row.toc$LinkingTo)
+
             
-                      
         #8 append to rows if it exists, otherwise rows=row
               if (!is.null(baton$rows.toc))  {
                 baton$rows.toc <- rbind(baton$rows.toc, row.toc)
@@ -144,7 +148,8 @@
           if (!is.null(new.remotes)) {
             baton$remotes.pending <- c(baton$remotes.pending , new.remotes)
             }
-          
+
+              
         #10 Remove the remote we just installed
             usr_pkg <- paste0(usr,"/",pkg)  #it is entered as usr/pkg so create that value to look up
             baton$remotes.pending <-baton$remotes.pending [!baton$remotes.pending %in% usr_pkg] 
