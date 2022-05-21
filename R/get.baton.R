@@ -40,6 +40,7 @@
 
             #3.3 read the raw description file
                 #  https://github.com/ropensci/git2r/issues/255   --  reading description with git2r
+                
                 dir_path <- paste0(get.groundhog.folder() , "/git_clones/" , remote_id)
                 clone_path <- paste0(dir_path , "/", usr, "_" ,pkg)
                 description_raw <-git2r::content(git2r::tree(git2r::lookup(clone_path, sha))["DESCRIPTION"])

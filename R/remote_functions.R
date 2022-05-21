@@ -67,6 +67,9 @@
               #Read the sha_time
                 sha_time <- readRDS(sha_path)
                 
+              #Force sha to be string rather than factor (extra safety, data.frame(string as factor should be set to FALSE, but in case it was already saved)
+                sha_time$sha=as.character(sha_time$sha)
+                
               #If highest commit date is higher than requested date, we can use existing sha_time, preventing git2r loading
                  if (max(sha_time$time)>date.to.time(date)) {
                     return(sha_time)
@@ -95,7 +98,7 @@
         
       
       #Create data.frame sha_time  
-        sha_time <- data.frame(sha=commit.sha, time=commit.time)
+        sha_time <- data.frame(sha=commit.sha, time=commit.time,stringsAsFactors = FALSE)
         
       #Save sha time
         if (!file.exists(dirname(sha_path))) {

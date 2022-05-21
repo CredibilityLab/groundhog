@@ -48,10 +48,7 @@
 
       if (package_version(rv$r.using.majmin) != package_version(rv$r.need.majmin) &&  (!rv$r.using.full == tolerate.R.version) )
       {
-        
-        message('rv using full:',rv$r.using.full)
-        message('tolerate.R.version:',tolerate.R.version)
-        
+            
       #3.1 Find date range for R-using
         #Subset of R.toc with current version   
           R.toc.current <-subset(R.toc, as.numeric(regexpr(rv$r.using.majmin, R.toc$Version) )==1)
