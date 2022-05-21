@@ -33,8 +33,8 @@
           packages_df <- get.packages_df() #utils.R #Function 33
          
       #2 Count disabled
-              n.disabled <-sum(packages_df$disabled)
-              n.total    <- nrow(packages_df)
+          n.disabled <-sum(packages_df$disabled)
+          n.total    <- nrow(packages_df)
               
       #4 if all packages are disabled end here
          if (n.disabled == n.total  && disable.quietly==FALSE) {

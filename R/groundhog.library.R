@@ -134,7 +134,7 @@
 
     #4 validate R
         validate_R(date , tolerate.R.version)
-     
+
     #5 Set of ignorable conflicts
         ignore.deps <- c(ignore.deps_default() , ignore.deps) #Add any ignore.deps explicitly stated to the default set in utils
         
