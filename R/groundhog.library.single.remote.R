@@ -93,7 +93,7 @@
           snowball_path <- file.path(snowball_dir, snowball_file)
           
         #Update  what is installed in the snowball
-          ip<-data.frame(utils::installed.packages(snowball$installation.path))
+          ip<-data.frame(utils::installed.packages(snowball$installation.path), stringsAsFactors=FALSE)
           snowball$installed <- snowball$pkg %in% ip$Package
   
           

@@ -13,7 +13,7 @@
 
   #2 Exit if local folder already has this version
 
-    ip <- data.frame(installed.packages(lib.loc =.pkgenv[["orig_lib_paths"]][1] ))
+    ip <- data.frame(installed.packages(lib.loc =.pkgenv[["orig_lib_paths"]][1] ), stringsAsFactors=FALSE)
     ip.pkg_vrs <- paste0(ip$Package,"_",ip$Version)
 
   
@@ -25,7 +25,7 @@
         pkg_path.groundhog <- paste0(groundhog_path,"/",pkg)
       
       #Does it exist?
-        if (nrow(data.frame(installed.packages(lib=groundhog_path)))==0) {
+        if (nrow(data.frame(installed.packages(lib=groundhog_path)), stringsAsFactors=FALSE)==0) {
           return(invisible(FALSE))
         }
         
@@ -36,7 +36,7 @@
         
 
       #get installed packages
-        ip <- data.frame(installed.packages(local_folder))
+        ip <- data.frame(installed.packages(local_folder), stringsAsFactors=FALSE)
         
       #If this one is installed, uninstall it (this should have been taken care vai disabling earlier, just an extra precaution)
         if (pkg %in% ip$Package) remove.packages(pkg,lib = local_folder)

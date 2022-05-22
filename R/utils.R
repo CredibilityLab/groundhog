@@ -510,7 +510,7 @@ get.available.mran.date <- function(date0, date1) {
       path  <- list.files(local_library,full.names=TRUE)
       disabled <- regexpr('_DISABLED', pkg_current) >0
       purged <- regexpr('_PURGE', pkg_current) >0
-      all_df <-data.frame(pkg, pkg_current, path,disabled,purged)
+      all_df <-data.frame(pkg, pkg_current, path,disabled,purged, stringsAsFactors=FALSE)
       packages_df <- all_df[all_df$pkg!="groundhog",]
       return(packages_df)
     }

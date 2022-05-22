@@ -7,6 +7,7 @@
 installation.feedback <- function(k, date, snowball, start.time) {
 
   # Get R being used and needed
+  
 	rv <- r.version.check(as.DateYMD(date))
 
   # How much time so far in this installation process

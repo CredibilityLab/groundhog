@@ -107,7 +107,7 @@ get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
     
     #5.6 Add new pairs to  dep12 
       if (length(pendingk) > 0) {
-        dep12k <- data.frame(pkg = depk, dep2 = pendingk)
+        dep12k <- data.frame(pkg = depk, dep2 = pendingk, stringsAsFactors=FALSE)
         dep12 <- rbind(dep12, dep12k)
         }
 

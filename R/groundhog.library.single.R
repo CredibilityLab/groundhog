@@ -82,7 +82,7 @@
      if (verified==TRUE) { 
      
       #10.1 Update  what is installed in the snowball
-          ip <- data.frame(utils::installed.packages(snowball$installation.path))
+          ip <- data.frame(utils::installed.packages(snowball$installation.path), stringsAsFactors=FALSE)
           snowball$installed <- (snowball$pkg %in% ip$Package | snowball$pkg %in% .pkgenv[['base_pkg']]) #if in packages or in base.packages
           
 			 #10.2 Path to snowball

@@ -54,7 +54,7 @@
                 writeLines(description_raw, tmp)
                 
             #3.5 read the description file into data.frame with read.dcf
-                 description_df <- data.frame(read.dcf(tmp))
+                 description_df <- data.frame(read.dcf(tmp), stringsAsFactors=FALSE)
             
             #3.6 If more than one row assume it is not a dcf file
                  if (nrow(description_df) > 1)

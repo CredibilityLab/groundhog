@@ -1,37 +1,21 @@
 # Compare \R versions
 #
 # Compare the current R version to the \R version at a given `date`.`
-#
-# return a named `list` with the following elements:
-# \describe{
-#   \item{r.using.full}{\R version currently in use}
-#   \item{r.using.major}{Major version number of the \R version currently in use}
-#   \item{r.using.minor}{Minor version number of the \R version currently in use}
-#   \item{r.using.majmin}{The Major.minor version number of the \R version currently in use}
-#   \item{r.using.patch}{Patch version number of the \R version currently in use}
-#   \item{r.need.full}{\R version currently in use at `date`}
-#   \item{r.need.major}{Major version number of the \R version in use at `date`}
-#   \item{r.need.minor}{Minor version number of the \R version in use at `date`}
-#   \item{r.using.majmin}{The Major.minor version number of the \R version currently in use}
-#   \item{r.need.patch}{Version number of the \R version in use at `date`, with
-#   the maximum patch version available today.}
-#
-#
-# groundhog:::r.version.check("2018-02-12")
-# }
 
 r.version.check <- function(date) {
   #If using an R version not in the cran.toc.rds give error
-    
-  
+ 
   # Using
     r.using.major <- as.numeric(R.version$major)
     r.using.minor <- as.numeric(strsplit(R.version$minor, "\\.")[[1]][1])
     r.using.patch <- as.numeric(strsplit(R.version$minor, "\\.")[[1]][2])
     r.using.majmin <- paste0(r.using.major, ".", r.using.minor)
     r.using.full <- paste0(r.using.majmin, ".", r.using.patch)
+    
+    
   # need
-    r.need.full <- get.version("R", date, patch = "max")
+    r.need.full <- as.character(get.version("R", date, patch = "max"))
+    r.need.full<<-r.need.full
     r.need.split <- strsplit(r.need.full, "\\.")[[1]]
     r.need.major <- as.numeric(r.need.split[1])
     r.need.minor <- as.numeric(r.need.split[2])

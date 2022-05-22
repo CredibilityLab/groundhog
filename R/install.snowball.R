@@ -496,7 +496,7 @@
               if (!snowball$pkg[k] %in% base_pkg())
               {
                 #Get available packages in this subfolder of groundhog.folder() with the path to package
-                  ap1 <- data.frame(utils::installed.packages( snowball$installation.path[k]))
+                  ap1 <- data.frame(utils::installed.packages( snowball$installation.path[k]), stringsAsFactors=FALSE)
                 
                 #If less than 1 package, die
                   if (nrow(ap1) < 1) {

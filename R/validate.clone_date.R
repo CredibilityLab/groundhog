@@ -107,7 +107,7 @@
       {
         
         #New row for the local git catalog
-          new_row  <- data.frame(remote_id=remote_id, usr=usr, pkg = pkg, last.saved =Sys.Date())            
+          new_row  <- data.frame(remote_id=remote_id, usr=usr, pkg = pkg, last.saved =Sys.Date(), stringsAsFactors=FALSE)            
         
         #Catalog path
           clone_catalog_path <- file.path(get.groundhog.folder() , 'clone_catalog.rds')
