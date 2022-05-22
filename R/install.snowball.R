@@ -101,6 +101,10 @@
           #}
           
           
+      #1.8 CRAN URL
+          r <- getOption("repos")
+          CRAN.mirror.url <- as.character(r["CRAN"])
+          
     #####################
     #2 CRAN
     #####################
@@ -375,10 +379,10 @@
                 if (snowball$pkg_vrs[k] %in% ap_source$pkg_vrs) 
                   {
                   #If it is current, get from page with all sources
-                    url <- paste0("https://cran.r-project.org/src/contrib/" ,snowball$pkg_vrs[k] , ".tar.gz")
+                    url <- paste0(CRAN.mirror.url , "src/contrib/" ,snowball$pkg_vrs[k] , ".tar.gz")
                     } else { 
                   #If it is not current, use archive
-                    url <- paste0( "https://cran.r-project.org/src/contrib/Archive/" ,snowball$pkg[k] , "/" ,  snowball$pkg_vrs[k] , ".tar.gz")
+                    url <- paste0(CRAN.mirror.url , "src/contrib/Archive/" ,snowball$pkg[k] , "/" ,  snowball$pkg_vrs[k] , ".tar.gz")
                   }
                 
         #4.10 Feedback on time to user
