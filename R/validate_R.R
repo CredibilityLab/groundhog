@@ -38,12 +38,24 @@
               
                               
            #Add r-dev to cran.toc
-              row <- data.frame(Package="R",Version=rv$r.using.full,Published = two.days.ago, Imports="",Depends="",Suggests="",LinkingTo="")
+              row <- data.frame(Package="R",Version=rv$r.using.full,Published = two.days.ago, Imports="",Depends="",Suggests="",LinkingTo="", stringsAsFactors=FALSE)
               .pkgenv[["cran.toc"]] <- rbind(.pkgenv[["cran.toc"]], row)
                
               } #End if version not in cran.toc even after update
             }   #End if version not in cran.toc before update
     
+      
+    #3 Validate tolerate.R.version
+      if (!tolerate.R.version %in% c("",rv$r.using.full)) {
+        msg<- paste0("|IMPORTANT\n",
+                     "|    The version of R you are using '",    rv$r.using.full,  "' does not match the version\n",
+                     "|    entered in the tolerate.R.version argument, '",tolerate.R.version,"'\n",
+                     "|    You must either drop that argument or replace it with the version of R\n",
+                     "|    you are currently using.  Plese enter OK to confirm you read this message.")
+       infinite.prompt(msg,"ok")
+       exit()
+      }
+      
     #3 If R needed does not match R using, and was not authorized
 
       if (package_version(rv$r.using.majmin) != package_version(rv$r.need.majmin) &&  (!rv$r.using.full == tolerate.R.version) )
