@@ -48,8 +48,8 @@
     #3 Validate tolerate.R.version
       if (!tolerate.R.version %in% c("",rv$r.using.full)) {
         msg<- paste0("|IMPORTANT\n",
-                     "|    The version of R you are using '",    rv$r.using.full,  "' does not match the version\n",
-                     "|    entered in the tolerate.R.version argument, '",tolerate.R.version,"'\n",
+                     "|    Groundhog says: the version of R you are using '",    rv$r.using.full,  "' does \n",
+                     "|    not match the version entered in the tolerate.R.version argument, '",tolerate.R.version,"'\n",
                      "|    You must either drop that argument or replace it with the version of R\n",
                      "|    you are currently using.  Plese enter OK to confirm you read this message.")
        infinite.prompt(msg,"ok")
@@ -88,15 +88,15 @@
         
       txt <- paste0(
             "|IMPORTANT\n",
-            "|   You are using R-", rv$r.using.full, ", but the version of R current for \n",
-            "|   the entered date, '", date, "', is R-", rv$r.need.majmin, ". It is recommended that\n",
-            "|   you either keep this date and switch to that version of R, or you keep \n",
-            "|   the version of R you are using but switch the date to between\n",
+            "|   Groundhog says: you are using R-", rv$r.using.full, ", but the version of R \n",
+            "|   current for the entered date, '", date, "', is R-", rv$r.need.majmin, ".\n",
+            "|   It is recommended that you either keep this date and switch to that version\n",
+            "|   of R, or you keep the version of R you are using but switch the date to between\n",
             "|   '" , min.date , "' and '" , max.date , "'.\n|\n",
             "|   You may bypass this R-version check by adding: tolerate.R.version='",rv$r.using.full,"'\n",
             "|   as an option in your groundhog.library() call.\n",
             "|   Please enter 'OK' to confirm you have read this message.")
-      #answer<-infinite.prompt(txt,'ok')
+      answer<-infinite.prompt(txt,'ok')
       exit()
       } else {
        return(invisible(TRUE))
