@@ -32,15 +32,15 @@
                     return(TRUE)
               }
              
-            #2.3 Different pkg_date loaded              
+            #2.3 This package is attached or loaded, and does not match one that was loaded remotely
               active <- get.active()
-              if (pkg %in% active$pkg) {
+              if (pkg %in% active$pkg  && (!git_usr_pkg_date %in% .pkgenv[['remotes.loaded']])) {
               
                 msg <- paste0("|IMPORTANT\n",
                               "|    A version of the package '",pkg, "' is already loaded and it may or may not match \n", 
                               "|    the version available on '",remote_id, "' on '",date,"'.\n",
                               "|    Restart the R session (CTRL/CMD-SHIFT F10 in R-Studio) and try again\n",
-                              "|    If the problem persist visit https://groundhogR.com/conflict for further suggestions",
+                              "|    If the problem persist visit https://groundhogR.com/conflict for further suggestions\n",
                               "|    Type 'OK' to confirm you have read this message")
                 infinite.prompt(msg,'ok')
                 exit()
@@ -64,9 +64,14 @@
         }
       }
     
-    
+    #4.1 libpath entire snowball
       .libPaths(c(snowball$installation.path, .libPaths()))
     
+      
+    #4.2 Create/update remotes.df
+        if (is.null(.pkgenv[['remotes_df']])) {
+           .pkgenv[['remotes_df']] <- data.frame(pkg=character(),date=character(),attached=c() , stringsAsFactors = FALSE)
+            }
         
     #5 install snowball (install will only happen if needed, this function also adds to  .libPath())
         install.snowball(snowball, date,recycle.files=TRUE)
@@ -108,7 +113,7 @@
         
         #8.2 Attached remotes
           attached.list <- utils::sessionInfo()$otherPkgs # pkgs in attached
-          attached.pkg  <-names(attached.list)
+          attached.pkg  <- names(attached.list)
      
        
         #8.4 active
@@ -137,7 +142,13 @@
               if (is.null(.pkgenv[['remote_packages']]))   .pkgenv[['remote_packages']]  <- snowball.remotes$pkg
               if (!is.null(.pkgenv[['remote_packages']]))  .pkgenv[['remote_packages']]  <- c(snowball.remotes$pkg,.pkgenv[['remote_packages']])
 
-    
+        #8.9 update remotes.df
+            rdf <- .pkgenv[['remotes_df']]                                           #localize the .pkgenv[]
+            rdf$attached <- ifelse(rdf$pkg %in% attached.pkg, TRUE, rdf$attached)    #turn attach to true if appropriate
+            .pkgenv[['remotes_df']] <- rdf                                           #unlocalize
+            
+            
+            
       }#End if verified is true
         
         
