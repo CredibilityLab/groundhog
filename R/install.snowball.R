@@ -479,11 +479,11 @@
             }
                 
                 
-        #6 Add remote to remotes.df
+        #6 Add remote to remotes_df
             if (remote[k]==TRUE)
               {
-              row_remotes.df <- data.frame(pkg=snowball$pkg[k],date=date,attached=FALSE,stringsAsFactors = FALSE)
-              .pkgenv[['remotes.df']] <- rbind(.pkgenv[['remotes.df']], row_remotes.df)
+              row.remotes_df <- data.frame(pkg=snowball$pkg[k],date=date,attached=FALSE,stringsAsFactors = FALSE)
+              .pkgenv[['remotes_df']] <- rbind(.pkgenv[['remotes_df']], row.remotes_df)
               }
                 
         #7 Verify package exists (if not base)

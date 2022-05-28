@@ -39,6 +39,23 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
         } # End conflict found for forced install
       } # End check force install
 
+        
+  #3.5 Stop if a remote package has been loaded
+        conflict.remote.TF <- ((snowball$pkg %in% .pkgenv[['remotes_df']] & (!date %in%  .pkgenv[['remotes_df']])))
+        conflict.remote.n <- sum(conflict.remote.TF)
+        if (conflict.remote.n>0)
+        {
+          msg <- paste0("|PROBLEM.\n",
+                "|    Groundhog says:\n",
+                "|    Some of the non-CRAN packages needed for '",requested_pkg, "' are already loaded,\n",
+                "|    but for a date which does not match '" , date , "'. \n",
+                "|    To resolve this conflict you may need to modify your script ensuring the\n",
+                "|    same date\is used throughout, and then re-run it after restarting the\n",
+                "|    R session (in R Studio: CMD/CTRL-SHIFT-F10).\n",
+                "|    Please type 'OK' to confirm you have read this message.")
+          infinite.prompt(msg,"ok")
+          exit()
+        }
   
   #4 Create conflict set 
     #4.1 These are packages that are needed and have a conflict with an active one

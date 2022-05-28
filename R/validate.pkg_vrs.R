@@ -56,7 +56,7 @@
                       )
           
         #End with "choose a version" message, if conflict pkg is remote
-           if (pkg %in%  .pkgenv[['remotes.df']]$pkg) {
+           if (pkg %in%  .pkgenv[['remotes_df']]$pkg) {
             txt <- paste0(txt, 
                     "|    Because that version was obtained from a non-CRAN repository,\n",
                     "|    it is likely that you are actively loading it within your script \n",
