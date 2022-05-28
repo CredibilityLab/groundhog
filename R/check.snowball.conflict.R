@@ -50,7 +50,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                 "|    Some of the non-CRAN packages needed for '",requested_pkg, "' are already loaded,\n",
                 "|    but for a date which does not match '" , date , "'. \n",
                 "|    To resolve this conflict you may need to modify your script ensuring the\n",
-                "|    same date\is used throughout, and then re-run it after restarting the\n",
+                "|    same date is used throughout, and then re-run it after restarting the\n",
                 "|    R session (in R Studio: CMD/CTRL-SHIFT-F10).\n",
                 "|    Please type 'OK' to confirm you have read this message.")
           infinite.prompt(msg,"ok")
