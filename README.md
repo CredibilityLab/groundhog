@@ -20,7 +20,7 @@ To use this in-development version:
 `remotes::install_github('CredibilityLab/groundhog')`
 
 
-**Major changes in v1.9.9.999 (versus v.1.5.0 on CRAN)***
+**Major changes in v1.9.9.last_date (versus v.1.5.0 on CRAN)***
 1) Install/load packages from GitHub & GitLab, not just CRAN
 
    syntax:   `groundhog.library(usr/pkg,date)` 
@@ -29,6 +29,8 @@ To use this in-development version:
    
 3) Built in switch that if MRAN is down, installs everything from CRAN for next 5 hours (using source files from CRAN, instead of binaries from MRAN, for older packages)
 4) Speed increase for loading packages
+5) Add capability of disabling packages in the user library, to avoid conflicts without needed to uninstall packages
+
 
 
 **Testing**
