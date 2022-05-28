@@ -478,15 +478,11 @@
                      #ref is the sha indicating which version is installed
             }
                 
-        #6 Add the one that was just installed to the .libPath()
-            #.libPaths(c(snowball$installation.path[k] , .libPaths()))
-            #this was deleted in 2022-05, because now the whole snowball's path is loaded at once     
-
                 
         #6 Add remote to remotes.df
             if (remote[k]==TRUE)
               {
-              row_remotes.df <- data.frame(pkg=snowball$pkg[k],date=date,attached=FALSE)
+              row_remotes.df <- data.frame(pkg=snowball$pkg[k],date=date,attached=FALSE,stringsAsFactors = FALSE)
               .pkgenv[['remotes.df']] <- rbind(.pkgenv[['remotes.df']], row_remotes.df)
               }
                 
