@@ -29,7 +29,7 @@ To use this in-development version:
    
 3) Built in switch that if MRAN is down, installs everything from CRAN for next 5 hours (using source files from CRAN, instead of binaries from MRAN, for older packages)
 4) Speed increase for loading packages
-5) Add capability of disabling packages in the user library, to avoid conflicts without needed to uninstall packages
+5) Add capability of disabling packages in the user library, to avoid conflicts. This replaces the previous solution of prompting uninstalling packages with a conflict.
 
 
 
