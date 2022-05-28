@@ -30,7 +30,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
           message2()
           message(
             "You selected 'force.install=TRUE' but the following packages that would be installed\n",
-            "are currently loaded:", paste0(snowball$pkg[conflict.pkg], collapse = ",  "),
+            "are currently loaded: ", pasteQC(snowball$pkg[conflict.pkg]),
             "\n\nYou need to restart your R session to carry out the installation.\n",
             "(in R Studio press: CTRL/CMD-SHIFT-F10 to do so)"
           
@@ -147,6 +147,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
     				             "|    To do that: rerun groundhog.library() with the option: 'ignore.deps=c(" , pkg.conf , ")' \n\n",
     				             "|    Press 'OK' to confirm you have read this message.")
                        answer <- infinite.prompt(msg, c('ok'))
+					   exit()
                }
     
 
