@@ -48,15 +48,29 @@
               #but if more where submitted in pkg=c(pkg1,pkg2) it will just move on to the next package
               #instead of ending the entire groundhog.library() call
       
-  #4 Another version already attached
-        #Add message if dates mismatch across groundhog library calls
-          if ((pkg %in% attached.pkg) &  (!pkg_vrs %in% attached.pkg_vrs)) {
+  #4 Another version already load
+          if ((pkg %in% active$pkg) &  (!pkg_vrs %in% active$pkg_vrs)) {
             txt <- paste0(
                     "|IMPORTANT\n",
-                    "|    Groundhog says: another version of '", pkg,"' is already attached ('", active$pkg_vrs[active$pkg==pkg],"').\n"
+                    "|    Groundhog says: another version of '", pkg,"' is already loaded ('", active$pkg_vrs[active$pkg==pkg],"').\n"
                       )
-           
-           
+          
+        #End with "choose a version" message, if conflict pkg is remote
+           if (pkg %in%  .pkgenv[['remotes.df']]$pkg) {
+            txt <- paste0(txt, 
+                    "|    Because that version was obtained from a non-CRAN repository,\n",
+                    "|    it is likely that you are actively loading it within your script \n",
+                    "|    and thus even restarting the R session the problem would arise again.\n",
+                    "|    You may need to modify your script so only one of the two version is loaded.\n",
+                    "|    In R Studio you may restart the R Session with CMD/CTRL-SHFT-F10\n\n",
+                    "|    Please type 'OK' to confirm you have read this message."
+                  ) #End of paste0
+            
+                  infinite.prompt(txt,'ok')
+                  exit()
+                  }
+            
+             
         #Add message if dates mismatch across groundhog library calls
          if (length(.pkgenv[['hogdays']])>1) {
             txt <- paste0(txt, 
@@ -64,9 +78,7 @@
                     "|    Dates you have used: ",pasteQC(.pkgenv[['hogdays']]), "\n",
                     "|    If possible use the same date for all packages\n"
                   ) #End of paste0
-            
-            
-          }
+                  }
            
           txt<-paste0(txt,
                       "|    You may restart the R session to unload all packages.\n",

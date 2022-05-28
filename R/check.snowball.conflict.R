@@ -7,11 +7,7 @@
 
 check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) {
   
-  
-  #0 Message used a few times below
-      msg_F10 <- "Unload conflicting packages restarting the R session.\nIn R Studio press: CTRL/CMD-SHIFT-F10"
-  
-  #1 short name for package being installed/loaded
+   #1 short name for package being installed/loaded
         requested_pkg_vrs <- snowball$pkg_vrs[length(snowball$pkg_vrs)]
         requested_pkg     <- snowball$pkg[length(snowball$pkg_vrs)]
   
@@ -121,46 +117,39 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
     
                
       #9.4 msg for conflict with NEEDED remote
-           if (flag.conflict_active_remote==TRUE)
+            
+            
+           if (flag.conflict_active_remote==TRUE || flag.conflict_needed_remote==TRUE)
             {
+                if (flag.conflict_active_remote) pkg.conf <-paste0(conflict.active.pkg[conflict.active.pkg %in% .pkgenv[['remote_packages']]],collapse=', ')
+                if (flag.conflict_needed_remote) pkg.conf <-paste0(conflict.needed.pkg[conflict.needed.pkg %in% .pkgenv[['remote_packages']]],collapse=', ')
+
                 msg <- paste0(msg, "\n",
-                         "|   Because the conflict involves packages not on CRAN, you may want to just allow the version conflict.\n",
-    				             "|   To do that: rerun groundhog.library() with the option: ",
-                        "'ignore.deps=c(" ,  
-                        paste0(conflict.active.pkg[conflict.active.pkg %in% .pkgenv[['remote_packages']]],collapse=', '),
-                    ")' \n\n")
+                         "|    Because the conflict involves non-CRAN package(s), you may want to allow the version conflict\n",
+    				             "|    and use the package version already loaded rather than the one you are trying to load.\n",
+    				             "|    To do that: rerun groundhog.library() with the option: 'ignore.deps=c(" , pkg.conf , ")' \n\n",
+    				             "|    Press 'OK' to confirm you have read this message.")
+                       answer <- infinite.prompt(msg, c('ok'))
                }
-    	 #9.5 msg for conflict with ACTIVE remote
-          
-              if (flag.conflict_needed_remote==TRUE)
-              {
-                msg <- paste0(msg, "\n",
-                         "|   Because the conflict involves packages not on CRAN, you may want to just allow the version conflict.\n",
-    				             "|   To do that: rerun groundhog.library() with the option: ",
-                          "ignore.deps=c(" ,  
-                        paste0(dQuote(conflict.needed.pkg[conflict.needed.pkg %in% snowball.remotes$pkg]),collapse=', '),
-                    ") \n\n")
-              }
+    
 
             
-      #11.5 Add 'alternatively' before F10 if a msg about ignore.deps was shown before
-        if (flag.conflict_needed_remote | flag.conflict_active_remote) {
-          msg <- paste0(msg, "\n",
-                 "|   Alternatively, if you think you can avoid the conflict:")
-             }
-     
-         
+   
             
-    #12  Prompt to disable all, or conflict ones only, 
-            msg <- paste0(msg, "\n|\n",
+    #12  If the conflict does not involve remote packages, prompt to disable them
+           if (flag.conflict_needed_remote==FALSE) {
+             msg <- paste0(msg, "\n|\n",
                                   "|    The simplest solution to prevent this & future conflicts, is to disable\n",
                                   "|    all existing packages. You may quickly re-enable them at any time by\n",
                                   "|    running `enable.packages()`.\n\n",
                                   "|    Your options:\n",
                                   "|    1) Type 'disable.packages()' to disable existing packages.\n",
                                   "|    2) type 'x' to stop")
+           
+               answer <- infinite.prompt(msg, c('disable.packages()','x'))
             
-            answer <- infinite.prompt(msg, c('disable.packages()','x'))
+             }
+            
             
             
      #13 Disable & Localize
