@@ -85,11 +85,7 @@
           quiet.install.original <- quiet.install
         
           
-      #1.7 Drop remotes if install.only==TRUE
-          #if (install.only==TRUE) {
-          #  snowball <- snowball[!snowball$from %in% c('github','gitlab') ,]
-          #}
-          
+    
           
       #1.8 CRAN URL
           r <- getOption("repos")

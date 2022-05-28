@@ -109,6 +109,6 @@ get.date.for.install.binary <- function(pkg_vrs , date) {
 
       
           
-  #4 If we hav enot yet returned, give 1970 date
+  #4 If we have not yet returned, give 1970 date
         return(as.DateYMD("1970-01-01"))
   }

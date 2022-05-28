@@ -87,10 +87,13 @@
 
               } else { 
 
-              message ("\nGroundhog says: ",
-                    "Unable to connect to '",remote_idk, "' to obtain files for the '",usrk,"/",pkgk,"' package.\n",
-                    "Check spelling of package, make sure it is available on '",remote_idk, "', check your internet connection,\n",
-				          	"and/or visit http://groundhogR.com/troubleshoot\n")
+              msg <- paste0 ("|IMPORTANT\n",
+							 "|   groundhog says: Unable to connect to '",remote_idk, "' to obtain files for the\n",
+							 "|   '",usrk,"/",pkgk,"' package. Check spelling of package, make sure it is available\n",
+							 "|   on '",remote_idk, "',  check your internet connection, and/or visit \n",
+							 "|   http://groundhogR.com/troubleshoot\n",
+							 "|   Type 'OK' to confirm you have read this message.")
+				infinite.prompt(msg,'ok')   
                 exit()
               }  #End of if local exists
 

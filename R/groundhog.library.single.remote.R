@@ -37,10 +37,9 @@
               if (pkg %in% active$pkg  && (!git_usr_pkg_date %in% .pkgenv[['remotes.loaded']])) {
               
                 msg <- paste0("|IMPORTANT\n",
-                              "|    A version of the package '",pkg, "' is already loaded and it may or may not match \n", 
-                              "|    the version available on '",remote_id, "' on '",date,"'.\n",
-                              "|    Restart the R session (CTRL/CMD-SHIFT F10 in R-Studio) and try again\n",
-                              "|    If the problem persist visit https://groundhogR.com/conflict for further suggestions\n",
+                              "|    A version of the package '",pkg, "' is already loaded.\n",
+                              "|    To load the version available on '" , date, "', first restart the R session\n",
+							  "|    In R Studio: CTRL/CMD-SHIFT F10\n",
                               "|    Type 'OK' to confirm you have read this message")
                 infinite.prompt(msg,'ok')
                 exit()
