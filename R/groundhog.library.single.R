@@ -98,10 +98,10 @@
 							
 				#10.3 Localize special pkgs in the snowball 
 							
-					localizable <- c('foreach','doParallel','iterators')
+					localizable <- .pkgenv[['localize.automatically']]  #Pkgs for parallel  by default get localized whenever they are called.
 					
 					snowball.localizable <- snowball[snowball$pkg %in% localizable,]
-				  n.local <-nrow(snowball.localizable)	
+				    n.local <-nrow(snowball.localizable)	
 
           if (n.local>0)
           {

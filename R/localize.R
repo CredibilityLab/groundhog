@@ -19,13 +19,13 @@
   
     if (pkg_vrs %in% ip.pkg_vrs) return(invisible(TRUE))
     
-  #3 Exit if grounddog.folder does not have the target pkg
+  #3 Exit if groundhog.folder does not have the target pkg
       #Path to pkg in groundhog
         groundhog_path <- get.pkg_search_paths(pkg,vrs)
         pkg_path.groundhog <- paste0(groundhog_path,"/",pkg)
       
       #Does it exist?
-        if (nrow(data.frame(installed.packages(lib=groundhog_path)), stringsAsFactors=FALSE)==0) {
+        if (nrow(data.frame(installed.packages(lib=groundhog_path), stringsAsFactors=FALSE))==0) {
           return(invisible(FALSE))
         }
         
@@ -39,7 +39,8 @@
         ip <- data.frame(installed.packages(local_folder), stringsAsFactors=FALSE)
         
       #If this one is installed, uninstall it (this should have been taken care vai disabling earlier, just an extra precaution)
-        if (pkg %in% ip$Package) remove.packages(pkg,lib = local_folder)
+        #if (pkg %in% ip$Package) remove.packages(pkg,lib = local_folder)
+         if (pkg %in% ip$Package) rename.file(pkg ,lib = local_folder)
       
   #5 Copy the folder from groundhog folder
         file.copy(pkg_path.groundhog,        #copy contents of the "pkg_vrs/pkg" folder
@@ -60,7 +61,8 @@
     k=1
     for (pkg_vrs.k in snowball$pkg_vrs)
     {
-    cat('...',k)
+    cat('copying ',pkg_vrs.k)
+    k=k+1
     localize.pkg(pkg_vrs.k, localize.quietly=localize.quietly)
     }
   }

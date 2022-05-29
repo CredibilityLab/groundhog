@@ -12,8 +12,12 @@
 #installed base packages
   .pkgenv[['base_pkg']] <- data.frame(installed.packages(priority = 'base'))$Package
     
-  
+#Localizable packages (if any of these pacakges are loaded, they become localized
+  .pkgenv[['localize.automatically']] <- c('foreach','doParallel','iterators')
+  .pkgenv[['localize.rstudio']]  <- c('base64enc', 'yaml' , 'compiler' , 'fastmap' , 'cli' , 'rlang',
+                                  'digest', 'evaluate', 'htmltools', 'markdown', 'rmarkdown','knitr','xun')
 
+  
 #Check support of colors? (legacy function perhaps)
 .onLoad <- function(libname, pkgname) {
   
