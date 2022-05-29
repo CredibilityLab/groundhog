@@ -6,7 +6,8 @@
 #' reversible, but if you rely on groundhog to load packages you may not need to ever reverse it.
 #' To re-enable all packages simply  run `enable.packages()`
 #' 
-
+#'@param disable.quietly defaults to `FALSE`. If set to `TRUE`, feedback on console is not shown
+#'@param skip.prompt defaults to `FALSE`. If set to `TRUE`, prompts asking for confirmation are skipped
 #'@examples
 #' \dontrun{
 #' disable.packages()
@@ -111,7 +112,7 @@
 #' @export
 
     
-     enable.packages <- function(packages) {
+     enable.packages <- function() {
     
       #1 Get packages in all paths except last, which is the base R path
         packages_df <- get.packages_df() #utils.R #Function 33

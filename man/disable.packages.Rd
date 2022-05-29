@@ -6,6 +6,11 @@
 \usage{
 disable.packages(disable.quietly = FALSE, skip.prompt = FALSE)
 }
+\arguments{
+\item{disable.quietly}{defaults to \code{FALSE}. If set to \code{TRUE}, feedback on console is not shown}
+
+\item{skip.prompt}{defaults to \code{FALSE}. If set to \code{TRUE}, prompts asking for confirmation are skipped}
+}
 \description{
 To avoid version conflicts between the version of the package \code{groundhog} is trying
 to load, and the version R Studio loads automatically from the local library, you can

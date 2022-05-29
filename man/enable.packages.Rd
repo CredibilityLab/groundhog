@@ -4,7 +4,7 @@
 \alias{enable.packages}
 \title{Re-enable previously disabled packages in your non-groundhog library}
 \usage{
-enable.packages(packages)
+enable.packages()
 }
 \description{
 This function reverses the actions taken by \code{disable.packages()}
