@@ -117,11 +117,24 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
       if (n.conflict > 0 ) {
              
   #8 Show general message
+        cn<-conflict.needed[1:min(5,length(conflict.needed))]
+        ca<-conflict.active[1:min(5,length(conflict.active))]
+ 
          msg <- paste0("|PROBLEM.\n",
                 "|    Groundhog says:\n",
                 "|    ", n.conflict, " of the ", n.needed, " packages needed for '",requested_pkg_vrs, "' have a version conflict\n",
-                "|    with packages already in your current R session.")
-			  
+                "|    with packages already in your current R session.\n|\n",
+                "|    NEEDED: ",pasteQC(cn),"\n",
+                "|    LOADED: ",pasteQC(ca),"\n|\n"
+                )
+
+         
+        if (n.conflict>5) {
+          msg<-paste0(msg, "|    Showing first 5 of the ",n.conflict, " conflicting packages.\n",
+                           "|    (`.view.conflict` to see all ",n.conflict, ")") 
+			     .view.conflict <<- data.frame(loaded=conflict.active, needed=conflict.needed)
+          }
+			    
 	 #9 Add notice about remotes already loaded
       #9.1 Find remotes in the snowball
            snowball.remotes <- subset(snowball, snowball$from %in% c('github','gitlab'))
@@ -188,9 +201,23 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                     #snowball <- snowball[!snowball$from %in% c('github','gitlab') ,]
                   
                 #13.3 Localize the snowball
-                  message1("Copying needed packages from groundhog to the local library.")
+                  message1("Copying needed packages from groundhog to the default personal R library.")
                   localize.snowball(snowball, localize.quietly=TRUE)
             
+                  
+                #13.4 If  r/markdown or knitr is active, groundhog install and localize all markdown packages
+                  if (sum(c('markdown','rmarkdown','knitr') %in% active$pkg)>0) 
+                    {
+                    for (pkgk in .pkgenv[['markdown_packages']])
+                    {
+                      snowballk <- get.snowball(pkgk,date)
+                      install.snowball(snowballk,date=date,install.only = TRUE, skip.remotes=TRUE)
+                      localize.snowball(snowballk)
+                    }
+                    
+                    
+                  } 
+                  
                          
           #13.4 Ask them to restart the R Session
                   txt<-paste0("|IMPORTANT:\n",
