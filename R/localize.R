@@ -58,12 +58,11 @@
 #Function that loops localizing all files in a snowball
   localize.snowball <- function(snowball, localize.quietly)
     {
-    k=1
     for (pkg_vrs.k in snowball$pkg_vrs)
     {
-    cat('copying ',pkg_vrs.k)
-    k=k+1
+    message1('copying ' , pkg_vrs.k , ' to default personal library.')
     localize.pkg(pkg_vrs.k, localize.quietly=localize.quietly)
+    
     }
   }
     
