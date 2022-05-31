@@ -13,8 +13,8 @@ disable.packages(disable.quietly = FALSE, skip.prompt = FALSE)
 }
 \description{
 To avoid version conflicts between the version of the package \code{groundhog} is trying
-to load, and the version R Studio loads automatically from the local library, you can
-disable all packages in the default local library. This action is fully and instantaneously
+to load, and the version R Studio loads automatically from your default personal library, you can
+disable all packages in the default personal library. This action is fully and instantaneously
 reversible, but if you rely on groundhog to load packages you may not need to ever reverse it.
 To re-enable all packages simply  run \code{enable.packages()}
 }
