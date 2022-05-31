@@ -36,9 +36,16 @@
                   #"using a different date, before running the command you just run.\n")
           
           #Attempt to load via groundhog  
-          
-            groundhog.library(pkg_utility, groundhog.day,tolerate.R.version = get.rversion()) #Always accept different versions here
-          
+            #Save existing path
+              libPaths.before<-.libPaths()
+              
+            #groundhog call
+              groundhog.library(pkg_utility, groundhog.day,tolerate.R.version = get.rversion()) #Always accept different versions here
+              
+            #return libpath
+              .libPaths(libPaths.before)
+              
+              
          #Final check giving error if it failed
            if (! pkg_utility %in% .packages()) {
              exit("groundhog says: Error. Could not load '" , pkg_utility, "'.")
