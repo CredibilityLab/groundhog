@@ -45,25 +45,25 @@
     
     
   #7 Install packages if needed, add and groundhog libpaths for each package
-      
+     #7.1 Install
       for (pathk in snowball$installation.path) {
         if (!file.exists(pathk))  {
           dir.create(pathk,recursive=TRUE,showWarnings = FALSE)
         }
       }
     
-    
+    #7.2 libpath
       .libPaths(c(snowball$installation.path, .libPaths()))
 
     
-    #If all installed, load directly 
+    #7.3 If all installed, load directly 
       if (all(snowball$installed)) {
             sapply(snowball$pkg,loadNamespace)
           
           
             } else {
               
-    #Else, run install snowball which will install and then do the paths and load namespaced within the final loop
+    #7.4 Else, run install snowball which will install and then do the paths and load namespaced within the final loop
             install.snowball(snowball,       date=date,      force.install = force.install, force.source = force.source, quiet.install = quiet.install)
              }
   
