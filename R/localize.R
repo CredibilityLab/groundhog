@@ -36,22 +36,19 @@
       #all paths except the last one
         local_folder <- .pkgenv[["orig_lib_paths"]][-length(.pkgenv[["orig_lib_paths"]])]
         
-        
-
       #get installed packages
         ip <- data.frame(utils::installed.packages(local_folder), stringsAsFactors=FALSE)
         
       #If this one is installed, uninstall it (this should have been taken care vai disabling earlier, just an extra precaution)
         if (pkg %in% ip$Package) utils::remove.packages(pkg,lib = local_folder)
-        #if (pkg %in% ip$Package) rename.file(pkg ,lib = local_folder)
-      
+
   #5 Copy the folder from groundhog folder
         file.copy(pkg_path.groundhog,        #copy contents of the "pkg_vrs/pkg" folder
                   local_folder,              #to the local library
                   recursive = TRUE)          #include all files
         
      
-      if (localize.quietly==FALSE) message1("Copying package to local (non-groundhog) folder: ",pkg_vrs)
+      if (localize.quietly==FALSE) message1("  copying: ",pkg_vrs)
      
   #6 Add to localized vector
         .pkgenv[['localized']]<-c(.pkgenv[['localized']], pkg_vrs)
@@ -59,13 +56,11 @@
   
 #---------------------------
   
-  
 #Function that loops localizing all files in a snowball
   localize.snowball <- function(snowball, localize.quietly=TRUE)
     {
     for (pkg_vrs.k in snowball$pkg_vrs)
     {
-    message1('copying ' , pkg_vrs.k)
     localize.pkg(pkg_vrs.k, localize.quietly=localize.quietly)
     
     }

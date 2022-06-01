@@ -96,22 +96,6 @@
 						  } #End if snowball exists
 							
 							
-				#10.3 Localize special pkgs in the snowball 
-							
-					localizable <- .pkgenv[['localize.automatically']]  #Pkgs for parallel  by default get localized whenever they are called.
-					
-					snowball.localizable <- snowball[snowball$pkg %in% localizable,]
-				    n.local <-nrow(snowball.localizable)	
-
-          if (n.local>0)
-          {
-					for (k in 1:n.local)
-					  {
-					  localize.pkg(snowball.localizable$pkg_vrs[k])
-
-					  } #End for
-          }   #End if
-							
      } #End if verified         
 
   #11 If not verified, delete snowball

@@ -191,7 +191,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                   disable.packages(disable.quietly = FALSE, skip.prompt=TRUE)
 
                 #13.2 MSG 
-                  message1("\nMaking copies of packages needed by '",requested_pkg_vrs,"' in default R library.")
+                  message1("\nCopying packages needed by '",requested_pkg_vrs,"' to default R library.")
                   
                 #13.3 Install snowball
                  # groundhog.install(snowball)  #install full snowball, populated from the target pkg 
@@ -201,8 +201,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                     #snowball <- snowball[!snowball$from %in% c('github','gitlab') ,]
                   
                 #13.3 Localize the snowball
-                  message1("Copying needed packages from groundhog to the default personal R library.")
-                  localize.snowball(snowball, localize.quietly=TRUE)
+                  localize.snowball(snowball, localize.quietly=FALSE)
             
                   
                 #13.4 If  r/markdown or knitr is active, groundhog install and localize all markdown packages
@@ -212,7 +211,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                     {
                       snowball.k <- get.snowball(pkgk,date)
                       install.snowball(snowball.k,date=date,install.only = TRUE, skip.remotes=TRUE)
-                      localize.snowball(snowball.k)
+                      localize.snowball(snowball.k, localize.quietly=TRUE)
                     }
                     
                     
