@@ -18,7 +18,9 @@
 #Packages for markdown R Studio making
   .pkgenv[['markdown_packages']] <-  c('base64enc', 'htmltools' , 'markdown' , 'rmarkdown', 'knitr')
 
-  
+#Packages that have been already localized
+  .pkgenv[['localized']] <- c()
+
 #Check support of colors? (legacy function perhaps)
 .onLoad <- function(libname, pkgname) {
   

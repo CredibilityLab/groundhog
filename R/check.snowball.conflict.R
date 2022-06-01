@@ -125,7 +125,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                 "|    ", n.conflict, " of the ", n.needed, " packages needed for '",requested_pkg_vrs, "' have a version conflict\n",
                 "|    with packages already in your current R session.\n|\n",
                 "|    NEEDED: ",pasteQC(cn),"\n",
-                "|    LOADED: ",pasteQC(ca),"\n|\n"
+                "|    LOADED: ",pasteQC(ca),"\n"
                 )
 
          
@@ -169,12 +169,12 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
             
     #12  If the conflict does not involve remote packages, prompt to disable them
            if (flag.conflict_needed_remote==FALSE) {
-             msg <- paste0(msg, "\n|\n",
+             msg <- paste0(msg, "|\n",
                                   "|    The simplest solution to prevent this & future conflicts, is to disable\n",
                                   "|    all existing packages. You may quickly re-enable them at any time by\n",
                                   "|    running `enable.packages()`.\n\n",
                                   "|    Your options:\n",
-                                  "|    1) Type 'disable.packages()' to disable existing packages.\n",
+                                  "|    1) Type 'disable.packages()'\n",
                                   "|    2) type 'x' to stop")
            
                answer <- infinite.prompt(msg, c('disable.packages()','x'))
@@ -190,8 +190,8 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                 #13.1 disable                
                   disable.packages(disable.quietly = FALSE, skip.prompt=TRUE)
 
-                #13.2 MSG : will install snowball
-                  message1("Verifying all needed packages are installed.")
+                #13.2 MSG 
+                  message1("\nMaking copies of packages needed by '",requested_pkg_vrs,"' in default R library.")
                   
                 #13.3 Install snowball
                  # groundhog.install(snowball)  #install full snowball, populated from the target pkg 
@@ -210,9 +210,9 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                     {
                     for (pkgk in .pkgenv[['markdown_packages']])
                     {
-                      snowballk <- get.snowball(pkgk,date)
-                      install.snowball(snowballk,date=date,install.only = TRUE, skip.remotes=TRUE)
-                      localize.snowball(snowballk)
+                      snowball.k <- get.snowball(pkgk,date)
+                      install.snowball(snowball.k,date=date,install.only = TRUE, skip.remotes=TRUE)
+                      localize.snowball(snowball.k)
                     }
                     
                     
@@ -241,4 +241,5 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
      exit()
   }# End if some conflict found
 } # End function
+
 

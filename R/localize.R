@@ -7,6 +7,9 @@
 
   localize.pkg <- function(pkg_vrs,localize.quietly=FALSE)
   {
+  #0 Early return if already localized 
+    if (pkg_vrs %in% .pkgenv[['localized']]) return(TRUE)
+    
   #1 split name
     pkg <- get.pkg(pkg_vrs)
     vrs <- get.vrs(pkg_vrs)
@@ -49,18 +52,20 @@
         
      
       if (localize.quietly==FALSE) message1("Copying package to local (non-groundhog) folder: ",pkg_vrs)
-    
+     
+  #6 Add to localized vector
+        .pkgenv[['localized']]<-c(.pkgenv[['localized']], pkg_vrs)
   }
   
 #---------------------------
   
   
 #Function that loops localizing all files in a snowball
-  localize.snowball <- function(snowball, localize.quietly)
+  localize.snowball <- function(snowball, localize.quietly=TRUE)
     {
     for (pkg_vrs.k in snowball$pkg_vrs)
     {
-    message1('copying ' , pkg_vrs.k , ' to default personal library.')
+    message1('copying ' , pkg_vrs.k)
     localize.pkg(pkg_vrs.k, localize.quietly=localize.quietly)
     
     }
