@@ -27,7 +27,7 @@
 #25 Compare two sets of pkg_vrs vectors, obtaining text report of any mismatches 
 #26 base.libary()           : Copy library() to use when finalizing loading a pkg
 #27 Validate.tf
-#28 Prompt with OK, saving a .txt file to suppress prompt within x days
+#28 abandoned                : <abandoned> replaced by infinite.prompt() + pkg_specific.warnings
 #31 pasteQC()  -  paste a vector separating elements by quots  c('a','b','c')-->  string: '"a","b","c"'
 #32 infinite.promopt() ask the same question until a valid answer is provided
 #33 get.packages_df  -  data.frame with installed packages in local library
@@ -405,47 +405,9 @@ get.available.mran.date <- function(date0, date1) {
         }
       
         
-#Function 28 - Prompt to OK saving a .txt file showing the prompt has been shown
-    prompt.ok <- function(prompt_name , msg, days_till_shown_again) {
-      
-      #File path to message cookie
-        msg.cookie.path <- file.path(get.groundhog.folder(), paste0("warnings_shown/" , prompt_name, ".txt"))
-        
-        if (file.exists(msg.cookie.path)) {  
-      
-          #How many days since it was created
-            create.time <- file.info(msg.cookie.path)$ctime
-            days <- difftime(Sys.time() , create.time, units='days')
-          
-          #If less than K days, stop
-            if (days<days_till_shown_again)  return(invisible())
-            
-          #if more, delete the cookie file
-            if (days>days_till_shown_again)  unlink(msg.cookie.path)
-            
-            }
+#Function 28 - abandoned
+   
     
-          #Save cookie
-            if (!file.exists(dirname(msg.cookie.path))) dir.create(dirname(msg.cookie.path))
-            utils::write.csv(Sys.time() , msg.cookie.path)
-            
-          #Show the warning
-            message2()
-            message(msg)
-            message()
-            message1("This warning will not be shown again within ", days_till_shown_again, " days.")
-            text.answer <-readline(prompt = "Type OK to proceed, anything else to stop >")
-            
-          
-          
-      #Check prompt
-      if (tolower(text.answer)!="ok") {
-          message("You did not type OK, call aborted.")
-          exit()
-          }
-      
-      }  
-  
 #29 Read non dcf DESCRIPTION file saves to data.fraem
           read.desc2 = function(filepath) {
             
@@ -537,3 +499,41 @@ get.available.mran.date <- function(date0, date1) {
           return(x)
         } #ENd of function
     
+    
+#35 Format msg: format output to have fixed width and starting symbol (e.g., "|    ")
+    
+format.msg <- function(msg,width=70, header='IMPORTANT', pre="|")
+{
+  #Line counter
+    j<-0
+  #Lines with formatted message starts empty
+    msg.lines=c()
+  #Turn message into vector of words
+    msg.left <- strsplit(msg,' ')[[1]]
+
+  #Loop over lines
+    while (length(msg.left)>0)
+    {
+     j=j+1
+     msg.lines[j]=''
+
+    #loop over words
+      while (nchar(msg.lines[j]) + nchar(msg.left[1]) <width)
+      {
+      new.word <- msg.left[1]
+      
+      msg.lines[j] <- paste0(msg.lines[j],new.word," ")   #add the next word
+      msg.left <- msg.left[-1]
+      
+      if (regexpr('\n', new.word)>0) break   #skip line if \n is found
+      if (length(msg.left)==0) break
+      }
+      msg.lines[j]<- paste0(pre,"    ", msg.lines[j] ) 
+      if (length(msg.left)==0) break
+    }
+      
+  #formatted 
+    msg.formatted <- paste0(msg.lines,collapse="\n")
+    msg.formatted <- paste0(pre,header,"\n",msg.formatted)
+    return(msg.formatted)
+}

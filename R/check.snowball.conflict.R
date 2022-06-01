@@ -45,14 +45,15 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
         conflict.remote.n <- sum(conflict.remote.TF)
         if (conflict.remote.n>0)
         {
-          msg <- paste0("|PROBLEM.\n",
-                "|    Groundhog says:\n",
-                "|    Some of the non-CRAN packages needed for '",requested_pkg, "' are already loaded,\n",
-                "|    but for a date which does not match '" , date , "'. \n",
-                "|    To resolve this conflict you may need to modify your script ensuring the\n",
-                "|    same date is used throughout, and then re-run it after restarting the\n",
-                "|    R session (in R Studio: CMD/CTRL-SHIFT-F10).\n",
-                "|    Please type 'OK' to confirm you have read this message.")
+          msg <- paste0("groundhog says: ",
+                "Some of the non-CRAN packages needed for '",requested_pkg, "' are already loaded,",
+                "but for a date which does not match '" , date , "'. ",
+                "To resolve this conflict you may need to modify your script ensuring the",
+                "same date is used throughout, and then re-run it after restarting the",
+                "R session (in R Studio: CMD/CTRL-SHIFT-F10).\n ",
+                "Please type 'OK' to confirm you have read this message.")
+  
+          msg <- format.msg(msg)  #function 36 in utils.R
           infinite.prompt(msg,"ok")
           exit()
         }
@@ -182,11 +183,13 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
              }
             
             
-            
      #13 Disable & Localize
           #13.1 Disable
             if (answer=='disable.packages()')  {
-                
+              
+                #13.0 installed.packages
+                  ip <- data.frame(installed.packages(lib=.pkgenv[['default_libpath']]))
+              
                 #13.1 disable                
                   disable.packages(disable.quietly = FALSE, skip.prompt=TRUE)
 
@@ -201,7 +204,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                     #snowball <- snowball[!snowball$from %in% c('github','gitlab') ,]
                   
                 #13.3 Localize the snowball
-                  localize.snowball(snowball, localize.quietly=FALSE)
+                  localize.snowball(snowball, localize.quietly=FALSE,ip=ip)
             
                   
                 #13.4 If  r/markdown or knitr is active, groundhog install and localize all markdown packages
@@ -220,8 +223,9 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                          
           #13.4 Ask them to restart the R Session
                   txt<-paste0("|IMPORTANT:\n",
-                              "|   Groundhog says: to complete this process you must restart the R Session.\n",
-                              "|   In R Studio: CMD/CTRL-SHFT-F10")
+                              "|   Groundhog says: all needed packages have been installed, and\n",
+                              "|   conflicting packages disabled. You will be able to load  '",requested_pkg,"'\n",
+                              "|   after you restart the R session. In R Studio: CMD/CTRL-SHFT-F10")
                   
                   infinite.prompt(txt,"stop")
                   exit()
