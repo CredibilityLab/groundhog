@@ -37,7 +37,9 @@
         attached.pkg <- names(attached.list)
         attached.vrs <- unlist(lapply(attached.list, function(x) x$Version))
         attached.pkg_vrs <- paste0(attached.pkg , "_" , attached.vrs)
+        attached.pkg_vrs <- paste0(utils::sessionInfo()$basePkgs,"_",getRversion()) #add base pkgs
         
+
   #3 Early return if already attached
             if (pkg_vrs %in% attached.pkg_vrs) {
                   message1("The package '", pkg_vrs, "' is already attached.")
