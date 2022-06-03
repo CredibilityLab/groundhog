@@ -8,21 +8,19 @@
   localize.pkg <- function(pkg_vrs,localize.quietly=FALSE)
   {
   #0 Early return if already localized 
-    if (pkg_vrs %in% .pkgenv[['localized']]) return(TRUE)
+    if (pkg_vrs %in% .pkgenv[['localized']]) return(invisible(TRUE))
     
   #1 split name
     pkg <- get.pkg(pkg_vrs)
     vrs <- get.vrs(pkg_vrs)
 
-  #2 Exit if local folder already has this version
+  #2 Early return if local folder already has this version
 
     ip <- data.frame(utils::installed.packages(lib.loc =.pkgenv[["orig_lib_paths"]][1] ), stringsAsFactors=FALSE)
     ip.pkg_vrs <- paste0(ip$Package,"_",ip$Version)
-
-  
     if (pkg_vrs %in% ip.pkg_vrs) return(invisible(TRUE))
     
-  #3 Exit if groundhog.folder does not have the target pkg
+  #3 Early return if groundhog.folder does not have the target pkg
       #Path to pkg in groundhog
         groundhog_path <- get.pkg_search_paths(pkg,vrs)
         pkg_path.groundhog <- paste0(groundhog_path,"/",pkg)
@@ -32,14 +30,18 @@
           return(invisible(FALSE))
         }
         
-  #4 Delete other version of package from local folder
+  #4 Remove other version of package from local folder
       #all paths except the last one
         local_folder <- .pkgenv[["orig_lib_paths"]][-length(.pkgenv[["orig_lib_paths"]])]
-        
       
-      #If this one is installed, uninstall it (this should have been taken care via disabling earlier, just an extra precaution)
+      #If this one is installed, uninstall it 
         if (pkg %in% ip$Package) utils::remove.packages(pkg,lib = local_folder)
 
+            #note: when localizing after 'disable.packages()' this won't be necessary
+            #but if it occurs as part of special packages that need to be localized
+            #such as 'foreach' then this is necessary.
+        
+        
   #5 Copy the folder from groundhog folder
         file.copy(pkg_path.groundhog,        #copy contents of the "pkg_vrs/pkg" folder
                   local_folder,              #to the local library

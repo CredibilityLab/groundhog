@@ -19,6 +19,8 @@ pkg_specific.warnings <- function(pkg)
       #3.1 Foreach
         if (pkg=='foreach')
         {
+        #
+          
         
         #Message
           msg <- paste0("|IMPORTANT\n",
