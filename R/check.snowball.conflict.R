@@ -204,7 +204,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                     #snowball <- snowball[!snowball$from %in% c('github','gitlab') ,]
                   
                 #13.3 Localize the snowball
-                  localize.snowball(snowball, localize.quietly=FALSE,ip=ip)
+                  localize.snowball(snowball, localize.quietly=FALSE)
             
                   
                 #13.4 If  r/markdown or knitr is active, groundhog install and localize all markdown packages
@@ -215,11 +215,12 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                       snowball.k <- get.snowball(pkgk,date)
                       install.snowball(snowball.k,date=date,install.only = TRUE, skip.remotes=TRUE)
                       localize.snowball(snowball.k, localize.quietly=TRUE)
-                    }
-                    
-                    
-                  } 
-                  
+                    } #End for
+                  }  #End markdown
+                
+                #13.5 Localize foreach as well??
+                  #PENDING 2022 06 02
+                
                          
           #13.4 Ask them to restart the R Session
                   txt<-paste0("|IMPORTANT:\n",

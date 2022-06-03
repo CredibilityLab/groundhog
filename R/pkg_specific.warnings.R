@@ -10,25 +10,64 @@ pkg_specific.warnings <- function(pkg)
       all_pkgs_with_warnings <- c('foreach')
       
   #2 if pkg does not belong to set of packages with warnings, stop with early return
-      if (!pkg %in% all_pkgs_with_warnings) return(invisible())
+      if (!pkg %in% all_pkgs_with_warnings) return(invisible(TRUE))
   
   
+  #--------------------------------------------------------
   #3. Messages
-      msg=days=list()
       
-    #3.1 - foreach
-        msg[['foreach']] <- paste0('The package `foreach` can jeopardize reproducibility by loading packages\n',
-                                  'from the default R library in background.\n',
-                                  'This is easy to solve adding 3 lines of code to a foreach loop.  Check out:\n',
-                                  'https://groundhogr.com/foreach')
-  
-        days[['foreach']] <- 90
+      #3.1 Foreach
+        if (pkg=='foreach')
+        {
         
+        #Message
+          msg <- paste0("|IMPORTANT\n",
+								      "|     groundhog says: the package `foreach` can jeopardize \n",
+								      "|     reproducibility by loading packages from the default\n",
+                      "|     R library in background.  This is easy to solve adding\n",
+                      "|     just three lines of code to the `foreach` loops.\n",
+                      "|     More information at: https://groundhogr.com/foreach")
+        #Number of days
+          days_till_shown_again <- 90
           
-    
-  #4 Show warning with a prompt to continue -  function 28 in utils.R
-      prompt.ok(prompt_name = 'pkg_foreach' , msg=msg[[pkg]], days_till_shown_again = days[[pkg]])    
+        }
+      
+ #--------------------------------------------------------     
+ #4 Show prompt if more than `days` have past
+        #4.1 Path to cookie    
+          msg.cookie.path <- file.path(get.groundhog.folder(), paste0("warnings_shown/" , pkg , ".txt"))
+          
+        #4.2 How many days since it was last shown
+          if (file.exists(msg.cookie.path)) {  
+      
+          #How many days since it was created
+            create.time <- file.info(msg.cookie.path)$ctime
+            days <- difftime(Sys.time() , create.time, units='days')
+            } else { 
+            days=5000
+            }
+          
+            
+        #4.3 If less than `days` early return
+            if (days < days_till_shown_again)  return(invisible(TRUE))
+            
+        #4.4 if more than so many days show the msg and save the cookie 
+            if (days>=days_till_shown_again) {
+              
+          #cookie
+            if (!file.exists(dirname(msg.cookie.path))) dir.create(dirname(msg.cookie.path))
+            utils::write.csv(Sys.time() , msg.cookie.path)
+            
+          #show message
+            msg<-paste0(msg,"\n",
+                        "|     This warning will not be shown again within ", days_till_shown_again, " days.\n",
+                        "|     Type 'OK' to confirm you have read this message.\n")
+            answer<-infinite.prompt(msg,"ok")
+            return(invisible(TRUE))
+          } #End if showing the message
+          
+}
 
-    }
 
-
+pkg_specific.warnings('foreach')
+pkg='foreach'

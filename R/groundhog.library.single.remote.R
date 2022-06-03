@@ -57,17 +57,17 @@
     #4 Check snowball conflict
         check.snowball.conflict(snowball, force.install,ignore.deps,date)  
 
-     for (pathk in snowball$installation.path) {
-        if (!file.exists(pathk))  {
-          dir.create(pathk,recursive=TRUE,showWarnings = FALSE)
+       for (pathk in snowball$installation.path) {
+          if (!file.exists(pathk))  {
+            dir.create(pathk,recursive=TRUE,showWarnings = FALSE)
+          }
         }
-      }
     
     #4.1 libpath entire snowball
       .libPaths(c(snowball$installation.path, .libPaths()))
     
-      
-    #4.2 Create/update remotes.df
+
+    #4.2 Create remotes_df
         if (is.null(.pkgenv[['remotes_df']])) {
            .pkgenv[['remotes_df']] <- data.frame(pkg=character(),date=character(),attached=c() , stringsAsFactors = FALSE)
             }
@@ -75,9 +75,14 @@
     #5 install snowball (install will only happen if needed, this function also adds to  .libPath())
         install.snowball(snowball, date,recycle.files=TRUE)
 
-        
-        
+    
     #6 Attach pkg
+      #6.0 Workaroudn: .libPaths() was returning to default, so i re-set it here, 
+      #                seems like install.snowball() is undoingthe libpath selection
+      .libPaths('')
+      .libPaths(c(snowball$installation.path, .libPaths()))
+
+      #6.1 Attach itself
         base.library(pkg, character.only=TRUE) #utils. function 26
 
     #7 verify snowball loaded

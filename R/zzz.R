@@ -1,8 +1,4 @@
 
-  #.mismatch.warning <- new.env(parent = emptyenv()) #No longer used it seems
-
-
-
 #Create package environment
   .pkgenv <- new.env(parent = emptyenv())
 
@@ -21,9 +17,12 @@
 #Packages that have been already localized
   .pkgenv[['localized']] <- c()
 
+
 #Check support of colors? (legacy function perhaps)
-.onLoad <- function(libname, pkgname) {
+  .onLoad <- function(libname, pkgname) {
   
+
+    
     #Setup pkg variable values
     .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
     .pkgenv[['default_libpath']] <-  .libPaths()

@@ -36,10 +36,8 @@
       #all paths except the last one
         local_folder <- .pkgenv[["orig_lib_paths"]][-length(.pkgenv[["orig_lib_paths"]])]
         
-      #get installed packages
-        ip <- data.frame(utils::installed.packages(local_folder), stringsAsFactors=FALSE)
-        
-      #If this one is installed, uninstall it (this should have been taken care vai disabling earlier, just an extra precaution)
+      
+      #If this one is installed, uninstall it (this should have been taken care via disabling earlier, just an extra precaution)
         if (pkg %in% ip$Package) utils::remove.packages(pkg,lib = local_folder)
 
   #5 Copy the folder from groundhog folder
