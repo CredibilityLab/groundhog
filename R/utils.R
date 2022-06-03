@@ -32,6 +32,8 @@
 #32 infinite.promopt() ask the same question until a valid answer is provided
 #33 get.packages_df  -  data.frame with installed packages in local library
 #34 sandwich.library() - turn a string containing library calls into a vector of pkg names
+#35 format.msg()       - format output to have fixed width and starting symbol (e.g., "|    ")
+
 ########################################################################
     
 
