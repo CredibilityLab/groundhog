@@ -184,51 +184,49 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
             
             
      #13 Disable & Localize
-          #13.1 Disable
-            if (answer=='disable.packages()')  {
-              
-                #13.0 installed.packages
-                  ip <- data.frame(installed.packages(lib=.pkgenv[['default_libpath']]))
-              
-                #13.1 disable                
-                  disable.packages(disable.quietly = FALSE, skip.prompt=TRUE)
+        
+      if (answer=='disable.packages()')  {
+      
+        #13.0 installed.packages
+          ip <- data.frame(installed.packages(lib=.pkgenv[['default_libpath']]))
+      
+        #13.1 disable                
+          disable.packages(disable.quietly = FALSE, skip.prompt=TRUE)
 
-                #13.2 MSG 
-                  message1("\nCopying packages needed by '",requested_pkg_vrs,"' to default R library.")
-                  
-                #13.3 Install snowball
-                 # groundhog.install(snowball)  #install full snowball, populated from the target pkg 
-                  install.snowball(snowball,date=date,install.only = TRUE, skip.remotes=TRUE)
-                  
-                #13.3 Drop any remotes from the snowball
-                    #snowball <- snowball[!snowball$from %in% c('github','gitlab') ,]
-                  
-                #13.3 Localize the snowball
-                  localize.snowball(snowball, localize.quietly=FALSE)
-            
-                  
-                #13.4 If  r/markdown or knitr is active, groundhog install and localize all markdown packages
-                  if (sum(c('markdown','rmarkdown','knitr') %in% active$pkg)>0) 
-                    {
-                    for (pkgk in .pkgenv[['markdown_packages']])
-                    {
-                      snowball.k <- get.snowball(pkgk,date)
-                      install.snowball(snowball.k,date=date,install.only = TRUE, skip.remotes=TRUE)
-                      localize.snowball(snowball.k, localize.quietly=TRUE)
-                    } #End for
-                  }  #End markdown
-                
-                #13.5 Localize foreach as well??
-                  #PENDING 2022 06 02
+        #13.2 MSG 
+          message1("\nCopying packages needed by '",requested_pkg_vrs,"' to default R library.")
+          
+        #13.3 Install snowball
+         # groundhog.install(snowball)  #install full snowball, populated from the target pkg 
+          install.snowball(snowball,date=date,install.only = TRUE, skip.remotes=TRUE)
+          
+        #13.3 Drop any remotes from the snowball
+            #snowball <- snowball[!snowball$from %in% c('github','gitlab') ,]
+          
+        #13.4 Localize the snowball
+          localize.snowball(snowball, localize.quietly=FALSE)
+    
+          
+        #13.5 If  r/markdown or knitr is active, groundhog install and localize all markdown packages
+          if (sum(c('markdown','rmarkdown','knitr') %in% active$pkg)>0) 
+            {
+            for (pkgk in .pkgenv[['markdown_packages']])
+            {
+              snowball.k <- get.snowball(pkgk,date)
+              install.snowball(snowball.k,date=date,install.only = TRUE, skip.remotes=TRUE)
+              localize.snowball(snowball.k, localize.quietly=TRUE)
+            } #End for
+          }  #End markdown
+              
+       
                 
                          
-          #13.4 Ask them to restart the R Session
-                  txt<-paste0("|IMPORTANT:\n",
-                              "|   Groundhog says: all needed packages have been installed, and\n",
-                              "|   conflicting packages disabled. You will be able to load  '",requested_pkg,"'\n",
-                              "|   after you restart the R session. In R Studio: CMD/CTRL-SHFT-F10")
+          #13.6 Ask them to restart the R Session
+                  txt<-paste0("Because packages were just disabled, to proceed, restart the R session ",
+                              "and then run groundhog.library('",requested_pkg,"','",date,"') again\n ",
+                              "In R Studio you can restart R with CMD/CTRL-SHFT-F10")
                   
-                  infinite.prompt(txt,"stop")
+                  answer<-infinite.prompt(format.msg(txt),"stop")
                   exit()
               } #End If agreed to disable something
             
