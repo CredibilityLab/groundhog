@@ -549,7 +549,7 @@ format.msg <- function(msg,width=70, header='IMPORTANT', pre="|")
       {
       r["CRAN"] <- "http://cran.r-project.org/" 
       options(repos=r)
-      message("A default CRAN mirror option has not been set.")
-      message("Groundhog has set the default to 'http://cran.r-project.org/'")
+      message1("A default CRAN mirror option has not been set.")
+      message1("Groundhog has set the default to 'http://cran.r-project.org/'")
       }
  }
