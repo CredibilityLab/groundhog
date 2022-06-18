@@ -29,9 +29,6 @@
     .pkgenv[['groundhog_loaded_pkgs']] <- c()
 
    
-    #Verify a mirror has been set    
-     set.default.mirror() #Function 36
-
     
          
     } #End of onLoad
@@ -129,6 +126,14 @@
             }  #End mismatch in version
           } #End if !is.null()
           } #ENd if consent==TRUE
+        
+        
+        
+     #Verify a mirror has been set    
+      set.default.mirror() #Function 36
+
+ 
+     
       } #End on attach
     
     
