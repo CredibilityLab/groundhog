@@ -84,6 +84,9 @@
         #This is executed first so that upon exit() and setting it back to this, it exists for sure.
 
     
+  #0.5) Verify a mirror has been set    
+     set.default.mirror() #Function 36
+    
     
   #1) Validation     
     #1.0 if ignore deps is not empty, check that it is already loaded

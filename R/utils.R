@@ -539,3 +539,17 @@ format.msg <- function(msg,width=70, header='IMPORTANT', pre="|")
     msg.formatted <- paste0(pre,header,"\n",msg.formatted)
     return(msg.formatted)
 }
+
+
+#36 Set default mirror
+ set.default.mirror<-function()
+ {
+  r <- getOption("repos")
+      if (regexpr('http', r)[[1]] == -1)
+      {
+      r["CRAN"] <- "http://cran.r-project.org" 
+      options(repos=r)
+      message("A default CRAN mirror option has not been set.")
+      message("Groundhog has set the default to 'http://cran.r-project.org'")
+      }
+ }
