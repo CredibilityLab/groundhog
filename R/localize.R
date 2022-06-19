@@ -5,7 +5,7 @@
 #it is executed in groundhog.library.single(), in #10.3, after verifying the snowball has been 
 #successfully installed.
 
-  localize.pkg <- function(pkg_vrs,localize.quietly=FALSE)
+  localize.pkg <- function(pkg_vrs,localize.quietly=FALSE,ip=NULL)
   {
   #0 Early return if already localized 
     if (pkg_vrs %in% .pkgenv[['localized']]) return(invisible(TRUE))
@@ -16,7 +16,7 @@
 
   #2 Early return if local folder already has this version
 
-    ip <- data.frame(utils::installed.packages(lib.loc =.pkgenv[["orig_lib_paths"]][1] ), stringsAsFactors=FALSE)
+    if (is.null(ip)) ip <- data.frame(utils::installed.packages(lib.loc =.pkgenv[["orig_lib_paths"]][1] ), stringsAsFactors=FALSE)
     ip.pkg_vrs <- paste0(ip$Package,"_",ip$Version)
     if (pkg_vrs %in% ip.pkg_vrs) return(invisible(TRUE))
     
@@ -59,9 +59,11 @@
 #Function that loops localizing all files in a snowball
   localize.snowball <- function(snowball, localize.quietly=TRUE)
     {
+    ip <- data.frame(utils::installed.packages(lib.loc =.pkgenv[["orig_lib_paths"]][1] ), stringsAsFactors=FALSE)
+
     for (pkg_vrs.k in snowball$pkg_vrs)
     {
-    localize.pkg(pkg_vrs.k, localize.quietly=localize.quietly)
+    localize.pkg(pkg_vrs.k, localize.quietly=localize.quietly,ip=ip)
     
     }
   }

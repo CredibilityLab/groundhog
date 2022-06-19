@@ -98,16 +98,21 @@
 							
 				
 		   #10.3 Localize special pkgs in the snowball 
-					snowball.localizable <- snowball[snowball$pkg %in% .pkgenv[['localize.automatically']],]
-				  n.local <- nrow(snowball.localizable)	
-					if (n.local>0)
-          {
-					for (k in 1:n.local)
-					  {
-					  localize.pkg(snowball.localizable$pkg_vrs[k],localize.quietly=TRUE)
-
-					  } #End for
-          }   #End if		
+# 					snowball.localizable <- snowball[snowball$pkg %in% .pkgenv[['localize.automatically']],]
+# 				  n.local <- nrow(snowball.localizable)	
+# 					if (n.local>0)
+#           {
+# 					for (k in 1:n.local)
+# 					  {
+# 					  localize.pkg(snowball.localizable$pkg_vrs[k],localize.quietly=TRUE)
+# 
+# 					  } #End for
+#           }   #End if		
+							
+				#10.4 localize everything that's not base
+					snowball.no_base <- snowball[!snowball$pkg %in% base_pkg(),]
+					localize.snowball(snowball.no_base)
+							
 										
      } #End if verified         
 
