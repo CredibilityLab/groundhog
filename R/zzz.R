@@ -22,14 +22,11 @@
   .onLoad <- function(libname, pkgname) {
   
 
-    
     #Setup pkg variable values
     .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
     .pkgenv[['default_libpath']] <-  .libPaths()
     .pkgenv[['groundhog_loaded_pkgs']] <- c()
 
-   
-    
          
     } #End of onLoad
 
