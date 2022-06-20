@@ -36,12 +36,11 @@
               active <- get.active()
               if (pkg %in% active$pkg  && (!git_usr_pkg_date %in% .pkgenv[['remotes.loaded']])) {
               
-                msg <- paste0("|IMPORTANT\n",
-                              "|    A version of the package '",pkg, "' is already loaded.\n",
-                              "|    To load the version available on '" , date, "', first restart the R session\n",
-							  "|    In R Studio: CTRL/CMD-SHIFT F10\n",
-                              "|    Type 'OK' to confirm you have read this message")
-                infinite.prompt(msg,'ok')
+                msg <- paste0("A version of the package '",pkg, "' is already loaded. ",
+                              "To load the version available on '" , date, "', first restart the R session. ",
+							  "In R Studio: CTRL/CMD-SHIFT F10.\n ",
+                              "Type 'OK' to confirm you have read this message")
+                infinite.prompt(format.msg(msg),'ok')
                 exit()
               }
 

@@ -29,7 +29,7 @@
 #27 Validate.tf
 #28 abandoned                : <abandoned> replaced by infinite.prompt() + pkg_specific.warnings
 #31 pasteQC()  -  paste a vector separating elements by quots  c('a','b','c')-->  string: '"a","b","c"'
-#32 infinite.promopt() ask the same question until a valid answer is provided
+#32 infinite.prompt() ask the same question until a valid answer is provided
 #33 get.packages_df  -  data.frame with installed packages in local library
 #34 sandwich.library() - turn a string containing library calls into a vector of pkg names
 #35 format.msg()             : format output to have fixed width and starting symbol (e.g., "|    ")
@@ -504,7 +504,8 @@ get.available.mran.date <- function(date0, date1) {
     
 #35 Format msg: format output to have fixed width and starting symbol (e.g., "|    ")
     
-format.msg <- function(msg,width=70, header='IMPORTANT', pre="|")
+    
+    format.msg <- function(msg,width=70, header='IMPORTANT.', pre="|")
 {
   #Line counter
     j<-0
@@ -523,18 +524,18 @@ format.msg <- function(msg,width=70, header='IMPORTANT', pre="|")
       while (nchar(msg.lines[j]) + nchar(msg.left[1]) <width)
       {
       new.word <- msg.left[1]
-      
       msg.lines[j] <- paste0(msg.lines[j],new.word," ")   #add the next word
       msg.left <- msg.left[-1]
       
       if (regexpr('\n', new.word)>0) break   #skip line if \n is found
       if (length(msg.left)==0) break
-      }
+    }
       msg.lines[j]<- paste0(pre,"    ", msg.lines[j] ) 
       if (length(msg.left)==0) break
     }
       
   #formatted 
+    msg.lines <- gsub("\n", "\n|", msg.lines)
     msg.formatted <- paste0(msg.lines,collapse="\n")
     msg.formatted <- paste0(pre,header,"\n",msg.formatted)
     return(msg.formatted)
