@@ -112,7 +112,9 @@
 				#10.4 localize everything that's not base
 					snowball.no_base <- snowball[!snowball$pkg %in% base_pkg(),]
 					localize.snowball(snowball.no_base)
-							
+						
+				#10.5 add snowball to loaded by groundhog
+					.pkgenv[['groundhog_loaded_pkgs']] <- 	c(.pkgenv[['groundhog_loaded_pkgs']] , snowball$pkg)
 										
      } #End if verified         
 

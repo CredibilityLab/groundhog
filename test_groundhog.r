@@ -1,9 +1,9 @@
 # {groundhog}  tester
 #
-#This version : 2022 04 24
+#This version : 2022 05 13
 
 #Install most recent version of groundhog
-  remotes::install_github("CredibilityLab/groundhog")
+ # remotes::install_github("CredibilityLab/groundhog")
 
   
 ######################################################################################
@@ -31,6 +31,9 @@
 
     library('groundhog')
     set.groundhog.folder('c:/temp_testing_groundhog')
+    
+    
+    
 #Set 0 - various forms of calling packages to be loaded
 
   #Single package, with and without quotes
@@ -42,13 +45,23 @@
     pkg1='pwr'
     groundhog.library(pkg1,test.day)    
     
-  #Object containing many packages
+  #Vector containing many packages
     pkg2=c('pwr','metafor')
     groundhog.library(pkg2,test.day)    #single package, no quotes, show warning to use ""
 
   #Direct cal to many packages
     groundhog.library(c('pwr','metafor'),test.day)    
     
+  #Sandwiching library
+    library('groundhog')
+    groundhog.library("
+          library('pwr')
+          library(metafor)
+          library(tidyr)
+          ", 
+      test.day)
+    
+  
     
 #######################################    
 #Set 1 - Error and warnings with conflicts
@@ -68,39 +81,22 @@
                        #(since it is the package being called with conflict no offer to load early or ignore conflict, only to uninstall)
     library(groundhog)
     pwr::pwr.t.test(n=50,d=.4)  #load pkg
-    groundhog.library('pwr',  test.day) #Default error ctrl-shift-f10
-    groundhog.library('pwr',  test.day) #2nd time, offer to uninstall, accept it and see if it works
-    
-    disable.local()
-    sessionInfo()
-    see.unistalled.conflicts()
-    reinstall.conflicts()
+    groundhog.library('pwr',  test.day) #Unload wrong version, load correct version
+
     
     
   #Test conflict 3 - same as 2, but conflict triggered by a loaded dependency rather than target package
     library(groundhog)
-    library('rio')
+    library('vctrs')
+    
     groundhog.library('tibble',test.day)
 
-  #Test conflict 4 - another version already attached, for an ignore.deps case, same behavior as test conflict 1
+  #Test conflict with recommended package
     library(groundhog)
-    library('knitr')
-    groundhog.library('knitr',test.day)
-  
-  #Test conflict 5 - another version is loaded, and it is an ignored deps, so it is attached with a warning
-    knitr::all_labels()  #to trigger loading but not attaching knitr
-    library(groundhog)
-    groundhog.library('knitr',test.day)
-  
-  #Test conflict 6 - another version already loaded, for involving dependencies in ignore.deps
-    #install.packages('rio')
-    library('groundhog')
-    library('rio')
-    groundhog.library('dplyr',test.day)   #Fails, then gives all 3 options
-    groundhog.library('foreign',test.day) #Gives warning because it is a recommended packageoptions
-    groundhog.library('AER',test.day)     #Fails, then gives all 3 options
+    x=MASS::abbey      #different version
+    groundhog.library('MASS','2022-04-01')
     
-    
+    disable.packages()
 ########################################################################
 #SET OF TESTS 2 -  CHECKING PREVIOUSLY FOUND BUGS
     
@@ -108,14 +104,13 @@
     library('groundhog')
     
     pkgs=c("robustlmm","R2ucare")
-    groundhog.library(pkgs,test.day)
-    lmer(NA)  #should read error in formula rather than cannot find functin
+    groundhog.library(pkgs,'2022-04-01')
+    lmer(NA)  #should read error in formula rather than cannot find function
     
 #2) Folder with space names
     library('groundhog')
     current.folder<-get.groundhog.folder()
-    #PC:  set.groundhog.folder("c:/temp/another folder with spaces")
-    #MAC: set.groundhog.folder(paste0(current.folder,'/temp groundhog folder')
+    set.groundhog.folder(paste0(current.folder,'/temp groundhog folder'))
 
     groundhog.library('jsonlite',test.day)
     
@@ -127,15 +122,19 @@
     source("http://groundhogr.com/source_file_for_test_groundhog.r")
     
     
-#4) Run with option tolerate.R.Version (run this in R-3.2.5)
-    groundhog.library('pwr','2021-08-01',tolerate.R.version = '3.2.5')
-    
-    
+set.groundhog.folder('c:/dropbox/groundhog_folder')
 #ADDITIONAL OPTIONS
 
-#5) Test source version
+#4) tolerate
+  library('groundhog')
+
+  groundhog.library('pwr','2018-08-01')
+  groundhog.library('pwr','2018-08-01',tolerate.R.version='4.1.3')
+
+    
+#5) Source
     library('groundhog')
-    groundhog.library('pwr','2018-08-01',tolerate.R.version = '3.2.5',force.source = TRUE)
+    groundhog.library('pwr','2018-08-01',tolerate.R.version = '4.1.3', force.install=TRUE,force.source = TRUE)
     
 #6) Test for re-install
     library('groundhog')
@@ -153,7 +152,7 @@
 #9) Include suggests
     library('groundhog')
     pks=c('pwr','rio')
-    groundhog.library(pks, "2021-08-15",include.suggests = TRUE)
+    groundhog.library(pks, "2019-08-15",include.suggests = TRUE,tolerate.R.version = '4.1.3')
     
 #
 ########################################################################
@@ -287,3 +286,56 @@
     test.groundhog(1:10)         #Install the 100 most downloaded packages 
     test.groundhog(500:525)        #install the 500-525 most downloaded packages
     test.groundhog(-10, groundhog.day='2021-09-04',seed=9)  #install 10 random packages available right now for this version of R
+
+    
+    
+#---------------------------------------------  
+#4.  Remotes
+  
+#4.1 Remote A dependson Remote B, verify Remote B can be attache 
+    #Run in 3.6.3 - Key is whether the second package, a dependency of the 1st, is laoded without an error 
+   
+   library('groundhog') 
+    groundhog.library('crsh/papaja','2020-04-01')
+    groundhog.library('tidymodels/broom','2020-04-01')  #SHOUDL WORK
+    
+    
+#4.2 Same, but now with non matching dates
+    library('groundhog') 
+    groundhog.library('crsh/papaja','2020-04-01')
+    groundhog.library('tidymodels/broom','2020-04-02')  #SHOULD NOT WORK
+    
+    
+#4.3 Load remote, then try to load CRAN version
+      library('groundhog') 
+      groundhog.library('crsh/papaja','2020-04-01')   #remote broom dependency
+      groundhog.library('broom','2020-04-01')    
+    
+      #Should say script needs to be revised
+
+      
+#4.4 remote dependency already loaded
+    library('groundhog')
+    groundhog.library('tidymodels/broom','2020-04-01')  
+    groundhog.library('crsh/papaja','2020-04-01')
+  
+        #Should work
+    
+   
+    
+#4.5 remote dependency already loaded, but wrong date
+    library('groundhog')
+    groundhog.library('tidymodels/broom','2020-04-02')  
+    groundhog.library('crsh/papaja','2020-04-01')
+    
+    
+#4.6 CRAN pkg with CRAN dependency and the dependency is already loaded as remote
+    library('groundhog')
+    groundhog.library('tidymodels/broom','2020-04-02')  
+    groundhog.library('dragon','2020-04-02', ignore.deps = 'broom')  
+
+    t1=toc("arsenal",T)
+    sessionInfo()
+    
+    
+    
