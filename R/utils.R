@@ -535,11 +535,24 @@ get.available.mran.date <- function(date0, date1) {
     }
       
   #formatted 
-    msg.lines <- gsub("\n", "\n|", msg.lines)
-    msg.formatted <- paste0(msg.lines,collapse="\n")
-    msg.formatted <- paste0(pre,header,"\n",msg.formatted)
+    #Add |  
+      msg.lines <- gsub("\n", "\n|", msg.lines)
+      
+      
+    #Join al
+      msg.formatted <- paste0(msg.lines,collapse="\n")
+      
+    #Add header
+      msg.formatted <- paste0(pre,header,"\n",msg.formatted)
+      
+    #Add ------------- on top
+      sep.line <- c(paste0(rep('-',width+5)) , "\n" )
+      #msg.formatted<-c(sep.line, msg.formatted, "\n", sep.line)
+      msg.formatted<-c(sep.line, msg.formatted)
+    
     return(msg.formatted)
 }
+
 
 
 #36 Set default mirror

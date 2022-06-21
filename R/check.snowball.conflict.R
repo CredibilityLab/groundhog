@@ -16,9 +16,6 @@
 
 check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) {
 
-  #0 F10 message
-    msg.f10 <- paste0("You may unload all packages by restarting the R session \n ",
-                      "(in R Studio CMD/CTRL-SHFT-F10).")
     
    #1 short name for package being installed/loaded
         requested_pkg_vrs <- snowball$pkg_vrs[length(snowball$pkg_vrs)]
@@ -41,13 +38,11 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
               
               if (length(pkg.loaded_need_installing)>0) {
                 msg <- paste0(
-                          "groundhog say: you selected 'force.install=TRUE' but the following packages that would be installed ",
-                          "are currently loaded: ", pasteQC(pkg.loaded_need_installing), 
-                           msg.f10
-                          )
-            
-            
-                
+                          "groundhog say: you selected 'force.install=TRUE' but the following packages",
+                          " that would be installed are currently loaded: ", pasteQC(pkg.loaded_need_installing), ". \n ",
+                           "You may unload all packages by restarting the R session, in R Studio CMD/CTRL-SHFT-F10.\n ", 
+                          "Type 'OK' to confirm you have read this message.")
+
                 infinite.prompt(format.msg(msg),'ok')
                 exit()
                 
@@ -68,7 +63,9 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                 "using a date other than '",date,"': ",pasteQC(pkg.conflict_remote_date),". ",
                 "This creates a potential version conflict. To avoid it you may need to modify ",
                 "your script ensuring the same date is used for every groundhog.library() call. ",
-                msg.f10)
+                "You may unload all packages by restarting the R session, in R Studio CMD/CTRL-SHFT-F10.\n ", 
+                "Type 'OK' to confirm you have read this message.")
+
   
           infinite.prompt(format.msg(msg),"ok")
           exit()
@@ -95,11 +92,14 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                           " Across groundhog calls you have used different dates (",
                           paste0(.pkgenv[['hogdays']],collapse=' , '),
                           " ) that is proably the root cause of this conflict. ")
+                          
                 }
           
         #Request restart   
-           msg<-paste0(msg, msg.f10)
-      
+           
+        msg<-paste0(msg, "You may unload all packages by restarting the R session, in R Studio CMD/CTRL-SHFT-F10.\n ", 
+                  "Type 'OK' to confirm you have read this message.")
+                          
          answer <- infinite.prompt(format.msg(msg),'ok')
          exit()
          }
@@ -118,10 +118,11 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
               msg <- paste0("groundhog says: the following package(s) that need to be loaded: ",pasteQC(pkg.conflit_new.remote),
                     ", were previously loaded from CRAN. This creates a version conflict that may be unavoidable. ",
                     "Whichever version you load first is the one you will use. To allow this conflict include the following ",
-                   "option in your groundhg.library() call: 'ignore.deps=c(" , pasteQC(pkg.conflit_new.remote) , ")'")
-           
-              msg <-paste0(msg, msg.f10)  
-              msg<-paste0(msg,"\nType 'OK' to confirm you have read this message.")
+                   "option in your groundhg.library() call: 'ignore.deps=c(" , pasteQC(pkg.conflit_new.remote) , ")'",
+                   "You may unload all packages by restarting the R session, in R Studio CMD/CTRL-SHFT-F10.\n ", 
+                    "Type 'OK' to confirm you have read this message.")
+
+                   
               infinite.prompt(format.msg(msg),'ok')
               exit()
 
@@ -139,10 +140,11 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
              {
               msg <- paste0("groundhog says: the following needed CRAN package(s) , ",pasteQC(pkg.conflit_old.remote),
                     ", were previously loaded from a non-CRAN repository (e.g., github or gitlab).",
-                    " This creates a version conflict that may be unavoidable, and you will use Whichever version of the package you load first. ",
-                    "But you need to allow this conflict, which you can do adding this option in subsequent ",
-                    "groundhog.library() calls: 'ignore.deps=c(" , pasteQC(pkg.conflit_old.remote) , ")' \n ",
-                   "Press 'ok' to confirm you have read this message")
+                    " This creates a version conflict that may be unavoidable; you probably will have to just use the ",
+                    "version of the package you load first, even if the second call is expecting a different version. ",
+                    "This needs to be explicitly allowed by adding `ignore.deps=c(" , pasteQC(pkg.conflit_old.remote) , ")` ",
+                    "in groundhog.library() calls that trigger this message. ",
+                    "Type 'OK' to confirm you have read this message.")
 
               answer<-infinite.prompt(format.msg(msg),'ok')
               exit()
@@ -174,8 +176,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
         txt<-paste0("Some of the packages needed to load '",requested_pkg_vrs,"' conflicted with packages ",
                     "already in your R session. The conflict has been resolved, but you will need to ",
                     "restart the R session and re-run groundhog.library('",requested_pkg,"','",date,"') ",
-                    "to complete the process.\n ",
-                   "In R Studio you can restart R with CMD/CTRL-SHFT-F10")
+                    "to complete the process, in R Studio press CMD/CTRL-SHFT-F10")
           answer<-infinite.prompt(format.msg(txt),"stop")     
           exit()
   
