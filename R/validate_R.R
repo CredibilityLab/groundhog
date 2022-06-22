@@ -26,15 +26,14 @@
               {
               
             #Show message that R-dev is being temporarily added
-              txt <- paste0("|IMPORTANT\n",
-                            "|   The version of R you are using, 'R-" , rv$r.using.full, "', is not included\n",
-                            "|   in groundhog's database of R releases. Assuming this is because you are using\n",
-                            "|   an R-dev version for testing purposes, the version 'R-" , rv$r.using.full, "'\n",
-                            "|   will be temporarily added to your local database as if it was released 2 days ago.\n",
-                            "|   This  modification will be undone when the R session is restarted.\n",
-                            "|   Type OK to confirm you read this message.")
+              msg <- paste0("The version of R you are using, 'R-" , rv$r.using.full, "', is not included ",
+                            "in groundhog's database of R releases. Assuming this is because you are using ",
+                            "an R-dev version for testing purposes, the version 'R-" , rv$r.using.full, "'",
+                            "will be temporarily added to your local database as if it was released 2 days ago. ",
+                            "This  modification will be undone when the R session is restarted. \n ",
+                            "Please type 'OK' to confirm you read this message.")
               
-                infinite.prompt(txt,'ok')
+                infinite.prompt(format.msg(msg),'ok')
               
                               
            #Add r-dev to cran.toc
@@ -47,12 +46,11 @@
       
     #3 Validate tolerate.R.version
       if (!tolerate.R.version %in% c("",rv$r.using.full)) {
-        msg<- paste0("|IMPORTANT\n",
-                     "|    Groundhog says: the version of R you are using '",    rv$r.using.full,  "' does \n",
-                     "|    not match the version entered in the tolerate.R.version argument, '",tolerate.R.version,"'\n",
-                     "|    You must either drop that argument or replace it with the version of R\n",
-                     "|    you are currently using.  Plese enter OK to confirm you read this message.")
-       infinite.prompt(msg,"ok")
+        msg<- paste0("Groundhog says: the version of R you are using '",    rv$r.using.full,  "' does ",
+                     "not match the version entered in the tolerate.R.version argument, '",tolerate.R.version,"'. ",
+                     "You must either drop that argument or replace it with the version of R ",
+                     "you are currently using.  Please type 'OK' to confirm you read this message.")
+       infinite.prompt(format.msg(msg),"ok")
        exit()
       }
       
@@ -86,17 +84,16 @@
               }
             
         
-      txt <- paste0(
-            "|IMPORTANT\n",
-            "|   Groundhog says: you are using R-", rv$r.using.full, ", but the version of R \n",
-            "|   current for the entered date, '", date, "', is R-", rv$r.need.majmin, ".\n",
-            "|   It is recommended that you either keep this date and switch to that version\n",
-            "|   of R, or you keep the version of R you are using but switch the date to between\n",
-            "|   '" , min.date , "' and '" , max.date , "'.\n|\n",
-            "|   You may bypass this R-version check by adding: tolerate.R.version='",rv$r.using.full,"'\n",
-            "|   as an option in your groundhog.library() call.\n",
-            "|   Please enter 'OK' to confirm you have read this message.")
-      answer<-infinite.prompt(txt,'ok')
+            msg <- paste0(
+                "Groundhog says: you are using R-", rv$r.using.full, ", but the version of R ",
+                "current for the entered date, '", date, "', is R-", rv$r.need.majmin, ".x. ",
+                "It is recommended that you either keep this date and switch to that version ",
+                "of R, or you keep the version of R you are using but switch the date to between ",
+                "'" , min.date , "' and '" , max.date , "'. \n \n ",
+                "You may bypass this R-version check by adding: `tolerate.R.version='",rv$r.using.full,"'`",
+                "as an option in your groundhog.library() call. ",
+                "Please type 'OK' to confirm you have read this message.")
+      answer<-infinite.prompt(format.msg(msg),'ok')
       exit()
       } else {
        return(invisible(TRUE))

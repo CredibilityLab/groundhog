@@ -39,7 +39,7 @@ toc <- function(pkg, dependencies = FALSE) {
       "    1. package names are cAsE seNsiTive\n",
       "    2. By default requested packages are looked for only on CRAN\n",
 	  "    3. To load a 'GitHub' or 'Gitlab' package you need to include\n",
-	  "       the directory, e.g., groundhog.library('github::crsh/papaja','",date.example,"')"
+	  "       the full path, e.g., groundhog.library('github::crsh/papaja','",date.example,"')"
     )
     exit()
   }
