@@ -93,7 +93,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
         #if has used different dates, indicate that.
             if (length(.pkgenv[['hogdays']])>1) {
               msg<-paste0(msg,
-                          " Across groundhog calls you have used different dates (",
+                          " Across groundhog.library() calls you have used different dates (",
                           paste0(.pkgenv[['hogdays']],collapse=' , '),
                           ") that is proably the root cause of this conflict. ")
                           
