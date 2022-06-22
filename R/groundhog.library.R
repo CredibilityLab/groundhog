@@ -142,18 +142,21 @@
         ignore.deps <- c(ignore.deps_default() , ignore.deps) #Add any ignore.deps explicitly stated to the default set in utils
         
         
-    #5.5 Sandwich possible library() commands  
-        pkg <- sandwich.library(pkg)  #utils.R function 34
-        
     #6 put package name in quotes if it is not an object and was not put in quotes
         pkg.catch <- try(typeof(pkg),silent=TRUE)
         if (as.character(class(pkg.catch))=="try-error") {
           pkg <- as.character(substitute(pkg))
           message2()
           message1("     There is no object ",pkg, " in your environment, so will try loading package '",pkg,
-                   "'.\n     To avoid seeing this message when using groundhog.library(), enter package name in quotes.\n\n")  
+                   "'.\n     To avoid seeing this message when using groundhog.library(), enter package names in quotes.\n\n")  
         } 
           
+        
+         
+    #6.5 Sandwich possible library() commands  
+        pkg <- sandwich.library(pkg)  #utils.R function 34
+   
+        
     #7 Add groundhog.day to hogdays to alert of possible different days used in a snowball.conflict
         if (!is.null(.pkgenv[['hogdays']])) {
             .pkgenv[['hogdays']] <- unique(c(date, .pkgenv[['hogdays']]))
