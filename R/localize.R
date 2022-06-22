@@ -1,9 +1,8 @@
 #Takes a snowball and it copies all packages from the groundhog library to the default one
-#
-#This function was created to allows `foreach` to run based on a version-controlled package
-#It is necessary because each of the parallel 'workers' looks for the foreachc pkg in the default library
-#it is executed in groundhog.library.single(), in #10.3, after verifying the snowball has been 
-#successfully installed.
+#This serves the following purposes
+#  1) Avoid conflicts between packages loaded automatically without needing to disable folders
+#  2) Have pkgs available if run on background (e.g., with parallel processing)
+
 
   localize.pkg <- function(pkg_vrs,localize.quietly=FALSE,ip=NULL)
   {
@@ -45,10 +44,7 @@
             purged   <- file.rename(old , new)
             
             }
-            #note: when localizing after 'disable.packages()' this won't be necessary
-            #but if it occurs as part of special packages that need to be localized
-            #such as 'foreach' then this is necessary.
-        
+            
         
   #5 Copy the folder from groundhog folder
         file.copy(pkg_path.groundhog,        #copy contents of the "pkg_vrs/pkg" folder
