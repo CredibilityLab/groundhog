@@ -392,8 +392,8 @@
                       }
                 
               #Install source 
-                              #(turn off warnings because if something goes wrong, we try again, with warnings on)
-                              #this prevents a package that actually installed successfully on the 2nd attempt, showing a warning)
+                #(turn off warnings because if something goes wrong, we try again, with warnings on)
+                #this prevents a package that actually installed successfully on the 2nd attempt, showing a warning)
                 if (quiet.install==TRUE) options(warn=-1)
                       if (getRversion()>"3.3") {
                           utils::install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", dependencies = FALSE, quiet = quiet.install, method='libcurl', INSTALL_opts = '--no-lock')
@@ -426,11 +426,18 @@
                 
                   #4.15  R TOOLS CHECK
                       if (.Platform$OS.type == "windows" & Sys.which("make") == "") {
-                      message2()
-                      message1(
-                              "***RTOOLS ALERT***\nYou need 'R Tools' to install packages from source in Windows, but R Tools was not ",
-                              "found. For help see:\nhttp://groundhogr.com/rtools"
-                               )
+                      msg <-  paste0(
+                              "groundhog says: you need 'R Tools' to install packages from source in Windows, but R Tools was not ",
+                              "found. This is an R rather than a groundhog requirement. Sometimes even after you install R Tools, ",
+                              "R does not find it. You can get some help here: https://groundhogr.com/rtools \n ",
+                              "A solution that tends to work is to run a line of code that updates the file that R consults when loading ",
+                              "up, adding the R tools folder to it, so that it finds it. For example, if you recently installed ",
+                              "R Tools in folder `c:/RTools_3.5`, then you would run this line of code: \n \n ",
+                              "Sys.setenv(PATH = paste('C:/Rtools_3.5/mingw_64/bin', Sys.getenv('PATH'), sep=';')) \n \n",
+                              "Please type 'OK' to confirm you have read this message.")
+                          
+                      infinite.prompt(format.msg(msg,header='R TOOLS ALERT!',width=80), 'ok')
+                               
                             } # End of if make=="
                 
                 
