@@ -27,7 +27,7 @@
 #Date to use for testing individual packages
     test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
 
-    test.day <-'2021-09-04'
+    test.day <-'2022-05-01'
 
     library('groundhog')
     set.groundhog.folder('c:/temp_testing_groundhog')
@@ -74,7 +74,7 @@
   #Test conflict 1 - another version  already attached
    library(groundhog)
    library('pwr')
-   groundhog.library('pwr',test.day)  #error, not attached, even after repeated, same message
+   groundhog.library('pwr',test.day)  #solve conflict, ask for restart
 
    
   #Test conflict 2 - other versions of package loaded, cannot attach, later offered to uninstall 
@@ -89,14 +89,16 @@
     library(groundhog)
     library('vctrs')
     
-    groundhog.library('tibble',test.day)
+    sessionInfo()
+    groundhog.library('tibble','2022-04-01')
 
   #Test conflict with recommended package
     library(groundhog)
     x=MASS::abbey      #different version
-    groundhog.library('MASS','2022-04-01')
+    groundhog.library('MASS','2022-03-01')
     
-    disable.packages()
+    
+    
 ########################################################################
 #SET OF TESTS 2 -  CHECKING PREVIOUSLY FOUND BUGS
     
@@ -104,7 +106,7 @@
     library('groundhog')
     
     pkgs=c("robustlmm","R2ucare")
-    groundhog.library(pkgs,'2022-04-01')
+    groundhog.library(pkgs,'2022-05-01')
     lmer(NA)  #should read error in formula rather than cannot find function
     
 #2) Folder with space names
@@ -122,9 +124,6 @@
     source("http://groundhogr.com/source_file_for_test_groundhog.r")
     
     
-set.groundhog.folder('c:/dropbox/groundhog_folder')
-#ADDITIONAL OPTIONS
-
 #4) tolerate
   library('groundhog')
 
@@ -134,26 +133,26 @@ set.groundhog.folder('c:/dropbox/groundhog_folder')
     
 #5) Source
     library('groundhog')
-    groundhog.library('pwr','2018-08-01',tolerate.R.version = '4.1.3', force.install=TRUE,force.source = TRUE)
+   groundhog.library('jsonlite','2020-08-01',tolerate.R.version = '4.2.0', force.install=TRUE,force.source = TRUE)
     
 #6) Test for re-install
     library('groundhog')
-    groundhog.library('pwr','2018-08-01',tolerate.R.version = '3.2.5',force.install = TRUE)
+    groundhog.library('jsonlite','2020-08-01',tolerate.R.version = '4.2.0',force.install = TRUE)
     
-#7) Test for re-install with current date
-    library('groundhog')
-    groundhog.library('pwr',test.day,force.install = TRUE)
     
-#8) Test for re-install with current date and source
+#7) Test for re-install with current date and source
     library('groundhog')
-    pks=c('pwr','metafor')
+    pks=c('jsonlite','metafor')
     groundhog.library(pks,test.day,force.install = TRUE, force.source = TRUE)
     
 #9) Include suggests
     library('groundhog')
-    pks=c('pwr','rio')
-    groundhog.library(pks, "2019-08-15",include.suggests = TRUE,tolerate.R.version = '4.1.3')
+    pks=c('jsonlite','metafor')
+    groundhog.library(pks, "2022-06-10",include.suggests = TRUE)
     
+    toc('MASS')
+    
+    ap=data.frame(available.packages())
 #
 ########################################################################
 #SET OF TESTS 3 -  INSTALLATION OF PACKAGES IN RANDOM ORDER
