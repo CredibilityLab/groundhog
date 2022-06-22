@@ -31,12 +31,20 @@
         }
         
   #4 Remove other version of package from local folder
-      #all paths except the last one
-        local_folder <- .pkgenv[["orig_lib_paths"]][-length(.pkgenv[["orig_lib_paths"]])]
+       # Set of packages installed in personal library
+          #packages_df <- get.packages_df() #utils.R #Function 33
+    
+        
+        #all paths except the last one
+          local_folder <- .pkgenv[["orig_lib_paths"]][-length(.pkgenv[["orig_lib_paths"]])]
       
       #If this one is installed, uninstall it 
-        if (pkg %in% ip$Package) utils::remove.packages(pkg,lib = local_folder)
-
+        if (pkg %in% ip$Package) {
+            old<- file.path(ip$LibPath[ip$Package==pkg] , pkg) 
+            new <- paste0(old , "_PURGE")
+            purged   <- file.rename(old , new)
+            
+            }
             #note: when localizing after 'disable.packages()' this won't be necessary
             #but if it occurs as part of special packages that need to be localized
             #such as 'foreach' then this is necessary.
