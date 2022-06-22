@@ -16,11 +16,6 @@
       if (validation=='already_attached') return(TRUE)
   
       
-    #2.5 Show package warnings
-      pkg_specific.warnings(pkg)   #see pkg_specific.warnings.R
-      
-        #Some packages get warnings. for example 'foreach' prompts user to get 
-        #assistance to incorportate groundhbog.
       
   #3 Update cran.toc() if needed for entered date 
       update_cran.toc_if.needed(date)

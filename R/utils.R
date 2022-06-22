@@ -27,7 +27,7 @@
 #25 Compare two sets of pkg_vrs vectors, obtaining text report of any mismatches 
 #26 base.libary()           : Copy library() to use when finalizing loading a pkg
 #27 Validate.tf
-#28 abandoned                : <abandoned> replaced by infinite.prompt() + pkg_specific.warnings
+
 #31 pasteQC()  -  paste a vector separating elements by quots  c('a','b','c')-->  string: '"a","b","c"'
 #32 infinite.prompt() ask the same question until a valid answer is provided
 #33 get.packages_df  -  data.frame with installed packages in local library
