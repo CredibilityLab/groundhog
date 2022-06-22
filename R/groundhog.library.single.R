@@ -15,6 +15,7 @@
       validation <- validate.pkg_vrs(pkg, vrs, date, ignore.deps)
       if (validation=='already_attached') return(TRUE)
   
+      
     #2.5 Show package warnings
       pkg_specific.warnings(pkg)   #see pkg_specific.warnings.R
       
@@ -96,18 +97,7 @@
 						  saveRDS(snowball, snowball_path, version = 2)
 						  } #End if snowball exists
 							
-				
-		   #10.3 Localize special pkgs in the snowball 
-# 					snowball.localizable <- snowball[snowball$pkg %in% .pkgenv[['localize.automatically']],]
-# 				  n.local <- nrow(snowball.localizable)	
-# 					if (n.local>0)
-#           {
-# 					for (k in 1:n.local)
-# 					  {
-# 					  localize.pkg(snowball.localizable$pkg_vrs[k],localize.quietly=TRUE)
-# 
-# 					  } #End for
-#           }   #End if		
+		
 							
 				#10.4 localize everything that's not base
 					snowball.no_base <- snowball[!snowball$pkg %in% base_pkg(),]
