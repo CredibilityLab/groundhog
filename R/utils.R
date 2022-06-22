@@ -505,7 +505,7 @@ get.available.mran.date <- function(date0, date1) {
 #35 Format msg: format output to have fixed width and starting symbol (e.g., "|    ")
     
     
-    format.msg <- function(msg,width=70, header='IMPORTANT.', pre="|")
+ format.msg <- function(msg,width=70, header='IMPORTANT.', pre="|")
 {
   #Line counter
     j<-0
@@ -524,10 +524,10 @@ get.available.mran.date <- function(date0, date1) {
       while (nchar(msg.lines[j]) + nchar(msg.left[1]) <width)
       {
       new.word <- msg.left[1]
-      msg.lines[j] <- paste0(msg.lines[j],new.word," ")   #add the next word
       msg.left <- msg.left[-1]
-      
       if (regexpr('\n', new.word)>0) break   #skip line if \n is found
+      msg.lines[j] <- paste0(msg.lines[j],new.word," ")   #add the next word
+      
       if (length(msg.left)==0) break
     }
       msg.lines[j]<- paste0(pre,"    ", msg.lines[j] ) 
@@ -553,8 +553,8 @@ get.available.mran.date <- function(date0, date1) {
     return(msg.formatted)
 }
 
-
-
+    
+   
 #36 Set default mirror
  set.default.mirror<-function()
  {
