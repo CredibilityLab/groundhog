@@ -16,23 +16,25 @@ pkg_specific.warnings <- function(pkg)
   #--------------------------------------------------------
   #3. Messages
       
+      #EXAMPLE: Decided not to use, but keeping in case future revisions do include pkg warnigns
       #3.1 Foreach
-        if (pkg=='foreach')
-        {
-        #
-          
-        
-        #Message
-          msg <- paste0("|IMPORTANT\n",
-								      "|     groundhog says: the package `foreach` can jeopardize \n",
-								      "|     reproducibility by loading packages from the default\n",
-                      "|     R library in background.  This is easy to solve adding\n",
-                      "|     just three lines of code to the `foreach` loops.\n",
-                      "|     More information at: https://groundhogr.com/foreach")
-        #Number of days
-          days_till_shown_again <- 90
-          
-        }
+      
+#         if (pkg=='foreach')
+#         {
+#         #
+#           
+#         
+#         #Message
+#           msg <- paste0("|IMPORTANT\n",
+# 								      "|     groundhog says: the package `foreach` can jeopardize \n",
+# 								      "|     reproducibility by loading packages from the default\n",
+#                       "|     R library in background.  This is easy to solve adding\n",
+#                       "|     just three lines of code to the `foreach` loops.\n",
+#                       "|     More information at: https://groundhogr.com/foreach")
+#         #Number of days
+#           days_till_shown_again <- 90
+#           
+#         }
       
  #--------------------------------------------------------     
  #4 Show prompt if more than `days` have past
@@ -69,7 +71,3 @@ pkg_specific.warnings <- function(pkg)
           } #End if showing the message
           
 }
-
-
-pkg_specific.warnings('foreach')
-pkg='foreach'
