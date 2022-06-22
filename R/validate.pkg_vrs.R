@@ -37,8 +37,8 @@
         attached.pkg <- names(attached.list)
         attached.vrs <- unlist(lapply(attached.list, function(x) x$Version))
         attached.pkg_vrs <- paste0(attached.pkg , "_" , attached.vrs)
-        attached.pkg_vrs <- paste0(utils::sessionInfo()$basePkgs,"_",getRversion()) #add base pkgs
-        
+        attached.base.pkg_vrs <- paste0(utils::sessionInfo()$basePkgs,"_",getRversion()) #add base pkgs
+        attached.pkg_vrs <- c(attached.pkg_vrs,attached.base.pkg_vrs)
 
   #5 Early return if already attached
         if (pkg_vrs %in% attached.pkg_vrs) {
