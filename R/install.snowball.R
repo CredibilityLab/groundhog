@@ -103,7 +103,7 @@
           message2("\ngroundhog says: will now download ",n.cran, " binary packages from CRAN")
         
       #2.2 Download all CRAN binaries
-          if (getRversion()>"3.3") {
+          if (getRversion()>"3.4") {
             cran.binaries <- data.frame(utils::download.packages(snowball.cran$pkg, type='binary', destdir=temp_path,  method='libcurl'),stringsAsFactors = FALSE)
           } else {
 
@@ -221,14 +221,14 @@
     
             #Download it from MRAN
               #Is R being used newer than 3.2.0?
-                if (getRversion()>"3.3") {
+                if (getRversion()>"3.4") {
                     mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path, method='libcurl')
                   } else {
-                #IF R is 3.2 or older
+                #IF R is 3.3 or older
                     mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path)
                   }
                   
-              
+
             
             #If file was successfully downloaded
                   if (nrow(mran.binaries_rowk)==1) {
@@ -395,7 +395,7 @@
                 #(turn off warnings because if something goes wrong, we try again, with warnings on)
                 #this prevents a package that actually installed successfully on the 2nd attempt, showing a warning)
                 if (quiet.install==TRUE) options(warn=-1)
-                      if (getRversion()>"3.3") {
+                      if (getRversion()>"3.4") {
                           utils::install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", dependencies = FALSE, quiet = quiet.install, method='libcurl', INSTALL_opts = '--no-lock')
                       } else {
                           utils::install.packages(url, repos = NULL, lib = snowball$installation.path[k], type = "source", dependencies = FALSE, quiet = quiet.install, INSTALL_opts = '--no-lock')
