@@ -48,11 +48,9 @@
          txt<-paste0(
                  "|PROBLEM\n",
                  "|   Groundhog says: The package you requested, '" , usr , "/" , pkg , "'\n",
-                 "|   appears to be misconfigured on ", remote_id,".\n",
-                 "|   Specifically, the package available from 'https://" ,remote_id , ".com/",usr , "/" , pkg , "'\n",
-                 "|   referes to itself as '" , pkg_self_name, "'. \n",
+                 "|   appears to have a different name on ", remote_id,".\n",
                  "|   You could try running:  groundhog.library('",usr , "/" , pkg_self_name,"' , '",date,"')\n",
-        		     "|   Type OK to confirm you have read this message.")
+        	     "|   Type OK to confirm you have read this message.")
          answer <- infinite.prompt(txt,'ok')
          exit()
        }
