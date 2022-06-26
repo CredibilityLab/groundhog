@@ -451,12 +451,15 @@ get.available.mran.date <- function(date0, date1) {
     
 #32 infinite.prompt
     
-    infinite.prompt <- function(text_msg, valid_answers)
+    infinite.prompt <- function(text_msg, valid_answers,must.restart=FALSE)
       {
       answer=''
       while (!tolower(answer) %in% valid_answers)
       {
-        message (text_msg)
+        message1 (text_msg)
+        if (answer!='') message("        You typed, instead, `",answer,"`")
+        if (answer!='' && must.restart==TRUE) message("        But you must restart the R session to continue")
+
         answer <-readline(prompt = "|   >")
         } #end while
         return(answer)
