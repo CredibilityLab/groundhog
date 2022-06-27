@@ -1,6 +1,6 @@
 Package: groundhog
 Title: The Simplest Solution to Version-Control for CRAN, GitHub, and GitLab Packages
-Version: 1.9.9.2022.06.26
+Version: 1.9.9.2022.06.27
 Authors@R: c(
     person(given = "Uri",
            family = "Simonsohn",
