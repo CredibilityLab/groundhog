@@ -8,7 +8,7 @@
 #installed base packages
   .pkgenv[['base_pkg']] <- data.frame(utils::installed.packages(priority = 'base'))$Package
     
-#Localizable packages (if any of these pacakges are loaded, they become localized
+#Localizable packages (if any of these packages are loaded, they become localized
   .pkgenv[['localize.automatically']] <- c('foreach','doParallel','iterators')
   
 #Packages for markdown R Studio making
