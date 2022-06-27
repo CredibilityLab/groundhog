@@ -1,6 +1,6 @@
-#Function 1 Get path to clone
-#Function 2 Load a package needed for remote installation (e.g., git2r)
-#Function 3 Get sha_time data.frame (reading clone's commits with git2r)
+#Function 1 get.clone_path()      - Get path to clone
+#Function 2 load.pkg_utility()    - Load a package needed for remote installation (e.g., git2r)
+#Function 3 get.sha_time()        - Get sha_time data.frame (reading clone's commits with git2r)
 #Function 4 get sha for a particular package date
 #Function 5 Get lib for remote install of the package
 #Function 6 Identify remote ('github' vs 'gitlab';)
@@ -92,12 +92,16 @@
               #Force sha to be string rather than factor (extra safety, data.frame(string as factor should be set to FALSE, but in case it was already saved)
                 sha_time$sha=as.character(sha_time$sha)
                 
-              #If highest commit date is higher than requested date, we can use existing sha_time, preventing git2r loading
+              #If highest commit date is higher than requested date, we can use existing sha_time
                  if (max(sha_time$time)>date.to.time(date)) {
                     return(sha_time)
                   } #End if date is sandwiched
+                
+             
+                
               } #End if file exists
               
+          
           
        #Ensure clone exists
          validate.clone_date (pkg, date, remote_id, usr)
@@ -148,6 +152,16 @@
         #Get time of first second of next day
             time <-  as.numeric(as.POSIXct(as.Date(date)+1, format="%Y-%m-%d"))
     
+        #IF time before 1st, STOP with error
+            if (time<min(sha_time$time)) {
+                date0 <- as.Date(min(sha_time$time)/86400,origin='1970-01-01')
+                msg<-paste0("Groundhog says: the package '" , usr , "/" , pkg ,"' was not yet available on ",
+                            "'" , remote_id ,"' on '", date, "'. The first commit was on '",date0,"'. \n ",
+                            "Please type 'OK' to confirm you have read this message")
+                     infinite.prompt(format.msg(msg),'ok')
+                     exit()
+              }
+                    
         #Find last commit before the 1st second of the day after the request
             time.k <- max(sha_time$time[sha_time$time < time])
       
