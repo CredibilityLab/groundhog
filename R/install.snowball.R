@@ -217,7 +217,7 @@
             #Add to downloaded counter
               j1 <- j1 + 1
             #Message
-              message1(j1,") Downloading: '",snowball.mran$pkg_vrs[k],"' from MRAN")
+              message1(j1," of ", n.mran , ") Downloading: '",snowball.mran$pkg_vrs[k], " from MRAN")
     
             #Download it from MRAN
               #Is R being used newer than 3.2.0?
@@ -274,7 +274,7 @@
                pos <-  regexpr(snowball.mran$pkg_vrs[k], mran.binaries$downloaded.path[k]) 
               if (pos>0 ) {
                 #message 
-                  message1(j2,") Installing: '",snowball.mran$pkg_vrs[k],"'")
+                  message1(j2," of " , nrow(snowball.mran), ") Installing: '",snowball.mran$pkg_vrs[k],"'")
                 
                 #Get extension of downloaded files
                  ext <- tools::file_ext(mran.binaries$downloaded.path[k])
