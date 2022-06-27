@@ -1,7 +1,5 @@
+
 #Load all databases, optional parameter update.toc leads to downloading from groundhogr.com as wasaby as backup
-
-
-
 
 load.cran.toc <- function(update.toc = FALSE) {
   
@@ -37,14 +35,30 @@ load.cran.toc <- function(update.toc = FALSE) {
 
             
             if ((in.path==FALSE & in.pkg==FALSE) | update.toc==TRUE) {
+              
             #Download groundhog
+              #R Version After 3.4
+               if (getRversion()>"3.4") {
                 dl <- try(utils::download.file(paste0(groundhogR.url, rdsk), file.path(gf, rdsk) , mode = "wb", method = "libcurl" ))
             
                 #If download failed, try  wasabi's backup
                   if (dl!=0) {
                       dl2 <- try(utils::download.file(paste0(wasabi.url, rdsk), file.path(gf, rdsk), mode = "wb", method = "libcurl" ))
                       if (dl2!=0) stop('Error.\nGroundhog says: could not download "', rdsk, "'")
-                    }
+                    } #End if download filed from groundhogR.com
+               } #ENd if version 3.4
+              
+               #R Version before 3.4
+               if (getRversion()<"3.4") {
+                dl <- try(utils::download.file(paste0(groundhogR.url, rdsk), file.path(gf, rdsk) , mode = "wb" ))
+            
+                #If download failed, try  wasabi's backup
+                  if (dl!=0) {
+                      dl2 <- try(utils::download.file(paste0(wasabi.url, rdsk), file.path(gf, rdsk), mode = "wb" ))
+                      if (dl2!=0) stop('Error.\nGroundhog says: could not download "', rdsk, "'")
+                    } #End if download filed from groundhogR.com
+               } #ENd if version 3.4
+              
               } #End case 2
             
           #Read it locally, dropping the .rds part of the name ('cran.toc.rds' -> 'cran.toc')
