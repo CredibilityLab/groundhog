@@ -21,26 +21,44 @@
 #----------------------------------------------------------------
   
 #Function 2 Load a package needed for remote installation (e.g., git2r)
-  load.pkg_utility <- function(pkg_utility , groundhog.day)
+  load.pkg_utility <- function(pkg_utility , date)
   {
+    
+      if (pkg_utility %in% .packages()) return(TRUE)
+    
+      
 
-        ip <- utils::installed.packages()
-       if (! pkg_utility %in% c(.packages(),ip)) {
+      #Check date is after when git2r when from S4 to S3 classes
+        
+        date2<-date
+        
+        if (date<'2018-10-15') {
+            msg <- paste0("groundhog relies on `gitr` and `remotes` to install packages from GitHub ",
+                          "and Gitlab. To address a  backwards incompatible change in `git2r` ",
+                          "introduced in 2018, when groundhog loads those packages in order ",
+                          "to install packages from Github or Gitlab, and the requested date is ",
+                          "prior to '2018-10-15', that date is used instead, ",
+                          "loading `git2r_0.23.0` and `remotes_2.0.0`. You *can* load earlier ",
+                          "versions of those packages directly with groundhog, but those earlier ",
+                          "versions will not allow loading github and gitlab packages with groundhog. \n \n ")
+            
+            if (pkg_utility=='git2r') message1(format.msg(msg,header="NOTE"))
+            date2<-'2018-10-15'
+            
+          }
+        
+    
+      ip <- utils::installed.packages()
           
-              #Explain to user which version of 'pkg' (e.g., git2r) is being used
-                #message2()
-                #message1("To proceed we need to load the package '", pkg_utility, "'.\n",
-                  #"It will now be loaded by 'groundhog', loading its version available on CRAN on\n",
-                  #"on the date '", groundhog.day , "'. If you want to use a different version\n",
-                  #"of '", pkg_utility, "' you may load it via library() or via groundhog.library(),\n",
-                  #"using a different date, before running the command you just run.\n")
+      
+          if (! pkg_utility %in% c(.packages(),ip)) {
           
           #Attempt to load via groundhog  
             #Save existing path
               libPaths.before<-.libPaths()
               
-            #groundhog call
-              groundhog.library(pkg_utility, groundhog.day,tolerate.R.version = get.rversion()) #Always accept different versions here
+            #groundhog call using date 2
+              groundhog.library(pkg_utility, date2 ,tolerate.R.version = get.rversion()) #Always accept different versions here
               
             #return libpath
               .libPaths(libPaths.before)
@@ -50,10 +68,7 @@
            if (! pkg_utility %in% .packages()) {
              exit("groundhog says: Error. Could not load '" , pkg_utility, "'.")
             } #End of final check that git2r is now available
-        
-          #Now remove it since we don't need it loaded
-            #unloadNamespace(pkg_utility)
-            
+             
           
       } #End if pkg_utility not loaded
   } #End of function 2
