@@ -457,7 +457,7 @@ get.available.mran.date <- function(date0, date1) {
       while (!tolower(answer) %in% valid_answers)
       {
         message1 (text_msg)
-        if (answer!='') message("        You typed, instead, `",answer,"`")
+        if (answer!='') message("        You typed `" , answer , "`; that is sadly not an accepted response.")
         if (answer!='' && must.restart==TRUE) message("        But you must restart the R session to continue")
 
         answer <-readline(prompt = "|   >")
@@ -550,7 +550,6 @@ get.available.mran.date <- function(date0, date1) {
       
     #Add ------------- on top
       sep.line <- c(paste0(rep('-',width+5)) , "\n" )
-      #msg.formatted<-c(sep.line, msg.formatted, "\n", sep.line)
       msg.formatted<-c(sep.line, msg.formatted)
     
     return(msg.formatted)
