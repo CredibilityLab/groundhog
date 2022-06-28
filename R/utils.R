@@ -570,3 +570,27 @@ get.available.mran.date <- function(date0, date1) {
     #If an instance of R does not have a CRAN mirror, use the cran.r-project.org/ URL by default
   
  }
+ 
+#37 Does personal folder exist
+    verify.personal.library.exists<-function()
+      {
+      #Create personal library if it does not exist
+      default_library <- Sys.getenv("R_LIBS_USER")
+      if (!file.exists(default_library)) {
+        msg <- paste0("R does not have a default personal library to save packages to. ",
+               "The defaulat location for it is: '", default_library,"'. \n ",
+               "   1) Type 'create' to create it \n ",
+               "   2) Otherwise type 'stop'")
+        
+        answer<-infinite.prompt(format.msg(msg),c('create','stop'))
+        if (answer=='create') {
+              dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)
+              }
+        
+        if (answer=='stop') {
+              exit()
+        }
+      }#End if library does not exist
+    }#End function
+        
+    

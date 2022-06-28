@@ -87,7 +87,9 @@
   #0.5) Verify a mirror has been set    
      set.default.mirror() #Function 36
     
-    
+  #0.6 Verify a personal library has been assigned
+     verify.personal.library.exists()
+     
   #1) Validation     
     #1.0 if ignore deps is not empty, check that it is already loaded
        if (length(ignore.deps)>0) {
