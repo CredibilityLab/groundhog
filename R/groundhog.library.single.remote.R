@@ -12,7 +12,26 @@
             exit()
           }
     
-  
+    
+    #0.5 Recommend 60 days for github/gitlab packages
+        today <- Sys.Date()
+        days <- as.numeric(round(difftime(today,date,unit='days'),0))
+        if (days<60)
+        {
+        msg <- paste0(
+                  "For enhanced reproducibility, it is recommended that for GitHub and Gitlab packages, ",
+                  "a date at least 2 months in the past is used for loading packages (so, before '", today-60 ,"').",
+                  "The reason for this recommendation is that changes ('commits') on Git can be retroactive, ",
+                  "that is, be saved with a *past* timestamp. This time inconsitency is much less likely, ",
+                  "but not impossible, beyond 60 days. \n ",
+                  "Type 'stop' if you would like to modify the date before proceeding. \n ",
+                  "Type 'ignore' if you would like to ignore this suggestion and continue with '", date,"'.")
+        
+        answer<-infinite.prompt(format.msg(msg),c('stop','ignore'))
+        if (answer=='stop') exit()
+        }
+        
+        
     #1 Process pkg-->usr, remote_id
         pkg_list<-make.pkg_list(pkg)
         usr <- pkg_list$usr
