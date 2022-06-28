@@ -13,23 +13,7 @@
           }
     
     
-    #0.5 Recommend 60 days for github/gitlab packages
-        today <- Sys.Date()
-        days <- as.numeric(round(difftime(today,date,unit='days'),0))
-        if (days<60)
-        {
-        msg <- paste0(
-                  "For enhanced reproducibility, it is recommended that for GitHub and Gitlab packages, ",
-                  "a date at least 2 months in the past is used for loading packages (so, before '", today-60 ,"').",
-                  "The reason for this recommendation is that changes ('commits') on Git can be retroactive, ",
-                  "that is, be saved with a *past* timestamp. This time inconsitency is much less likely, ",
-                  "but not impossible, beyond 60 days. \n ",
-                  "Type 'stop' if you would like to modify the date before proceeding. \n ",
-                  "Type 'ignore' if you would like to ignore this suggestion and continue with '", date,"'.")
-        
-        answer<-infinite.prompt(format.msg(msg),c('stop','ignore'))
-        if (answer=='stop') exit()
-        }
+    
         
         
     #1 Process pkg-->usr, remote_id
@@ -65,8 +49,32 @@
 
     #3 Get snowball
         snowball <- get.snowball.remote(pkg, date, remote_id, usr,include.suggests=include.suggests,force.install=force.install)
-
-        #3.1 Force source 
+        
+        
+      #3.1 Check if more than 60 days since date when installing 
+        if (snowball$installed[snowball$pkg==pkg]==FALSE)
+        {
+          today <- Sys.Date()
+          days <- as.numeric(round(difftime(today,date,unit='days'),0))
+          if (days<60)
+          {
+          msg <- paste0(
+                    "For enhanced reproducibility, it is recommended that for GitHub and Gitlab packages, ",
+                    "a date at least 2 months in the past is used for loading packages (so, before '", today-60 ,"').",
+                    "The reason for this recommendation is that changes ('commits') on Git can be retroactive, ",
+                    "that is, be saved with a *past* timestamp. This time inconsitency is much less likely, ",
+                    "but not impossible, beyond 60 days. \n ",
+                    "   1) Type 'stop' to use a different date \n ",
+                    "   2) Type 'ignore' to continue with '", date,"'.")
+          
+          answer<-infinite.prompt(format.msg(msg),c('stop','ignore'))
+          if (answer=='stop') exit()
+          } #End 60 days
+          
+        } #End if not installed
+        
+        
+        #3.2 Force source 
           if (force.source==TRUE) {
             snowball$from <- ifelse(snowball$sha!='', 'source', snowball$from)
           }      
