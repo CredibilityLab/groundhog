@@ -48,7 +48,7 @@
         
   #5 Copy the folder from groundhog folder
         file.copy(pkg_path.groundhog,        #copy contents of the "pkg_vrs/pkg" folder
-                  local_folder,              #to the local library
+                  local_folder[1],           #to the local library listed first
                   recursive = TRUE)          #include all files
         
      
