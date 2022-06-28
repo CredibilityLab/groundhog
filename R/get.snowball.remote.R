@@ -1,7 +1,7 @@
 
 #This script is called from groundhog.library.single.remote()
 #It modified cran.toc to include the remote, and its remote dependencies, and then
-#generates a snowball using the defatul get.snowball() function
+#generates a snowball using the default get.snowball() function
 #
 
   get.snowball.remote<-function(pkg,date,remote_id, usr,include.suggests, force.install)
