@@ -576,10 +576,11 @@ get.available.mran.date <- function(date0, date1) {
       {
       #Create personal library if it does not exist
       default_library <- Sys.getenv("R_LIBS_USER")
-      if (!file.exists(default_library)) {
-        msg <- paste0("R does not have a default personal library to save packages to. ",
-               "The defaulat location for it is: '", default_library,"'. \n ",
-               "   1) Type 'create' to create it \n ",
+      
+      if (length(.libPaths()) <= 1 & !file.exists(default_library)) {
+        msg <- paste0("R does not have a personal library to save packages to. ",
+               "The default location for it is: '", default_library,"'. \n ",
+               "   1) Type 'create' to create that directory \n ",
                "   2) Otherwise type 'stop'")
         
         answer<-infinite.prompt(format.msg(msg),c('create','stop'))
