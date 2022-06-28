@@ -110,9 +110,6 @@
     #1.2) Reload databases if necessary and change them back on existr  so that any changes to cran.toc are undone (previous groundhog.library() call loading remotes)
         if (is.null(.pkgenv[['cran.toc']])) load.cran.toc()
        
-        
-    
-
     #1.4) Verify options are T/F (utils.R - function 27)
           validate.TF(include.suggests)
           validate.TF(force.source)
