@@ -1,9 +1,3 @@
-# {groundhog}  tester
-#
-#This version : 2022 05 13
-
-#Install most recent version of groundhog
- # remotes::install_github("CredibilityLab/groundhog")
 
   
 ######################################################################################
@@ -21,21 +15,25 @@
   #Set 1 - Error and warnings with conflicts
   #Set 2 - Previously documented bugs
   #Set 3 - Automatized installation of packages in random order, via function
+  #Set 4 - Remotes (github and gitlab)
+
+#Version being tested (only locally available)
+#install.packages('C:/git/groundhog_1.9.9.2022.06.27.tar.gz',repos=NULL)
+
+library('groundhog')
 
 
 
 #Date to use for testing individual packages
     test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
 
-    test.day <-'2022-05-01'
-
-    library('groundhog')
-    set.groundhog.folder('c:/temp_testing_groundhog')
+    set.groundhog.folder('c:/temp/full_test')
+    
+    
     
     
     
 #Set 0 - various forms of calling packages to be loaded
-
   #Single package, with and without quotes
     library('groundhog')
     groundhog.library('pwr',test.day)  #quotes
@@ -149,11 +147,9 @@
     library('groundhog')
     pks=c('jsonlite','metafor')
     groundhog.library(pks, "2022-06-10",include.suggests = TRUE)
-    
-    toc('MASS')
-    
-    ap=data.frame(available.packages())
-#
+
+#10) Load cran toc leads to errors
+    groundhog:::load.cran.toc(TRUE)
 ########################################################################
 #SET OF TESTS 3 -  INSTALLATION OF PACKAGES IN RANDOM ORDER
   #Function 
@@ -277,34 +273,45 @@
       } #end of function
       
   
+    
 # Installation can be tested with most downloaded packages as of the release of R's version matching that being used
 # or based on available packages when testing. 
-    set.groundhog.folder("c:/dropbox/groundhog_folder/temp7")
+    set.groundhog.folder("c:/temp/test_groundhog20220626")
     groundhog.library('pwr','2021-08-15')
     library('groundhog')
     test.groundhog(1:10)         #Install the 100 most downloaded packages 
-    test.groundhog(500:525)        #install the 500-525 most downloaded packages
-    test.groundhog(-10, groundhog.day='2021-09-04',seed=9)  #install 10 random packages available right now for this version of R
+    test.groundhog(310:335)        #install the 500-525 most downloaded packages
+    test.groundhog(-10, seed=9)  #install 10 random packages available right now for this version of R
 
+    
+    groundhog.library('pbdMPI','2017-04-01')
     
     
 #---------------------------------------------  
 #4.  Remotes
   
 #4.1 Remote A dependson Remote B, verify Remote B can be attache 
+    
     #Run in 3.6.3 - Key is whether the second package, a dependency of the 1st, is laoded without an error 
    
+    
+
    library('groundhog') 
-    groundhog.library('crsh/papaja','2020-04-01')
-    groundhog.library('tidymodels/broom','2020-04-01')  #SHOUDL WORK
+    groundhog.library('crsh/papaja','2016-10-01')
+    
+
+    groundhog.library('tidymodels/broom','2016-10-01')  #SHOUDL WORK
     
     
+
+
 #4.2 Same, but now with non matching dates
     library('groundhog') 
     groundhog.library('crsh/papaja','2020-04-01')
     groundhog.library('tidymodels/broom','2020-04-02')  #SHOULD NOT WORK
     
     
+    toc('git2r')
 #4.3 Load remote, then try to load CRAN version
       library('groundhog') 
       groundhog.library('crsh/papaja','2020-04-01')   #remote broom dependency
@@ -333,8 +340,59 @@
     groundhog.library('tidymodels/broom','2020-04-02')  
     groundhog.library('dragon','2020-04-02', ignore.deps = 'broom')  
 
-    t1=toc("arsenal",T)
-    sessionInfo()
+   
+    
+    install.packages('C:/git/groundhog_1.9.9.2022.06.27.tar.gz',repos=NULL)
+    library('groundhog')
+    
+#5 - Popular github packages
+    popular_github_packages<-c(
+            "tidyverse/dplyr",
+            #"YuLab-SMU/clusterProfiler",  - requires bioconductor
+            "satijalab/Seurat",
+            "insightsengineering/teal.reporter",
+            "RamiKrispin/TSstudio",
+            "rmaia/pavo",
+            # "joey711/phyloseq",              - requires bioconductor
+            "rmcelreath/rethinking",
+            #"jokergoo/ComplexHeatmap",
+            "Rdatatable/data.table",
+            "rstudio/connectwidgets",
+            "sparklyr/sparklyr",
+            "rstudio/reticulate",
+            "tidyverse/ggplot2",
+            "benjjneb/dada2",
+            "insightsengineering/tern.rbmi",
+            "kassambara/survminer",
+            "plotly/plotly.R",
+            "timoast/Signac",
+            "Netflix/metaflow",
+            "yihui/knitr",
+            "mlr-org/mlr",
+            "ropensci/drake",
+            "rstudio/rticles",
+            "r-spatial/sf",
+            "ropensci/skimr",
+            "mitchelloharawild/vitae",
+            "stan-dev/rstan",
+            "business-science/tidyquant")
     
     
     
+    library('groundhog')    
+    k=14
+    for (pk in popular_github_packages[k:length(popular_github_packages)])
+    {
+    message('-------------------------------------------------------')
+    message('---   groundhog testser: [',k,']  ',pk,'       ---')
+    
+      groundhog.library(pk,'2017-02-10')    
+    k=k+1
+      
+    }
+    
+    
+
+
+    groundhog.library('jeroen/jsonlite','2001-01-01',tolerate.R.version = '3.3.3')
+
