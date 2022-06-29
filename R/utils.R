@@ -456,9 +456,15 @@ get.available.mran.date <- function(date0, date1) {
       answer=''
       while (!tolower(answer) %in% valid_answers)
       {
+           
         message1 (text_msg)
-        if (answer!='') message("        You typed `" , answer , "`; that is sadly not an accepted response.")
-        if (answer!='' && must.restart==TRUE) message("        But you must restart the R session to continue")
+        
+         #Truncate answer to first 15 characters when displaying it back to the user
+          answer2 <- ifelse(nchar(answer)>15, paste0(substr(answer,1, 15),"..."), answer)
+      
+        #Show answer
+          if (answer!='') message("        You typed `" , answer2 , "`.  That is sadly not an accepted response.")
+          if (answer!='' && must.restart==TRUE) message("        But you must restart the R session to continue")
 
         answer <-readline(prompt = "|   >")
         } #end while
@@ -466,6 +472,9 @@ get.available.mran.date <- function(date0, date1) {
     } #End prompt    
 
     
+    
+  
+
     
 #33 get.packages_df  -  data.frame with installed packages in local library
     get.packages_df <- function()
@@ -607,5 +616,42 @@ get.available.mran.date <- function(date0, date1) {
       
       
     }
+
+    cookie_name='warng1'
     
+#39 save.cookie() and read.cookie()
+    
+    #39.1 SAVE
+        save.cookie <- function(cookie_name)
+        {
+        #Create cookies directory
+          cookies_dir <- paste0(get.groundhog.folder(),"/cookies")
+          if (!file.exists(cookies_dir)) dir.create(cookies_dir,recursive=TRUE)
+          
+        #Cookie path
+          cookie_path <- file.path(cookies_dir, paste0(cookie_name,".csv"))
+          
+        #Save time
+          write.csv(as.numeric(Sys.time()),cookie_path,row.names = FALSE)
+        }
+        
+   #39.2 READ
+      get.minutes.since.cookie <- function(cookie_name)
+      {
+      #Cookie path
+        cookies_dir <- paste0(get.groundhog.folder(),"/cookies")
+        cookie_path <- file.path(cookies_dir, paste0(cookie_name,".csv"))
+        
+      #Exists? Return 999999 if it does not, contents if it does
+        if (!file.exists(cookie_path)) return (999999)
+        if (file.exists(cookie_path)) {
+          time0<-read.csv(cookie_path)$x  
+          seconds <- as.numeric(Sys.time()-time0)
+          minutes <- seconds/60
+          return(minutes)
+        }
+     }#End of readcookie
+   
+   
+   
     
