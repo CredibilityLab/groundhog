@@ -47,12 +47,7 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
   non.cran <- dep[!dep %in% cran.toc$Package]
   dep <- dep[!dep %in% non.cran]
 
-  #Give warning (commented out because this code is executed twice within a groundhog.library() call, and so it duplicates the warning)
-  #if (length(non.cran)>0) {   #This only considers non-cran dependencies which are not the packaae of interest, to avoid double reporting it
-  #  message2("groundhog.library() Warning: Missing dependencies *??!")
-  # message1("The following dependencies: '",non.cran,"' were not found on CRAN and their installation will not be attempted.")
-  # }
-
+  
   # These steps are normally taken care of server side but let's stay on the
   # safe side
   dep <- dep[dep != ""] # drop empty values
