@@ -41,7 +41,7 @@
               
                 msg <- paste0("A version of the package '",pkg, "' is already loaded. \n ",
                               "To load the version available on '" , date, "', first restart the R session. \n ",
-							  "In R Studio press CTRL/CMD-SHIFT F10. \n ",
+							  restart.text()," \n ",
                               "Type 'OK' to confirm you have read this message")
                 infinite.prompt(format.msg(msg),'ok')
                 exit()
@@ -55,7 +55,7 @@
         if (snowball$installed[snowball$pkg==pkg]==FALSE)
         {
           today <- Sys.Date()
-          days <- as.numeric(round(difftime(today,date,unit='days'),0))
+          days <- as.numeric(round(difftime(today,date,units='days'),0))
           if (days<60)
           {
           msg <- paste0(

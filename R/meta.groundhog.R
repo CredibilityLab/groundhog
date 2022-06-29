@@ -40,7 +40,7 @@
          if (compareVersion(vrs,"1.4.0") <0) {
            message1("This version of groundhog does not have the 'meta.groundhog()' function.")
            message1("To switch to a different version of groundhog, you will have to restart ")
-           message1("the R session (CTRL/CMD-SHIFT-F10), and reload it via 'library(groundhog)'.")
+           message1("the R session reload groundhog' \n ",restart.text())
            
          }
 

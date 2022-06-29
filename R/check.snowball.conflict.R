@@ -40,12 +40,14 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                 msg <- paste0(
                           "You selected  'force.install=TRUE' but the following packages",
                           " that would be installed are currently loaded: ", pasteQC(pkg.loaded_need_installing), ". \n ",
-                           "You may unload all packages by restarting the R session \n (in R Studio press CMD/CTRL-SHFT-F10). \n ", 
+                           "You may unload all packages by restarting the R session \n ",
+                          restart.text(),
                           " \n --   The package ",requested_pkg_vrs, " was NOT installed   -- \n \n ",
 
                            "Type 'OK' to confirm you have read this message.")
 
-                infinite.prompt(format.msg(msg),'ok')
+                answer<-infinite.prompt(format.msg(msg),c('ok','quit()'))
+                if (answer=="quit()") quit()
                 exit()
                 
               } # End conflict found for forced install
@@ -65,13 +67,16 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                 "using a date other than '",date,"': ",pasteQC(pkg.conflict_remote_date),". ",
                 "This creates a potential version conflict. To avoid it you may need to modify ",
                 "your script ensuring the same date is used for every groundhog.library() call. ",
-                "You may unload all packages by restarting the R session \n (in R Studio press CMD/CTRL-SHFT-F10). \n ", 
+                "You may unload all packages by restarting the R session \n ",
+                restart.text(),
                 " \n --   The package ",requested_pkg_vrs, " was NOT loaded   -- \n \n ",
 
                 "Type 'OK' to confirm you have read this message.")
 
   
-          infinite.prompt(format.msg(msg),"ok")
+          answer <- infinite.prompt(format.msg(msg),c("ok","quit()"))
+          if (answer=="quit()") quit()
+
           exit()
         }
 
@@ -101,13 +106,15 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
           
         #Request restart   
            
-        msg<-paste0(msg, " \n You may unload all packages by restarting the ",
-                   "R session \n (in R Studio press CMD/CTRL-SHFT-F10). \n ", 
-                   " \n --   The package ",requested_pkg_vrs, " was NOT loaded   -- \n \n  ",
-
+        msg<-paste0(msg, " \n You may unload all packages by restarting the R session \n " ,
+                   restart.text(), 
+                   " \n \n ", 
+                   "  --   The package ",requested_pkg_vrs, " was NOT loaded   -- \n \n  ",
                   "Type 'OK' to confirm you have read this message.")
                           
-         answer <- infinite.prompt(format.msg(msg),'ok')
+         answer <- infinite.prompt(format.msg(msg),c("ok","quit()"))
+         if (answer=="quit()") quit()
+
          exit()
          }
           
@@ -126,7 +133,8 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                     ", were previously loaded from CRAN. This creates a version conflict that may be unavoidable, ",
                     "but it needs to be explicilty allowed including the following ",
                    "option in your groundhg.library() call: 'ignore.deps=c(" , pasteQC(pkg.conflit_new.remote) , ")'",
-                   "If, instead, you want to unload the previously loaded packages, restart the R session (in R Studio press CMD/CTRL-SHFT-F10). \n ", 
+                   "If, instead, you want to unload the previously loaded packages, restart the R session \n ",
+                   restart.text(),
                    " \n --   The package ",requested_pkg_vrs, " was NOT loaded.   -- \n \n ",
                     "Type 'OK' to confirm you have read this message.")
 
@@ -181,11 +189,15 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
        localize.snowball(snowball)   
          
     #10.4 Message that a restart is needed 
-        txt<-paste0("Some of the packages needed to load '",requested_pkg_vrs,"' conflicted with packages ",
+        txt<-paste0(
+                    "Some of the packages needed to load '",requested_pkg_vrs,"' conflicted with packages ",
                     "already in your R session. The conflict has been resolved, but you will need to ",
                     "restart the R session and re-run groundhog.library('",requested_pkg,"','",date,"') ",
-                    "to complete the process. \n \n -- In R Studio press CMD/CTRL-SHFT-F10  --")
-          answer<-infinite.prompt(format.msg(txt),"stop")     
+                    "to complete the process. \n ",
+                    restart.text()
+                    )
+          answer<-infinite.prompt(format.msg(txt),c("quit()","stop")) #'stop' is for debugging, not meant to be selected by users
+          if (answer=='quit()') quit()
           exit()
   
 } # End function

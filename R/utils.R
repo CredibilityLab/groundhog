@@ -594,4 +594,18 @@ get.available.mran.date <- function(date0, date1) {
       }#End if library does not exist
     }#End function
         
+#38 restart.text()  - give instructions for restarting in R
+    
+    restart.text <- function()
+    {
+      
+      text1 <- "(In R Studio press CMD/CTRL-SHIFT-F10)"
+      text2 <- "(Not using R Studio: type 'quit()' and restart R)"
+      
+      if (Sys.getenv("RSTUDIO")==1) return (text1)
+      if (Sys.getenv("RSTUDIO")!=1) return (text2)
+      
+      
+    }
+    
     

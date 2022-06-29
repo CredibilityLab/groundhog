@@ -145,10 +145,7 @@
         pkg.catch <- try(typeof(pkg),silent=TRUE)
         if (as.character(class(pkg.catch))=="try-error") {
           pkg <- as.character(substitute(pkg))
-          message2()
-          message1("     There is no object ",pkg, " in your environment, so will try loading package '",pkg,
-                   "'.\n     To avoid seeing this message when using groundhog.library(), enter package names in quotes.\n\n")  
-        } 
+          } 
           
         
          
