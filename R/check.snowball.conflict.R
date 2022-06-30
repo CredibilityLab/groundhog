@@ -97,8 +97,8 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
           
         #if has used different dates, indicate that.
             if (length(.pkgenv[['hogdays']])>1) {
-              msg<-paste0(msg,
-                          " Across groundhog.library() calls you have used different dates (",
+              msg<-paste0(msg, " \n ",
+                          "Across groundhog.library() calls you have used different dates (",
                           paste0(.pkgenv[['hogdays']],collapse=' , '),
                           ") that is proably the root cause of this conflict. ")
                           
@@ -196,7 +196,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                     "to complete the process. \n ",
                     restart.text()
                     )
-          answer<-infinite.prompt(format.msg(txt),c("quit()","stop")) #'stop' is for debugging, not meant to be selected by users
+          answer<-infinite.prompt(format.msg(txt),c("quit()","stop"),must.restart = TRUE) #'stop' is for debugging, not meant to be selected by users
           if (answer=='quit()') quit()
           exit()
   
