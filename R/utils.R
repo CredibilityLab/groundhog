@@ -459,12 +459,13 @@ get.available.mran.date <- function(date0, date1) {
            
         message1 (text_msg)
         
-         #Truncate answer to first 15 characters when displaying it back to the user
-          answer2 <- ifelse(nchar(answer)>15, paste0(substr(answer,1, 15),"..."), answer)
+         #Truncate answer to first k.max characters when displaying it back to the user
+          k.max<-20
+          answer2 <- ifelse(nchar(answer)>k.max, paste0(substr(answer,1, k.max),"..."), answer)
       
         #Show answer
-          if (answer!='') message("        You typed `" , answer2 , "`.  That is sadly not an accepted response.")
-          if (answer!='' && must.restart==TRUE) message("        But you must restart the R session to continue")
+          if (answer!='')                         message('        You typed "[' , answer2 , ']".  That is sadly not an accepted response.')
+          if (answer!='' && must.restart==TRUE)   message("        You need to restart the R session to continue")
 
         answer <-readline(prompt = "|   >")
         } #end while
