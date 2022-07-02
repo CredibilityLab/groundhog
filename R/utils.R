@@ -253,7 +253,7 @@ get.available.mran.date <- function(date0, date1) {
        if (is.character(entered_date)) { 
        d.parts <- strsplit(entered_date,"-")[[1]]     #split date by '-
         if (nchar(d.parts[3])>2) {
-            message(msg)
+            message1(msg)
             exit()
         }
        }
@@ -261,14 +261,14 @@ get.available.mran.date <- function(date0, date1) {
        
       # numeric
          if (is.numeric(entered_date)) {
-          message(msg)
+          message1(msg)
           exit()
         }
  
       # correct format
         d <- try(as.Date(entered_date, format="%Y-%m-%d"))
           if ("try-error" %in% class(d) || is.na(d)) {
-              message(msg)
+              message1(msg)
                exit()
           }
      

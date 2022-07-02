@@ -94,14 +94,20 @@
     #1.0 if ignore deps is not empty, check that it is already loaded
        if (length(ignore.deps)>0) {
          if (!all(ignore.deps %in% .packages())) {
-           message("\nGroundhog says: Error.\nAll packages included in the ignore.deps() option must be loaded prior to running\n",
+           message1("\nGroundhog says: Error.\nAll packages included in the ignore.deps() option must be loaded prior to running\n",
                    "groundhog.library(), but the following is/are not: ",
                     paste0(dQuote(ignore.deps [!ignore.deps %in% .packages()]), collapse=" ,"))
            exit()
           } #End if some are not loaded
           } #End if ignore.deps() are requested
     
-    #1.1) Is date valid?
+    #1.0.5) Are pkg and date set?
+      if (missing(pkg) || missing(date)) {
+        message1("groundhog says: you must include both a package name and a date in 'groundhog.library()' ")
+        exit()
+      }
+     
+     #1.1) Is date valid?
         date.catch <- try(typeof(date),silent=TRUE)
         if (as.character(class(date.catch))=="try-error") {
           message("Groundhog says: The object '" , as.character(substitute(date)) ,"', does not exist.")
