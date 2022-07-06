@@ -26,14 +26,21 @@
 #24 get.groundhog_libpaths() - get subset of paths in libPath() that belong to groundhog
 #25 Compare two sets of pkg_vrs vectors, obtaining text report of any mismatches 
 #26 base.libary()           : Copy library() to use when finalizing loading a pkg
-#27 Validate.tf
-
+#27 Validate.tf()
+#28 DROPPED
+#29 read.desc2()
+#30 DROPPED
 #31 pasteQC()  -  paste a vector separating elements by quots  c('a','b','c')-->  string: '"a","b","c"'
 #32 infinite.prompt() ask the same question until a valid answer is provided
-#33 get.packages_df  -  data.frame with installed packages in local library
+#33 get.packages_df()  -  data.frame with installed packages in local library
 #34 sandwich.library() - turn a string containing library calls into a vector of pkg names
 #35 format.msg()             : format output to have fixed width and starting symbol (e.g., "|    ")
 #36 set.default.mirror()     : set a CRAN mirror if none is already set
+#37 verify.personal.library.exists(): if no folder for saving personal packages exists, prompted to create it
+#38 restart.text()            : tells user to either quit() R or use CMD-SHIF-F10 based on whether they use R Studio
+#39 get.minutes.since.cookie() : reads csv file with Sys.time() of last time this cookie was saved
+#40 get.repos_from.snowball()  : infer repository (cran, github, gitlab) from other information already in the snowball
+#41 update.groundhog.session() : Update groundhog session with new packages loaded and requested with groundhog
 ########################################################################
     
 
@@ -248,6 +255,14 @@ get.available.mran.date <- function(date0, date1) {
           )
     
        
+       # correct format
+        d <- try(as.Date(entered_date, format="%Y-%m-%d"))
+          if ("try-error" %in% class(d) || is.na(d)) {
+              message1(msg)
+               exit()
+          }
+
+       
               
       #The format check does not verify that the day is at most 2 charcters long,  (e.g., it accepts 2022-01-109)
        if (is.character(entered_date)) { 
@@ -265,13 +280,7 @@ get.available.mran.date <- function(date0, date1) {
           exit()
         }
  
-      # correct format
-        d <- try(as.Date(entered_date, format="%Y-%m-%d"))
-          if ("try-error" %in% class(d) || is.na(d)) {
-              message1(msg)
-               exit()
-          }
-     
+           
   }#End is valid date
   
   
@@ -410,7 +419,7 @@ get.available.mran.date <- function(date0, date1) {
 #Function 28 - abandoned
    
     
-#29 Read non dcf DESCRIPTION file saves to data.fraem
+#29 Read non dcf DESCRIPTION file saves to data.frame
           read.desc2 = function(filepath) {
             
             #Row to be generated, starts as empty list
@@ -609,8 +618,8 @@ get.available.mran.date <- function(date0, date1) {
     restart.text <- function()
     {
       
-      text1 <- "(In R Studio press CMD/CTRL-SHIFT-F10)"
-      text2 <- "(Not using R Studio: type 'quit()' and restart R)"
+      text1 <- "(In R Studio press CMD/CTRL-SHIFT-F10) \n "
+      text2 <- "(Not using R Studio: type 'quit()' and restart R) \n "
       
       if (Sys.getenv("RSTUDIO")==1) return (text1)
       if (Sys.getenv("RSTUDIO")!=1) return (text2)
@@ -651,8 +660,44 @@ get.available.mran.date <- function(date0, date1) {
           minutes <- seconds/60
           return(minutes)
         }
-     }#End of readcookie
+     }#End of read cookie
    
    
-   
+#40 get.repos_from.snowball()
+      
+      get.repos_from.snowball <- function(snowball)
+      {
+      #If missing, or explicitly MRAN or CRAN, then it is a CRAN package.
+        repos <- ifelse(snowball$from %in% c(NA< 'CRAN','MRAN'),'CRAN',snowball$from)
+      return(repos)
+      }
+
     
+#41 Update groundhog session with new packages loaded and requested with groundhog
+      update.groundhog.session <- function(snowball)
+      {
+      #The fucntion has as argument snowball_with_repos, to make sure the snowball submitted includes $repos
+      # this variable is set in groundhog.library.single() and groundhog.library.single.remote() just before
+      # calling on the function update.groundhog.session()
+        
+      #Add repos
+            snowball$repos <- get.repos_from.snowball(snowball)  #function 40,  just above
+            
+      #Get requested pkg from snowball
+            pkg <- snowball$pkg[nrow(snowball)]
+          
+      #Subset from snowball
+				    groundhog.session_df.k <-snowball[,c('pkg','vrs','pkg_vrs','repos')]
+					  
+			#Add time
+					  groundhog.session_df.k$time <- as.numeric(Sys.time())
+					  
+			#TRUE FALSE for whether package was explicitly requested
+					  groundhog.session_df.k $requested <- groundhog.session_df.k$pkg == pkg     
+					  
+			#ADD NEW ROWS
+					  .pkgenv[['groundhog.session_df']] <- 	rbind(.pkgenv[['groundhog.session_df']] , groundhog.session_df.k )
+      }
+      
+        
+      

@@ -8,15 +8,19 @@
 #installed base packages
   .pkgenv[['base_pkg']] <- data.frame(utils::installed.packages(priority = 'base'))$Package
     
-#Localizable packages (if any of these packages are loaded, they become localized
-  .pkgenv[['localize.automatically']] <- c('foreach','doParallel','iterators')
-  
-#Packages for markdown R Studio making
-  .pkgenv[['markdown_packages']] <-  c('base64enc', 'htmltools' , 'markdown' , 'rmarkdown', 'knitr')
 
 #Packages that have been already localized
   .pkgenv[['localized']] <- c()
 
+  
+#Dataframe with groundhog package this session, saving every pkg loaded with groundhog.
+  .pkgenv[['groundhog.session_df']] <- data.frame(pkg=character(),
+                                                  vrs=character(), 
+                                                  pkg_vrs=character(), 
+                                                  repos=character(), 
+                                                  requested=logical(),
+                                                  time=numeric())
+  
 
 #Check support of colors? (legacy function perhaps)
   .onLoad <- function(libname, pkgname) {
@@ -27,6 +31,13 @@
     .pkgenv[['default_libpath']] <-  .libPaths()
     .pkgenv[['groundhog_loaded_pkgs']] <- c()
 
+    
+              
+    #Delete to be purged packages, if any (put here with disable.packages())
+      packages_df <- get.packages_df() #utils.R #Function 33
+      purge_df <- subset(packages_df, packages_df$purged==TRUE)
+      if (nrow(purge_df)>0) unlink(purge_df$path , recursive = TRUE)   
+    
          
     } #End of onLoad
 
@@ -87,11 +98,7 @@
             #                                "when loading packages 'groundhog.library()'\n",
             #                                "While not recommended, if you want to re-enable those packages, run 'enable.packages()'")
             # 
-          
-      #Delete to be purged packages, if any (put here with disable.packages())
-            packages_df <- get.packages_df() #utils.R #Function 33
-            purge_df <- subset(packages_df, packages_df$purged==TRUE)
-            if (nrow(purge_df)>0) unlink(purge_df$path , recursive = TRUE)   
+
           
     #2.2 check for update
     # isTRUE() is necessary here because this will return logical(0) if the pkg

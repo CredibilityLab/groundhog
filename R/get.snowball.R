@@ -146,7 +146,7 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
     snowball.MRAN.date <- as.DateYMD(snowball.MRAN.date)
 
     snowball.MRAN <- snowball.MRAN.date != "1970-01-01"
-    snowball.from <- ifelse(snowball.MRAN, "MRAN", "source") # MRAN if available, if not source
+    snowball.from <- ifelse(snowball.MRAN, "MRAN", "source")      # MRAN if available, if not source
     snowball.from <- ifelse(snowball.CRAN, "CRAN", snowball.from) # Replace MRAN if CRAN is available and using most recent version of R
 
   

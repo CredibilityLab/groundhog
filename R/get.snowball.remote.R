@@ -46,12 +46,11 @@
            pkg_self_name <- baton$rows.toc[1,]$Package
          
          txt<-paste0(
-                 "|PROBLEM\n",
-                 "|   Groundhog says: The package you requested, '" , usr , "/" , pkg , "'\n",
-                 "|   appears to have a different name on ", remote_id,".\n",
-                 "|   You could try running:  groundhog.library('",usr , "/" , pkg_self_name,"' , '",date,"')\n",
-        	     "|   Type OK to confirm you have read this message.")
-         answer <- infinite.prompt(txt,'ok')
+                 "The package you requested, '" , usr , "/" , pkg , "'\n",
+                 "appears to have a different name on ", remote_id,".\n",
+                 "You could try running:  groundhog.library('",usr , "/" , pkg_self_name,"' , '",date,"')\n",
+        	     "Type 'OK' to confirm you have read this message.")
+         answer <- infinite.prompt(format.msg(txt),'ok')
          exit()
        }
        
@@ -67,7 +66,7 @@
     #add the remote versions
       cran.toc <- rbind(baton$rows.toc,  cran.toc)
 
-    #Copy changes to the environmental variabe  
+    #Copy changes to the environmental variable  
       .pkgenv[['cran.toc']] <- cran.toc
       
       
@@ -103,7 +102,7 @@
       #6.3 Add sha and usr to snowball
           snowball$sha=snowball$usr=NA
 
-      #6.4 Loop and if it is not NA replace variuos values of the snowball
+      #6.4 Loop and if it is not NA replace various values of the snowball
         for (k in 1:nrow(snowball))
         {
         if (!is.na(kj[k])) {

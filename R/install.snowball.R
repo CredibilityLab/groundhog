@@ -3,8 +3,6 @@
 #########################################################
 
  
-
-
   install.snowball=function(snowball, 
                             date, 
                             force.install = FALSE, 
@@ -43,10 +41,10 @@
      
       
       #1.1 Count number of rows
-          n.snowball=nrow(snowball)
+          n.snowball <- nrow(snowball)
         
       #1.2 Main package
-         main.pkg_vrs=snowball$pkg_vrs[n.snowball]
+         main.pkg_vrs <- snowball$pkg_vrs[n.snowball]
 
       #1.3 FORCE INSTALL
           if (any(snowball$installed) & force.install) {
@@ -463,7 +461,7 @@
                 
                 
         #5 IF it is remote
-                
+
             if (remote[k]==TRUE & snowball$installed[k]==FALSE  & skip.remotes==FALSE)
             {
               
@@ -474,7 +472,9 @@
                 clone_path <- get.clone_path(pkg=snowball$pkg[k], usr=snowball$usr[k], remote_id=snowball$from[k]) 
               
               #Add "file://" if it is a unix machine so that install_git will treat it as a URL
-                if (.Platform$OS.type == "unix" & Sys.info()['sysname']!="Darwin") clone_path <- paste0("file://",clone_path)
+                if (.Platform$OS.type == "unix" & Sys.info()['sysname']!="Darwin") {
+                  clone_path <- paste0("file://",clone_path)
+                  }
                 
               #Install it
                   remotes::install_git(clone_path,  dependencies = FALSE , lib=snowball$installation.path[k], ref=snowball$sha[k], INSTALL_opts = '--no-lock')
@@ -505,7 +505,7 @@
         #8 Load the package
            if (install.only==FALSE) {
              loadNamespace(package=snowball$pkg[k], lib.loc =snowball$installation.path)
-             .pkgenv[['groundhog_loaded_pkgs']] <- c(.pkgenv[['groundhog_loaded_pkgs']] , snowball$pkg_vrs[k])
+             .pkgenv[['groundhog_loaded_pkgs']] <- c(.pkgenv[['groundhog_loaded_pkgs']] , snowball$pkg[k])
            }
             
       } #End loop over snowball        

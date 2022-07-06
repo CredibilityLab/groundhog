@@ -11,11 +11,7 @@
             message("When installing remote packages, like '",pkg, "' the 'force.install' option may not be set to TRUE")
             exit()
           }
-    
-    
-    
-        
-        
+  
     #1 Process pkg-->usr, remote_id
         pkg_list<-make.pkg_list(pkg)
         usr <- pkg_list$usr
@@ -26,7 +22,7 @@
     #2 Check if conflict with already loaded remote package (unlike CRAN pkg_vrs here we must use the *date*, version number is not enough)
         
           #Full identifier of pkg called: remote, usr, pkg, date. ('github::crsh/papaja_2021_10-01')
-                git_usr_pkg_date<-paste0(git  , "_", usr, "_", pkg ,"_", gsub("-","_",date))
+                git_usr_pkg_date <- paste0(git  , "_", usr, "_", pkg ,"_", gsub("-","_",date))
     
                       
             #2.1 This same pkg_date loaded & attached     : skip 
@@ -37,15 +33,7 @@
              
             #2.3 This package is attached or loaded, and does not match one that was loaded remotely
               active <- get.active()
-              if (pkg %in% active$pkg  && (!git_usr_pkg_date %in% .pkgenv[['remotes.loaded']])) {
-              
-                msg <- paste0("A version of the package '",pkg, "' is already loaded. \n ",
-                              "To load the version available on '" , date, "', first restart the R session. \n ",
-							  restart.text()," \n ",
-                              "Type 'OK' to confirm you have read this message")
-                infinite.prompt(format.msg(msg),'ok')
-                exit()
-              }
+
 
     #3 Get snowball
         snowball <- get.snowball.remote(pkg, date, remote_id, usr,include.suggests=include.suggests,force.install=force.install)
@@ -58,7 +46,18 @@
           days <- as.numeric(round(difftime(today,date,units='days'),0))
           if (days<60)
           {
-          msg <- paste0(
+            
+          #Check cookie, when was person last warned
+            mins_since_warned<- get.minutes.since.cookie('60_days_remote')
+            
+          #Show warning if more than 30 minutes
+            if (mins_since_warned>30)
+            {
+            #Save cookie with time when warning is shown
+                save.cookie('60_days_remote')
+            
+            #Draft message
+              msg <- paste0(
                     "For enhanced reproducibility, it is recommended that for GitHub and Gitlab packages, ",
                     "a date at least 2 months in the past is used for loading packages (so, before '", today-60 ,"').",
                     "The reason for this recommendation is that changes ('commits') on Git can be retroactive, ",
@@ -67,11 +66,17 @@
                     "   1) Type 'stop' to use a different date \n ",
                     "   2) Type 'ignore' to continue with '", date,"'.")
           
-          answer<-infinite.prompt(format.msg(msg),c('stop','ignore'))
-          if (answer=='stop') exit()
-          } #End 60 days
+            #Show
+              answer<-infinite.prompt(format.msg(msg),c('stop','ignore'))
+            
+            #Process answers
+              if (answer=='stop') exit()
+              if (answer=='ignore') message1("\nOK. Will not show this warning again during next 30 minutes.\n")
+            
           
-        } #End if not installed
+                } #End since 30 minutes since last warned
+              } #End if 60 days
+            } #End if not installed
         
         
         #3.2 Force source 
@@ -104,7 +109,6 @@
     
     #6 Attach pkg
       #6.0 Workaroudn: .libPaths() was returning to default, so i re-set it here, 
-      #                seems like install.snowball() is undoingthe libpath selection
       .libPaths('')
       .libPaths(c(snowball$installation.path, .libPaths()))
 
@@ -130,8 +134,6 @@
         #Update  what is installed in the snowball
           ip<-data.frame(utils::installed.packages(snowball$installation.path), stringsAsFactors=FALSE)
           snowball$installed <- snowball$pkg %in% ip$Package
-  
-          
           snowball$installed <- TRUE
           saveRDS(snowball, snowball_path, version = 2)
          
@@ -178,7 +180,31 @@
             .pkgenv[['remotes_df']] <- rdf                                           #unlocalize
             
             
-            
+         
+        
+               
+        
+				#8.10 localize everything that's not base
+					snowball.no_base <- snowball[!snowball$pkg %in% base_pkg(),]
+					localize.snowball(snowball.no_base)
+					
+					
+			  #8.11 Save everything to groundhog.session
+					#Subset from snowball
+					  groundhog.session_df.k <-snowball[,c('pkg','vrs','pkg_vrs', 'from')]
+					  
+					#Add time
+					  groundhog.session_df.k$time <- as.numeric(Sys.time())
+					  
+					#TRUE FALSE for whether package was explicitly requested
+					  groundhog.session_df.k $requested <- groundhog.session_df.k$pkg == pkg     
+					  
+					#ADD NEW ROWS
+						.pkgenv[['groundhog.session_df']] <- 	c(.pkgenv[['groundhog.session_df']] , groundhog.session_df.k )
+
+			#8.12 Update groundhog session (dataframe with everything loaded with groundhog in this R session)
+						update.groundhog.session(snowball)  #utils.R -  function #41
+
       }#End if verified is true
         
         

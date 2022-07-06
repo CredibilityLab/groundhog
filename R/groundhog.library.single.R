@@ -13,7 +13,21 @@
   
   #2 Validate pkg
       validation <- validate.pkg_vrs(pkg, vrs, date, ignore.deps)
-      if (validation=='already_attached') return(TRUE)
+      if (validation=='already_attached') {
+        
+        #If already attached, and asked fro install, give error
+          if (force.install==TRUE) {
+            msg<- paste0("You may not install a package that is already attached, ",
+                         "to force installing this package you need unload all packages first ",
+                         "by restarting the R session. \n ",
+                         restart.text(), " \n ",
+                         "Type 'OK' to confirm you have read this message.")
+                         
+            infinite.prompt(format.msg(msg),'ok')
+            }
+        
+        return(TRUE)
+        }
   
       
       
@@ -28,11 +42,10 @@
       if (force.install==TRUE) snowball$installed=FALSE
       
       
-  #5 CHECK FOR CONFLICT SNOWBALL <-> AVAILABLE PACKAGES
+  #5 CHECK FOR CONFLICT SNOWBALL
       check.snowball.conflict(snowball=snowball, force.install=force.install ,ignore.deps=ignore.deps, date=date)  
     
-  
-        
+
   #6 message if installation will be necessary
     need.to.install.total <- sum(!snowball$installed)
     if (need.to.install.total > 0) {
@@ -100,7 +113,11 @@
 						
 				#10.5 add snowball to loaded by groundhog
 					.pkgenv[['groundhog_loaded_pkgs']] <- 	c(.pkgenv[['groundhog_loaded_pkgs']] , snowball$pkg)
-										
+			
+			  #10.6 Update groundhog session (dataframe with everything loaded with groundhog in this R session
+					update.groundhog.session(snowball)  #utils.R -  function #41
+
+			 
      } #End if verified         
 
   #11 If not verified, delete snowball
