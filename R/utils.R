@@ -462,21 +462,36 @@ get.available.mran.date <- function(date0, date1) {
     
     infinite.prompt <- function(text_msg, valid_answers,must.restart=FALSE)
       {
-      answer=''
-      while (!tolower(answer) %in% valid_answers)
-      {
+      #Initialize values
+        answer <- ''
+        k <- 1
+        
+      #Loop
+        while (!tolower(answer) %in% valid_answers)
+        {
            
         message1 (text_msg)
         
-         #Truncate answer to first k.max characters when displaying it back to the user
-          k.max<-20
-          answer2 <- ifelse(nchar(answer)>k.max, paste0(substr(answer,1, k.max),"..."), answer)
+         #Truncate answer to first text.max characters when displaying it back to the user
+          text.max<-20
+          answer2 <- ifelse(nchar(answer)>text.max, paste0(substr(answer,1, text.max),"..."), answer)
       
-        #Show answer
-          if (answer!='')                         message('        You typed "[' , answer2 , ']".  That is sadly not an accepted response.')
+        #Draft text showign answer
+          msg.answer <- paste0('        You typed --> "' , answer2 , '".  That is sadly not an accepted response.')
+        
+        #Add counter if k>1
+          if (k>1) msg.answer<-paste0(k,") ",msg.answer )
+              
+        #Show feedback on wrong answer
+          if (answer!='')                         message(msg.answer)
+        
+        #Show text they MUST restart session
           if (answer!='' && must.restart==TRUE)   message("        You need to restart the R session to continue")
 
         answer <-readline(prompt = "|   >")
+        
+        #Add counter
+          k=k+1
         } #end while
         return(answer)
     } #End prompt    
