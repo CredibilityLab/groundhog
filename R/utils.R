@@ -477,18 +477,23 @@ get.available.mran.date <- function(date0, date1) {
           answer2 <- ifelse(nchar(answer)>text.max, paste0(substr(answer,1, text.max),"..."), answer)
       
         #Draft text showign answer
-          msg.answer <- paste0('        You typed --> "' , answer2 , '".  That is sadly not an accepted response.')
+          msg.answer <- paste0('You typed --> "' , answer2 , '".  That is sadly not an accepted response.')
         
         #Add counter if k>1
-          if (k>1) msg.answer<-paste0(k,") ",msg.answer )
-              
+          if (k>1) {
+              msg.answer<-paste0(k,") ",msg.answer)
+              }
         #Show feedback on wrong answer
-          if (answer!='')                         message(msg.answer)
-        
+          if (answer!='') {
+            message("        ", msg.answer)
+            }
         #Show text they MUST restart session
-          if (answer!='' && must.restart==TRUE)   message("        You need to restart the R session to continue")
-
-        answer <-readline(prompt = "|   >")
+          if (answer!='' && must.restart==TRUE){
+            message("        You need to restart the R session to continue")
+          }
+          
+        #Ask for answer
+          answer <-readline(prompt = "|   >")
         
         #Add counter
           k=k+1
