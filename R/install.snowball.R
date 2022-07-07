@@ -89,6 +89,17 @@
           r <- getOption("repos")
           CRAN.mirror.url <- as.character(r["CRAN"])
           
+          
+      #1.9 Make CRAN-->MRAN if not using the most recent version of R (avoid R warning: 'was built with different R version)
+          R.using <- get.rversion()
+          R.max   <- max(toc("R")$Version)
+          if (R.using!=R.max)
+              {
+              snowball$from <- ifelse(snowball$from=='CRAN', "MRAN",snowball$from)
+              }
+
+
+          
     #####################
     #2 CRAN
     #####################
