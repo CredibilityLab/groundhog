@@ -18,7 +18,7 @@
   #Set 4 - Remotes (github and gitlab)
 
 #Version being tested (only locally available)
-#install.packages('C:/git/groundhog_1.9.9.2022.06.27.tar.gz',repos=NULL)
+#install.packages('c:/dropbox/groundhogr/groundhog_1.9.9.2022.06.29.tar.gz',repos=NULL)
 
 library('groundhog')
 
@@ -28,12 +28,27 @@ library('groundhog')
     test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
 
     set.groundhog.folder('c:/temp/full_test')
-    
-    
-    
-    
+
     
 #Set 0 - various forms of calling packages to be loaded
+  
+  #Missing/wrong arguments
+      #Missing pkg
+        groundhog.library(date='2022-01-01')
+    
+      #Missing date
+        groundhog.library('rio')
+    
+      #wrong format for date
+        groundhog.library(2,2)
+        
+      #Inexistent pkg on cran
+        groundhog.library(2,'2022-06-01')
+    
+      #inexistent pkg on github
+        groundhog.library('github::crsh/powerful_999','2022-06-01')
+    
+        
   #Single package, with and without quotes
     library('groundhog')
     groundhog.library('pwr',test.day)  #quotes
@@ -62,11 +77,52 @@ library('groundhog')
   
     
 #######################################    
-#Set 1 - Error and warnings with conflicts
+#Set 1 - Enumerated conflicts in 'check.snowball.conflict.R'
+            test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
 
+    
+    #Conflict 1: force Install (is any package that needs to be *installed*  loaded)
+    
+        #Conflict caused by R Studio loading the pkg
+          library('groundhog')
+            pwr::cohen.ES()
+            groundhog.library('pwr',test.day,force.install=TRUE)
 
+        #Conflict caused by groundhog
+            groundhog.library('pwr',test.day)
+            groundhog.library('pwr',test.day,force.install=TRUE)
+    
+        
+    #Conflict 2: Same remote, different date
+        library('groundhog')
+        groundhog.library('heliosdrm/pwr',test.day)
+        groundhog.library('heliosdrm/pwr',test.day+1)
+    
+        
+
+    #Conflict 3: Requested package was previously loaded with groundhog but different version or repository
+        library('groundhog')
+        groundhog.library('pwr',test.day)
+        groundhog.library('heliosdrm/pwr',test.day)
+  
+        
+      #Conflict 4: Dependency conflicts with previously loaded groundhog package
+        library('groundhog')
+        groundhog.library('rio',test.day)                              #load rio
+        groundhog.library('haven',test.day-80,tolerate=groundhog:::get.rversion()) #try to load a depenency, haven, with diff date
+  
+        
+    #Conflict 5: Any pkg in snowball was already loaded, different version, not with groundhog
+        library('groundhog')
+
+        pwr::pwr.2p.test()
+        groundhog.library('pwr','2020-01-01',tolerate.R.version='4.2.0')
+  
+        
+        
+    
   #Install in local library an older version of pwr to create conflicts later on
-    install.packages("https://cran.r-project.org/src/contrib/Archive/pwr/pwr_1.2-2.tar.gz",repos=NULL,type='source')
+    install.packages("https://cran.r-project.org/src/contrib/Archive/pwr/pwr_1.2-1.tar.gz",repos=NULL,type='source')
 
 
   #Test conflict 1 - another version  already attached
@@ -86,16 +142,21 @@ library('groundhog')
   #Test conflict 3 - same as 2, but conflict triggered by a loaded dependency rather than target package
     library(groundhog)
     library('vctrs')
-    
-    sessionInfo()
-    groundhog.library('tibble','2022-04-01')
+    groundhog.library('tibble',test.day)
 
   #Test conflict with recommended package
     library(groundhog)
     x=MASS::abbey      #different version
-    groundhog.library('MASS','2022-03-01')
+    groundhog.library('MASS',test.day-300,tolerate.R.version=groundhog:::get.rversion())
     
     
+  #Date is too recent for CRAN
+    groundhog.library('pwr',Sys.Date()-1)
+    
+  #Date is too recent for github
+    
+    groundhog.library('heliosdrm/pwr',Sys.Date()-55) #this is shown once, and then a cookie will not show it for 30 minutes
+    sessionInfo()
     
 ########################################################################
 #SET OF TESTS 2 -  CHECKING PREVIOUSLY FOUND BUGS
@@ -104,7 +165,7 @@ library('groundhog')
     library('groundhog')
     
     pkgs=c("robustlmm","R2ucare")
-    groundhog.library(pkgs,'2022-05-01')
+    groundhog.library(pkgs,test.day)
     lmer(NA)  #should read error in formula rather than cannot find function
     
 #2) Folder with space names
@@ -126,29 +187,20 @@ library('groundhog')
   library('groundhog')
 
   groundhog.library('pwr','2018-08-01')
-  groundhog.library('pwr','2018-08-01',tolerate.R.version='4.1.3')
+  groundhog.library('pwr','2018-08-01',tolerate.R.version='3.6.3')
 
     
 #5) Source
     library('groundhog')
-   groundhog.library('jsonlite','2020-08-01',tolerate.R.version = '4.2.0', force.install=TRUE,force.source = TRUE)
+   groundhog.library('jsonlite','2020-08-01',tolerate.R.version = '3.6.3', force.install=TRUE,force.source = TRUE)
     
-#6) Test for re-install
-    library('groundhog')
-    groundhog.library('jsonlite','2020-08-01',tolerate.R.version = '4.2.0',force.install = TRUE)
-    
-    
-#7) Test for re-install with current date and source
-    library('groundhog')
-    pks=c('jsonlite','metafor')
-    groundhog.library(pks,test.day,force.install = TRUE, force.source = TRUE)
-    
-#9) Include suggests
-    library('groundhog')
-    pks=c('jsonlite','metafor')
-    groundhog.library(pks, "2022-06-10",include.suggests = TRUE)
 
-#10) Load cran toc leads to errors
+#6) Include suggests
+    library('groundhog')
+    pks=c('jsonlite','metafor')
+    groundhog.library(pks, test.day ,include.suggests = TRUE)
+
+#7) Update cran to
     groundhog:::load.cran.toc(TRUE)
 ########################################################################
 #SET OF TESTS 3 -  INSTALLATION OF PACKAGES IN RANDOM ORDER
@@ -276,51 +328,46 @@ library('groundhog')
     
 # Installation can be tested with most downloaded packages as of the release of R's version matching that being used
 # or based on available packages when testing. 
-    set.groundhog.folder("c:/temp/test_groundhog20220626")
-    groundhog.library('pwr','2021-08-15')
     library('groundhog')
-    test.groundhog(1:10)         #Install the 100 most downloaded packages 
-    test.groundhog(310:335)        #install the 500-525 most downloaded packages
+    test.groundhog(1:10)         #Install the 10 most downloaded packages 
+    test.groundhog(501:525)      #install the 501-510 most downloaded packages
     test.groundhog(-10, seed=9)  #install 10 random packages available right now for this version of R
 
-    
-    groundhog.library('pbdMPI','2017-04-01')
     
     
 #---------------------------------------------  
 #4.  Remotes
+
   
-#4.1 Remote A dependson Remote B, verify Remote B can be attache 
-    
-    #Run in 3.6.3 - Key is whether the second package, a dependency of the 1st, is laoded without an error 
-   
-    
+
+      
+#4.1 - Run in 4.0.3
+    #Test conflicts when a remote depends on a remote
+    # Key is whether the second package, a dependency of the 1st, is loaded without an error 
 
    library('groundhog') 
-    groundhog.library('crsh/papaja','2016-10-01')
-    
-
-    groundhog.library('tidymodels/broom','2016-10-01')  #SHOUDL WORK
+    groundhog.library('crsh/papaja','2021-03-01')
+    groundhog.library('tidymodels/broom',test.day)
     
     
 
 
-#4.2 Same, but now with non matching dates
+  # Same, but now with non matching dates
     library('groundhog') 
-    groundhog.library('crsh/papaja','2020-04-01')
-    groundhog.library('tidymodels/broom','2020-04-02')  #SHOULD NOT WORK
+    groundhog.library('crsh/papaja','2016-10-01')
+    groundhog.library('tidymodels/broom','2016-10-02')  #SHOULD NOT WORK
     
     
-    toc('git2r')
-#4.3 Load remote, then try to load CRAN version
+    
+  # Load remote, then try to load CRAN version
       library('groundhog') 
-      groundhog.library('crsh/papaja','2020-04-01')   #remote broom dependency
-      groundhog.library('broom','2020-04-01')    
+      groundhog.library('crsh/papaja','2016-10-01')   #remote broom dependency
+      groundhog.library('broom','2016-10-01')    
     
       #Should say script needs to be revised
 
       
-#4.4 remote dependency already loaded
+  #remote dependency already loaded
     library('groundhog')
     groundhog.library('tidymodels/broom','2020-04-01')  
     groundhog.library('crsh/papaja','2020-04-01')
@@ -329,33 +376,20 @@ library('groundhog')
     
    
     
-#4.5 remote dependency already loaded, but wrong date
+  # remote dependency already loaded, but wrong date
     library('groundhog')
     groundhog.library('tidymodels/broom','2020-04-02')  
     groundhog.library('crsh/papaja','2020-04-01')
     
     
-#4.6 CRAN pkg with CRAN dependency and the dependency is already loaded as remote
-    library('groundhog')
-    groundhog.library('tidymodels/broom','2020-04-02')  
-    groundhog.library('dragon','2020-04-02', ignore.deps = 'broom')  
 
-   
-    
-    install.packages('C:/git/groundhog_1.9.9.2022.06.27.tar.gz',repos=NULL)
-    library('groundhog')
-    
-#5 - Popular github packages
+#4.2 - Popular github packages
     popular_github_packages<-c(
             "tidyverse/dplyr",
-            #"YuLab-SMU/clusterProfiler",  - requires bioconductor
             "satijalab/Seurat",
             "insightsengineering/teal.reporter",
             "RamiKrispin/TSstudio",
             "rmaia/pavo",
-            # "joey711/phyloseq",              - requires bioconductor
-            "rmcelreath/rethinking",
-            #"jokergoo/ComplexHeatmap",
             "Rdatatable/data.table",
             "rstudio/connectwidgets",
             "sparklyr/sparklyr",
@@ -364,7 +398,7 @@ library('groundhog')
             "benjjneb/dada2",
             "insightsengineering/tern.rbmi",
             "kassambara/survminer",
-            "plotly/plotly.R",
+            "plotly/plotly",
             "timoast/Signac",
             "Netflix/metaflow",
             "yihui/knitr",
@@ -380,19 +414,18 @@ library('groundhog')
     
     
     library('groundhog')    
-    k=14
+    k=1
     for (pk in popular_github_packages[k:length(popular_github_packages)])
     {
     message('-------------------------------------------------------')
     message('---   groundhog testser: [',k,']  ',pk,'       ---')
     
-      groundhog.library(pk,'2017-02-10')    
+    groundhog.library(pk,Sys.Date()-61)    # choose date 60 days ago 
     k=k+1
       
     }
     
     
-
-
-    groundhog.library('jeroen/jsonlite','2001-01-01',tolerate.R.version = '3.3.3')
+    groundhog.library('jeroen/jsonlite','2022/06/28')
+    traceback()
 
