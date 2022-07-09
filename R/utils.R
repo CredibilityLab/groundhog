@@ -153,11 +153,16 @@
     message1(...)
     
      #Read cran toc again to undo any changes with remote
-        .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
-                    
+        #Only run if main folder exists, otherwise we have loop, 
+        #exiting when it does not exist, and asking that it exist when exitin
+          main_folder <-  paste0(path.expand("~"), "/R_groundhog")
+          if (file.exists(main_folder)) {
+            .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
+          }     
+          
     #Return libpath
-        .libPaths(.pkgenv[["orig_lib_paths"]])
-    invokeRestart("abort")
+       .libPaths(.pkgenv[["orig_lib_paths"]])
+        invokeRestart("abort")
   }
 
 #11 Available mran dates

@@ -44,8 +44,8 @@ get.groundhog.folder <- function() {
         if (consent == FALSE)
           {
           
-          message("You typed '",answer,"'. Only if you type 'OK' can you use groundhog.library()")
-          exit()
+          stop("You typed '",answer,"'. Only if you type 'OK' can you use groundhog.library()")
+         #exit()
           }
     
   #Create main folder 
