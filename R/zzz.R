@@ -1,42 +1,44 @@
 
-#Create package environment
-  .pkgenv <- new.env(parent = emptyenv())
+# Package environment
+        .pkgenv <- new.env(parent = emptyenv())
 
-#Empty paths for groundhog loaded packages
-  .pkgenv[['groundhog.paths']] <- c(character())
 
-#installed base packages
-  .pkgenv[['base_pkg']] <- data.frame(utils::installed.packages(priority = 'base'))$Package
-    
 
-#Packages that have been already localized
-  .pkgenv[['localized']] <- c()
-
-  
-#Dataframe with groundhog package this session, saving every pkg loaded with groundhog.
-  .pkgenv[['groundhog.session_df']] <- data.frame(pkg=character(),
-                                                  vrs=character(), 
-                                                  pkg_vrs=character(), 
-                                                  repos=character(), 
-                                                  requested=logical(),
-                                                  time=numeric())
-  
-
-#Check support of colors? (legacy function perhaps)
   .onLoad <- function(libname, pkgname) {
   
 
-    #Setup pkg variable values
-    .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
-    .pkgenv[['default_libpath']] <-  .libPaths()
-    .pkgenv[['groundhog_loaded_pkgs']] <- c()
-
+    #---VARIABLES---
     
-              
-    #Delete to be purged packages, if any (put here with disable.packages())
-      packages_df <- get.packages_df() #utils.R #Function 33
-      purge_df <- subset(packages_df, packages_df$purged==TRUE)
-      if (nrow(purge_df)>0) unlink(purge_df$path , recursive = TRUE)   
+      
+      #1 Empty paths for groundhog loaded packages
+        .pkgenv[['groundhog.paths']] <- c(character())
+      
+      #2 installed base packages
+        .pkgenv[['base_pkg']] <- data.frame(utils::installed.packages(priority = 'base'))$Package
+          
+      
+      #3 Packages that have been already localized
+        .pkgenv[['localized']] <- c()
+      
+        
+      #4 Dataframe with groundhog package this session, saving every pkg loaded with groundhog.
+        .pkgenv[['groundhog.session_df']] <- data.frame(pkg=character(),
+                                                        vrs=character(), 
+                                                        pkg_vrs=character(), 
+                                                        repos=character(), 
+                                                        requested=logical(),
+                                                        time=numeric())
+        
+      #5 Setup pkg variable values
+          .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
+          .pkgenv[['default_libpath']] <-  .libPaths()
+          .pkgenv[['groundhog_loaded_pkgs']] <- c()
+    
+    
+      #6 Delete to be purged packages, if any (put here with disable.packages())
+          packages_df <- get.packages_df() #utils.R #Function 33
+          purge_df <- subset(packages_df, packages_df$purged==TRUE)
+          if (nrow(purge_df)>0) unlink(purge_df$path , recursive = TRUE)   
     
          
     } #End of onLoad
@@ -56,7 +58,7 @@
         
       #2. If no consent, ask for it
          if (consent == FALSE) {
-            message("groundhog needs authorization to save files to  '",main_folder, "'\n",
+            message("groundhog needs authorization to save files to '",main_folder, "'\n",
                                   "Enter 'OK' to provide authorization")
                                   
             answer <- readline()
