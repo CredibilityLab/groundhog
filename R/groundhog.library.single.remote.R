@@ -179,9 +179,6 @@
             rdf$attached <- ifelse(rdf$pkg %in% attached.pkg, TRUE, rdf$attached)    #turn attach to true if appropriate
             .pkgenv[['remotes_df']] <- rdf                                           #unlocalize
             
-            
-         
-        
                
         
 				#8.10 localize everything that's not base
@@ -189,20 +186,7 @@
 					localize.snowball(snowball.no_base)
 					
 					
-			  #8.11 Save everything to groundhog.session
-					#Subset from snowball
-					  groundhog.session_df.k <-snowball[,c('pkg','vrs','pkg_vrs', 'from')]
-					  
-					#Add time
-					  groundhog.session_df.k$time <- as.numeric(Sys.time())
-					  
-					#TRUE FALSE for whether package was explicitly requested
-					  groundhog.session_df.k $requested <- groundhog.session_df.k$pkg == pkg     
-					  
-					#ADD NEW ROWS
-						.pkgenv[['groundhog.session_df']] <- 	c(.pkgenv[['groundhog.session_df']] , groundhog.session_df.k )
-
-			#8.12 Update groundhog session (dataframe with everything loaded with groundhog in this R session)
+			  #8.11 Update groundhog session (dataframe with everything loaded with groundhog in this R session)
 						update.groundhog.session(snowball)  #utils.R -  function #41
 
       }#End if verified is true
