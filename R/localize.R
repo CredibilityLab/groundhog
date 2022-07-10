@@ -53,10 +53,13 @@
     #10 If this one is installed, uninstall it 
         if (pkg %in% ip$Package) {
             old<- file.path(ip$LibPath[ip$Package==pkg] , pkg) 
-            new <- paste0(old , "_PURGE")
+            random <- paste0(sample(letters,size=6),collapse = '')
+            new <- paste0(old , "_",random,"_PURGE")  #add 6 random letters and _PURGE
             purged   <- file.rename(old , new)
             
-            }
+        }
+         
+         
     #11  Copy the folder from groundhog folder
          #path to copy pkg from and to
             from_path <-paste0(installation.path,'/',pkg)  #groundhog_folder
