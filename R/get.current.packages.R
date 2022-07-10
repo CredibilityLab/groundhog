@@ -36,7 +36,7 @@ get.current.packages <- function(type) {
 			current.packages$pkg_vrs <- paste0(current.packages$Package, "_", current.packages$Version)
 			}
 			
-        saveRDS(current.packages, ap_file_path)
+        saveRDS(current.packages, ap_file_path, version=2, compress=FALSE)
     } #End if file found
     
   return(current.packages)

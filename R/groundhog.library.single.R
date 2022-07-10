@@ -110,7 +110,7 @@
 					  
 					   
 						if (!file.exists(snowball_path)) {
-						  saveRDS(snowball, snowball_path, version = 2)
+						  saveRDS(snowball, snowball_path, version = 2, compress=FALSE)
 						  } #End if snowball exists
 							
 		

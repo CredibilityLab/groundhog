@@ -133,7 +133,7 @@
           
           
         #Save clone_catalog
-          saveRDS(clone_catalog, clone_catalog_path, version=2) #version 2 for backwards compatible
+          saveRDS(clone_catalog, clone_catalog_path, version=2,compress=FALSE) #version 2 for backwards compatible
         
       } 
       

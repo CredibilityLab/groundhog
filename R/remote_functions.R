@@ -132,7 +132,7 @@
         }
         
         #Save the sha_time
-          saveRDS(sha_time , sha_path)
+          saveRDS(sha_time , sha_path,version=2,compress=FALSE)
         
         
         return(sha_time)
