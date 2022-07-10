@@ -91,14 +91,17 @@
           
           
       #1.9 Make CRAN-->MRAN if not using the most recent version of R (avoid R warning: 'was built with different R version)
-          R.using <- get.rversion()
-          R.max   <- max(toc("R")$Version)
-          if (R.using!=R.max)
-              {
-              snowball$from <- ifelse(snowball$from=='CRAN', "MRAN",snowball$from)
-              }
+          # R.using <- get.rversion()
+          # R.max   <- max(toc("R")$Version)
+          # if (R.using!=R.max)
+          #     {
+          #     snowball$from <- ifelse(snowball$from=='CRAN', "MRAN",snowball$from)
+          #     }
 
 
+            #This is not enough because it depends on cran.toc which may not be up to date
+            #Sever (groundhog) has textfile with version of R that's current, could use that if 
+            #later implemented
           
     #####################
     #2 CRAN
@@ -460,7 +463,7 @@
                           "which is at least one major update after the date you entered '", date, "'.\n",
                           "You can try using a more recent date in your groundhog.library() command, \n",
                           "or run it with the same date using 'R-", rv$r.need.full, "'\n", 
-                          "Instructions for running older versions of R: ",
+                          "Instructions for running older versions of R: \n",
                           "    http://groundhogr.com/many")
                           }
                           
