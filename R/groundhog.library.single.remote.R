@@ -141,7 +141,7 @@
           ip<-data.frame(utils::installed.packages(snowball$installation.path), stringsAsFactors=FALSE)
           snowball$installed <- snowball$pkg %in% ip$Package
           snowball$installed <- TRUE
-          saveRDS(snowball, snowball_path, version = 2)
+          saveRDS(snowball, snowball_path, version = 2, compress=FALSE)
          
              
    #8 Add package_date to .envpkg vector of loaded remotes to prevent conflicts not idnetified by vrs 
