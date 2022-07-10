@@ -29,7 +29,7 @@ get.groundhog.folder <- function() {
        #If no folder, ask for consent 
          if (consent == FALSE) {
             message2()
-            message1("groundhog needs authorization to save files to  '",main_folder, "'\n",
+            message1("groundhog needs authorization to save files to '",main_folder, "'\n",
                     "Enter 'OK' to provide authorization")
                                   
             answer <- readline()
@@ -44,8 +44,8 @@ get.groundhog.folder <- function() {
         if (consent == FALSE)
           {
           
-          stop("You typed '",answer,"'. Only if you type 'OK' can you use groundhog.library()")
-         #exit()
+          message("You typed '",answer,"'. Only if you type 'OK' can you use groundhog.library()")
+          exit()
           }
     
   #Create main folder 
