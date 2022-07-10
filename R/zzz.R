@@ -3,6 +3,10 @@
         .pkgenv <- new.env(parent = emptyenv())
 
 
+# installed base packages
+        .pkgenv[['base_pkg']] <- data.frame(utils::installed.packages(priority = 'base'))$Package
+      
+        
 
   .onLoad <- function(libname, pkgname) {
   
@@ -13,8 +17,6 @@
       #1 Empty paths for groundhog loaded packages
         .pkgenv[['groundhog.paths']] <- c(character())
       
-      #2 installed base packages
-        .pkgenv[['base_pkg']] <- data.frame(utils::installed.packages(priority = 'base'))$Package
           
       
       #3 Packages that have been already localized
@@ -58,7 +60,7 @@
         
       #2. If no consent, ask for it
          if (consent == FALSE) {
-            message("groundhog needs authorization to save files to '",main_folder, "'\n",
+            packageStartupMessage("groundhog needs authorization to save files to '",main_folder, "'\n",
                                   "Enter 'OK' to provide authorization")
                                   
             answer <- readline()
@@ -72,7 +74,7 @@
       #3. It not given, die
           if (consent == FALSE)
           {
-          message("You did not say 'OK'\nIf you run 'groundhog.library()' you will be asked again")
+          packageStartupMessage("You did not say 'OK'\nIf you run 'groundhog.library()' you will be asked again")
           }
         
       #4. If consent given, proceed
@@ -84,6 +86,7 @@
             
       #5 Load toc files
           load.cran.toc()    
+          
 
       #6 Report versions being used
           groundhog.version_using <- as.character(packageVersion("groundhog"))
