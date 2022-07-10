@@ -198,7 +198,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                              " \n ",
                              "2) Explicitly allow the already loaded version of the package ",
                              "to be tolerated, by adding the 'ignore.deps' options, running: \n ",
-                             "`groundhog.library('",requested_pkg , "','", date, "', ignore.deps=c(", need.to.ignore ,")`",
+                             "`groundhog.library('",requested_pkg , "','", date, "', ignore.deps=c(", need.to.ignore ,"))`",
                              " \n \n ", 
                              type.ok)
                           
