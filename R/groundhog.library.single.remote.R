@@ -108,18 +108,24 @@
 
     
     #6 Attach pkg
-      #6.0 Workaroudn: .libPaths() was returning to default, so i re-set it here, 
-      .libPaths('')
-      .libPaths(c(snowball$installation.path, .libPaths()))
 
-      #6.1 Attach itself
-        base.library(pkg, character.only=TRUE) #utils. function 26
+        #Turn off warnings
+          warn0 <- getOption("warn")
+          options(warn = -1)
+          
+        #library()
+          base.library(pkg, character.only=TRUE) #utils. function 26
+          
+        #Options back
+          options(warn = warn0)
 
-    #7 verify snowball loaded
-        verified <- verify.snowball.loaded(snowball,ignore.deps)  
- 
+
       
    #7 If verified, save snowball
+      verified <- verify.snowball.loaded(snowball,ignore.deps)  
+
+          
+          
       if (verified==TRUE) 
       { 
         
