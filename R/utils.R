@@ -34,13 +34,14 @@
 #32 infinite.prompt() ask the same question until a valid answer is provided
 #33 get.packages_df()  -  data.frame with installed packages in local library
 #34 sandwich.library() - turn a string containing library calls into a vector of pkg names
-#35 format.msg()             : format output to have fixed width and starting symbol (e.g., "|    ")
-#36 set.default.mirror()     : set a CRAN mirror if none is already set
+#35 format.msg()               : format output to have fixed width and starting symbol (e.g., "|    ")
+#36 set.default.mirror()       : set a CRAN mirror if none is already set
 #37 verify.personal.library.exists(): if no folder for saving personal packages exists, prompted to create it
-#38 restart.text()            : tells user to either quit() R or use CMD-SHIF-F10 based on whether they use R Studio
+#38 restart.text()             : tells user to either quit() R or use CMD-SHIF-F10 based on whether they use R Studio
 #39 get.minutes.since.cookie() : reads csv file with Sys.time() of last time this cookie was saved
 #40 get.repos_from.snowball()  : infer repository (cran, github, gitlab) from other information already in the snowball
 #41 update.groundhog.session() : Update groundhog session with new packages loaded and requested with groundhog
+#42 check.groundhog.version()  : if more than `min.days' days since last check, check if groundhog needs to be updated
 ########################################################################
     
 
@@ -261,7 +262,7 @@ get.available.mran.date <- function(date0, date1) {
     
        
        # correct format
-        d <- try(as.Date(entered_date, format="%Y-%m-%d"))
+        d <- try(as.Date(entered_date, format="%Y-%m-%d"),silent = TRUE)
           if ("try-error" %in% class(d) || is.na(d)) {
               message1(msg)
                exit()
@@ -725,4 +726,51 @@ get.available.mran.date <- function(date0, date1) {
       }
       
         
+#42  check.groundhog.version()  - if more than `min.days' days since last check, check if goundhog needs to be updated
       
+      check.groundhog.version <- function(min.days=7)
+      {
+        
+      #How many days has it been
+          last.check.minutes <- get.minutes.since.cookie('check_groundhog_version')
+          last.check.days    <- (last.check.minutes/60)/24
+        
+      #If less than min.days, early return
+          if (last.check.days<min.days) return(invisible(TRUE))
+          
+      #If more than `min.days` days, check version on server
+          if (last.check.days>=min.days)
+              {
+              #Try to read from groundhogr.com   
+                  groundhog.version_cran <- tryCatch(
+                  as.character(readLines("https://groundhogr.com/groundhog_version.txt")),
+                  warning = function(w) NULL,
+                  error = function(e) NULL
+                )
+              
+              #If NULL then early return
+                  if (is.null(groundhog.version_cran)) return(invisible(FALSE))
+              
+              #Get majmin
+                groundhog.version_using <- as.character(packageVersion("groundhog"))
+                gv.using <- as.numeric(strsplit(groundhog.version_using, "\\.")[[1]])
+                gv.cran  <- as.numeric(strsplit(groundhog.version_cran, "\\.")[[1]])
+                gv.using.majmin <-  10000*gv.using[1] + gv.using[2]
+                gv.cran.majmin  <-  10000*gv.cran[1]  + gv.cran[2]
+    
+    
+              #If server's is bigger, prompt to update
+                if (isTRUE(gv.cran.majmin > gv.using.majmin)) {
+                    message2()
+                    message1(
+                    "\n\n\n",
+                    "          OUTDATED GROUNDHOG\n",
+                    "            You are using version  '" , groundhog.version_using, "\n",
+                    "            The current version is '" , groundhog.version_cran, "'\n\n",
+                    "            You can read about the changes here: https://groundhogr.com/changelog\n\n",
+                    "Update by running: \ninstall.packages('groundhog')"
+                    )
+                    }  #End mismatch in version
+                  
+            } #ENd last check more than `min.days`  ago
+      }#End of function 42
