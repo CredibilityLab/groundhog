@@ -668,7 +668,7 @@ get.available.mran.date <- function(date0, date1) {
           cookie_path <- file.path(cookies_dir, paste0(cookie_name,".csv"))
           
         #Save time
-          write.csv(as.numeric(Sys.time()),cookie_path,row.names = FALSE)
+          utils::write.csv(as.numeric(Sys.time()),cookie_path,row.names = FALSE)
         }
         
    #39.2 READ
@@ -681,7 +681,7 @@ get.available.mran.date <- function(date0, date1) {
       #Exists? Return 999999 if it does not, contents if it does
         if (!file.exists(cookie_path)) return (999999)
         if (file.exists(cookie_path)) {
-          time0<-read.csv(cookie_path)$x  
+          time0 <- utils::read.csv(cookie_path)$x  
           seconds <- as.numeric(Sys.time()-time0)
           minutes <- seconds/60
           return(minutes)
