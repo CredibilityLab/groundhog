@@ -36,7 +36,7 @@ toc <- function(pkg, dependencies = FALSE) {
     message1(
       "There is no package '", pkg, "' in our database of all CRAN packages ever posted.\n",
       "   Keep in mind that:\n",
-      "    1. package names are cAsE seNsiTive\n",
+      "    1. Package names are cAsE seNsiTive\n",
       "    2. By default requested packages are looked for only on CRAN\n",
 	  "    3. To load a 'GitHub' or 'Gitlab' package you need to include\n",
 	  "       the full path, e.g., groundhog.library('github::crsh/papaja','",date.example,"')"
