@@ -8,6 +8,15 @@
     
     #1 Load installed packages
         ip <- data.frame(utils::installed.packages(lib.loc =.pkgenv[["orig_lib_paths"]][1] ), stringsAsFactors=FALSE)
+        
+      #If none, create empty row to avoid errors when combining pkg_vrs
+        if (nrow(ip)==0) {
+        ip[1,] <- rep('',ncol(ip))
+        }
+        
+        #This is here becuase if installed.packages() and the dataframe is empty, creating pkg_vrs produces an error
+
+    #2 Make pkg_vrs
         ip$pkg_vrs<-paste0(ip$Package,"_",ip$Version)
       
     
