@@ -29,7 +29,7 @@
       if (pkg_vrs %in% .pkgenv[['localized']]) next
 
     #7 If local folder already has this version and the pkg in snowball is not remote
-      if (pkg_vrs  %in% ip$pkg_vrs & sha=='') next
+      if (pkg_vrs  %in% ip$pkg_vrs & sha %in% c('', NA)) next
       
         
     #8 iF package does not exist in groundhog folder, error    
