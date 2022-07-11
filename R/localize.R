@@ -53,8 +53,9 @@
     #10 If this one is installed, uninstall it 
         if (pkg %in% ip$Package) {
             old<- file.path(ip$LibPath[ip$Package==pkg] , pkg) 
-            random <- paste0(sample(letters,size=6),collapse = '')
-            new <- paste0(old , "_",random,"_PURGE")  #add 6 random letters and _PURGE
+            #random <- paste0(sample(letters,size=6),collapse = '')
+            #new <- paste0(old , "_",random,"_PURGE")  #add 6 random letters and _PURGE
+            new<-  paste0(olde,_"PURGE")
             purged   <- file.rename(old , new)
             
         }
