@@ -14,7 +14,6 @@ For information about groundhog, check out the blogpost announcing it (http://da
 CRAN contains the officially released versions of groundhog. Here on github is the in-development version.
 
 The in-development version may undergo backwards incompatible changes, and probably includes many (instead of few) typos and silly bugs.
-Once it seems to be ready, it will be sent to CRAN and become v2.0.0. Aiming for July 2022. 
 
 To use this in-development version:
 `remotes::install_github('CredibilityLab/groundhog')`
