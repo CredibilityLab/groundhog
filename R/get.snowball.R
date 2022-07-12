@@ -25,7 +25,7 @@
 #2 Produce  dep12  (topographical sort) to get order of installation
 #3 Add pkg at the end
 #4 Get the version of each package
-#5 Make Snowball table with: installed | CRAN | MRAN | TARBALL | INSTALLATION TIME
+#5 Make Snowball table
 #6 Turn to data frame 
 ######################################################################################
 

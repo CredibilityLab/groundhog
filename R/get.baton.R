@@ -4,7 +4,7 @@
 #2) Get baton loops chasing all remotes found as dependencies until there are none left
 
 
-#0 Function that cleans
+#0 Auxiliary function that cleans fields of text
                   clean_text <- function(y) {
                   return(gsub("\\s*\\([^\\)]+\\)|\\n| ","",as.character(y))) #Kill the parenthense, \n, and space
                   }

@@ -1,6 +1,6 @@
 
 #This script is called from groundhog.library.single.remote()
-#It modified cran.toc to include the remote, and its remote dependencies, and then
+#It modifies cran.toc to include the remote package and its remote dependencies, and then
 #generates a snowball using the default get.snowball() function
 #
 

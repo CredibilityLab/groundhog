@@ -2,15 +2,10 @@
 #
 # Get currently active (=loaded) packages in the session, with their version
 #
-# return a `data.frame` with two columns:
-# \describe{
-#   \item{pkg}{the package name}
-#   \item{pkg_vrs}{the package name and its version, separated by an
-#   underscore}
-# }
-#
+# return a `data.frame` with two columns, pkg & pkg_vrs
 
-#
+
+
 get.active <- function() {
   si <- utils::sessionInfo()
 

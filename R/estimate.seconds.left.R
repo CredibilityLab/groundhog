@@ -1,12 +1,5 @@
 # Estimate seconds left in install
 #
-#k numeric. Current step in the snowball process.
-#snowball the result of [get.snowball()].
-#param start.time the result of [Sys.time()] when the installation process
-#   started
-#
-#return the remaining time left in seconds
-#
 estimate.seconds.left <- function(k, start.time, snowball) {
   # Time assigned to binary installs
   time.per.binary <- 25 # assumed 25 seconds per binary

@@ -1,17 +1,8 @@
-# Check snowball conflict
 
-#1  short name for package being installed/loaded
-#2  Ignore conflicts 
-#3  Active packages
-#4  Conflict 1: force Install (is any package that needs to be *installed*  loaded)
-#5  Conflict 2: Same remote, different date
-#6  Obtain vector with all conflicting packages
-#7  Conflict 3 - different version
-#8  Conflict 4 - pkg 1 on CRAN, pkg 2 is remotes, so even same date creates conflict
-#9  Conflict 5 - pkg 1 on Remote, pkg 2 is CRAN, so even same date creates conflict
-#10 Conflict 6 - Typical conflict: both packages are in CRAN, one was loaded before groundhog tried 
+# If a package in the to be loaded/installed snowball conflicts with an already loaded 
+# package, informative feedback is provided
 
-#-------------------------------
+
 
 
 check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) {
@@ -58,6 +49,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
       #Conflict 5: Any pkg in snowball was already loaded, different version, not with groundhog
 
           
+    #Text reused in several separate messages
           
       text.not.loaded <- paste0("The package ",requested_pkg_vrs, " was NOT loaded  \n \n ")
       type.ok <- "Type 'OK' to confirm you have read this message."
@@ -164,7 +156,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
                            !snowball$pkg_vrs_repos %in% gs$pkg_vrs_repos &    #but not same vrs or repository 
                            !snowball$pkg %in% ignore.deps                  #and we are not asked to ignore this conflict
         
-            #vector with T/F for each pkg having been previosly loaded in different version with groundhog
+            #vector with T/F for each pkg having been previously loaded in different version with groundhog
              #(this includes the pkg requested now, but that was taken care of in conflict #3)
             
             
