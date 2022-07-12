@@ -334,7 +334,6 @@
           
       #4.1 Any Source or Remote files remain to be installed?
         
-        
           n.source <- sum(source & snowball$installed==FALSE )
           n.remote <- sum(remote & snowball$installed==FALSE )
           
@@ -486,14 +485,18 @@
                 clone_path <- get.clone_path(pkg=snowball$pkg[k], usr=snowball$usr[k], remote_id=snowball$from[k]) 
               
               #Add "file://" if it is a unix machine so that install_git will treat it as a URL
-                if (.Platform$OS.type == "unix" & Sys.info()['sysname']!="Darwin") {
-                  clone_path <- paste0("file://",clone_path)
-                  }
+                #if (.Platform$OS.type == "unix" & Sys.info()['sysname']!="Darwin") {
+                 # clone_path <- paste0("file://",clone_path)
+                  #}
                 
               #Install it
-                  remotes::install_git(clone_path,  dependencies = FALSE , lib=snowball$installation.path[k], ref=snowball$sha[k], INSTALL_opts = '--no-lock')
+                    try_install_git(path=clone_path,  dependencies = FALSE , lib=snowball$installation.path[k], ref=snowball$sha[k], INSTALL_opts = '--no-lock')
+                    
                      #ref is the sha indicating which version is installed
-            }
+                     #try_install_git runs remotes::install_git first on the path, and if it does not work on file://path
+                    # see fucntion #8 in remotes_functions.R
+            }    
+
                 
                 
         #6 Add remote to remotes_df

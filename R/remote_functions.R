@@ -280,6 +280,99 @@
   }
   
 
+  
+  
+#----------------------------------------------
+  
+#Function 8 - try install_git
+  
+  #    -----------  Workaround given ambiguity  2022-07-10    -----
+  #There is ambiguity whether install_git() needs to have the path as "file://" or just the path/
+  #This functions tries by default without the 'file://' and if it fails, it makes a note of it to 
+  #always add 'file://' first, but then it will update the moment trying with file:// fails but without it succeeds
+  
+  
+  try_install_git<-function(path,  dependencies, lib, ref, INSTALL_opts)      {
+
+      
+      #1 Should we start without adding 'file://
+    
+        #Assume we don't add it
+          add_file_first <- FALSE
+        #Cookie path
+          cookies_dir <- paste0(get.groundhog.folder(),"/cookies")
+          dir.create(cookies_dir,recursive = TRUE, showWarnings = FALSE)
+          cookie_path <- file.path(cookies_dir, "add_file_first.csv")
+        
+        #if it exists, we do add it
+          if (file.exists(cookie_path)) add_file_first==TRUE
+        
+        
+      #2 File 1 & file 2
+        #Add 'file://' to a path
+        file_path <- paste0('file://',path)
+        
+        #If that should be the 1st one, make it
+          if (add_file_first==TRUE) 
+            {
+            path1<-file_path
+            path2<-path
+          } else {
+        
+        #But if itshould be the 2nd, do that
+          path1<-path
+          path2<-file_path
+        } #End if we should try 'file://' first
+        
+        
+        
+      #3 Try path 1
+          try1 <- try(remotes::install_git(url=path1,  dependencies=dependencies  , lib=lib, ref=ref, INSTALL_opts=INSTALL_opts ))
+  
+        
+
+                                    
+
+      #4 If try 1 success, done
+            if (class(try1)!='try-error') return(invisible(TRUE))
+            
+            
+      #5 If try 1 failure, try path 2 
+            
+            if (class(try1)=='try-error'){
+              message1("Will now try using the modified path: '" , path2, "'")
+              try2 <- try(remotes::install_git(url=path2,  dependencies=dependencies  , lib=lib, ref=ref, INSTALL_opts=INSTALL_opts ))
+             }
+              
+      #6 If try 2 works, adjust cookie
+            if (class(try2)!='try-error')
+              {
+              #if the cookie exists, delete it, so we try without file first
+                if (file.exists(cookie_path)) {
+                  unlink(cookie_path)
+                }
+              time <- as.numeric(Sys.time())
+              
+              #If the cookie doesn't exist, create it, so we try it first
+                if (!file.exists(cookie_path)) {
+                  utils::write.csv (time , file=cookie_path)
+                }
+              
+              return(invisible(TRUE))  
+            
+            } #End if second try was a problem
+       
+            
+      #7 If try 2 fails, give up
+            if (class(try2)=='try-error') {
+              message("groundhog says:\n",
+                      "The 2nd path also did not work, could not install pacakge.")
+            }
+  } #End function
+  
+  
  
+  
+  
   
   
