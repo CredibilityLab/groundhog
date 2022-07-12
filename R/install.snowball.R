@@ -494,7 +494,7 @@
                     
                      #ref is the sha indicating which version is installed
                      #try_install_git runs remotes::install_git first on the path, and if it does not work on file://path
-                    # see fucntion #8 in remotes_functions.R
+                     #see function #8 in remotes_functions.R
             }    
 
                 
