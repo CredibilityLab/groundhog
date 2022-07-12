@@ -325,27 +325,24 @@
         } #End if we should try 'file://' first
         
         
-        
       #3 Try path 1
           try1 <- try(remotes::install_git(url=path1,  dependencies=dependencies  , lib=lib, ref=ref, INSTALL_opts=INSTALL_opts ))
   
-        
-
-                                    
 
       #4 If try 1 success, done
-            if (class(try1)!='try-error') return(invisible(TRUE))
+            if (!methods::is(try1,'try-error')) return(invisible(TRUE))
             
             
       #5 If try 1 failure, try path 2 
             
-            if (class(try1)=='try-error'){
+             if (methods::is(try1, 'try-error')) {
+              
               message1("Will now try using the modified path: '" , path2, "'")
               try2 <- try(remotes::install_git(url=path2,  dependencies=dependencies  , lib=lib, ref=ref, INSTALL_opts=INSTALL_opts ))
              }
               
       #6 If try 2 works, adjust cookie
-            if (class(try2)!='try-error')
+              if (!methods::is(try2, 'try-error'))
               {
               #if the cookie exists, delete it, so we try without file first
                 if (file.exists(cookie_path)) {
@@ -364,7 +361,7 @@
        
             
       #7 If try 2 fails, give up
-            if (class(try2)=='try-error') {
+            if (methods::is(try2,'try-error')) {
               message("groundhog says:\n",
                       "The 2nd path also did not work, could not install pacakge.")
             }
