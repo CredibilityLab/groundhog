@@ -24,24 +24,24 @@
 #22 Turn dates to unix time
 #23 strpos1()                - string position - simpler gregexpr for strpos  
 #24 get.groundhog_libpaths() - get subset of paths in libPath() that belong to groundhog
-#25 Compare two sets of pkg_vrs vectors, obtaining text report of any mismatches 
+#25 get.mismatched_versions_report() : Compare two sets of pkg_vrs vectors, obtaining text report of any mismatches  (not used anymore)
 #26 base.libary()           : Copy library() to use when finalizing loading a pkg
 #27 Validate.tf()
 #28 DROPPED
 #29 read.desc2()
 #30 DROPPED
-#31 pasteQC()  -  paste a vector separating elements by quots  c('a','b','c')-->  string: '"a","b","c"'
-#32 infinite.prompt() ask the same question until a valid answer is provided
-#33 get.packages_df()  -  data.frame with installed packages in local library
-#34 sandwich.library() - turn a string containing library calls into a vector of pkg names
-#35 format.msg()               : format output to have fixed width and starting symbol (e.g., "|    ")
-#36 set.default.mirror()       : set a CRAN mirror if none is already set
+#31 pasteQC()                  :  paste a vector separating elements by quots  c('a','b','c')-->  string: '"a","b","c"'
+#32 infinite.prompt()          :  ask the same question until a valid answer is provided
+#33 get.packages_df()          :  data.frame with installed packages in local library
+#34 sandwich.library()         :  turn a string containing library calls into a vector of pkg names
+#35 format.msg()               :  format output to have fixed width and starting symbol (e.g., "|    ")
+#36 set.default.mirror()       :  set a CRAN mirror if none is already set
 #37 verify.personal.library.exists(): if no folder for saving personal packages exists, prompted to create it
-#38 restart.text()             : tells user to either quit() R or use CMD-SHIF-F10 based on whether they use R Studio
-#39 get.minutes.since.cookie() : reads csv file with Sys.time() of last time this cookie was saved
-#40 get.repos_from.snowball()  : infer repository (cran, github, gitlab) from other information already in the snowball
-#41 update.groundhog.session() : Update groundhog session with new packages loaded and requested with groundhog
-#42 check.groundhog.version()  : if more than `min.days' days since last check, check if groundhog needs to be updated
+#38 restart.text()             :  tells user to either quit() R or use CMD-SHIF-F10 based on whether they use R Studio
+#39 get.minutes.since.cookie() :  reads csv file with Sys.time() of last time this cookie was saved
+#40 get.repos_from.snowball()  :  infer repository (cran, github, gitlab) from other information already in the snowball
+#41 update.groundhog.session() :  Update groundhog session with new packages loaded and requested with groundhog
+#42 check.groundhog.version()  :  if more than `min.days' days since last check, check if groundhog needs to be updated
 ########################################################################
     
 
