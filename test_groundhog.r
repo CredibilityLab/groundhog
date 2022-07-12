@@ -18,15 +18,15 @@
   #Set 4 - Remotes (github and gitlab)
 
 #Version being tested (only locally available)
-install.packages('http://groundhogr.com/groundhog_1.9.9.2022.07.10.tar.gz',repos=NULL)
-
+install.packages('http://groundhogr.com/groundhog_1.9.9.2022.07.12-1539.tar.gz',repos=NULL)
+groundhog:::load.cran.toc(TRUE)
 library('groundhog')
 
 
 
 #Date to use for testing individual packages
     test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
-    set.groundhog.folder('c:/temp/full_test')
+    set.groundhog.folder('c:/temp/full_test3')
     
 
 #Set 0 - various forms of calling packages to be loaded
@@ -41,7 +41,7 @@ library('groundhog')
       #wrong format for date
         groundhog.library(2,2)
         
-      #Inexistent pkg on cran
+      #Nonexistent pkg on cran
         groundhog.library(2,test.day)
     
       #inexistent pkg on github
@@ -80,9 +80,7 @@ library('groundhog')
     
 #######################################    
 #Set 1 - Enumerated conflicts in 'check.snowball.conflict.R'
-            test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
 
-    
     #Conflict 1: force Install (is any package that needs to be *installed*  loaded)
     
         #Conflict caused by R Studio loading the pkg
@@ -115,7 +113,8 @@ library('groundhog')
         #RUN THIS IN 4.1.x
           library('groundhog')
           groundhog.library('haven','2021-08-01')  
-          groundhog.library('rio','2021-08-05') 
+          groundhog.library('rio','2021-08-05')
+          groundhog.library('rio','2021-08-05',ignore.deps='haven') 
         
         #RUN THIS IN 4.1.x
           library('groundhog')
@@ -176,7 +175,6 @@ library('groundhog')
     
   #Date is too recent for github (will not show it if package is already installed)
     #temporarily change groundhog folder so warning is shown
-      k=sample(10000,size=1)  
       d0=get.groundhog.folder()
       temp_path<-paste0(d0,'/test1')
       set.groundhog.folder(temp_path)
@@ -218,11 +216,12 @@ library('groundhog')
   library('groundhog')
 
   groundhog.library('pwr',test.day-400)
+  ok
   groundhog.library('pwr',test.day-400,tolerate.R.version=groundhog:::get.rversion())
 
     
 #5) Source
-    library('groundhog')
+  library('groundhog')
    groundhog.library('jsonlite',test.day-400,force.install=TRUE,force.source = TRUE,tolerate.R.version=groundhog:::get.rversion())
     
 
@@ -376,7 +375,6 @@ library('groundhog')
     test.groundhog(-10, seed=9)  #install 10 random packages available right now for this version of R
 
     
-    groundhog.library('h2o','2022-05-17')
 #---------------------------------------------  
 #4.  Remotes
 
@@ -448,12 +446,11 @@ library('groundhog')
             "ropensci/drake",
             "rstudio/rticles",
             "r-spatial/sf",
-            "ropensci/skimr",
-            "mitchelloharawild/vitae",
-            "stan-dev/rstan",
-            "business-science/tidyquant")
+            "ropensci/skimr")
     
     
+    
+    groundhog.library('mlr-org/mlr',test.day)
     
     library('groundhog')    
       test.day <- groundhog:::get.r.majmin.release()+95 #release of this R version + 45 days
@@ -468,9 +465,8 @@ library('groundhog')
     k=k+1
       
     }
-    
-    
+    test.day='2022-06-09'
+    Sys.setenv(PATH = paste("C:/Rtools/bin", Sys.getenv("PATH"), sep=";"))
+
     groundhog.library('jeroen/jsonlite',test.day)
-    groundhog.library('crsh/papaja',test.day)
-    traceback()
 
