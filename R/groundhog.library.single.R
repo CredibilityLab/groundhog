@@ -78,7 +78,7 @@
              }
   
  
-  #8 library() it with optinos off because warning of built with different version serve no purpose
+  #8 library() it with options off because warning of built with different version serve no purpose
       #Turn off warnings
         warn0 <- getOption("warn")
         options(warn = -1)
