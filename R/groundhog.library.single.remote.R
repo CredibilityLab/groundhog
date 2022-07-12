@@ -10,8 +10,19 @@
        if (force.install==TRUE) {
             message("When installing remote packages, like '",pkg, "' the 'force.install' option may not be set to TRUE")
             exit()
-          }
-  
+       }
+    
+      #Require R>3.2
+        r.using<- groundhog:::get.rversion()
+        if (r.using<"3.3") {
+          msg <- paste0("You are using R version 'R-" , r.using , "'. You need version ",
+                        ">3.3.0 to use groundhog for loading from Github and GitLab. \n ",
+                        "Type 'OK' to confirm you have read this message.")
+          infinite.prompt(format.msg(msg),'ok')
+          exit()
+          
+        }
+        
     #1 Process pkg-->usr, remote_id
         pkg_list<-make.pkg_list(pkg)
         usr <- pkg_list$usr
