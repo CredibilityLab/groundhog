@@ -11,9 +11,7 @@ version](https://www.r-pkg.org/badges/version-ago/groundhog)](https://cran.r-pro
 
 For information about groundhog, check out the blogpost announcing it (http://datacolada.org/95) or groundhog's website (https://groundhogr.com)
 
-CRAN contains the officially released versions of groundhog. Here on github is the in-development version.
-
-The in-development version may undergo backwards incompatible changes, and probably includes many (instead of few) typos and silly bugs.
+CRAN contains the officially released versions of groundhog. Here on github is the in development version which may undergo backwards incompatible changes, and probably includes many (instead of few) typos and silly bugs.
 
 To use this in-development version:
 `remotes::install_github('CredibilityLab/groundhog')`
