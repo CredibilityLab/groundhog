@@ -516,10 +516,10 @@ get.available.mran.date <- function(date0, date1) {
     get.packages_df <- function()
       {
       local_library <-   .pkgenv[['default_libpath']][1:(length(.pkgenv[['default_libpath']])-1)]
-      pkg_current   <- list.files(local_library)
+      path  <- list.files(local_library,full.names=TRUE)
+      pkg_current   <- basename(path)
       pkg <- gsub("_DISABLED", "", pkg_current)
       pkg <- gsub("_PURGE", "", pkg)
-      path  <- list.files(local_library,full.names=TRUE)
       disabled <- regexpr('_DISABLED', pkg_current) >0
       purged <- regexpr('_PURGE', pkg_current) >0
       all_df <-data.frame(pkg, pkg_current, path,disabled,purged, stringsAsFactors=FALSE)
