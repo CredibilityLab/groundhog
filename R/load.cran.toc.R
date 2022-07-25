@@ -22,15 +22,26 @@ load.cran.toc <- function(update.toc = FALSE) {
           for (rdsk in files.rds)
           {
           #See if file exists
-            in.path <- file.exists(file.path(gf ,rdsk))              #in groundhog.folder()
-            in.pkg  <-file.exists(system.file(rdsk, package = "groundhog"))  #in inst folder for groundhog
+            in.path <- file.exists(file.path(gf ,rdsk))                      #in groundhog.folder()
+            in.pkg  <- file.exists(system.file(rdsk, package = "groundhog"))  #in inst folder for groundhog
           
           #Case 1: in.pkg but not in path, copy it locally (but not being updated, to avoid wasteful copy )
             if (in.path==FALSE & in.pkg==TRUE & update.toc==FALSE) {
               file.copy  (system.file(rdsk, package = "groundhog") , file.path(gf, rdsk))
               }
             
-          #Case 2:  neither exists or if was asked for update, download
+          #Case 2: in both but the package's is newer (this happens when updating groundhog version)
+              if (in.path && in.pkg && update.toc==FALSE)
+                {
+                time.path <- file.info(file.path(gf ,rdsk))$mtime
+                time.pkg <- file.info(system.file(rdsk, package = "groundhog"))$mtime
+                if (time.path<time.pkg)
+                  {
+                  file.copy  (system.file(rdsk, package = "groundhog") , file.path(gf, rdsk))
+                 } #End if package's version is newer
+              }   #End if both files exist
+              
+          #Case 3:  neither exists or if was asked for update, download
             in.path <- file.exists(file.path(gf ,rdsk))              #redo the check to catch errors
 
             
