@@ -33,11 +33,15 @@ load.cran.toc <- function(update.toc = FALSE) {
           #Case 2: in both but the package's is newer (this happens when updating groundhog version)
               if (in.path && in.pkg && update.toc==FALSE)
                 {
-                time.path <- file.info(file.path(gf ,rdsk))$mtime
-                time.pkg <- file.info(system.file(rdsk, package = "groundhog"))$mtime
+                #Time of both files
+                  time.path <- file.info(file.path(gf ,rdsk))$mtime
+                  time.pkg <- file.info(system.file(rdsk, package = "groundhog"))$mtime
+                
+
+                #If pkg is newer, copy it
                 if (time.path<time.pkg)
                   {
-                  file.copy  (system.file(rdsk, package = "groundhog") , file.path(gf, rdsk))
+                  file.copy  (system.file(rdsk, package = "groundhog") , file.path(gf, rdsk), overwrite = TRUE)
                  } #End if package's version is newer
               }   #End if both files exist
               
