@@ -48,6 +48,8 @@ library('groundhog')
         groundhog.library('github::crsh/powerful_999',test.day)
     
         
+        set.groundhog.folder('c:/temp/20221001')
+        
   #Single package, with and without quotes
     library('groundhog')
     groundhog.library('pwr',test.day)  #quotes
@@ -242,7 +244,11 @@ library('groundhog')
   groundhog.library('pwr',test.day)
     
   
-    
+#9 ) Base packages 
+  groundhog.library('stats',test.day)
+  groundhog.library('parallel',test.day)
+ groundhog.library('mgcv',test.day)
+ 
 ########################################################################
 #SET OF TESTS 3 -  INSTALLATION OF PACKAGES IN RANDOM ORDER
   #Function 
