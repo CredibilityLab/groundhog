@@ -4,7 +4,8 @@
 
   localize.snowball <- function(snowball , localize.quietly = TRUE)
   {
-    
+    #0 Early return if empty snowball
+      if (nrow(snowball)==0) return(TRUE)
     
     #1 Load installed packages
         ip <- data.frame(utils::installed.packages(lib.loc =.pkgenv[["orig_lib_paths"]][1] ), stringsAsFactors=FALSE)
