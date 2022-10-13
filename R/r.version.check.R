@@ -15,7 +15,6 @@ r.version.check <- function(date) {
     
   # need
     r.need.full <- as.character(get.version("R", date, patch = "max"))
-    r.need.full<<-r.need.full
     r.need.split <- strsplit(r.need.full, "\\.")[[1]]
     r.need.major <- as.numeric(r.need.split[1])
     r.need.minor <- as.numeric(r.need.split[2])
