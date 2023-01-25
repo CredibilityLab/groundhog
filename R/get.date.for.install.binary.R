@@ -16,7 +16,7 @@ get.date.for.install.binary <- function(pkg_vrs , date) {
       return(binary.date)
       }
       
-      
+ 
   
   #0.5 R being used
     r.using.full <- get.rversion() # Get current
@@ -73,6 +73,7 @@ get.date.for.install.binary <- function(pkg_vrs , date) {
         D1 <- max(date.R1, date.pkg1)
         D2 <- min(date.R2, date.pkg2)
       
+      
       #3.2 If there is no overlap, ends before it starts, January 1
         if (D2<=D1) return(as.DateYMD("1970-01-01"))
    
@@ -83,6 +84,10 @@ get.date.for.install.binary <- function(pkg_vrs , date) {
           missing.mran.dates <- .pkgenv[["missing.mran.dates"]] 
           available.dates <- available.dates[!available.dates %in% missing.mran.dates]
       
+      #3.4.5 LOSING MRAN 
+          #Drop dates after Jan 31st, 2023 they are all missing from MRAN
+           available.dates <- available.dates[available.dates<as.DateYMD("2023-01-31")]
+          
       #3.5 If no dates left, return 1970
           if (length(available.dates)==0)  return(as.DateYMD("1970-01-01"))
           
