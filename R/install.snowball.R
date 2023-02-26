@@ -1,4 +1,5 @@
-# Install snowball
+#as of 2023 02 26 this is not running succesfully, the files downloaded from wasabi do not unzip correctly lead to empty folder
+
 
 #########################################################
 
@@ -12,25 +13,7 @@
                             skip.remotes=FALSE, 
                             recycle.files=FALSE)     {
    
-    #0 Check if MRAN is down
-      #Assume not
-        mran.is.down <- FALSE
   
-      #See if we have a text file saying it is down saved within the last 5 hours    
-        mran.is.down_path <-file.path(get.groundhog.folder(),'mran.is.down.txt')
-        
-      #If a file exists it checks if it is less than 5 hours old, in which case we assume MRAN is down
-        if (file.exists(mran.is.down_path) && as.numeric(Sys.time() - file.mtime(mran.is.down_path)) < 5*60) {
-            mran.is.down <- TRUE
-            
-          }
-    
-      #If MRAN is down, install from source instead of MRAN 
-        if (mran.is.down==TRUE ) {
-            snowball$from <- ifelse(snowball$from=='MRAN' & snowball$installed==FALSE,'source',snowball$from)
-              message1('groundhog says: MRAN seems to be down. Will install from source (much slower).')
-			        message1('           --  To give MRAN another try, run `mran.is.up() --')
-            }
     
         
     #1 Preliminaries
@@ -90,25 +73,14 @@
           CRAN.mirror.url <- as.character(r["CRAN"])
           
           
-      #1.9 Make CRAN-->MRAN if not using the most recent version of R (avoid R warning: 'was built with different R version)
-          # R.using <- get.rversion()
-          # R.max   <- max(toc("R")$Version)
-          # if (R.using!=R.max)
-          #     {
-          #     snowball$from <- ifelse(snowball$from=='CRAN', "MRAN",snowball$from)
-          #     }
-
-
-            #This is not enough because it depends on cran.toc which may not be up to date
-            #Sever (groundhog) has textfile with version of R that's current, could use that if 
-            #later implemented
+    
           
     #####################
     #2 CRAN
     #####################
       #2.1 Subset of CRAN packages to download
         snowball.cran <- snowball[snowball$installed==FALSE & snowball$from=="CRAN",]
-        n.cran=nrow(snowball.cran)
+        n.cran <- nrow(snowball.cran)
         
         if (n.cran>0)
           {
@@ -128,8 +100,6 @@
           message2("\ngroundhog says: all ",n.cran, " files downloaded. Now they will be installed")
         
           for (k in 1:nrow(snowball.cran)) {
-            
-
                 infile  <- as.character(cran.binaries$downloaded.path[k])
                 outfile <- as.character(snowball.cran$installation.path[k])
                 message1(k,") Installing: ",snowball.cran$pkg_vrs[k])
@@ -161,163 +131,128 @@
           } #End if n.cran>0
           
     ##########################
-    #3 MRAN          
+    #3 GRAN          
     ###########################
 
-      #3.1 Subset of MRAN packages to download
-        snowball.mran <- snowball[snowball$installed==FALSE & snowball$from=="MRAN",]
-        n.mran <- nrow(snowball.mran)
+      #3.1 Subset of GRAN packages to download
+        snowball.gran <- snowball[snowball$installed==FALSE & snowball$from=="GRAN",]
+        n.gran <- nrow(snowball.gran)
         
-      #3.1.5 If any MRAN in snowball found, install them
-        if (n.mran>0)
+      #3.2 If any gran in snowball found, install them
+        if (n.gran>0)
         {  
-        message2("\ngroundhog says: will now look for ",n.mran, " binary packages in MRAN (a Microsoft archive of CRAN).")
-        message1("MRAN is slower than CRAN, but faster than installing from source.")
+        message2("\ngroundhog says: will now look for ",n.gran, " binary packages in GRAN (groundhog's archive of CRAN).")
+
+      #3.3 URLs to download from GRAN
+          #OS
+            os <- get.os()
+          #R Version
+            r.version    <- get.r.majmin()
+
+          #Extension
+            if (os=='windows') ext <- 'zip'
+            if (os!='windows') ext <- 'tgz'
+          
+          #Put together URL
+            url.wasabi <- paste0("http://gran.groundhogr.com/", os , "/", r.version, "/", snowball.gran$GRAN.date, "/" , snowball.gran$pkg_vrs, ".", ext)
+          
+      #3.4 Initialize dataframe that will store all results
+          gran.binaries <- data.frame(pkg.gran=character() ,  downloaded.path=character(), stringsAsFactors = FALSE)
         
-      #3.2 Setup URL to use as repository for each package
-        repos.mran <- paste0("https://mran.microsoft.com/snapshot/", snowball.mran$MRAN.date, "/")
-      
-      #3.3 Initialize dataframe that will store all results
-          mran.binaries <- data.frame(pkg.mran=character() ,  downloaded.path=character(), stringsAsFactors = FALSE)
-        
-      #3.4 Loop downloading
-          good.mran.file <- c()
+      #3.5 Loop downloading
+          good.gran.file <- c()
           
           j1 <- 0 #Counter for actually downloaded files
           
-          for (k in 1:n.mran) {
+          for (k in 1:n.gran) {
         
-    #3.4.5 Download if we are not recylcing or the file is not here
-    mran.path.k <- file.path(temp_path, snowball.mran$pkg[k])
-    if (recycle.files==FALSE || (recycle.files==TRUE & !file.exists(mran.path.k)) )
+    #3.4.5 Download if we are not recycling or the file is not here
+    gran.path.k <- file.path(temp_path, snowball.gran$pkg[k])
+    if (recycle.files==FALSE || (recycle.files==TRUE & !file.exists(gran.path.k)) )
     {              
-              
-                
-            #Dummy to identify if a problem is found and move file to source
-              good.mran.file[k] <- TRUE   
+      #Dummy to identify if a problem is found and move file to source
+         good.gran.file[k] <- TRUE   
             
-      #3.5 Verify the binary being served is the one we want
-            #Get the available packages on that date
-              ap <- utils::available.packages(utils::contrib.url (repos.mran[k],'binary'))
+      #Add to downloaded counter
+          j1 <- j1 + 1
               
-          #Check MRAN down
-            #If ap is empty we did not get any packages from MRAN, it may be down, save the file taht tells groundhog
-              #not to try mran again within 5 hours 
-              if (nrow(ap)==0) {
-                  
-                  #Save file that indicated mran is down for the next five hours
-                    write(Sys.time(),mran.is.down_path)
-                  
-                  #Message
-                    message("\n\n\nGroundhog says:")
-                    message("We were unable to connect to the MRAN server. We won't attempt to connect again for the next 5 hours.")
-                    message("   ---  Please rerun the groundhog.library() command you just run and we will install from source instead  ---")
-                    exit()
-              }#End MRAN
-                  
-              
-            #Format available packages as data.frame
-                ap.df <- data.frame(ap, stringsAsFactors = FALSE) 
-              
-            #Get row with target pkg
-                ap.pkg <- ap.df[ap.df$Package==snowball.mran$pkg[k],]
-                
-            
-            #If there is a match for that pkg_vrs, get it
-              if (nrow(ap.pkg)>0 && ap.pkg$Version == snowball.mran$vrs[k])
-              {
-            #Add to downloaded counter
-              j1 <- j1 + 1
-            #Message
-              message1(j1," of ", n.mran , ") Downloading: '",snowball.mran$pkg_vrs[k], " from MRAN")
+      #Message
+          message1(j1," of ", n.gran , ") Downloading: '",snowball.gran$pkg_vrs[k], " from GRAN")
     
-            #Download it from MRAN
-              #Is R being used newer than 3.2.0?
-                if (getRversion()>"3.4") {
-                    mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path, method='libcurl')
-                  } else {
-                #IF R is 3.3 or older
-                    mran.binaries_rowk <- utils::download.packages(snowball.mran$pkg[k], type='binary',repos = repos.mran[k],available=ap, destdir=temp_path)
-                  }
-                  
+      #Download from gran
+        
+        #R > 3.3
+         if (getRversion()>"3.3") {
+            dl <- try(utils::download.file(url.wasabi[j1] , file.path(temp_path, basename(url.wasabi[j1])) , mode = "wb", method = "libcurl" ))
+          }
+      
+       #R < 3.4
+         if (getRversion()<"3.4") {
+            dl <- try(utils::download.file(url.wasabi[j1] , file.path(temp_path, basename(url.wasabi[j1])) , mode = "wb" ))
+          } 
+              
+        
 
             
-            #If file was successfully downloaded
-                  if (nrow(mran.binaries_rowk)==1) {
-                      mran.binaries[k,] <-mran.binaries_rowk  
-            #If file did not download 
-                  } else {
-                   #Make not that this file did not succeed, and let's say MRAN is down
-                    good.mran.file[k] <- FALSE 
-                    mran.is.down      <- TRUE
-                    write(Sys.time(),mran.is.down_path)
-                  } 
-            #IF file was not the right version
-              } else {
-                #If not found, then it is a bad mran pkg
-                good.mran.file[k] <- FALSE
-                snowball$from[snowball$pkg==snowball.mran$pkg[k]] <- 'source'
-                
-              }
-                
+       #Check if file downloaded successfully
+          if (dl==0) {
+            gran.binaries[k,] <- c(snowball.gran$pkg[j1], file.path(temp_path, basename(url.wasabi[j1])) )  
+            } else {
+            good.gran.file[k] <- FALSE 
+            snowball$from[snowball$pkg==snowball.gran$pkg[k]] <- 'source'
+          }
+        
        } #End if recycling
                 
-      } #End loop over MRAN binaries
+      } #End loop over gran binaries
 
                   
       #3.4 Unzip them 
         #Message
-          if (j1 >  0) message2("groundhog says: found ",j1," packages in MRAN, will install them now.")
-          if (j1 == 0) message2("groundhog says: did not find any packages in MRAN")
+          if (j1 >  0) message2("groundhog says: found ",j1," packages in gran, will install them now.")
+          if (j1 == 0) message2("groundhog says: did not find any packages in gran")
       
         #Reset counter
           j2 <- 0 
         
 
-        for (k in 1:nrow(snowball.mran)) {
+        for (k in 1:nrow(snowball.gran)) {
 
             
-          #Correct MRAN, unzip
-              if (good.mran.file[k])
+          #Correct gran, unzip
+              if (good.gran.file[k])
               {
                   j2 <- j2 + 1
-              #Legacy check, from before using available.packages() to ensure correct MRAN file was downloaded
+              #Legacy check, from before using available.packages() to ensure correct gran file was downloaded
               #Kept as an extra security, but no mismatched file should be downloaded so no mismatched file should be found
-               pos <-  regexpr(snowball.mran$pkg_vrs[k], mran.binaries$downloaded.path[k]) 
-              if (pos>0 ) {
-                #message 
-                  message1(j2," of " , nrow(snowball.mran), ") Installing: '",snowball.mran$pkg_vrs[k],"'")
-                
+              
                 #Get extension of downloaded files
-                 ext <- tools::file_ext(mran.binaries$downloaded.path[k])
+                 ext <- tools::file_ext(gran.binaries$downloaded.path[k])
 
                 #if it is a zip file, unzip it 
                   if (ext=="zip") {
-                        utils::unzip(mran.binaries$downloaded.path[k] , exdir=snowball.mran$installation.path[k])
+                        utils::unzip(gran.binaries$downloaded.path[k] , exdir=snowball.gran$installation.path[k])
                 #Otherwise, run untar
                   } else {
-                  utils::untar(mran.binaries$downloaded.path[k] , exdir=snowball.mran$installation.path[k])        
+                  utils::untar(gran.binaries$downloaded.path[k] , exdir=snowball.gran$installation.path[k])        
                   }
                 #delete
-                  if (recycle.files==FALSE) unlink(mran.binaries$downloaded.path[k])
-                  } else { 
-                #if the name of the file does not match despite passing available.packages check, bad file
-                      good.mran.file[k] <- FALSE
-                }#End if pos>0
-              }#End if good mran file  
+                  if (recycle.files==FALSE) unlink(gran.binaries$downloaded.path[k])
+
+               } #End if good gran file  
               
-          #Incorrect MRAN, put it up for source
-              if (!good.mran.file[k]) # don't use else{} because prior if() could chnage the value
+          #Incorrect gran, put it up for source
+              if (!good.gran.file[k]) 
                   {
                 
                   #Update snowball to get this package from source instead
-                      sk=match(snowball.mran$pkg_vrs[k],snowball$pkg_vrs)  #package number in snowball
+                      sk=match(snowball.gran$pkg_vrs[k],snowball$pkg_vrs)  #package number in snowball
                       snowball$from[k]="source"
-                  } #End if !good.mran
-              }#End loop over mran
+                  } #End if !good.gran
+              }#End loop over gran
           message1() #skip a line for next message
 
-        } #End if any MRAN files found
+        } #End if any gran files found
 
 
   ##################################################################################################
@@ -361,7 +296,7 @@
             
           }      
         
-      #4.7 Loop through entire snowball: loading CRAN/MRAN and installing SOURCE
+      #4.7 Loop through entire snowball: loading CRAN/gran and installing SOURCE
 
           for (k in 1:n.snowball)
           {
