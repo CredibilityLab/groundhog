@@ -8,7 +8,7 @@
 get.gran.binary.date <- function(pkg_vrs , date) {
 
   #1 Preliminaries
-    os <- get.os
+    os <- get.os()
     date <- as.Date(date)
 
 

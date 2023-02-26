@@ -35,7 +35,6 @@ load.cran.toc <- function(update.toc = FALSE) {
           
       }
       
-
   #3 Loop checking file exist, downloading if necessary, and assigning to .pkgenv
           for (rdsk in files.rds)
           {
@@ -78,7 +77,7 @@ load.cran.toc <- function(update.toc = FALSE) {
                   }
                 
                 #gran.toc 
-                  if (rdsk != gran.file.rds) {
+                  if (rdsk == gran.file.rds) {
                     url.g <- paste0(groundhogR.url, "gran.toc/", rdsk)
                     url.w <- paste0("http://gran.groundhogr.com/toc/", rdsk)
   
@@ -110,7 +109,16 @@ load.cran.toc <- function(update.toc = FALSE) {
               } #End case 2
             
           #Read it locally, dropping the .rds part of the name ('cran.toc.rds' -> 'cran.toc')
-              dfk <- gsub(".rds","",rdsk)
+              #CRAN and Times already have the name, simply drop .rds     
+              if (rdsk != gran.file.rds) {
+                 dfk <- gsub(".rds","",rdsk)
+              } 
+
+             #GRAN has an os specific name, let's change it to gran.toc
+              if (rdsk == gran.file.rds) {
+                 dfk <- 'gran.toc'
+               } 
+            
              .pkgenv[[dfk]] <- readRDS(file.path(gf,rdsk))
           }
     
@@ -119,3 +127,4 @@ load.cran.toc <- function(update.toc = FALSE) {
   #5 Return TRUE
     invisible(TRUE)
 }
+
