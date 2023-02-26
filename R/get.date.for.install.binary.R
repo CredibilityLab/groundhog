@@ -4,7 +4,7 @@
 get.date.for.install.binary <- function(pkg_vrs , date) {
   
   
-  #Format date for not founda and entered date
+  #Format date for not found and entered date
     binary.date <- as.DateYMD("1970-01-01")
     date <- as.DateYMD(date)
   

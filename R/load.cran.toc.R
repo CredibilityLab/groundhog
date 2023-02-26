@@ -17,6 +17,24 @@ load.cran.toc <- function(update.toc = FALSE) {
     #Names of files
       files.rds = c('cran.toc.rds' , 'cran.times.rds' , 'missing.mran.dates.rds' )
 
+    #Add gran.toc if mac or windows
+      os <- get.os()
+      if (os!='uknown') {
+        
+          #User has this R version  
+            r.version    <- get.r.majmin()
+            
+          #Drop the period
+            rv <- sub("\\.","",r.version)
+  
+          #rds with gran toc 
+            gran.file.rds <- paste0(os, rv,'.rds')
+            
+          #Add id
+            files.rds = c(files.rds, gran.file.rds)
+          
+      }
+      
 
   #3 Loop checking file exist, downloading if necessary, and assigning to .pkgenv
           for (rdsk in files.rds)
@@ -52,26 +70,41 @@ load.cran.toc <- function(update.toc = FALSE) {
             if ((in.path==FALSE & in.pkg==FALSE) | update.toc==TRUE) {
               
             #Download groundhog
+             #GET URL
+                #cran.toc, times
+                  if (rdsk != gran.file.rds) {
+                    url.g <- paste0(groundhogR.url, rdsk)
+                    url.w <- paste0(wasabi.url,     rdsk)
+                  }
+                
+                #gran.toc 
+                  if (rdsk != gran.file.rds) {
+                    url.g <- paste0(groundhogR.url, "gran.toc/", rdsk)
+                    url.w <- paste0("http://gran.groundhogr.com/toc/", rdsk)
+  
+                  }
+                
+              
               #R Version After 3.4
                if (getRversion()>"3.4") {
-                dl <- try(utils::download.file(paste0(groundhogR.url, rdsk), file.path(gf, rdsk) , mode = "wb", method = "libcurl" ))
+                dl <- try(utils::download.file(url.g , file.path(gf, rdsk) , mode = "wb", method = "libcurl" ))
             
                 #If download failed, try  wasabi's backup
                   if (dl!=0) {
-                      dl2 <- try(utils::download.file(paste0(wasabi.url, rdsk), file.path(gf, rdsk), mode = "wb", method = "libcurl" ))
+                      dl2 <- try(utils::download.file(url.w , file.path(gf, rdsk), mode = "wb", method = "libcurl" ))
                       if (dl2!=0) stop('Error.\nGroundhog says: could not download "', rdsk, "'")
-                    } #End if download filed from groundhogR.com
+                    } #End if download failed  from groundhogR.com
                } #ENd if version 3.4
               
                #R Version before 3.4
                if (getRversion()<"3.4") {
-                dl <- try(utils::download.file(paste0(groundhogR.url, rdsk), file.path(gf, rdsk) , mode = "wb" ))
+                dl <- try(utils::download.file(url.g, file.path(gf, rdsk) , mode = "wb" ))
             
                 #If download failed, try  wasabi's backup
                   if (dl!=0) {
-                      dl2 <- try(utils::download.file(paste0(wasabi.url, rdsk), file.path(gf, rdsk), mode = "wb" ))
+                      dl2 <- try(utils::download.file(url.w , file.path(gf, rdsk), mode = "wb" ))
                       if (dl2!=0) stop('Error.\nGroundhog says: could not download "', rdsk, "'")
-                    } #End if download filed from groundhogR.com
+                    } #End if download failed from groundhogR.com
                } #ENd if version 3.4
               
               } #End case 2
