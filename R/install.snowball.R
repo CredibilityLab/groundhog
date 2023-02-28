@@ -9,15 +9,12 @@
                             force.install = FALSE, 
                             force.source = FALSE, 
                             quiet.install = TRUE,
-                            install.only=FALSE, 
-                            skip.remotes=FALSE, 
-                            recycle.files=FALSE)     {
+                            install.only=FALSE)     {
    
-  
-    
+   
         
     #1 Preliminaries
-      #1.0 souce remote dummies
+      #1.0 source|remote dummies
           source <- snowball$from=='source'
           remote <- snowball$from %in% c('gitlab','github')
           source.remote <- source | remote
@@ -130,9 +127,9 @@
                 } #End unzip loop
           } #End if n.cran>0
           
-    ##########################
-    #3 GRAN          
-    ###########################
+##########################
+#3 GRAN          
+###########################
 
       #3.1 Subset of GRAN packages to download
         snowball.gran <- snowball[snowball$installed==FALSE & snowball$from=="GRAN",]
@@ -153,106 +150,67 @@
             if (os=='windows') ext <- 'zip'
             if (os!='windows') ext <- 'tgz'
           
-          #Put together URL
+          #URL for Binary on GRAN
             url.wasabi <- paste0("http://gran.groundhogr.com/", os , "/", r.version, "/", snowball.gran$GRAN.date, "/" , snowball.gran$pkg_vrs, ".", ext)
           
-      #3.4 Initialize dataframe that will store all results
-          gran.binaries <- data.frame(pkg.gran=character() ,  downloaded.path=character(), stringsAsFactors = FALSE)
-        
-      #3.5 Loop downloading
-          good.gran.file <- c()
-          
-          j1 <- 0 #Counter for actually downloaded files
-          
+         
+      #3.4 Loop downloading
           for (k in 1:n.gran) {
-        
-    #3.4.5 Download if we are not recycling or the file is not here
-    gran.path.k <- file.path(temp_path, snowball.gran$pkg[k])
-    if (recycle.files==FALSE || (recycle.files==TRUE & !file.exists(gran.path.k)) )
-    {              
-      #Dummy to identify if a problem is found and move file to source
-         good.gran.file[k] <- TRUE   
             
-      #Add to downloaded counter
-          j1 <- j1 + 1
-              
-      #Message
-          message1(j1," of ", n.gran , ") Downloading: '",snowball.gran$pkg_vrs[k], " from GRAN")
+          #Message
+            message1(j1," of ", n.gran , ") Downloading: '",snowball.gran$pkg_vrs[k], " from GRAN")
     
-      #Download from gran
-        
-        #R > 3.3
-         if (getRversion()>"3.3") {
-            dl <- try(utils::download.file(url.wasabi[j1] , file.path(temp_path, basename(url.wasabi[j1])) , mode = "wb", method = "libcurl" ))
-          }
-      
-       #R < 3.4
-         if (getRversion()<"3.4") {
-            dl <- try(utils::download.file(url.wasabi[j1] , file.path(temp_path, basename(url.wasabi[j1])) , mode = "wb" ))
-          } 
-              
-        
-
+          #Download from gran
+            #R > 3.3
+               if (getRversion()>"3.3") {
+                  dl <- try(utils::download.file(url.wasabi[j1] , file.path(temp_path, basename(url.wasabi[j1])) , mode = "wb", method = "libcurl" ))
+                }
             
-       #Check if file downloaded successfully
-          if (dl==0) {
-            gran.binaries[k,] <- c(snowball.gran$pkg[j1], file.path(temp_path, basename(url.wasabi[j1])) )  
-            } else {
-            good.gran.file[k] <- FALSE 
-            snowball$from[snowball$pkg==snowball.gran$pkg[k]] <- 'source'
-          }
-        
-       } #End if recycling
-                
-      } #End loop over gran binaries
+             #R < 3.4
+               if (getRversion()<"3.4") {
+                  dl <- try(utils::download.file(url.wasabi[j1] , file.path(temp_path, basename(url.wasabi[j1])) , mode = "wb" ))
+                } 
+              
+          } #End loop over gran binaries
 
                   
-      #3.4 Unzip them 
+      #3.5 Find downloaded zips, and unzip them  
+          all.zip <- list.files(temp_path,full.names = TRUE)
+          n.zip <- length(all.zip)
+          
         #Message
-          if (j1 >  0) message2("groundhog says: found ",j1," packages in gran, will install them now.")
-          if (j1 == 0) message2("groundhog says: did not find any packages in gran")
+          if (n.zip >  0) message2("groundhog says: found ",j1," packages in GRAN, will install them now.")
+          if (n.zip == 0) message2("groundhog says: did not find any packages in GRAN")
       
-        #Reset counter
-          j2 <- 0 
-        
+      #3.6 Unzip all files found
+        for (k.zip in 1:n.zip)
+        {
+          #Short name
+            zk <- all.zip[k.zip]
 
-        for (k in 1:nrow(snowball.gran)) {
-
+          #Extension
+            ext <- tools::file_ext(zk)
+  
+          #Find installation path in snowball
+            pkg.k      <- get.pkg(basename(zk))
+            k.snowball <- match(pkg.k , snowball$pkg)
+            outfile    <- snowball$installation.path[k.snowball]
+          
+            message1('Installing ',pkg.k)
+          
+          #Unzip  
+            if (ext=="zip") utils::unzip(zk, exdir=outfile)
+            if (ext!="zip") utils::untar(zk, exdir=outfile)        
             
-          #Correct gran, unzip
-              if (good.gran.file[k])
-              {
-                  j2 <- j2 + 1
-              #Legacy check, from before using available.packages() to ensure correct gran file was downloaded
-              #Kept as an extra security, but no mismatched file should be downloaded so no mismatched file should be found
-              
-                #Get extension of downloaded files
-                 ext <- tools::file_ext(gran.binaries$downloaded.path[k])
+          #Delete zip 
+            unlink(zk)
+          
+        }
 
-                #if it is a zip file, unzip it 
-                  if (ext=="zip") {
-                        utils::unzip(gran.binaries$downloaded.path[k] , exdir=snowball.gran$installation.path[k])
-                #Otherwise, run untar
-                  } else {
-                  utils::untar(gran.binaries$downloaded.path[k] , exdir=snowball.gran$installation.path[k])        
-                  }
-                #delete
-                  if (recycle.files==FALSE) unlink(gran.binaries$downloaded.path[k])
-
-               } #End if good gran file  
-              
-          #Incorrect gran, put it up for source
-              if (!good.gran.file[k]) 
-                  {
-                
-                  #Update snowball to get this package from source instead
-                      sk=match(snowball.gran$pkg_vrs[k],snowball$pkg_vrs)  #package number in snowball
-                      snowball$from[k]="source"
-                  } #End if !good.gran
-              }#End loop over gran
-          message1() #skip a line for next message
-
-        } #End if any gran files found
+          
+      #3.7 Any binary which was not found add to snowball
+          snowball.binary = snowball[snowball$from %in% c("CRAN","GRAN"),]
+          failed.binary = snowball.binary$   
 
 
   ##################################################################################################

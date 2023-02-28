@@ -788,4 +788,33 @@ get.available.mran.date <- function(date0, date1) {
     return(os)
   }
     
+#44 Multi download
     
+    
+#FROM:https://stackoverflow.com/questions/72380712/faster-way-to-download-multiple-files-in-r
+    multi_download <- function(file_remote, 
+                           file_local,
+                           total_con = 50L, 
+                           host_con  = 50L) {
+
+  
+  # create pool
+     pool <- curl::new_pool(total_con = total_con, host_con = host_con)
+  
+  # function performed on successful request
+    save_download <- function(req) {
+    writeBin(req$content, file_local[file_remote == req$url])
+  }
+  
+  # setup async calls
+  invisible(
+    lapply(
+      file_remote, function(f) 
+        curl::curl_fetch_multi(f, done = save_download, pool = pool)
+    )
+  )
+  
+  # all created requests are performed here
+     out <- curl::multi_run(pool = pool)
+    return(out)
+  }
