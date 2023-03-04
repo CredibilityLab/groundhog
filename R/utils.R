@@ -42,6 +42,11 @@
 #40 get.repos_from.snowball()  :  infer repository (cran, github, gitlab) from other information already in the snowball
 #41 update.groundhog.session() :  Update groundhog session with new packages loaded and requested with groundhog
 #42 check.groundhog.version()  :  if more than `min.days' days since last check, check if groundhog needs to be updated
+#43 Get operating system
+#44 Multi download
+#45 Check consent has been given to save files locally
+#46 Turn path from '\' to '/'
+
 ########################################################################
     
 
@@ -468,6 +473,14 @@ get.available.mran.date <- function(date0, date1) {
     
     infinite.prompt <- function(text_msg, valid_answers,must.restart=FALSE)
       {
+      
+        
+      #If it is a script, show batch_msg instead
+       if (interactive()==FALSE) {
+         message(batch_msg)
+         exit()
+         }
+      
       #Initialize values
         answer <- ''
         k <- 1
@@ -616,11 +629,11 @@ get.available.mran.date <- function(date0, date1) {
   
  }
  
-#37 Does personal folder exist
+#37 Does personalfolder to install R packages (not groundohg, but R's default) exist
     verify.personal.library.exists<-function()
       {
       #Create personal library if it does not exist
-      default_library <- Sys.getenv("R_LIBS_USER")
+         default_library <- Sys.getenv("R_LIBS_USER")
       
       if (length(.libPaths()) <= 1 & !file.exists(default_library)) {
         msg <- paste0("R does not have a personal library to save packages to. ",
@@ -730,6 +743,13 @@ get.available.mran.date <- function(date0, date1) {
       
       check.groundhog.version <- function(min.days=7)
       {
+      
+      #Start with high numbers  
+        last.check.days=9999  
+        
+      #Skip cookie time if min.days=0
+          if (min.days>0)
+          {
         
       #How many days has it been
           last.check.minutes <- get.minutes.since.cookie('check_groundhog_version')
@@ -737,7 +757,9 @@ get.available.mran.date <- function(date0, date1) {
         
       #If less than min.days, early return
           if (last.check.days<min.days) return(invisible(TRUE))
-          
+      
+          } #End if min.days>0
+        
       #If more than `min.days` days, check version on server
           if (last.check.days>=min.days)
               {
@@ -783,8 +805,8 @@ get.available.mran.date <- function(date0, date1) {
     bin.url <- contrib.url(repos,type='binary')
     os <- 'unknown'
     if (regexpr('windows', bin.url)[[1]]>0) os<-'windows'
-    if (regexpr('macosx', bin.url)[[1]]>0) os<-'mac'
-    if (regexpr('arm64', bin.url)[[1]]>0 & os=='mac') os<-'mac_arm'
+    if (regexpr('macosx', bin.url)[[1]]>0)  os<-'mac'
+    if (regexpr('arm64', bin.url)[[1]]>0 &  os=='mac') os<-'mac_arm'
     return(os)
   }
     
@@ -817,4 +839,57 @@ get.available.mran.date <- function(date0, date1) {
   # all created requests are performed here
      out <- curl::multi_run(pool = pool)
     return(out)
-  }
+    }
+    
+    
+    
+    
+#49 Check consent has been given to save files locally
+      check.consent <- function() {
+        
+      #Folder with cookie with location of groundohg folder, its exsitence means consent
+         main_folder <-  fw(paste0(path.expand("~"), "/R_groundhog")) #fw: function #50
+        
+      #See if consent has been given by seeing if the folder exists
+        consent <- (file.exists(main_folder))
+        if (consent==TRUE) return(TRUE)
+        
+       #If no consent, ask 
+         if (consent == FALSE) {
+            msg       = paste0("groundhog needs authorization to save files to '",main_folder,
+                        "'\n", "Enter 'OK' to provide authorization, and 'NO' not to.")
+            
+            batch_msg =  paste0("\n\n*********IMPORTANT MESSAGE FROM GROUNDHOG*****************************************\n",
+                         "groundhog needs to save files to '",main_folder,"' in order to work.\n",
+                         "Per CRAN policy, you need to actively authorize groundhog to do this.\n",
+                         "To do so, simply create that folder, by e.g., running in R:\n",
+                         "       dir.create('",main_folder,"') \n",
+                         "**********************************************************************************\n\n")
+          #For batch files
+            if (interactive()==FALSE)
+            {
+              message(batch_msg)
+              return(FALSE)
+              
+            }
+            
+            
+          #Run the prompt
+           answer = infinite.prompt(msg, c('ok','no') , must.restart=FALSE)
+            
+          #Interactive message, if using R interactively
+            if (tolower(answer)=="ok")  {
+              dir.create(main_folder, recursive = TRUE, showWarnings = FALSE)
+              return(TRUE)
+              }
+            if (tolower(answer)=="no") {
+              message("You did not provide permission to save files locally, groundhog will not work until you do.")
+              return(FALSE)
+              }
+         } #end 
+        
+        
+      }#End of function
+          
+#50 Turn \ into /
+      fw <- function(x) gsub("\\\\", "/", x)
