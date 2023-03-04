@@ -468,6 +468,8 @@ get.available.mran.date <- function(date0, date1) {
     
     infinite.prompt <- function(text_msg, valid_answers,must.restart=FALSE)
       {
+  
+      
       #Initialize values
         answer <- ''
         k <- 1
@@ -616,11 +618,11 @@ get.available.mran.date <- function(date0, date1) {
   
  }
  
-#37 Does personal folder exist
+#37 Does personal folder to install R packages exist?
     verify.personal.library.exists<-function()
       {
       #Create personal library if it does not exist
-      default_library <- Sys.getenv("R_LIBS_USER")
+        default_library <- Sys.getenv("R_LIBS_USER")
       
       if (length(.libPaths()) <= 1 & !file.exists(default_library)) {
         msg <- paste0("R does not have a personal library to save packages to. ",
@@ -726,10 +728,16 @@ get.available.mran.date <- function(date0, date1) {
       }
       
         
-#42  check.groundhog.version()  - if more than `min.days' days since last check, check if goundhog needs to be updated
+#42  check.groundhog.version()  - if more than `min.days' days since last check, check if groundhog needs to be updated
       
       check.groundhog.version <- function(min.days=7)
       {
+      ######
+        last.check.days=9999  #give high value so that when unassigned it works fine
+        
+      #Skip cookie time if min.days=0
+          if (min.days>0)
+          {
         
       #How many days has it been
           last.check.minutes <- get.minutes.since.cookie('check_groundhog_version')
@@ -737,7 +745,10 @@ get.available.mran.date <- function(date0, date1) {
         
       #If less than min.days, early return
           if (last.check.days<min.days) return(invisible(TRUE))
-          
+          } 
+          #END IF MIN.days>0
+        
+        
       #If more than `min.days` days, check version on server
           if (last.check.days>=min.days)
               {
@@ -774,3 +785,55 @@ get.available.mran.date <- function(date0, date1) {
                   
             } #ENd last check more than `min.days`  ago
       }#End of function 42
+      
+      
+#49 Check consent has been given to save files locally
+      check.consent <- function() {
+        
+      #Folder with cookie with location of groundohg folder, its exsitence means consent
+         main_folder <-  fw(paste0(path.expand("~"), "/R_groundhog")) #fw: function #50
+        
+      #See if consent has been given by seeing if the folder exists
+        consent <- (file.exists(main_folder))
+        if (consent==TRUE) return(TRUE)
+        
+       #If no consent, ask 
+         if (consent == FALSE) {
+            msg       = paste0("groundhog needs authorization to save files to '",main_folder,
+                        "'\n", "Enter 'OK' to provide authorization, and 'NO' not to.")
+            
+            batch_msg =  paste0("\n\n*********IMPORTANT MESSAGE FROM GROUNDHOG*****************************************\n",
+                         "groundhog needs to save files to '",main_folder,"' in order to work.\n",
+                         "Per CRAN policy, you need to actively authorize groundhog to do this.\n",
+                         "To do so, simply create that folder, by e.g., running in R:\n",
+                         "       dir.create('",main_folder,"') \n",
+                         "**********************************************************************************\n\n")
+          #For batch files
+            if (interactive()==FALSE)
+            {
+              message(batch_msg)
+              return(FALSE)
+              
+            }
+            
+            
+          #Run the prompt
+           answer = infinite.prompt(msg, c('ok','no') , must.restart=FALSE)
+            
+          #Interactive message, if using R interactively
+            if (tolower(answer)=="ok")  {
+              dir.create(main_folder, recursive = TRUE, showWarnings = FALSE)
+              return(TRUE)
+              }
+            if (tolower(answer)=="no") {
+              message("You did not provide permission to save files locally, groundhog will not work until you do.")
+              return(FALSE)
+              }
+         } #end 
+        
+        
+      }#End of function
+          
+#50 Turn \ into /
+      fw <- function(x) gsub("\\\\", "/", x)
+      
