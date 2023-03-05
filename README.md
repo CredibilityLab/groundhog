@@ -11,12 +11,12 @@ version](https://www.r-pkg.org/badges/version-ago/groundhog)](https://cran.r-pro
 
 For information about groundhog, check out the blogpost announcing it (http://datacolada.org/95), announcing v2.0 (http://datacolada.org/100),  or groundhog's website (https://groundhogr.com)
 
-CRAN contains the officially released versions of groundhog. Here on github are the in development versions.  Almost nobody, or perhaps nobody, should rely on the version of groundghog available here.
+CRAN contains the officially released versions of groundhog. Here on github are the in development versions.  Almost nobody, or perhaps nobody, should rely on the version of groundhog available here.
 
 The changelog is available at: https://groundhogr.com/changelog
 
 A big change is coming to groundhog with the shutting down of MRAN.
-For the next release of groundhog, v2.3 or possibly v3.0, groundgog will rely on a custom repository of CRAN binaries, named GRAN (http://gran.groundhogr.com).
+For the next release of groundhog, v2.3 or possibly v3.0, groundhog will rely on a custom repository of CRAN binaries, named GRAN (http://gran.groundhogr.com).
 Groundhog will also swith to parallel installation for source, providing noticeable speed improvements, specially for multiple packages whose dependencies can be installed in parallel. This new release is expected no later than May 2023, hopefully earlier. 
 
 **Testing**
