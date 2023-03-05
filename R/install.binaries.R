@@ -5,7 +5,7 @@
 
 ################################################################################
 
- install.binaries <- function(snowball)
+ install.binaries <- function(snowball, install.sequentially=FALSE)
    {
       
       #1  Directory for downloaded zips
@@ -18,30 +18,32 @@
           snowball <- snowball[snowball$from %in% c("CRAN","GRAN"),]
       
                         
-      #2 Make URLs
-        #2.0 General
-          
-          #Overall
-            os        <- get.os()
-            r.version <- get.r.majmin()
+      #2 Make  URLs for downlaoding and file-paths for saving
+        #2.0 Common beginning of URL
+          #CRAN      
             repos     <- as.character(getOption("repos"))
-
             url.cran  <- contrib.url(repos,type='binary')
+            
+          #GRAN
+            os  <- get.os()
+            r.version <- get.r.majmin()
             url.wasabi <- paste0("http://gran.groundhogr.com/", os , "/", r.version, "/")
     
+        #2.1 File extension
             if (os=='windows') ext <- 'zip'
             if (os!='windows') ext <- 'tgz'
         
-          #Each file  
-          
+        #2.2 Finalize URL with each file name
             url.files <- ifelse(snowball$from=='CRAN',
                                   paste0(url.cran,                       "/", snowball$pkg_vrs , "." , ext),
                                   paste0(url.wasabi, snowball$GRAN.date, "/", snowball$pkg_vrs , "." , ext))
-          
             
+        #2.3 Local name for saving
             zip.files <-file.path(temp_path,basename(url.files))
             
-        #3 Download them all
+            
+        #3 DOWNLOAD
+          #3.1 Message
             n.cran <- sum(snowball$from=="CRAN")
             n.gran <- sum(snowball$from=="GRAN")
 
@@ -49,7 +51,14 @@
             if (n.cran>0 & n.gran==0) message1("Will now download ",n.cran, " packages from CRAN")
             if (n.cran==0 & n.gran>0) message1("Will now download ",n.cran, " packages from GRAN")
 
-            outcome <- multi_download(url.files, zip.files)  #utils.R #Function 44
+            
+          #3.2 Download 
+               for (k in 1:length(url.files))
+                {
+                download.file(url.files[k], zip.files[k])
+                } #End loop downloading
+            
+            
 
         #4 Install them
             
@@ -72,7 +81,7 @@
                   k.snowball <- match(pkg.k , snowball$pkg)
                   outfile    <- snowball$installation.path[k.snowball]
                 
-                  message1('Installing ',pkg.k)
+                  message1('Installing ',basename(zk))
                 
                 #Unzip  
                   if (ext=="zip") utils::unzip(zk, exdir=outfile)

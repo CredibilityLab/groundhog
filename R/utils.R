@@ -42,10 +42,9 @@
 #40 get.repos_from.snowball()  :  infer repository (cran, github, gitlab) from other information already in the snowball
 #41 update.groundhog.session() :  Update groundhog session with new packages loaded and requested with groundhog
 #42 check.groundhog.version()  :  if more than `min.days' days since last check, check if groundhog needs to be updated
-#43 Get operating system
-#44 Multi download
-#45 Check consent has been given to save files locally
-#46 Turn path from '\' to '/'
+#43 Get operating system       :  windows or mac or mac_arm?
+#44 Check consent              :  Does .../R_groundhog exists?
+#45 Turn path from '\' to '/'  :  c:\users --> c:/users
 
 ########################################################################
     
@@ -810,41 +809,9 @@ get.available.mran.date <- function(date0, date1) {
     return(os)
   }
     
-#44 Multi download
-    
-    
-#FROM:https://stackoverflow.com/questions/72380712/faster-way-to-download-multiple-files-in-r
-    multi_download <- function(file_remote, 
-                           file_local,
-                           total_con = 50L, 
-                           host_con  = 50L) {
 
-  
-  # create pool
-     pool <- curl::new_pool(total_con = total_con, host_con = host_con)
-  
-  # function performed on successful request
-    save_download <- function(req) {
-    writeBin(req$content, file_local[file_remote == req$url])
-  }
-  
-  # setup async calls
-  invisible(
-    lapply(
-      file_remote, function(f) 
-        curl::curl_fetch_multi(f, done = save_download, pool = pool)
-    )
-  )
-  
-  # all created requests are performed here
-     out <- curl::multi_run(pool = pool)
-    return(out)
-    }
     
-    
-    
-    
-#49 Check consent has been given to save files locally
+#44 Check consent has been given to save files locally
       check.consent <- function() {
         
       #Folder with cookie with location of groundohg folder, its exsitence means consent
@@ -891,5 +858,5 @@ get.available.mran.date <- function(date0, date1) {
         
       }#End of function
           
-#50 Turn \ into /
+#45 Turn \ into /
       fw <- function(x) gsub("\\\\", "/", x)

@@ -1,15 +1,11 @@
 
 
-
-
-
-
   install.one.source <- function(url)
   {
     
      #File & package
       filename <- basename(url)
-      pkg_vrs <- substr(filename,1,nchar(filename)-7)  #Assume extension is 7 characters: .tar.gz
+      pkg_vrs <- gsub(".tar.gz", '', filename)  #remote extension tar.gz
       vrs <- get.vrs(pkg_vrs)
       pkg <- get.pkg(pkg_vrs)
       
