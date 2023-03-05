@@ -13,7 +13,7 @@ For information about groundhog, check out the blogpost announcing it (http://da
 
 CRAN contains the officially released versions of groundhog. Here on github are the in development versions.  Almost nobody, or perhaps nobody, should rely on the version of groundghog available here.
 
-The changelong is available at: https://groundhogr.com/changelog
+The changelog is available at: https://groundhogr.com/changelog
 
 A big change is coming to groundhog with the shutting down of MRAN.
 For the next release of groundhog, v2.3 or possibly v3.0, groundgog will rely on a custom repository of CRAN binaries, named GRAN (http://gran.groundhogr.com).
