@@ -45,7 +45,10 @@
 #43 Get operating system       :  windows or mac or mac_arm?
 #44 Check consent              :  Does .../R_groundhog exists?
 #45 Turn path from '\' to '/'  :  c:\users --> c:/users
-
+#46 validate.groundhog.library()  :  Validate arguments in (new) groundhog.library call
+#47 base.library.snowball.list
+#48 message.batch.installation.feedback() : feedback while installing a batch in parallel
+#49 - get.parallel.time()  :  estimate parallel time of installation
 ########################################################################
     
 
@@ -860,3 +863,100 @@ get.available.mran.date <- function(date0, date1) {
           
 #45 Turn \ into /
       fw <- function(x) gsub("\\\\", "/", x)
+      
+      
+
+#46 validate.groundhog.library()  :  Validate arguments in (new) groundhog.library call
+  validate.groundhog.library <- function(pkg, date,  quiet.install,  include.suggests ,  
+                            ignore.deps, force.source , force.install, tolerate.R.version  ,cores )
+  {
+      #1. pkg & date included
+             if (missing(pkg) || missing(date)) {
+              message1("groundhog says: you must include both a package name and a date in 'groundhog.library()' ")
+              exit()
+             }
+     
+
+           
+      #2 Valid date
+            date.catch <- try(typeof(date),silent=TRUE)
+            if (as.character(class(date.catch))=="try-error") {
+              message("Groundhog says: The object '" , as.character(substitute(date)) ,"', does not exist.")
+              exit()
+            }
+            validate.date(date) #Function defined in utils.R
+       
+       #3 T/F options (utils.R - function 27)
+          validate.TF(include.suggests)
+          validate.TF(force.source)
+          validate.TF(force.install)
+            
+            
+      #4 ignore.deps
+            if (length(ignore.deps)>0) {
+             if (!all(ignore.deps %in% .packages())) {
+               message1("\nGroundhog says: Error.\nAll packages included in the ignore.deps() option must be loaded prior to running\n",
+                       "groundhog.library(), but the following is/are not: ",
+                        paste0(dQuote(ignore.deps [!ignore.deps %in% .packages()]), collapse=" ,"))
+               exit()
+              } #End if some are not loaded
+              } #End if ignore.deps() are requested
+  
+     #5 Validate R vs tolerate.R.version)
+        validate_R(date , tolerate.R.version)
+
+    #6 Validate Core
+        tot.cores<-parallel::detectCores()
+        if (!is.numeric(cores) || cores %% 1!=0  || cores< -1 || cores==0 ||  cores> tot.cores)
+        {
+        message1('Groundhog says: Error. `cores` must be an integer values between 1 & ',tot.cores,' but you entered ',cores)
+        exit()
+        }
+  }
+  
+  
+#47 base.library.snowball.list
+  base.library.snowball.list <- function(snowball.list) {
+  
+      #Turn off warnings
+        warn0 <- getOption("warn")
+        options(warn = -1)
+      
+        #Note: warnings turned off to avoid warning that pkg was built with differn patch version of R
+        #it is not in practice actionable, and having a folder with majmin, without patch, implicitly
+        #assumes versions within majmin are all interchangeable.
+        
+          
+    #Loop: library()
+      for (snowball.k in snowball.list) {
+          pkg<-snowball.k$pkg[nrow(snowball.k)]
+          base.library(pkg, character.only=TRUE)
+      } 
+        
+    #turn on warnings
+      options(warn = warn0)
+    
+    
+  }
+  
+  
+#48 Moved to its own function
+ 
+  
+#49 - get.parallel.time()  :  estimate parallel time of installation
+get.parallel.time<-function(times,cores)
+{
+  #Sort times
+    times <- sort(times,decreasing=TRUE)
+    
+  #initiates times with small but sortable values
+    y = seq(0,.01,length.out=cores) 
+
+  #In loop, assign the next one, to the lowest total so far
+    for (k in 1:length(times))
+    {
+    y[which.min(y)]=y[which.min(y)] + times[k]  
+    }
+  #The longest link is the estimated time
+    return(max(y))
+}

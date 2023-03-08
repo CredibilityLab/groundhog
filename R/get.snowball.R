@@ -110,7 +110,7 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
   # 5 Snowball table, with installed | CRAN | GRAN | TARBALL | INSTALLATION TIME
 
   # - Install from CRAN if possible
-  # - else, install from MRAN if possible
+  # - else, install from GRAN if possible
   # - else, install from source
 
   #Installed?

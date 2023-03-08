@@ -1,4 +1,5 @@
 
+#returns a list where each element is a vector of package names
 
 
 get.snowflakes = function(snowball, date) 

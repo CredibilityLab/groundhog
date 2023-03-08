@@ -5,7 +5,7 @@
 
 ################################################################################
 
- install.binaries <- function(snowball, install.sequentially=FALSE)
+ install.binaries <- function(snowball)
    {
       
       #1  Directory for downloaded zips
@@ -14,11 +14,16 @@
           dir.create(temp_path, recursive = TRUE, showWarnings = FALSE)
     
     
-      #1.5 Drop non-binaries
+      #1.5 Drop non-binaries and already installed
           snowball <- snowball[snowball$from %in% c("CRAN","GRAN"),]
+          snowball <- snowball[snowball$installed == FALSE,]
+      
+      #1.6 early return if nothing to install
+          snowball$success = snowball$installed
+          if (nrow(snowball)==0) return(snowball)
       
                         
-      #2 Make  URLs for downlaoding and file-paths for saving
+      #2 Make  URLs for downloading and file-paths for saving
         #2.0 Common beginning of URL
           #CRAN      
             repos     <- as.character(getOption("repos"))
@@ -49,12 +54,13 @@
 
             if (n.cran>0 & n.gran>0)  message1("Will now download ",n.cran, " packages from CRAN, and ",n.gran," from GRAN")
             if (n.cran>0 & n.gran==0) message1("Will now download ",n.cran, " packages from CRAN")
-            if (n.cran==0 & n.gran>0) message1("Will now download ",n.cran, " packages from GRAN")
+            if (n.cran==0 & n.gran>0) message1("Will now download ",n.gran, " packages from GRAN")
 
             
           #3.2 Download 
                for (k in 1:length(url.files))
                 {
+                message1("Downloading ",k," of ",length(url.files))
                 download.file(url.files[k], zip.files[k])
                 } #End loop downloading
             
@@ -81,7 +87,7 @@
                   k.snowball <- match(pkg.k , snowball$pkg)
                   outfile    <- snowball$installation.path[k.snowball]
                 
-                  message1('Installing ',basename(zk))
+                  message1('Installing ',k,' of ',length(zk),': ',basename(zk))
                 
                 #Unzip  
                   if (ext=="zip") utils::unzip(zk, exdir=outfile)
@@ -100,6 +106,7 @@
           
       #6 delete temp folder
           unlink(temp_path, recursive = TRUE)
+          dir.create(temp_path,showWarnings = FALSE,recursive = TRUE) #create temp again
           
       #7 Output
           return(snowball)

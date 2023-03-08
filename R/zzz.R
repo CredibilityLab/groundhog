@@ -45,6 +45,13 @@
           
       #7 Verify a mirror has been set    
         set.default.mirror() #Function 36 -  utils.R
+        
+       #8 If background file script for installing snowball.list has not been copied, copy it
+          back_path<- file.path(get.groundhog.folder(), "background_install.snowball.list.R")
+          if (!file.exists(back_path) & system.file("background_install.snowball.list.R", package = "groundhog")!='')
+            {
+            file.copy  (system.file("background_install.snowball.list.R", package = "groundhog") , back_path)
+          }
 
          
     } #End of onLoad
