@@ -41,9 +41,13 @@
         
         
           #3.0 Log path
-              log_path <- paste0(get.groundhog.folder(),"/batch_installation_log.txt")
+              log_cores_path <- paste0(get.groundhog.folder(),"/batch_installation_console.txt")
+              log_path         <- paste0(get.groundhog.folder(),"/batch_installation_log.txt")
               dir.create(dirname(log_path),recursive = TRUE,showWarnings = FALSE)
             
+              #Clear the log path
+              unlink(log_path)
+              
           #3.0.5 Message  
               message1("Will rely on `",cores, "` core processors for faster in-parallel installation")
               message1("To force sequential installation add option `cores=1` to your groundhog.library() call")
@@ -55,10 +59,10 @@
           #3.2 Loop over snowflakes
               for (k in 1:length(snowflakes))
               {  
-                CL.2 <- parallel::makeCluster(getOption("cl.cores", min(cores,length(snowflakes[[k]])),outfile=log_path)
+                cluster_id <- parallel::makeCluster(getOption("cl.cores", min(cores,length(snowflakes[[k]])),outfile=log_cores_path)
             
             #3.3 Inner parallel loop with pkgs from source
-                parallel::clusterExport(CL.2, 
+                parallel::clusterExport(cluster_id, 
                            unclass(lsf.str(envir = asNamespace("groundhog"), all = TRUE)),
                            envir = as.environment(asNamespace("groundhog")))
                            
@@ -75,11 +79,11 @@
                   
                   #utils 48 in 'parallel groundhog' and utils #44
       
-                  #4.5 Install the snowflake
-                      parallel::parLapply(CL.2 , snowball.k$source_url , install.one.source)  #install.one.R has this function 'install.source 
+            #3.6 Install the snowflake
+                  parallel::parLapply(cluster_id , snowball.k$source_url , install.one.source)  #install.one.R has this function 'install.source 
               
-            #3.6  Kill the cluster
-                  parallel::stopCluster(CL.2)   
+            #3.7  Kill the cluster
+                  parallel::stopCluster(cluster_id)   
                 
             #3.7 Localize so that future snowflakes find these packages
                 localize.snowball(snowball [snowball$pkg %in% snowflakes[[k]],])

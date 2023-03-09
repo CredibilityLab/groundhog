@@ -2,6 +2,9 @@
 
   install.one.source <- function(url)
   {
+    #log
+      log_path  <- paste0(get.groundhog.folder(),"/batch_installation_log.txt")
+
     
      #File & package
       filename <- basename(url)
@@ -13,9 +16,18 @@
       installation_path <- get.pkg_search_paths(pkg,vrs)
       dir.create(installation_path,recursive=TRUE, showWarnings = FALSE)
 
+    #Log attempt to install
+      t1 <- format(Sys.time(), "%Y-%m-%d %H:%M")
+
+      write(paste0(t1, " - Installing ",pkg_vrs," from ",url),log_path,append = TRUE)
+      
     #Install
-       install.packages(url,type='source',repos=NULL, dependencies=FALSE,lib=installation_path)
-    
+      install.packages(url,type='source',repos=NULL, dependencies=FALSE,lib=installation_path)
+      
+    #Log success
+      ip <- installed.packages(installation_path)
+      
+      if (nrow(ip)>0)   write(paste0"Succeeding installing ",pkg_vrs," from ",url),log_path,append=TRUE)
+      if (nrow(ip)==0)  write(paste0"FAILED! installing ",pkg_vrs," from ",url),log_path,append=TRUE)
+
   }
-  
-  
