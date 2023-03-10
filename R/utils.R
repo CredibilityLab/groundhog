@@ -709,7 +709,7 @@ get.available.mran.date <- function(date0, date1) {
       get.repos_from.snowball <- function(snowball)
       {
       #If missing, or explicitly MRAN or CRAN, then it is a CRAN package.
-        repos <- ifelse(snowball$from %in% c(NA< 'CRAN','MRAN'),'CRAN',snowball$from)
+        repos <- ifelse(snowball$from %in% c(NA,'', 'CRAN','GRAN','MRAN'),'CRAN',snowball$from)
       return(repos)
       }
 

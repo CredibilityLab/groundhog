@@ -15,7 +15,7 @@
   #1  If snowball already exists early return it  
     
         #Path to snowball
-            snowball_dir <- paste0(get.groundhog.folder() , '/snowballs/' , remote_id )
+            snowball_dir <- paste0(get.groundhog.folder() , '/snowballs_v2/' , remote_id )
            
              if (include.suggests==FALSE) snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
              if (include.suggests==TRUE)  snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '_with_suggests.rds')  

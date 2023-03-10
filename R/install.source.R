@@ -4,9 +4,7 @@
   install.source <- function(snowball,date,cores)
   {
     
-    #If default -1, then go with total -2
-    if (cores==-1) cores <- parallel::detectCores()-2
-    
+     
     #0 Add all paths so that it is found when attempted
       .libPaths(unique(snowball$installation.path))
 
@@ -36,7 +34,7 @@
           message1("Will now install ",nrow(snowball), " packages from source")
     
    #3 Parallel installation
-      if (cores>1)
+      if (cores>1 )
       {
         
         
@@ -59,7 +57,7 @@
           #3.2 Loop over snowflakes
               for (k in 1:length(snowflakes))
               {  
-                cluster_id <- parallel::makeCluster(getOption("cl.cores", min(cores,length(snowflakes[[k]])),outfile=log_cores_path)
+                cluster_id <- parallel::makeCluster(getOption("cl.cores", min(cores,length(snowflakes[[k]]))),outfile=log_cores_path)
             
             #3.3 Inner parallel loop with pkgs from source
                 parallel::clusterExport(cluster_id, 
@@ -88,6 +86,7 @@
             #3.7 Localize so that future snowflakes find these packages
                 localize.snowball(snowball [snowball$pkg %in% snowflakes[[k]],])
                 
+            
                 
             } #Loop installing snowflakes
               

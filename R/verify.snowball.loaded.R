@@ -47,9 +47,10 @@
      
       #3.1 active
          active <- get.active()                          
-    
+         ip <- get.installed()  #get.active.R (if multiple versions available, it returns the first one in .libPaths())
+         
       #3.2 Counts of mismatches
-          snowball.match <- snowball$pkg_vrs %in% active$pkg_vrs  | snowball$pkg %in% base_pkg() | snowball$pkg %in% ignore.deps
+          snowball.match <- snowball$pkg_vrs %in% ip$pkg_vrs  | snowball$pkg %in% base_pkg() | snowball$pkg %in% ignore.deps
           
             #There is an or statement so that base packages are not checked against available ones because
             #those have their own library structure

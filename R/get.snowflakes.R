@@ -11,8 +11,9 @@ get.snowflakes = function(snowball, date)
    #2 Start empty 
         
       dep12 <- data.frame(pkg=character() , dep2=character())
-                  
-   #3 Seed with with all pkgs in the snowball
+      
+      
+   #3 Populate with with all pkgs in the snowball
       for (pkgk in snowball$pkg)
         {
         if (!pkgk %in% dep12$pkg) 
@@ -50,6 +51,14 @@ get.snowflakes = function(snowball, date)
         }    
                 
  
+    #6 Add anything in snowball that is not in dep12 (these are packages without dependencies)
+      if (sum(!snowball$pkg %in% dep12$pkg)>0) {
+          snowflakes[[k+1]] <-  snowball$pkg[!snowball$pkg %in% dep12$pkg]
+          }
+      
+      
+      
+      
     #6 Drop already istalled packages from the snowflakes
       for (k in 1:length(snowflakes))
         {

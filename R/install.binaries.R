@@ -18,6 +18,8 @@
           snowball <- snowball[snowball$from %in% c("CRAN","GRAN"),]
           snowball <- snowball[snowball$installed == FALSE,]
       
+          snowball$GRAN.date=as.DateYMD(snowball$GRAN.date)
+          
       #1.6 early return if nothing to install
           snowball$success = snowball$installed
           if (nrow(snowball)==0) return(snowball)
@@ -87,7 +89,7 @@
                   k.snowball <- match(pkg.k , snowball$pkg)
                   outfile    <- snowball$installation.path[k.snowball]
                 
-                  message1('Installing ',k,' of ',length(zk),': ',basename(zk))
+                  message1('Installing ',k.zip,' of ',n.zip,': ',basename(zk))
                 
                 #Unzip  
                   if (ext=="zip") utils::unzip(zk, exdir=outfile)

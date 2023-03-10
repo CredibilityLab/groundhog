@@ -129,11 +129,11 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
       data.frame(
         "pkg" = snowball.pkg,
         "vrs" = snowball.vrs,
-        "pkg_vrs" = snowball.pkg_vrs,   # Identify pkg
-        "installed" = TRUE,             # Installed?
-        "from" =  NA_character_,        # Where to install from
-        "GRAN.date" = NA_character_,    # GRAN date, in case MRAN is tried
-        "installation.time" = NA_real_, # time to install
+        "pkg_vrs" = snowball.pkg_vrs,       # Identify pkg
+        "installed" = TRUE,                  # Installed?
+        "from" = '',                         # Where to install from
+        "GRAN.date" = as.Date('1970-01-01'), # GRAN date, in case MRAN is tried
+        "installation.time" = 0,             # time to install
         "installation.path" = snowball.installation.path,
         stringsAsFactors = FALSE
       )

@@ -115,7 +115,7 @@
             }
         
     #5 install snowball (install will only happen if needed, this function also adds to  .libPath())
-        install.snowball(snowball, date,recycle.files=TRUE)
+        install.snowball(snowball, date)
 
     
     #6 Attach pkg
@@ -144,7 +144,7 @@
          message1( "(version current on '", remote_id , "' on '", date,"')"  )
          
         #Path to snowball
-          snowball_dir <- paste0(get.groundhog.folder() , '/snowballs/' , remote_id )
+          snowball_dir <- paste0(get.groundhog.folder() , '/snowballs_v2/' , remote_id )
           snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
           snowball_path <- file.path(snowball_dir, snowball_file)
           
@@ -214,7 +214,7 @@
         {
         #9.1 Snowball
            #Path to snowball
-            snowball_dir <- paste0(get.groundhog.folder() , '/snowballs/' , remote_id )
+            snowball_dir <- paste0(get.groundhog.folder() , '/snowballs_v2/' , remote_id )
             snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
             snowball_path <- file.path(snowball_dir, snowball_file)
           #Delete

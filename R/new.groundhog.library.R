@@ -1,18 +1,16 @@
   
 
 #' @export
-lm()
-
-  new.groundhog.library <- function(pkg, date,  quiet.install = TRUE,  
-                            include.suggests = FALSE,   ignore.deps=c(), 
-                            force.source = FALSE,       force.install = FALSE, 
-                            tolerate.R.version = "" ,   cores = -1)
+  new.groundhog.library <- function(pkg, date,        quiet.install = TRUE,  
+                            include.suggests = FALSE, ignore.deps=c(), 
+                            force.source = FALSE,     force.install = FALSE, 
+                            tolerate.R.version = "" , cores = -1)
   {
     
 #--------------------------------------------------------------
     
   #1 Preliminaries
-    
+        
     #1.1 Save default libpaths to change back to them after exiting
         if (!exists("orig_lib_paths",envir=.pkgenv)) {
               .pkgenv[["orig_lib_paths"]] <- .libPaths()
@@ -101,64 +99,76 @@ lm()
      
 #------------------------------------------------------------------------ 
     
-#3 Get snowballs to load or install
+#3 Get snowballs 
   
-  #3.1 Empty list for storing all snowballs
-    snowball.list <- list()
-     
-  #3.2 Loop getting snowballs for all packages
+
+  #3.2 Loop getting snowballs for all packages that are requested
         k <- 0 
+        snowball.list <- list()
+
      
-      #If package is not git, message it is attached already, or get snowball
           for (pkgk in pkg)
           {
           k <- k+1
-          snowball.list[[k]] <- get.snowball(pkgk , date , include.suggests , force.install)
+          snowball.k  <- get.snowball(pkgk , date , include.suggests , force.install)
     
-        #source
-            if (force.source==TRUE) snowball.list[[k]]$from='source'
-        
+        #options
+            if (force.source==TRUE)  snowball.k$from      = 'source'
+            if (force.install==TRUE) snowball.k$installed = FALSE
+       
+        #Add to snowball.all
+            if (k==1) snowball.all <- snowball.k
+            if (k> 1) snowball.all <- rbind(snowball.all, snowball.k)
+            
+        #Add to list
+            snowball.list[[k]] <- snowball.k
           
          } #End loop over pkgs
         
-  #3.3 Create snowball.all
-        #Start empty
-          snowball.all<-snowball.list[[1]][FALSE,]
-      
-        #Loop  
-          for (k in 1:length(snowball.list))
-          {
-            snowball.all <- rbind(snowball.all, snowball.list[[k]])
-          }
-        
+
           
 
-  #3.4 Set libpaths for big snowball
+  #3.4 Create all paths if they don't exist (so that they can be added to libpath in 3.5)
+        for (j in 1:nrow(snowball.all))
+        {
+          dir.create(snowball.all$installation.path[j],recursive = TRUE, showWarnings = FALSE)
+          
+        }
+        
+  #3.5 Set libpaths for big snowball
         .libPaths(unique(snowball.all$installation.path))
+        
         
         
 #------------------------------------------------------------------------ 
             
-#4 Install bit snowball
-        
+#4 Install snowball 
+      
 
-    #4.1 Any source package that needs install is loaded and thus needs background install?
-        snowball.install.source <- snowball.all[snowball.all$from=='source' & snowball.all$installed==FALSE,]
-        n.source.conflict       <- sum(snowball.install.source$pkg %in% get.active()$pkg)
+    #4.1 Do we need to install source from background?
+    #-----------------------------------------------------------------------------
+    #Note: R will not let you install a package that is in use. For binaries
+    #      pkgs are not formally installed, just unzipped, so we bypass this check
+    #      but for source pkgs we need to install in background
+    #-----------------------------------------------------------------------------
         
-    #4.1 BACKGROUND Install
+        # Any source package that needs install is loaded and thus needs background install?
+            snowball.install.source <- snowball.all[snowball.all$from=='source' & snowball.all$installed==FALSE,]
+            n.source.conflict       <- sum(snowball.install.source$pkg %in% get.active()$pkg)
+        
+    #4.2 BACKGROUND Install
         
         if (n.source.conflict > 0) 
          {
           
           #Save the snowball as an rds file
-              arguments_path <- file.path(get.groundhog.folder(), paste0("temp/snowball.list.rds"))
+              arguments_path <- file.path(get.groundhog.folder(), paste0("temp/background_install_arguments.rds"))
               dir.create(dirname(arguments_path),showWarnings = FALSE,recursive=TRUE)
-              arguments <- list(pkg=pkg, snowball.list=snowball.list, date=date, cores=cores)
+              arguments <- list(snowball=snowball.all, date=date, cores=cores)
               saveRDS(arguments , arguments_path,version=2 , compress=FALSE)
               
           #Execute snowball.install in background with system
-              script_path <- system.file("background_scripts/backgroung_install.snowball.list.R", package = "groundhog")
+              script_path <- system.file("background_scripts/backgroung_install.snowball.R", package = "groundhog")
               system(paste0("Rscript ",script_path , " " , arguments_path) )
               
             #Delete temp path
@@ -166,9 +176,10 @@ lm()
               
         } #End n conflict>0
 
-    #4.2 FOREGROUND INSTALL
+    #4.3 FOREGROUND INSTALL
         if (n.source.conflict == 0)  {
-          install.snowball.list(pkg, snowball.list , date,cores)
+             install.snowball(snowball.all,date, cores)        
+
           } 
        
   
@@ -180,7 +191,7 @@ lm()
       snowball.all<-snowball.all [!snowball.all$pkg %in% base_pkg(),]
         
     #localize
-      localize.snowball(snowball.all)            
+      localize.snowball(snowball.all)   #Note: source pacakges are already localized, but not binaries   
               
 
 #------------------------------------------------------------------------ 
@@ -193,14 +204,14 @@ lm()
 #------------------------------------------------------------------------ 
       
       
-#7 Library load everything
-      base.library.snowball.list(snowball.list)  #Utils.R #47
+#7 Library all pkgs
+      #base.library.snowball.list(snowball.list)  #Utils.R #47
+      for (pkgk in pkg)  base.library(pkgk, character.only=TRUE)
 
       
 #------------------------------------------------------------------------ 
 
-            
-   
+
 #8 Verify each snowball, saving snowball .rds if successful  
       
   for (k in 1:length(snowball.list))
@@ -215,18 +226,20 @@ lm()
        #Includes 'successfully attached' msg, see #verify.snowball.loaded.R
           
       
+    	#8.3 Path to snowball
+						snowball_dir <- paste0(get.groundhog.folder() , '/snowballs_v2' )
+						snowball_file <- paste0(pkg[k] , "_" ,  gsub( "-", "_" , date) , '.rds')  
+						snowball_path <- file.path(snowball_dir, snowball_file)
+	
     #If TRUE 
-     if (verified==TRUE) { 
+       
+        if (verified==TRUE) { 
      
-    #8.3 Update  column `installed` in  snowball
+    #8.4 Update  column `installed` in  snowball
           ip <- data.frame(utils::installed.packages(snowball$installation.path), stringsAsFactors=FALSE)
           snowball$installed <- (snowball$pkg %in% ip$Package | snowball$pkg %in% .pkgenv[['base_pkg']]) #if in packages or in base.packages
           
-		#8.4 Path to snowball
-							snowball_dir <- paste0(get.groundhog.folder() , '/snowballs' )
-							snowball_file <- paste0(pkg[k] , "_" ,  gsub( "-", "_" , date) , '.rds')  
-							snowball_path <- file.path(snowball_dir, snowball_file)
-					   
+				   
 		#8.5 Save snowball RDS 
 							if (!file.exists(snowball_path)) {
 						  saveRDS(snowball, snowball_path, version = 2, compress=FALSE)

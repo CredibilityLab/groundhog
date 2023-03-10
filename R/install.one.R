@@ -17,17 +17,18 @@
       dir.create(installation_path,recursive=TRUE, showWarnings = FALSE)
 
     #Log attempt to install
-      t1 <- format(Sys.time(), "%Y-%m-%d %H:%M")
+      t1 <- format(Sys.time(), "%Y-%m-%d %x")
 
-      write(paste0(t1, " - Installing ",pkg_vrs," from ",url),log_path,append = TRUE)
+      write(paste0(t1, " - Attempting to install ",pkg_vrs," from ",url),log_path,append = TRUE)
       
     #Install
       install.packages(url,type='source',repos=NULL, dependencies=FALSE,lib=installation_path)
       
     #Log success
       ip <- installed.packages(installation_path)
-      
-      if (nrow(ip)>0)   write(paste0"Succeeding installing ",pkg_vrs," from ",url),log_path,append=TRUE)
-      if (nrow(ip)==0)  write(paste0"FAILED! installing ",pkg_vrs," from ",url),log_path,append=TRUE)
+      t2 <- format(Sys.time(), "%Y-%m-%d %x")
+
+      if (nrow(ip)>0)   write(paste0(t2," - Succeeded installing ",pkg_vrs),log_path,append=TRUE)
+      if (nrow(ip)==0)  write(paste0(t2," - FAILED! installing ",pkg_vrs),log_path,append=TRUE)
 
   }

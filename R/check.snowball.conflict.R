@@ -216,7 +216,7 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
            
 
     #Install the snowball
-       install.snowball(snowball,date=date,install.only = TRUE, skip.remotes=FALSE)
+       install.snowball(snowball,date=date,skip.remotes=FALSE)
        
     #Localize the snowball
        localize.snowball(snowball)   
