@@ -58,8 +58,8 @@
             if (n.cran>0 & n.gran==0) message1("Will now download ",n.cran, " packages from CRAN")
             if (n.cran==0 & n.gran>0) message1("Will now download ",n.gran, " packages from GRAN")
 
-          #3.2 Download in parallel with libcurl if available
-            if (capabilities("libcurl")==TRUE)
+          #3.2 Download in parallel with libcurl, if available
+            if (capabilities("libcurl")==TRUE)  #does this user have libcurl available?
             {
               message1("...Downloading all packages simultaneously (using 'libcurl')...")
               download.file(url.files, zip.files,method='libcurl', quiet=TRUE)
