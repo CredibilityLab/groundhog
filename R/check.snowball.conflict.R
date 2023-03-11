@@ -54,7 +54,7 @@ check.snowball.conflict <- function(snowball, pkg.requested, force.install, igno
       #Conflict 5: Any pkg in snowball was already loaded, different version, not with groundhog
         
     #Text reused in several separate messages
-      text.not.loaded <- paste0("Not all requested packages were loaded")
+      text.not.loaded <- paste0("\n  ** Needed packages are installed, but restarting R is necessary to load them. **")
       text.restart    <- paste0("Please restart your R Session (in R Studio SHFT-CTRL/CMD-F10) ",
                                 "and run the groundhog.library() command again.")
     #--------------------------             
@@ -95,8 +95,8 @@ check.snowball.conflict <- function(snowball, pkg.requested, force.install, igno
         #Add different dates warning if relevant
             if (length(.pkgenv[['hogdays']])>1) {
                     msg<-paste0(msg, "\n",
-                                    "Across groundhog.library() calls you have used different dates (",
-                                    pasteQC(.pkgenv[['hogdays']]),")\n. That is a likely root cause for this conflict, ",
+                                    "Across groundhog.library() calls you have used different dates:\n(",
+                                    pasteQC(.pkgenv[['hogdays']]),").\nThat is a likely root cause for this conflict, ",
                                    "consider using the same date throughout."
                                 )
                           
@@ -149,7 +149,7 @@ check.snowball.conflict <- function(snowball, pkg.requested, force.install, igno
             
           #Show message
             message1(msg)
-            stop(text.not.loaded)
+            stop(" ** Restart R and re-run the groundhog.library() command **")
             
             
             }

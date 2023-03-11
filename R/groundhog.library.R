@@ -71,7 +71,7 @@
 #' @details For more information about groundhog check out [groundhogr.com](http://groundhogr.com)
 #' @export
 #'
-  groundhog.library <- function(pkg, date,  quiet.install = TRUE,  include.suggests = FALSE,  
+  groundhog.library.old <- function(pkg, date,  quiet.install = TRUE,  include.suggests = FALSE,  
                             ignore.deps=c(), force.source = FALSE,
                             force.install = FALSE, tolerate.R.version = "" )
     {

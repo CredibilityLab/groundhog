@@ -922,12 +922,7 @@ get.available.mran.date <- function(date0, date1) {
         exit()
         }
         
-    #7 warning if previous date has been used
-        if (length(.pkgenv[['hogdays']])>0 && !(date %in% .pkgenv[['hogdays']]) ) {
-          message("groundhog warning:\n",
-                  "You have use other dates for groundhog.library() calls in this session.\n",
-                  "Previous date(s) include",pasteQC(.pkgenv[['hogdays']]))
-          } 
+   
         
   }
   

@@ -15,7 +15,7 @@
 #----------------------------------------------------------------------------------------
 
 #' @export
-  new.groundhog.library <- function(pkg, date,        quiet.install = TRUE,  
+  groundhog.library <- function(pkg, date,        quiet.install = TRUE,  
                             include.suggests = FALSE, ignore.deps=c(), 
                             force.source = FALSE,     force.install = FALSE, 
                             tolerate.R.version = "" , cores = -1)
@@ -215,7 +215,7 @@
 #7 Check conflict now that it is all installed 
     check.snowball.conflict(snowball.all, pkg.requested=pkg , force.install=force.install, ignore.deps=ignore.deps, date=date)
 
-      
+    message('new.groundhog.libary() line 218 after check.snowball')
 #------------------------------------------------------------------------ 
       
       

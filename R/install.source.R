@@ -33,8 +33,8 @@
           
           message1("Will now install ",nrow(snowball), " packages from source")
     
-   #3 Parallel installation
-      if (cores>1 )
+   #3 Parallel installation if more than 1 core and more than 1 package
+      if (cores>1 & nrow(snowball>1))
       {
         
         
@@ -95,12 +95,9 @@
           
           
     #4 Sequential installation
-      if (cores==1)
+      if (cores==1 | nrow(snowball)==1)
       {
-          #4.1 Message  
-              message1("Because you set cores=1, will install sequentially")
-              message1("For faster installation drop the `cores=1` option in your groundhog.library() call")
-        
+          
           #4.2 Start clock for install feedback
               start.time=Sys.time()
             

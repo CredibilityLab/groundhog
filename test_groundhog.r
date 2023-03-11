@@ -26,7 +26,7 @@ library('groundhog')
 
 #Date to use for testing individual packages
     test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
-    set.groundhog.folder('c:/temp/full_test3')
+    set.groundhog.folder('c:/temp/full_test1')
     
 
 #Set 0 - various forms of calling packages to be loaded
@@ -45,10 +45,9 @@ library('groundhog')
         groundhog.library(2,test.day)
     
       #inexistent pkg on github
-        groundhog.library('github::crsh/powerful_999',test.day)
+        #groundhog.library('github::crsh/powerful_999',test.day)
     
         
-        set.groundhog.folder('c:/temp/20221001')
         
   #Single package, with and without quotes
     library('groundhog')
@@ -88,13 +87,18 @@ library('groundhog')
         #Conflict caused by R Studio loading the pkg
           library('groundhog')
             pwr::cohen.ES()
-            groundhog.library('pwr',test.day,force.install=TRUE)
-            ok
-
+            groundhog.library('pwr',test.day-2400,tolerate=groundhog:::get.rversion())
+            
+            test.day='2023-02-01'
+            pkg='pwr'  
+            
+          a=  groundhog:::get.active()
+          a[a$pkg=='pwr',]
+          
         #Conflict caused by groundhog
             groundhog.library('pwr',test.day)
             groundhog.library('pwr',test.day,force.install=TRUE)
-            ok
+            
     
         
     #Conflict 2: Same remote, different date

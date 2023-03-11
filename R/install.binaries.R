@@ -61,10 +61,8 @@
           #3.2 Download in parallel with libcurl, if available
             if (capabilities("libcurl")==TRUE)  #does this user have libcurl available?
             {
-              message1("...Downloading all packages simultaneously (using 'libcurl')...")
-              download.file(url.files, zip.files,method='libcurl', quiet=TRUE)
-              
-                  #Suppress output because it just shows the list of URLs which is not useful
+            download.file(url.files, zip.files,method='libcurl', quiet=TRUE)
+            #Suppress output because it just shows the list of URLs which is not useful
 
             } else {
                           
