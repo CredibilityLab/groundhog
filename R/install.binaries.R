@@ -8,8 +8,8 @@
  install.binaries <- function(snowball)
    {
       
-      #1  Directory for downloaded zips
-          time0 <- as.numeric(Sys.time())
+      #1  Directory for downloaded zips temp with timestamp 
+          time0 <- round(as.numeric(Sys.time()),0)
           temp_path <- paste0(get.groundhog.folder() ,"/temp_",time0)
           dir.create(temp_path, recursive = TRUE, showWarnings = FALSE)
     
@@ -58,15 +58,30 @@
             if (n.cran>0 & n.gran==0) message1("Will now download ",n.cran, " packages from CRAN")
             if (n.cran==0 & n.gran>0) message1("Will now download ",n.gran, " packages from GRAN")
 
+          #3.2 Download in parallel with libcurl if available
+            if (capabilities("libcurl")==TRUE)
+            {
+              message1("...Downloading all packages simultaneously (using 'libcurl')...")
+              download.file(url.files, zip.files,method='libcurl', quiet=TRUE)
+              
+                  #Suppress output because it just shows the list of URLs which is not useful
+
+            } else {
+                          
             
-          #3.2 Download 
+          #3.3 Else do loop and download sequentially
+              
                for (k in 1:length(url.files))
                 {
+                message2("Will download sequentially, one at a time, because 'libcurl' is not available.")
+                message2("(this is much slower)")
                 message1("Downloading ",k," of ",length(url.files))
+                
                 download.file(url.files[k], zip.files[k])
+                
                 } #End loop downloading
             
-            
+            }
 
         #4 Install them
             
