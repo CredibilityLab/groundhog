@@ -39,7 +39,7 @@
         #2.3 Successfully attached pkg_vrs
             if (pkg_vrs %in% attached$pkg_vrs)
               {
-              message1("Succesfully attached '", pkg_vrs,"'")
+              message2("Succesfully attached '", pkg_vrs,"'")
               } 
       
 

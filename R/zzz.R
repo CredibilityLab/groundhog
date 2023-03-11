@@ -35,6 +35,7 @@
           .pkgenv[['default_libpath']] <-  .libPaths()
           .pkgenv[['groundhog_loaded_pkgs']] <- c()
           .pkgenv[['acceptable.option.names']] <- c('os','download.sequentially')
+          .pkgenv[['hogdays']] <-c()
 
           
     
@@ -54,11 +55,31 @@
             file.copy  (system.file("background_install.snowball.list.R", package = "groundhog") , back_path)
           }
 
-         
+       #9 Read manually set options
+          #Path where option files are saved
+            options_path <-  paste0(path.expand("~"), "/R_groundhog/options/")
+            
+          #If path exists, read its contents
+            if (file.exists(options_path)) {
+              
+                #List of file paths as vector
+                    options_files <- list.files(options_path,full.names = TRUE)
+                  
+                #Loop reading those files
+                    for (fk in options_files) {
+                      
+                      #Assign to .pkgenv
+                      .pkgenv[[basename(fk)]] <- scan(fk,what='character',quiet=TRUE)
+                      
+                     
+                    }
+                    
+              } #End if file found
+
+                  
     } #End of onLoad
 
 
-    
 #2. Attaching 
     #' @importFrom utils packageVersion compareVersion
      

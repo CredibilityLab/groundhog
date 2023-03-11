@@ -631,7 +631,7 @@ get.available.mran.date <- function(date0, date1) {
   
  }
  
-#37 Does personalfolder to install R packages (not groundohg, but R's default) exist
+#37 Does personalfolder to install R packages (not groundhog, but R's default) exist
     verify.personal.library.exists<-function()
       {
       #Create personal library if it does not exist
@@ -921,33 +921,19 @@ get.available.mran.date <- function(date0, date1) {
         message1('Groundhog says: Error. `cores` must be an integer values between 1 & ',tot.cores,' but you entered ',cores)
         exit()
         }
+        
+    #7 warning if previous date has been used
+        if (length(.pkgenv[['hogdays']])>0 && !(date %in% .pkgenv[['hogdays']]) ) {
+          message("groundhog warning:\n",
+                  "You have use other dates for groundhog.library() calls in this session.\n",
+                  "Previous date(s) include",pasteQC(.pkgenv[['hogdays']]))
+          } 
+        
   }
   
   
-#47 base.library.snowball.list
-  base.library.snowball.list <- function(snowball.list) {
-  
-      #Turn off warnings
-        warn0 <- getOption("warn")
-        options(warn = -1)
-      
-        #Note: warnings turned off to avoid warning that pkg was built with differn patch version of R
-        #it is not in practice actionable, and having a folder with majmin, without patch, implicitly
-        #assumes versions within majmin are all interchangeable.
-        
-          
-    #Loop: library()
-      for (snowball.k in snowball.list) {
-          pkg<-snowball.k$pkg[nrow(snowball.k)]
-          base.library(pkg, character.only=TRUE)
-      } 
-        
-    #turn on warnings
-      options(warn = warn0)
-    
-    
-  }
-  
+#47 DROPPED
+
   
 #48 Moved to its own function
  

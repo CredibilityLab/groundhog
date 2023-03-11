@@ -5,21 +5,21 @@
 
 
 
-check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) {
+check.snowball.conflict <- function(snowball, pkg.requested, force.install, ignore.deps, date) {
 
-    
-   #1 manipulate snowball and groundhog.session data.frames
   
-      #1.1 Add repos
+   #1 Update snowball and groundhog.session dataframes
+  
+      #1.1 Fill repos column for snowball (CRAN vs Remote, this is NOT the install from, it is where package exists)
           snowball$repos <- get.repos_from.snowball(snowball)  #function utils.R #40
           snowball$pkg_vrs_repos <- paste0(snowball$pkg_vrs, snowball$repos)
           
-      #1.2 Get requested pkg
-          n <- nrow(snowball)
-          requested_pkg_vrs <- snowball$pkg_vrs[n]
-          requested_pkg     <- snowball$pkg[n]
-          requested_repos   <- snowball$repos[n]
-          requested_pkg_vrs_repos <- snowball$pkg_vrs_repos[n]
+      #1.2 Get requested pkg (vector)
+          
+          requested_pkg_vrs <- snowball$pkg_vrs[snowball$pkg %in% pkg.requested]
+          requested_pkg     <- snowball$pkg[snowball$pkg %in% pkg.requested]
+          requested_repos   <- snowball$repos[snowball$pkg %in% pkg.requested]
+          requested_pkg_vrs_repos <- snowball$pkg_vrs_repos[snowball$pkg %in% pkg.requested]
           
           
       #1.4 Short name for session 
@@ -42,42 +42,21 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
    #3 DROPPED
     
    #4 CONFLICTS
-      #Conflict 1: force Install (is any package that needs to be *installed*  loaded)
+     #Do first the conflicts for remotes, so that the general advice to just restart R is not given for them
+          
+          
+      #DROPPED SINCE WE DO THIS IN BACKGROUND - Conflict 1: force Install (is any package that needs to be *installed*  loaded)
+          
+          
       #Conflict 2: Same remote, different date
       #Conflict 3: Requested package was previously loaded with groundhog but different version or repository
       #Conflict 4: Dependency conflicts with previously loaded groundhog package
       #Conflict 5: Any pkg in snowball was already loaded, different version, not with groundhog
-
-          
+        
     #Text reused in several separate messages
-          
-      text.not.loaded <- paste0("The package ",requested_pkg_vrs, " was NOT loaded  \n \n ")
-      type.ok <- "Type 'OK' to confirm you have read this message."
-    #--------------------------                  
-    #Conflict 1: force Install (is any package that needs to be *installed*  loaded)
-    
-            if (force.install) {
-              
-              #Snowball pkg already loaded
-                  pkg.loaded_need_installing <- snowball$pkg[snowball$pkg %in% active$pkg]
-                                                         
-              
-              if (length(pkg.loaded_need_installing)>0) {
-                msg <- paste0(
-                          "The package '",requested_pkg_vrs, "' was NOT installed \n \n ",
-                          "You selected  'force.install=TRUE' but the following packages ",
-                          "that would be installed are currently loaded: ", pasteQC(pkg.loaded_need_installing), ". ",
-                          "You may unload all packages by restarting the R session. \n ",
-                          restart.text(),
-                          type.ok)
-
-                answer<-infinite.prompt(format.msg(msg),c('ok','quit()'))
-                if (answer=="quit()") quit()
-                exit()
-                
-              } # End conflict found for forced install
-            } # End check force install
-
+      text.not.loaded <- paste0("Not all requested packages were loaded")
+      text.restart    <- paste0("Please restart your R Session (in R Studio SHFT-CTRL/CMD-F10) ",
+                                "and run the groundhog.library() command again.")
     #--------------------------             
     #Conflict 2: Same remote, different date
         
@@ -86,64 +65,49 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
         
         if (length(pkg.conflict_remote_date)>0)
         {
-          msg <- paste0(
-                text.not.loaded,
-                "The following packages were previously loaded from a non-CRAN repository, ",
+          msg <- paste0("The following packages were previously loaded from a non-CRAN repository, ",
                 "using a date other than '",date,"': ",pasteQC(pkg.conflict_remote_date),". ",
                 "This creates a potential package version conflict that is not detectable ",
                 "by version number. To avoid this conflict you may need to modify ",
                 "your script ensuring the same date is used for every groundhog.library() call. ",
-                "You may unload all packages by restarting the R session \n ",
-                restart.text(),
-                type.ok)
+                text.restart)
+          
+          message1(msg)
+          stop(text.not.loaded)
 
-  
-          answer <- infinite.prompt(format.msg(msg),c("ok","quit()"))
-          if (answer=="quit()") quit()
-
-          exit()
         }
 
-        
+       
   #--------------------------               
-  #Conflict 3 - requested.pkg was previously loaded with groundhog but different version or repository
-        
-        if   (requested_pkg           %in% gs$pkg           &     #requested pkg was already loaded with groundhog
-             !requested_pkg_vrs_repos %in% gs$pkg_vrs_repos )     #but not same vrs or repository 
+  #Conflict 3 - a requested.pkg was previously loaded with groundhog but different version or repository
+        for (k in 1:length(requested_pkg))  
+        {      
+        if   (requested_pkg[k]           %in% gs$pkg           &     #requested pkg was already loaded with groundhog
+             !requested_pkg_vrs_repos[k] %in% gs$pkg_vrs_repos )     #but not same vrs or repository 
             
            {
-          
-              #Note: conflict 2 already took care of same pkg_vrs_repos, but different date for remotes, which could b
-              #      be a conflict too.
+      #Note: conflict 2 already took care of same pkg_vrs_repos, but different date for remotes, which could be a conflict too.
               
             
-        #Start message flagging problem
-          msg<-paste0(text.not.loaded,
-                      "Another version of '", requested_pkg ,
-                      "', was previously loaded with groundhog in this R session. ")
+      #Start message flagging problem
+          msg<-paste0("Another version of '", requested_pkg[k] , "', was previously loaded with groundhog in this R session. ")
           
         #Add different dates warning if relevant
             if (length(.pkgenv[['hogdays']])>1) {
-                    msg<-paste0(msg, 
+                    msg<-paste0(msg, "\n",
                                     "Across groundhog.library() calls you have used different dates (",
-                                    paste0(.pkgenv[['hogdays']],collapse=' , '),
-                                   ") that is a possible root cause for this conflict, ",
+                                    pasteQC(.pkgenv[['hogdays']]),")\n. That is a likely root cause for this conflict, ",
                                    "consider using the same date throughout."
                                 )
                           
                   } #End if multiple dates
         
         #Continue
-          msg <- paste0(msg, " \n ",
-                      "You can unload all packages by restarting the R session \n ",
-                      restart.text(),
-                      type.ok)
-          
-      
-        #Show message
-          answer<-infinite.prompt(format.msg(msg),"ok")
-          exit()
-          
+          message1(msg)
+          message1(text.restart)
+          stop(text.not.loaded)
+
+        }
         }
           
         
@@ -167,42 +131,33 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
             need.to.ignore <- pasteQC(snowball$pkg[conflict4.TF])  #pasteQC(), Utils.R function #31
     
           #Start saying there is a conflict
-            msg <- paste0(text.not.loaded,
-                          "Another version of a package needed to load '",requested_pkg_vrs,"' ",
-                          "was previously loaded with groundhog. ")
+            msg <- paste0("Another version of a needed package was previously loaded with groundhog.")
               
                    
-          #Add different dates warning if relevant
-            if (length(.pkgenv[['hogdays']])>1) {
-                          msg<-paste0(msg,
-                              "Across groundhog.library() calls you have used different dates (",
-                                  paste0(.pkgenv[['hogdays']],collapse=' , '),
-                              ") that is a possible root cause of this conflict.")
+          #If multiple hogdays used add explanation
+            if (length(.pkgenv[['hogdays']])>1) { 
+                          msg<-paste0(msg, "\n",
+                                     "Across groundhog.library() calls you have used different dates (",
+                                     pasteQC(.pkgenv[['hogdays']]),
+                                      ") that is a possible root cause for this conflict.")
                           
-                  } #End if  
+                  } #End if more than 1 hogday 
           
-          ##Request restart   
-            msg<-paste0(msg, " \n There are two alternative solutions: \n \n ",
-                        
-                             "1) Restart the R Session and modify your script to avoid the ",
-                             "other versions being loaded in the first place \n ",
-                             restart.text(),
-                             " \n ",
-                             "2) Explicitly allow the already loaded version of the package ",
-                             "to be tolerated, by adding the 'ignore.deps' options, running: \n ",
-                             "`groundhog.library('",requested_pkg , "','", date, "', ignore.deps=c(", need.to.ignore ,"))`",
-                             " \n \n ", 
-                             type.ok)
-                          
-            answer <- infinite.prompt(format.msg(msg),c("ok","quit()"))
-            if (answer=="quit()") quit()
-            exit()
+          ##Add ignore deps
+            msg <- paste0(msg, "\n",
+                          "You can either restart the R Session and avoid the conflict, or rely on the 'ignore.deps()' option to ignore it.")
+            
+          #Show message
+            message1(msg)
+            stop(text.not.loaded)
+            
+            
             }
  
           
           
   #--------------------------         
- 
+  #MOST LIKELY CONFLICT:
   #Conflict 5: Any pkg in snowball was already loaded, different version, not with groundhog
     
       conflict5.TF  <- snowball$pkg %in% active$pkg &           #pkg we want is active 
@@ -215,23 +170,12 @@ check.snowball.conflict <- function(snowball, force.install, ignore.deps, date) 
       if (sum(conflict5.TF)==0) return(invisible(TRUE))
            
 
-    #Install the snowball
-       install.snowball(snowball,date=date,skip.remotes=FALSE)
        
-    #Localize the snowball
-       localize.snowball(snowball)   
-         
     #Message that a restart is needed 
-        txt<-paste0(text.not.loaded,
-                    "Some of the packages needed to load '",requested_pkg_vrs,"' conflicted with packages ",
-                    "already in your R session. The conflict has been resolved, but you will need to ",
-                    "restart the R session and re-run groundhog.library('",requested_pkg,"','",date,"') ",
-                    "to complete the process. \n ",
-                    restart.text()
-                    )
-          answer<-infinite.prompt(format.msg(txt),c("quit()","stop"),must.restart = TRUE) #'stop' is for debugging, not meant to be selected by users
-          if (answer=='quit()') quit()
-          exit()
-  
+        msg <-"All needed packages are installed, but some have conflicting versions already loaded in your R session."
+        message1(msg)
+        message1(text.restart)
+        stop(text.not.loaded)
+        
 } # End function
 

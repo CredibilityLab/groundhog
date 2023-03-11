@@ -1,4 +1,18 @@
   
+  #1 Preliminaries
+  #2 Early return if everything is already attached
+  #3 Get snowballs for all requested packages
+  #4 Create libpaths
+  #5 Install snowball 
+    #5.2 Background (with R Script if source conflicts with it)
+    #5.3 Forground
+  #6 localize the snowballs
+  #7 Check conflict now that it is all installed 
+  #8 library() all pkgs
+  #9 Verify each snowball, saving snowball .rds if successful  
+  
+
+#----------------------------------------------------------------------------------------
 
 #' @export
   new.groundhog.library <- function(pkg, date,        quiet.install = TRUE,  
@@ -16,6 +30,7 @@
               .pkgenv[["orig_lib_paths"]] <- .libPaths()
            }
     
+    #Note: 1.2 & 1.3 could be done on loading, but, better here : (i) in case the user makes a change, and (ii) avoid writing files without authorization
     #1.2  Verify a mirror has been set (utils.R #36)    
         set.default.mirror() 
     
@@ -45,7 +60,6 @@
     #1.7 Drop pre-existing .libPaths to avoid finding pkg in path without version match
         .libPaths('')
     
-
 
     #1.8 put package name in quotes if it is not an object and was not put in quotes
         pkg.catch <- try(typeof(pkg),silent=TRUE)
@@ -99,15 +113,14 @@
      
 #------------------------------------------------------------------------ 
     
-#3 Get snowballs 
-  
-
-  #3.2 Loop getting snowballs for all packages that are requested
+#3 Get snowballs for all requested packages
+  #Save snowballs individually as a list and also as a single big snowball.all
+        
         k <- 0 
         snowball.list <- list()
 
      
-          for (pkgk in pkg)
+        for (pkgk in pkg)
           {
           k <- k+1
           snowball.k  <- get.snowball(pkgk , date , include.suggests , force.install)
@@ -125,27 +138,28 @@
           
          } #End loop over pkgs
         
+#------------------------------------------------------------
+        
+#4 Create libpathcs
 
-          
-
-  #3.4 Create all paths if they don't exist (so that they can be added to libpath in 3.5)
+  #4.1 Create all paths if they don't exist (so that they can be added to libpath in 3.5)
         for (j in 1:nrow(snowball.all))
         {
           dir.create(snowball.all$installation.path[j],recursive = TRUE, showWarnings = FALSE)
           
         }
         
-  #3.5 Set libpaths for big snowball
+  #4.2 Set libpaths for big snowball
         .libPaths(unique(snowball.all$installation.path))
         
         
         
 #------------------------------------------------------------------------ 
             
-#4 Install snowball 
+#5 Install snowball 
       
 
-    #4.1 Do we need to install source from background?
+    #5.1 Do we need to install source from background?
     #-----------------------------------------------------------------------------
     #Note: R will not let you install a package that is in use. For binaries
     #      pkgs are not formally installed, just unzipped, so we bypass this check
@@ -156,7 +170,7 @@
             snowball.install.source <- snowball.all[snowball.all$from=='source' & snowball.all$installed==FALSE,]
             n.source.conflict       <- sum(snowball.install.source$pkg %in% get.active()$pkg)
         
-    #4.2 BACKGROUND Install
+    #5.2 BACKGROUND Install
         
         if (n.source.conflict > 0) 
          {
@@ -176,7 +190,7 @@
               
         } #End n conflict>0
 
-    #4.3 FOREGROUND INSTALL
+    #5.2 FOREGROUND INSTALL
         if (n.source.conflict == 0)  {
              install.snowball(snowball.all,date, cores)        
 
@@ -186,7 +200,8 @@
 #------------------------------------------------------------------------ 
    
             
-#5 localize
+#6 localize the snowballs
+            
     #Drop base pkgs from snowball.all
       snowball.all<-snowball.all [!snowball.all$pkg %in% base_pkg(),]
         
@@ -197,22 +212,21 @@
 #------------------------------------------------------------------------ 
 
       
-#6 Check conflict now that it is all installed 
-    check.snowball.conflict(snowball.all, force.install=force.install, ignore.deps=ignore.deps, date=date)
+#7 Check conflict now that it is all installed 
+    check.snowball.conflict(snowball.all, pkg.requested=pkg , force.install=force.install, ignore.deps=ignore.deps, date=date)
 
       
 #------------------------------------------------------------------------ 
       
       
-#7 Library all pkgs
-      #base.library.snowball.list(snowball.list)  #Utils.R #47
+#8 Library all pkgs
       for (pkgk in pkg)  base.library(pkgk, character.only=TRUE)
 
       
 #------------------------------------------------------------------------ 
 
 
-#8 Verify each snowball, saving snowball .rds if successful  
+#9 Verify each snowball, saving snowball .rds if successful  
       
   for (k in 1:length(snowball.list))
        {

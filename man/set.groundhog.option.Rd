@@ -16,11 +16,12 @@ Set an option for groundhog
 }
 \details{
 Current options that can be set manually include the following:
-'os': operating system. It is supposed to be detected automatically, but if
+
+\link{os}: operating system. It is supposed to be detected automatically, but if
 groundhog were to not correctly identify a user's 'os' it can be set manually.
 Accepted options are 'windows','mac', 'mac_arm' (for the x1+ chip), 'linux'.
 
-'download.sequentially'. To speed up the download of binaries, they are
+\link{download.sequentially}. To speed up the download of binaries, they are
 by default downloaded with 'libcurl' simultaneously, if 'libcurl' is detected.
 A user can manually turn this off to avoid possible errors. This will lead to
 downloading packages one a time, slowing down installations by a few seconds per

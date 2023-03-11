@@ -64,7 +64,7 @@
       .pkgenv[[name]] <- value
     
     #Save it to path
-      path <-  paste0(path.expand("~"), "/R_groundhog/options/",name,".txt")
+      path <-  paste0(path.expand("~"), "/R_groundhog/options/",name)
       dir.create(dirname(path), showWarnings = FALSE,recursive = TRUE)
       write (value,path)
       
@@ -92,11 +92,9 @@
   
   get.groundhog.option <- function(name)
   {
-   #1 Validate accepted options
-    accepted.names <- c('os','download.sequentially')
-    
-    #If not accepted error
-      if (!name %in% accepted.names) {
+   
+    #1 If not an accepted name,  error
+          if (!name %in% .pkgenv[['acceptable.option.names']]) {                     
          stop("  groundhog says: '",name,"' is not one of the accepted options.\n",
               "    The set of accepted options is:\n",
               "   ",pasteQC(accepted.names))

@@ -7,7 +7,7 @@
 get.groundhog.option(name)
 }
 \description{
-Get groundhog option
+Obtain the value currently assigned to a manually set option.
 }
 \examples{
 \dontrun{
