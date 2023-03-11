@@ -16,7 +16,6 @@
       
       #1 Empty paths for groundhog loaded packages
         .pkgenv[['groundhog.paths']] <- c(character())
-      
           
       
       #3 Packages that have been already localized
@@ -35,7 +34,9 @@
           .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
           .pkgenv[['default_libpath']] <-  .libPaths()
           .pkgenv[['groundhog_loaded_pkgs']] <- c()
-    
+          .pkgenv[['acceptable.option.names']] <- c('os','download.sequentially')
+
+          
     
       #6 Delete to be purged packages, if any (put here with disable.packages())
           packages_df <- get.packages_df() #utils.R #Function 33
