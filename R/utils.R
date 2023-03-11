@@ -802,10 +802,19 @@ get.available.mran.date <- function(date0, date1) {
 #43 Get operating system
   get.os <- function()
   {
+    
+  #Default
+    os <- 'unknown'
+
+  #If it has been set by hand, read it
+    path <-  paste0(path.expand("~"), "/R_groundhog/options/os.txt") #see groundhog.options.R
+    if (file.exists(path)) {
+      os = scan(path,what='character',quiet=TRUE)
+      }
+    
   # use contrib.url() to rely on R's processing of sys.info() alternatives
     repos <- as.character(getOption("repos"))
     bin.url <- contrib.url(repos,type='binary')
-    os <- 'unknown'
     if (regexpr('windows', bin.url)[[1]]>0) os<-'windows'
     if (regexpr('macosx', bin.url)[[1]]>0)  os<-'mac'
     if (regexpr('arm64', bin.url)[[1]]>0 &  os=='mac') os<-'mac_arm'
