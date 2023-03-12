@@ -155,20 +155,40 @@
         
         
 #------------------------------------------------------------------------ 
-            
-#5 Install snowball 
-      
 
-    #5.1 Do we need to install source from background?
+        
+                    
+#5 Install snowball 
+  
+    #Get currently active packages
+          .pkgenv[['active']] = active = get.active()
+        
+    #5.0 If running non-interctively, stop with a conflict (since cannot ask to reload later and could create a problem)
+        
+        pkg.conflict <- active$pkg[pactive$pkg %in% snowball.all$pkg & !active$pkg_vrs %in% snowball.all$pkg_vrs)]
+        
+        if (length(pkg.conflict) >0 & interactive()==FALSE)
+        {
+          message1("Some of the packages you need to load have other versions already loaded.")
+          message1("You need to either start a new R session or explicitly ignore those conflicts by")
+          message1("adding the package names in the `ignore.deps` argument of the groundhog.library() call.")
+          message1("The packages with a conflict are: ", pastcQC(pkg.conflict))
+          stop ("*** Package Version Conflict  ***")
+          }
+        
+  
+        
+    #5.1 For interactive we now care abouut conflicts specifically with source packages
     #-----------------------------------------------------------------------------
     #Note: R will not let you install a package that is in use. For binaries
     #      pkgs are not formally installed, just unzipped, so we bypass this check
     #      but for source pkgs we need to install in background
     #-----------------------------------------------------------------------------
         
+        
         # Any source package that needs install is loaded and thus needs background install?
             snowball.install.source <- snowball.all[snowball.all$from=='source' & snowball.all$installed==FALSE,]
-            n.source.conflict       <- sum(snowball.install.source$pkg %in% get.active()$pkg)
+            n.source.conflict       <- sum(snowball.install.source$pkg %in% .pkgenv[['active']]$pkg)
         
     #5.2 BACKGROUND Install
         
@@ -208,17 +228,16 @@
     #localize
       localize.snowball(snowball.all)   #Note: source pacakges are already localized, but not binaries   
               
+      #localizing means copying the folder of the installed package to the default (non-groundhog) folder  
 
 #------------------------------------------------------------------------ 
 
       
-#7 Check conflict now that it is all installed 
+#7 Check conflict now that it is all installed (will prompt a restart if a conflict exists, will not occur again because they are localized)
     check.snowball.conflict(snowball.all, pkg.requested=pkg , force.install=force.install, ignore.deps=ignore.deps, date=date)
 
-    message('new.groundhog.libary() line 218 after check.snowball')
 #------------------------------------------------------------------------ 
-      
-      
+
 #8 Library all pkgs
       for (pkgk in pkg)  base.library(pkgk, character.only=TRUE)
 

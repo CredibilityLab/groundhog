@@ -36,8 +36,7 @@ check.snowball.conflict <- function(snowball, pkg.requested, force.install, igno
         
           
    #2 Active packages
-          active <- get.active()
-  
+          active <- .pkgenv[['active']]  #this was captured right before installing packages in groundhog.library()
   
    #3 DROPPED
     
