@@ -9,8 +9,7 @@
    {
       
       #1  Directory for downloaded zips temp with timestamp 
-          time0 <- round(as.numeric(Sys.time()),0)
-          temp_path <- paste0(get.groundhog.folder() ,"/temp_",time0)
+          temp_path <- paste0(get.groundhog.folder() ,"/temp/")
           dir.create(temp_path, recursive = TRUE, showWarnings = FALSE)
     
     
