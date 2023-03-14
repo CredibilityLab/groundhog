@@ -85,8 +85,7 @@
             if (length(.pkgenv[['hogdays']])>1) {
                     msg<-paste0(msg, "\n",
                                     "Across groundhog.library() calls you have used different dates:\n(",
-                                    pasteQC(.pkgenv[['hogdays']]),").\nThat is a likely root cause for this conflict, ",
-                                   "consider using the same date throughout."
+                                    pasteQC(.pkgenv[['hogdays']]),")."
                                 )
                           
                   } #End if multiple dates

@@ -22,15 +22,9 @@ install.packages('http://groundhogr.com/groundhog_1.9.9.2022.07.12-1539.tar.gz',
 groundhog:::load.cran.toc(TRUE)
 library('groundhog')
 
-library('pwr')
-a=  groundhog:::get.active()
-a[a$pkg=='pwr',]
-groundhog.library('pwr','2023-01-01')
-.libPaths()
-#Date to use for testing individual packages
+
     test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
-    set.groundhog.folder('c:/temp/full_test1')
-    
+
 
 #Set 0 - various forms of calling packages to be loaded
   
@@ -80,27 +74,12 @@ groundhog.library('pwr','2023-01-01')
   
     
     
-    get.g
+
     
 #######################################    
 #Set 1 - Enumerated conflicts in 'check.snowball.conflict.R'
 
-    #Conflict 1: force Install (is any package that needs to be *installed*  loaded)
-    
-        #Conflict caused by R Studio loading the pkg
-          library('groundhog')
-            pwr::cohen.ES()
-            groundhog.library('pwr',date='2018-06-01',tolerate=groundhog:::get.rversion())
-            groundhog.library('pwr',date='2022-06-01',tolerate=groundhog:::get.rversion())
-
-            test.day=as.Date('2023-02-01')-2400
-            pkg='pwr'  
-            
-        
-        #Conflict caused by groundhog
-            groundhog.library('pwr',test.day)
-            groundhog.library('pwr',test.day,force.install=TRUE)
-            
+    #Conflict 1: deprecated           
     
         
     #Conflict 2: Same remote, different date
