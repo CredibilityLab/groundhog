@@ -34,7 +34,7 @@
           message1("Will now install ",nrow(snowball), " packages from source")
     
    #3 Parallel installation if more than 1 core and more than 1 package
-      if (cores>1 & nrow(snowball>1))
+      if (cores>1 & nrow(snowball)>1)
       {
         
         

@@ -123,7 +123,7 @@
         for (pkgk in pkg)
           {
           k <- k+1
-          snowball.k  <- get.snowball(pkgk , date , include.suggests , force.install)
+          snowball.k  <- get.snowball(pkgk , date , include.suggests)
     
         #options
             if (force.source==TRUE)  snowball.k$from      = 'source'
@@ -142,55 +142,31 @@
         
 #4 Create libpathcs
 
-  #4.1 Create all paths if they don't exist (so that they can be added to libpath in 3.5)
-        for (j in 1:nrow(snowball.all))
-        {
-          dir.create(snowball.all$installation.path[j],recursive = TRUE, showWarnings = FALSE)
+    #4.1 Create all paths if they don't exist (so that they can be added to libpath in 3.5)
+          for (j in 1:nrow(snowball.all))
+          {
+            dir.create(snowball.all$installation.path[j],recursive = TRUE, showWarnings = FALSE)
+            
+          }
           
-        }
+    #4.2 Set libpaths for big snowball
+          .libPaths(unique(snowball.all$installation.path))
+          
         
-  #4.2 Set libpaths for big snowball
-        .libPaths(unique(snowball.all$installation.path))
-        
-        
-        
-#------------------------------------------------------------------------ 
-
+#5 Check conflict with previously groundhog-loaded packages
+    #Get currently active packages
+      .pkgenv[['active']] = active = get.active()
+      check.conflict.before(snowball=snowball.all, pkg.requested=pkg, ignore.deps, date)  #check.snowball.conflict.R
         
                     
-#5 Install snowball 
+#6 Install snowball 
   
-    #Get currently active packages
-          .pkgenv[['active']] = active = get.active()
-        
-    #5.0 If running non-interctively, stop with a conflict (since cannot ask to reload later and could create a problem)
-        
-        pkg.conflict <- active$pkg[pactive$pkg %in% snowball.all$pkg & !active$pkg_vrs %in% snowball.all$pkg_vrs)]
-        
-        if (length(pkg.conflict) >0 & interactive()==FALSE)
-        {
-          message1("Some of the packages you need to load have other versions already loaded.")
-          message1("You need to either start a new R session or explicitly ignore those conflicts by")
-          message1("adding the package names in the `ignore.deps` argument of the groundhog.library() call.")
-          message1("The packages with a conflict are: ", pastcQC(pkg.conflict))
-          stop ("*** Package Version Conflict  ***")
-          }
-        
-  
-        
-    #5.1 For interactive we now care abouut conflicts specifically with source packages
-    #-----------------------------------------------------------------------------
-    #Note: R will not let you install a package that is in use. For binaries
-    #      pkgs are not formally installed, just unzipped, so we bypass this check
-    #      but for source pkgs we need to install in background
-    #-----------------------------------------------------------------------------
-        
-        
-        # Any source package that needs install is loaded and thus needs background install?
+    #6.1 Do we need to install on background?
+    #   Any source package that needs install is loaded and thus needs background install?
             snowball.install.source <- snowball.all[snowball.all$from=='source' & snowball.all$installed==FALSE,]
             n.source.conflict       <- sum(snowball.install.source$pkg %in% .pkgenv[['active']]$pkg)
         
-    #5.2 BACKGROUND Install
+    #6.2 BACKGROUND Install
         
         if (n.source.conflict > 0) 
          {
@@ -210,7 +186,7 @@
               
         } #End n conflict>0
 
-    #5.2 FOREGROUND INSTALL
+    #6.3  FOREGROUND INSTALL
         if (n.source.conflict == 0)  {
              install.snowball(snowball.all,date, cores)        
 
@@ -220,7 +196,7 @@
 #------------------------------------------------------------------------ 
    
             
-#6 localize the snowballs
+#7 localize the snowballs
             
     #Drop base pkgs from snowball.all
       snowball.all<-snowball.all [!snowball.all$pkg %in% base_pkg(),]
@@ -233,33 +209,33 @@
 #------------------------------------------------------------------------ 
 
       
-#7 Check conflict now that it is all installed (will prompt a restart if a conflict exists, will not occur again because they are localized)
-    check.snowball.conflict(snowball.all, pkg.requested=pkg , force.install=force.install, ignore.deps=ignore.deps, date=date)
+#8 Check conflict now that it is all installed (will prompt a restart if a conflict exists, will not occur again because they are localized)
+    check.conflict.after(snowball.all, pkg.requested=pkg ,ignore.deps=ignore.deps, date=date)
 
 #------------------------------------------------------------------------ 
 
-#8 Library all pkgs
+#9 Library all pkgs
       for (pkgk in pkg)  base.library(pkgk, character.only=TRUE)
 
       
 #------------------------------------------------------------------------ 
 
 
-#9 Verify each snowball, saving snowball .rds if successful  
+#10 Verify each snowball, saving snowball .rds if successful  
       
   for (k in 1:length(snowball.list))
        {
          
-    #8.1 Take one snowball
+    #10.1 Take one snowball
        snowball<-snowball.list[[k]]
          
-    #8.2 Verified: TRUE or FALSE?
+    #10.2 Verified: TRUE or FALSE?
        verified <- verify.snowball.loaded(snowball, ignore.deps)  
        
        #Includes 'successfully attached' msg, see #verify.snowball.loaded.R
           
       
-    	#8.3 Path to snowball
+    	#10.3 Path to snowball
 						snowball_dir <- paste0(get.groundhog.folder() , '/snowballs_v2' )
 						snowball_file <- paste0(pkg[k] , "_" ,  gsub( "-", "_" , date) , '.rds')  
 						snowball_path <- file.path(snowball_dir, snowball_file)
@@ -268,20 +244,20 @@
        
         if (verified==TRUE) { 
      
-    #8.4 Update  column `installed` in  snowball
+    #10.4 Update  column `installed` in  snowball
           ip <- data.frame(utils::installed.packages(snowball$installation.path), stringsAsFactors=FALSE)
           snowball$installed <- (snowball$pkg %in% ip$Package | snowball$pkg %in% .pkgenv[['base_pkg']]) #if in packages or in base.packages
           
 				   
-		#8.5 Save snowball RDS 
+		#10.5 Save snowball RDS 
 							if (!file.exists(snowball_path)) {
 						  saveRDS(snowball, snowball_path, version = 2, compress=FALSE)
 						  } 	
 		
-		#8.6 add snowball to loaded by groundhog
+		#10.6 add snowball to loaded by groundhog
 					.pkgenv[['groundhog_loaded_pkgs']] <- 	c(.pkgenv[['groundhog_loaded_pkgs']] , snowball$pkg)
 			
-		#8.7 Update groundhog session (dataframe with everything loaded with groundhog in this R session
+		#10.7 Update groundhog session (dataframe with everything loaded with groundhog in this R session
 					update.groundhog.session(snowball)  #utils.R -  function #41
 
 			 
@@ -289,7 +265,7 @@
      
          
          
-  #8.7 If FALSE, delete snowball
+  #10.7 If FALSE, delete snowball
       if (verified==FALSE) {
         if (file.exists(snowball_path)) file.remove(snowball_path)
       }    

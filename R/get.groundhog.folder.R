@@ -103,7 +103,7 @@ set.groundhog.folder <- function(path) {
     load.cran.toc() #this will copy the rds files
     
   #Show confirmation message
-    message1("\nThe groundhog folder where downloaded packages are saved is now:\n",path)
+    message1("The groundhog folder where downloaded packages are saved is now:\n",path)
     
   #Reminder they can change it if it is the default path
     if (paste0(fw(dirname(path)),"/")==fw(main_folder)) message1("\nYou can change the location at any time running  `set.groundhog.folder(<path>)`")
