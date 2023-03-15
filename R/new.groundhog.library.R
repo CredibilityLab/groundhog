@@ -140,7 +140,7 @@
         
 #------------------------------------------------------------
         
-#4 Create libpathcs
+#4 Create libpaths
 
     #4.1 Create all paths if they don't exist (so that they can be added to libpath in 3.5)
           for (j in 1:nrow(snowball.all))

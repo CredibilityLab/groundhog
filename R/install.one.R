@@ -32,3 +32,7 @@
       if (nrow(ip)==0)  write(paste0(t2," - FAILED! installing ",pkg_vrs),log_path,append=TRUE)
 
   }
+  
+  
+  
+  install.one.remote<-
