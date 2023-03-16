@@ -29,7 +29,7 @@
       dir.create(installation_path,recursive=TRUE, showWarnings = FALSE)
 
     #Log attempt to install
-      t1 <- format(Sys.time(), "%Y-%m-%d %x")
+      t1 <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
 
       write(paste0(t1, " - Attempting to install ",pkg_vrs," from ",url),log_path,append = TRUE)
       

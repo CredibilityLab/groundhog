@@ -410,6 +410,13 @@ library('groundhog')
     
   # remote dependency already loaded, but wrong date
     library('groundhog')
+    
+    
+        groundhog.library('jeroen/jsonlite','2022-10-01')
+
+        
+        force.source=TRUE
+        
     groundhog.library('tidymodels/broom','2020-04-02')  
     groundhog.library('crsh/papaja','2020-04-01')
     
@@ -441,19 +448,20 @@ library('groundhog')
             "ropensci/skimr")
     
     
+    groundhog.library('git2r','2022-10-01',tolerate.R.version = '4.2.2',force.source = TRUE)
     
-    groundhog.library('mlr-org/mlr',test.day)
+    groundhog.library('mlr-org/mlr','2022-10-01',force.source=TRUE)
     
     library('groundhog')    
       test.day <- groundhog:::get.r.majmin.release()+95 #release of this R version + 45 days
 
-    k=2
+    k=1
     for (pk in popular_github_packages[k:length(popular_github_packages)])
     {
     message('-------------------------------------------------------')
     message('---   groundhog testser: [',k,']  ',pk,'       ---')
     
-    groundhog.library(pk,test.day)    
+    groundhog.library(pk,'2022-01-01')    
     k=k+1
       
     }

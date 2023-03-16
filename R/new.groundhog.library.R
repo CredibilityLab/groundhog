@@ -169,6 +169,8 @@
         
 #------------------------------------------------------------------------ 
     
+        
+        
 #3 Get snowballs for all requested packages
   #Save snowballs individually as a list and also as a single big snowball.all
         
@@ -186,13 +188,16 @@
           snowball.k  <- get.snowball(pkgk , date , include.suggests)
     
         #options
-            if (force.source==TRUE)  snowball.k$from      = 'source'
-            if (force.install==TRUE) snowball.k$installed = FALSE
-       
+           if (force.source==TRUE)   snowball.k$from      = 'source'
+           if (force.install==TRUE)  snowball.k$installed = FALSE
+     
         #Add to snowball.all
             if (k==1) snowball.all <- snowball.k
             if (k> 1) snowball.all <- rbind(snowball.all, snowball.k)
             
+          
+     
+          
         #Add to list
             snowball.list[[k]] <- snowball.k
           
@@ -212,8 +217,9 @@
             remote_id <- pkg_list$remote_id
             pkg <- pkg_list$pkg
             git <- pkg_list$remote_id
-          
-          
+        
+            
+            
           #Full identifier of pkg called: remote, usr, pkg, date. ('github::crsh/papaja_2021_10-01')
             git_usr_pkg_date <- paste0(remote_id  , "_", usr, "_", pkg ,"_", gsub("-","_",date))
     
@@ -228,7 +234,18 @@
           
         #Get snowball
           snowball.all       <- get.snowball.remote(pkg,date,remote_id, usr,include.suggests, force.install=FALSE)
+          
+            
+          #options
+            if (force.source==TRUE)  snowball.all$from      = 'source'
+            if (force.install==TRUE) snowball.all$installed = FALSE
+     
+          
           snowball.list[[1]] <- snowball.all
+          
+          
+          
+          
         }
         
 #------------------------------------------------------------
