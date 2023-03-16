@@ -19,7 +19,7 @@ load.cran.toc <- function(update.toc = FALSE) {
 
     #Add gran.toc if mac or windows
       os <- get.os()
-      if (os!='uknown') {
+      if (os %in% c('windows','mac', 'mac_arm')) {
         
           #User has this R version  
             r.version    <- get.r.majmin()

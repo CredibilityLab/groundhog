@@ -1,6 +1,5 @@
 
 
-
   install.source <- function(snowball,date,cores)
   {
     
@@ -9,7 +8,7 @@
       .libPaths(unique(snowball$installation.path))
 
     #1 Keep only source  packages that are not yet installed
-        snowball <- snowball[snowball$from  =='source' & snowball$installed==FALSE, ]
+        snowball <- snowball[snowball$from  %in% c('source', 'github','gitlab') & snowball$installed==FALSE, ]
         
     #1.5 early return if nothing to install
           snowball$success = snowball$installed
@@ -28,9 +27,35 @@
                       paste0(repos , "/src/contrib/" ,snowball$pkg_vrs , ".tar.gz"),
                       paste0(repos , "/src/contrib/Archive/" ,snowball$pkg , "/" ,  snowball$pkg_vrs , ".tar.gz"))
       
+        #2.4 Modify default URL if a package is remote
           
-        #2.4 message
+          #Check if snowball includes remote packages (it would have the column usr & sha)
+            if ("sha" %in% names(snowball))
+            {
+              #Find the remotes and instead of URL provide info remote::usr_pkg to install from clone
+                for (k in 1:nrow(snowball))
+                {
+                
+                #If a sha is found, it's remote
+                  if (!is.na(snowball$sha[k]))
+                  {
+                    #We figure out github vs gitlab from installation path  
+                      remote_id <- ''
+                      if  (regexpr('/_github/', snowball$installation.path[k])[[1]] > 0) remote_id <- 'github'
+                      if  (regexpr('/_gitlab/', snowball$installation.path[k])[[1]] > 0) remote_id <- 'gitlab'
+                    #Then provide the 'url' (clone instructions)
+                      snowball$source_url <- ifelse(!is.na(snowball$sha), 
+                                                  paste0("remote::",remote_id,"::",snowball$usr,"::",snowball$pkg,"::",date,"::",snowball$sha),
+                                                  snowball$source_url)
+                                                  
+                      #Note: this modified URL is then read by install.one.source (install.one.R) to install from clone  
+                      
+                  } #End if sha found
+                }   #End loop remote
+            }       #End if one remote at least 
           
+
+        #2.5 Start message
           message1("Will now install ",nrow(snowball), " packages from source")
     
    #3 Parallel installation if more than 1 core and more than 1 package
@@ -48,7 +73,7 @@
               
           #3.0.5 Message  
               message1("Will rely on `",cores, "` core processors for faster in-parallel installation")
-              message1("To force sequential installation add option `cores=1` to your groundhog.library() call")
+              message1("To force sequential installation set option `cores=1` in groundhog.library() ")
         
           #3.1 Get snowflakes (snowball broken into parallel installable parts)
               snowflakes <- get.snowflakes (snowball, date) #get.snowflakes.R
@@ -78,7 +103,7 @@
                   #utils 48 in 'parallel groundhog' and utils #44
       
             #3.6 Install the snowflake
-                  parallel::parLapply(cluster_id , snowball.k$source_url , install.one.source)  #install.one.R has this function 'install.source 
+                  parallel::parLapply(cluster_id , snowball.k$source_url , install.one)  #install.one.R has this function 'install.source 
               
             #3.7  Kill the cluster
                   parallel::stopCluster(cluster_id)   
@@ -108,7 +133,7 @@
                 installation.feedback(k, date, snowball, start.time) 
 
               #Install
-                install.one.source (snowball$source_url[k])       
+                install.one (snowball$source_url[k])       
               
               #localize
                 localize.snowball(snowball [k,])

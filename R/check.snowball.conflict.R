@@ -40,7 +40,7 @@
         #1.4 Create unique identifier  #will compare these to #1.4
               gs$pkg_vrs_repos      <- paste0(gs$pkg_vrs,gs$repos)
               
-        #1.5 Active pacakges 
+        #1.5 Active packages 
               active <- .pkgenv[['active']]  #this was captured right before installing packages in groundhog.library()
       
         

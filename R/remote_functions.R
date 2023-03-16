@@ -5,7 +5,7 @@
 #Function 5 Get lib for remote install of the package
 #Function 6 Identify remote ('github' vs 'gitlab';)
 #Function 7 make_package take a value entered by user, pkg or usr/pkg, or git::usr/pkg and turns it into a list with all the parts
-
+#Function 8 try_install_git()   - attempt to install a package from a local git repository
 
 #----------------------------------------------------------------
 
@@ -363,7 +363,7 @@
       #7 If try 2 fails, give up
             if (methods::is(try2,'try-error')) {
               message("groundhog says:\n",
-                      "The 2nd path also did not work, could not install pacakge.")
+                      "The 2nd path also did not work, could not install package.")
             }
   } #End function
   

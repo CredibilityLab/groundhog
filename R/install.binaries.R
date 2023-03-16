@@ -85,7 +85,7 @@
             #4.1 Read downloaded zip files
               all.zip <- list.files(temp_path,full.names = TRUE)
               n.zip <- length(all.zip)
-              message1("Will now install ",n.zip, " packages.")
+              if (n.zip>1) message1("Will now install ",n.zip, " packages.")
             
             #4.2 Unzip all files found
               for (k.zip in 1:n.zip)
