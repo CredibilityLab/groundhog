@@ -43,19 +43,19 @@
                 
                 dir_path <- paste0(get.groundhog.folder() , "/git_clones/" , remote_id)
                 clone_path <- paste0(dir_path , "/", usr, "_" ,pkg)
-                description_raw <-git2r::content(git2r::tree(git2r::lookup(clone_path, sha))["DESCRIPTION"])
-                
+                description_raw <- git2r::content(git2r::tree(git2r::lookup(clone_path, sha))["DESCRIPTION"])
+                description_raw <- gsub("[\r\n]", "", description_raw) #drop /r and /n from the text file
                   #note:
                   #git2r is in the suggests in DESCRIPTION , but preferred usage is to load it using groundhog() 
                   #to avoid version conflicts for users who are using git2r elsewhere in their session
                 
             #3.4  save contents in temporary file
                 tmp<-file.path(get.groundhog.folder(), 'temp', paste0('description_',usr,'_',pkg,"_",sha))
+                dir.create(dirname(tmp),showWarnings = FALSE,recursive = TRUE)
                 writeLines(description_raw, tmp)
                 
             #3.5 read the description file into data.frame with read.dcf
                  description_df <- data.frame(read.dcf(tmp), stringsAsFactors=FALSE)
-            
             #3.6 If more than one row assume it is not a dcf file
                  if (nrow(description_df) > 1)
                  {
