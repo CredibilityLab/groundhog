@@ -43,7 +43,8 @@
                       remote_id <- ''
                       if  (regexpr('/_github/', snowball$installation.path[k])[[1]] > 0) remote_id <- 'github'
                       if  (regexpr('/_gitlab/', snowball$installation.path[k])[[1]] > 0) remote_id <- 'gitlab'
-                    #Then provide the 'url' (clone instructions)
+                      
+                    #Then provide the 'url' (a ";;" separated string with all the fields needed to provide clone installation instructions)
                       snowball$source_url <- ifelse(!is.na(snowball$sha), 
                                                   paste0("remote::",remote_id,"::",snowball$usr,"::",snowball$pkg,"::",date,"::",snowball$sha),
                                                   snowball$source_url)
