@@ -1,5 +1,5 @@
 
-
+#Called for parallel loop installing source or remote
   install.one<-function(url)
   {
      #Remote
@@ -10,8 +10,8 @@
       if (remote==1) install.one.remote(url)
   
   }
-
-
+#---------------------------------
+#SOURCE
   install.one.source <- function(url)
   {
      #paths
@@ -38,18 +38,17 @@
       
     #Log success
       ip <- installed.packages(installation_path)
-      t2 <- format(Sys.time(), "%Y-%m-%d %x")
+      t2 <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
 
       if (nrow(ip)>0)   write(paste0(t2," - Succeeded installing ",pkg_vrs),log_path,append=TRUE)
       if (nrow(ip)==0)  write(paste0(t2," - FAILED! installing ",pkg_vrs),log_path,append=TRUE)
       } 
       
-      
-      
-  
-  
-  
-  install.one.remote<-function(url)
+   
+#---------------------------------
+#REMOTE
+
+    install.one.remote<-function(url)
     {
         #install.source() encodes the info for the clone with this syntax
                 #url=remote::usr::pkg::date
