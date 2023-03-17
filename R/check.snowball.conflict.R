@@ -12,35 +12,40 @@
     check.conflict.before<-function(snowball, pkg.requested, ignore.deps, date)
     {
       
-    #0 F10
+     #1 Short name for session.snowbals
+        ss <- .pkgenv[['session.snowballs']]
+      
+    #2 Check conflicts before only if groundhog has been used already and session.snowballs[] has rows
+      if (nrow(ss)>0)
+        {
+          
+    #3 F10
       f10 = ifelse(interactive(), "\n(in R Studio run CMD/CTRL-SHFT-F10 to restart R session.) ","")
       stop.txt = "\n\n ** Conflict with previously loaded packages **"
       
       
-    #1 Prepare variables
-        #1.1 Include repo (CRAN vs Remote) in snowballl
+    #4 Prepare variables
+        #4.1 Include repo (CRAN vs Remote) in snowballl
               snowball$repos <- get.repos_from.snowball(snowball)  #function utils.R #40
               snowball$pkg_vrs_repos <- paste0(snowball$pkg_vrs, snowball$repos)
               
-        #1.2 Get requested pkg (vector)
+        #4.2 Get requested pkg (vector)
               
               requested_pkg_vrs <- snowball$pkg_vrs[snowball$pkg %in% pkg.requested]
               requested_pkg     <- snowball$pkg[snowball$pkg %in% pkg.requested]
               requested_repos   <- snowball$repos[snowball$pkg %in% pkg.requested]
               requested_pkg_vrs_repos <- snowball$pkg_vrs_repos[snowball$pkg %in% pkg.requested]
               
-        #1.3 Short name for session 
-            gs <- .pkgenv[['groundhog.session_df']]
-                  
+                   
                   #this is a dataframe with variables: pkg, vrs, pkg_vrs, repos, time, requested
                   #it is loaded with zzz and updated in groundhog.library() 
             #-- (used to be updated with .single and single.remote())
                   #time is when the pkg was loaded, and requested is TRUE for actively asked for package.
             
-        #1.4 Create unique identifier  #will compare these to #1.4
-              gs$pkg_vrs_repos      <- paste0(gs$pkg_vrs,gs$repos)
+        #4.3 Create unique identifier  #will compare these to #1.4
+              ss$pkg_vrs_repos      <- paste0(ss$pkg_vrs , ss$repos)
               
-        #1.5 Active packages 
+        #4.4 Active packages 
               active <- .pkgenv[['active']]  #this was captured right before installing packages in groundhog.library()
       
         
@@ -50,7 +55,6 @@
           
           
       #2.1 Conflict 1: Same remote, different date
-        
         pkg.conflict_remote_date <- snowball$pkg[ (snowball$pkg %in% .pkgenv[['remotes_df']]$pkg) & (!date %in%  .pkgenv[['remotes_df']]$date) ]
         
         
@@ -163,8 +167,11 @@
           }
         }
     
-    
+        } #ENd if nrow(ss)>0
         } #End check.before
+              
+              
+    
           
 ######################################################################################################################################################
   

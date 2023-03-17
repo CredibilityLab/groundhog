@@ -5,8 +5,8 @@
 get.snowflakes = function(snowball, date) 
 {
   
-   #1 Keep only source
-     snowball <- snowball[snowball$from == 'source',]
+   #1 Keep source and remotes
+     snowball <- snowball[snowball$from %in% c('source', 'github','gitlab'),]
         
    #2 Start empty 
         
@@ -23,11 +23,16 @@ get.snowflakes = function(snowball, date)
           dep12 <- rbind(dep12, dep12.k)
           }
       }
-                      
-    #4 Drop base packages
+              
+    #4 Keep only packages that are in the snowball
+      dep12 <- dep12[dep12$pkg %in% snowball$pkg,]
+      dep12 <- dep12[dep12$dep2 %in% snowball$pkg,]
+
+              
+    #5 Drop base packages
       dep12<-dep12[!dep12$pkg %in% base_pkg() & !dep12$dep2 %in% base_pkg(), ]
             
-    #5 Break into snowflakes  
+    #6 Break into snowflakes  
       k<-0
       snowflakes<-list()
       while (nrow(dep12) > 0) {
@@ -45,27 +50,28 @@ get.snowflakes = function(snowball, date)
       # Drop those rows from both
         dep12 <- dep12[!indep.rows, ]
                   
-        # Safety valve in case loop impossible to end
+       # Safety valve in case loop impossible to end
           if (k == 50000) break 
       
+        
         }    
-                
- 
-    #6 Add anything in snowball that is not in dep12 (these are packages without dependencies)
-      if (sum(!snowball$pkg %in% dep12$pkg)>0) {
-          snowflakes[[k+1]] <-  snowball$pkg[!snowball$pkg %in% dep12$pkg]
+      
+    #7 Add anything in snowball that is not in dep12 (these are packages without dependencies)
+      flat_snowflakes <- unlist(snowflakes)
+      if (sum(!snowball$pkg %in% flat_snowflakes)>0) {
+          snowflakes[[k+1]] <-  snowball$pkg[!snowball$pkg %in% flat_snowflakes]
           }
       
       
       
       
-    #6 Drop already istalled packages from the snowflakes
+    #8 Drop already installed packages from the snowflakes
       for (k in 1:length(snowflakes))
         {
          snowflakes[[k]] <-snowflakes[[k]] [snowflakes[[k]] %in% snowball$pkg[snowball$installed==FALSE]  ]
         }
         
-    #7 Drop empty snowflakes        
+    #9 Drop empty snowflakes        
       snowflakes <- snowflakes[lapply(snowflakes,length)>0]   
   
   

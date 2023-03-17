@@ -21,21 +21,22 @@
       #3 Packages that have been already localized
         .pkgenv[['localized']] <- c()
       
-        
-      #4 Dataframe with groundhog package this session, saving every pkg loaded with groundhog.
-        .pkgenv[['groundhog.session_df']] <- data.frame(pkg=character(),
+      #4 Dataframe with snowballs loaded this session
+        .pkgenv[['session.snowballs']] <- data.frame(pkg=character(),
                                                         vrs=character(), 
                                                         pkg_vrs=character(), 
                                                         repos=character(), 
-                                                        requested=logical(),
-                                                        time=numeric())
+                                                        time=numeric(),
+                                                        sha=character(), 
+                                                        requested=logical())
+
         
       #5 Setup pkg variable values
           .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
           .pkgenv[['default_libpath']] <-  .libPaths()
-          .pkgenv[['groundhog_loaded_pkgs']] <- c()
-          .pkgenv[['acceptable.option.names']] <- c('os','download.sequentially')
           .pkgenv[['hogdays']] <-c()
+          .pkgenv[['acceptable.option.names']] <- c('os','download.sequentially')
+          
 
           
     

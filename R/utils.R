@@ -40,7 +40,7 @@
 #38 restart.text()             :  tells user to either quit() R or use CMD-SHIF-F10 based on whether they use R Studio
 #39 get.minutes.since.cookie() :  reads csv file with Sys.time() of last time this cookie was saved
 #40 get.repos_from.snowball()  :  infer repository (cran, github, gitlab) from other information already in the snowball
-#41 update.groundhog.session() :  Update groundhog session with new packages loaded and requested with groundhog
+#41 add.session.snowballs() :     Update session dataframe with info on all groundhog loaded snowballs
 #42 check.groundhog.version()  :  if more than `min.days' days since last check, check if groundhog needs to be updated
 #43 Get operating system       :  windows or mac or mac_arm?
 #44 Check consent              :  Does .../R_groundhog exists?
@@ -714,33 +714,36 @@ get.available.mran.date <- function(date0, date1) {
       }
 
     
-#41 Update groundhog session with new packages loaded and requested with groundhog
-      update.groundhog.session <- function(snowball)
+#41 Add snowball so session data.frame
+    
+      add.session.snowballs <- function(snowball)
       {
-      #The fucntion has as argument snowball_with_repos, to make sure the snowball submitted includes $repos
+      #The function has as argument snowball_with_repos, to make sure the snowball submitted includes $repos
       # this variable is set in groundhog.library.single() and groundhog.library.single.remote() just before
       # calling on the function update.groundhog.session()
+        
+      #Add sha if CRAN (this allows later knowing if a package has been loaded from remote)
+          if (!'sha'  %in% names(snowball)) snowball$sha=NA
         
       #Add repos
             snowball$repos <- get.repos_from.snowball(snowball)  #function 40,  just above
             
-      #Get requested pkg from snowball
-            pkg <- snowball$pkg[nrow(snowball)]
-          
-      #Subset from snowball
-				    groundhog.session_df.k <-snowball[,c('pkg','vrs','pkg_vrs','repos')]
+      #Subset of columns from snowball
+				    session.snowballs.k      <-snowball[,c('pkg','vrs','pkg_vrs','repos')]
 					  
 			#Add time
-					  groundhog.session_df.k$time <- as.numeric(Sys.time())
+					  session.snowballs.k$time <- as.numeric(Sys.time())
 					  
-			#TRUE FALSE for whether package was explicitly requested
-					  groundhog.session_df.k $requested <- groundhog.session_df.k$pkg == pkg     
-					  
-			#ADD NEW ROWS
-					  .pkgenv[['groundhog.session_df']] <- 	rbind(.pkgenv[['groundhog.session_df']] , groundhog.session_df.k )
+			#Requested
+					  session.snowballs.k$requested <- FALSE                  #No package was requested
+					  session.snowballs.k$requested[nrow(snowball)] <- TRUE   #Except the last one
+					
+			#Add to session
+					  .pkgenv[['session.snowballs']] <- 	rbind(.pkgenv[['session.snowballs']] , session.snowballs.k )
       }
       
-        
+ 
+      
 #42  check.groundhog.version()  - if more than `min.days' days since last check, check if goundhog needs to be updated
       
       check.groundhog.version <- function(min.days=7)
