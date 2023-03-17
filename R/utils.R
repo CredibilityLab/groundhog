@@ -881,7 +881,7 @@ get.available.mran.date <- function(date0, date1) {
   {
       #1. pkg & date included
              if (missing(pkg) || missing(date)) {
-              message1("groundhog says: you must include both a package name and a date in 'groundhog.library()' ")
+              message("groundhog says: you must include both a package name and a date in 'groundhog.library()' ")
               exit()
              }
      
@@ -904,7 +904,7 @@ get.available.mran.date <- function(date0, date1) {
       #4 ignore.deps
             if (length(ignore.deps)>0) {
              if (!all(ignore.deps %in% .packages())) {
-               message1("\nGroundhog says: Error.\nAll packages included in the ignore.deps() option must be loaded prior to running\n",
+               message("All packages included in the ignore.deps() option must be loaded prior to running\n",
                        "groundhog.library(), but the following is/are not: ",
                         paste0(dQuote(ignore.deps [!ignore.deps %in% .packages()]), collapse=" ,"))
                exit()
@@ -918,7 +918,7 @@ get.available.mran.date <- function(date0, date1) {
         tot.cores<-parallel::detectCores()
         if (!is.numeric(cores) || cores %% 1!=0  || cores< -1 || cores==0 ||  cores> tot.cores)
         {
-        message1('Groundhog says: Error. `cores` must be an integer values between 1 & ',tot.cores,' but you entered ',cores)
+        message('groundhog says: `cores` must be an integer values between 1 & ',tot.cores,' but you entered ',cores)
         exit()
         }
         

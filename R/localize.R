@@ -15,13 +15,13 @@
         ip[1,] <- rep('',ncol(ip))
         }
         
-        #This is here becuase if installed.packages() and the dataframe is empty, creating pkg_vrs produces an error
+        #This is here because if installed.packages() and the dataframe is empty, creating pkg_vrs produces an error
 
     #2 Make pkg_vrs
         ip$pkg_vrs<-paste0(ip$Package,"_",ip$Version)
       
     
-    #3 If entire snowball is not remote, assign sha='' to variables
+    #3 If entire snowball is not remote, assign sha='' to snowball
       if (!'sha' %in% names(snowball)) snowball$sha=''
     
         
