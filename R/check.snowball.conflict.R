@@ -75,8 +75,8 @@
       #2.2 Conflict 2 - a *requested.pkg* was previously loaded with groundhog but different version or repository
         for (k in 1:length(requested_pkg))  
         {      
-        if   (requested_pkg[k]           %in% gs$pkg           &     #requested pkg was already loaded with groundhog
-             !requested_pkg_vrs_repos[k] %in% gs$pkg_vrs_repos )     #but not same vrs or repository 
+        if   (requested_pkg[k]           %in% ss$pkg           &     #requested pkg was already loaded with groundhog
+             !requested_pkg_vrs_repos[k] %in% ss$pkg_vrs_repos )     #but not same vrs or repository 
             
            {
       #Note: conflict 1 already took care of same pkg_vrs_repos, but different date for remotes, which could be a conflict too.
@@ -106,8 +106,8 @@
     #-----------------------------------------------------------------------------
           
     #Conflict 3 A *dependency* was loaded for a different or repos date (add 'ignore.deps' option)
-    conflict3.TF <-   snowball$pkg           %in% gs$pkg           &    #pkg requested before
-                      !snowball$pkg_vrs_repos %in% gs$pkg_vrs_repos &    #but not same vrs or repository 
+    conflict3.TF <-   snowball$pkg           %in% ss$pkg           &    #pkg requested before
+                      !snowball$pkg_vrs_repos %in% ss$pkg_vrs_repos &    #but not same vrs or repository 
                       !snowball$pkg %in% ignore.deps                  #and we are not asked to ignore this conflict
         
             #vector with T/F for each pkg having been previously loaded in different version with groundhog

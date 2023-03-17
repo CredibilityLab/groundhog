@@ -333,10 +333,47 @@
        
         if (verified==TRUE) { 
           
-          #10.3.1. Save it
-            save.snowball(snowball,include.suggests)  #save.snowball.R
-		
-	        #10.3.2 Add snowball to session
+        #10.3. Save it
+            #save.snowball(snowball, date, include.suggests)  #save.snowball.R
+          
+        #10.4 Path for CRAN snowball 
+            if (!'sha' %in% names(snowball))
+            {
+               #dir
+                snowball_dir <- paste0(get.groundhog.folder() , '/snowballs_v2' )
+               
+              #file
+                  if (include.suggests==FALSE) snowball_file <- paste0(pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
+                  if (include.suggests==TRUE)  snowball_file <- paste0(pkg , "_" ,  gsub( "-", "_" , date) , '_with_suggests.rds')  
+            
+              #path
+                  snowball_path <- file.path(snowball_dir, snowball_file)
+            } else {
+          
+        #10.5 Path for Remote snowball
+         
+            #dir
+              snowball_dir <- paste0(get.groundhog.folder() , '/snowballs_v2/' , remote_id )
+            
+            #FILE
+               if (include.suggests==FALSE) snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
+               if (include.suggests==TRUE)  snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '_with_suggests.rds')  
+            
+            #FULL PATH
+               snowball_path <- file.path(snowball_dir, snowball_file)
+            }#End 10.5
+          
+         #10.6 Save snowball
+            #Update  column `installed` in  snowball
+                ip <- data.frame(utils::installed.packages(snowball$installation.path), stringsAsFactors=FALSE)
+                snowball$installed <- (snowball$pkg %in% ip$Package | snowball$pkg %in% .pkgenv[['base_pkg']]) #if in packages or in base.packages
+                
+	      #10.7  Save snowball RDS 
+			      saveRDS(snowball, snowball_path, version = 2, compress=FALSE)
+
+        
+          
+        #10.8 Add snowball to session
 					  add.session.snowballs(snowball)  #utils.R -  function #41  
 					                                   #includes variables pkg, vrs, pkg_vrs, repos, requested, sha
 			

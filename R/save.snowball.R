@@ -3,15 +3,19 @@
 
 
 
-save.snowball<-function(snowball, include.suggests) {
-      
+save.snowball<-function(snowball, date, include.suggests) {
+
+  
+  #0 pkg
+    pkg <- snowball$pkg[nrow(snowball)]
   
   #1 Set path  
   		#1.1 CRAN
           if (!'sha' %in% names(snowball))
             {
                #dir
-              snowball_dir <- paste0(get.groundhog.folder() , '/snowballs_v2' )
+                snowball_dir <- paste0(get.groundhog.folder() , '/snowballs_v2' )
+               
               
               #file
                   if (include.suggests==FALSE) snowball_file <- paste0(pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  

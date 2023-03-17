@@ -22,7 +22,7 @@
         .pkgenv[['localized']] <- c()
       
       #4 Dataframe with snowballs loaded this session
-        .pkgenv[['session.snowballs']] <- data.frame(pkg=character(),
+     .pkgenv[['session.snowballs']] <- data.frame(pkg=character(),
                                                         vrs=character(), 
                                                         pkg_vrs=character(), 
                                                         repos=character(), 
