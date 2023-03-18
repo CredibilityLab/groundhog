@@ -39,8 +39,9 @@ library('groundhog')
         groundhog.library(2,2)
         
       #Nonexistent pkg on cran
-        groundhog.library(2,test.day)
-    
+        groundhog.library('tio',test.day)
+            groundhog.library(2,test.day)
+
       #inexistent pkg on github
         #groundhog.library('github::crsh/powerful_999',test.day)
     

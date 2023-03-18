@@ -21,9 +21,7 @@ update_cran.toc_if.needed <- function(date) {
           "To ensure reproducibility of your script, given timezone differences and ",
           "delays in updating different CRAN mirrors, don't use a date more ",
           "recent than two days ago: ", format(Sys.Date() - 2), ". \n ")
-		  message1(msg)
-		  message("   ** groundhog stopped  **")
-		 exit()
+		  gstop(msg) #util #51
       }
 
   # 2 Load cran.toc if not yet loaded

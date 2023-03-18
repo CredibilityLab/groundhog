@@ -72,9 +72,8 @@
            
             #3.8 Exit if invalid description file
                  if (nrow(description_df)!=1) {
-                   message2()
-                   message1("The DESCRIPTION file for package '", pkg , "' is invalidly formatted. Installation aborted.")
-                   exit()
+                   msg = paste0("The DESCRIPTION file for package '", pkg , "' is invalidly formatted. Installation aborted.")
+                   gstop(msg)
                   }
                  
        #4) Find remotes dependencies in the DESCRIPTION of this remote package 

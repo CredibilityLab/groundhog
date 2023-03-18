@@ -97,24 +97,23 @@
 #--------------------------------------------------------------
     
   #1 Preliminaries
-    
-    
     #1.0 Save default libpaths to change back to them after exiting
         if (!exists("orig_lib_paths",envir=.pkgenv)) {
               .pkgenv[["orig_lib_paths"]] <- .libPaths()
            }
-    
+     #1.4 Validate arguments entered (Utils.R #46)
+        validate.groundhog.library(pkg, date,  quiet.install,  include.suggests ,ignore.deps, force.source , force.install, tolerate.R.version  ,cores)  
+   
     
     #1.1 If there is a remote, it needs to be alone
           remote <- basename(pkg)!=pkg      
           n.remote <- sum(remote)
           
           if (n.remote>0 & length(pkg)>1 ) {
-           message1("The list of packages you are trying to load includes a remote (e.g., Github) package.")
-           message1("But, remote packages need to be loaded on their own in separate groundhog.library() calls")
-           message("\n                    ** Load remote packages separately **")
-           exit()
-          }
+           msg =paste0("The list of packages you are trying to load includes a remote (e.g., Github) package.",
+                       "But, remote packages need to be loaded on their own in separate groundhog.library() calls")
+		   gstop(msg)
+         }
     
     #Note: 1.2 & 1.3 could be done on loading, but, better here : (i) in case the user makes a change, and (ii) avoid writing files without authorization
     #1.2  Verify a mirror has been set (utils.R #36)    
@@ -123,8 +122,6 @@
     #1.3 Verify a personal library to save non-groundhog packages has been assigned (Utils.R #37)
         verify.personal.library.exists() 
     
-    #1.4 Validate arguments entered (Utils.R #46)
-        validate.groundhog.library(pkg, date,  quiet.install,  include.suggests ,ignore.deps, force.source , force.install, tolerate.R.version  ,cores)  
        
     #1.5 Reload databases if needed
         update_cran.toc_if.needed(date) 
@@ -234,12 +231,10 @@
           #Same remote did not trigger a match before, somethign must not match, exit
               if (pkg %in% .pkgenv[['session.remotes_df']]$pkg)
               {
-                
-                message1("Another version of '", pkg, "' was previously loaded into your R session.")
-                message1("To unload all packages restart your R session ",f10)
-                message("\n\n ** Conflict with previously loaded packages **")
-                exit()
-                            }
+                msg=paste0("Another version of '", pkg, "' was previously loaded into your R session.\n",
+							"To unload all packages restart your R session ",f10)
+                gstop(msg) #util #51)
+               }
                 
             
         #Get snowball

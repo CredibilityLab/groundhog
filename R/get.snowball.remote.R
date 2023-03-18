@@ -44,13 +44,13 @@
          #Last row in the baton has name of DESCRIPTION pkg on its own
            pkg_self_name <- baton$rows.toc[1,]$Package
          
-         txt<-paste0(
+         msg<-paste0(
                  "The package you requested, '" , usr , "/" , pkg , "'\n",
                  "appears to have a different name on ", remote_id,".\n",
                  "You could try running:  groundhog.library('",usr , "/" , pkg_self_name,"' , '",date,"').")
-         message1(txt)
-		 message("   **  Problem with package name  **")
-         exit()
+           
+		  gstop(msg) #utils #51
+
        }
        
        

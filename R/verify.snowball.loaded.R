@@ -23,17 +23,17 @@
             
         #2.1 Pkg not attached
           if (!pkg %in% attached$pkg) {
-              message("groundhog says: FAILED to load '", pkg_vrs,"'")
-              exit()
+              msg = paste0("groundhog says: FAILED to load '", pkg_vrs,"'")
+              gstop(msg)
               }
     
         #2.2 Unexpected version attached
                 if ((pkg %in% attached$pkg) & (!pkg_vrs %in% attached$pkg_vrs))
                       {
-                      message("groundhog says: WARNING, loaded unexpected version of '", pkg, "'\n",
+                      msg <- paste0("groundhog says: WARNING, loaded unexpected version of '", pkg, "'\n",
                              "expected: '", pkg_vrs, "'\n",
                              "loaded  : '", attached$pkg_vrs[attached$pkg == pkg], "'\n")
-                      exit()
+                      gstop(msg)
                       }
        
         #2.3 Successfully attached pkg_vrs

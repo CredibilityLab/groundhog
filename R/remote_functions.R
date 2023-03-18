@@ -157,8 +157,7 @@
                 date0 <- as.Date(min(sha_time$time)/86400,origin='1970-01-01')
                 msg<-paste0("Groundhog says: the package '" , usr , "/" , pkg ,"' was not yet available on ",
                             "'" , remote_id ,"' on '", date, "'. The first commit was on '",date0,"'. \n ")
-                     message(msg)
-                     exit()
+                gstop(msg) #util #51
               }
                     
         #Find last commit before the 1st second of the day after the request
@@ -215,9 +214,9 @@
       
           #3 End if remote is unknown
                if (remote_id=="") {
-                    message('groundhog can only install non-CRAN packages from  GitHub and Gitlab.\n',
+                    msg <- paste0('groundhog can only install non-CRAN packages from  GitHub and Gitlab.\n',
                                     'The package "',pkg,'" is not recognized as either.')
-                    exit()
+                    gstop(msg) #util #51)
                }
             return(remote_id)
         } #End get.remote_id

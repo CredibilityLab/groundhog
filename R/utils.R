@@ -174,32 +174,8 @@
         invokeRestart("abort")
   }
 
-#11 Available mran dates
-get.available.mran.date <- function(date0, date1) {
-  missing.mran.dates <- .pkgenv[["missing.mran.dates"]]
+#11 Available mran dates (DROPPED)
 
-  all.dates <- date0:date1 # All dates in range
-  available.dates <- all.dates[!all.dates %in% missing.mran.dates] # Those that are not missing
-  if (length(available.dates) == 0) {
-    return(as.Date("1970-01-01"))
-  } # If none remain, end
-
-  # Report mid value
-  n.dates <- length(available.dates)
-
-  if (n.dates == 0) {
-    message1(
-      "We looked for the version of the package you need in MRAN ",
-      "but it was not found there"
-    )
-    exit()
-  }
-
-  # ceiling() rather than floor() or round() to work when n.dates <- 1
-  mid.date.k <- ceiling(n.dates / 2)
-  mid.date <- available.dates[mid.date.k]
-  return(as.Date(mid.date, origin = "1970-01-01"))
-} # End of function
 
 #12 Base packages
     base_pkg <- function() {
@@ -264,7 +240,7 @@ get.available.mran.date <- function(date0, date1) {
 #17 validate date  
   validate.date <- function(entered_date)
       {
-       msg=paste0("\ngroundhog says: The date you entered '", entered_date,"', is not valid.\n",
+       msg=paste0("The date you entered '", entered_date,"', is not valid.\n",
                 "Please use the 'yyyy-mm-dd' format"
           )
     
@@ -272,8 +248,7 @@ get.available.mran.date <- function(date0, date1) {
        # correct format
         d <- try(as.Date(entered_date, format="%Y-%m-%d"),silent = TRUE)
           if ("try-error" %in% class(d) || is.na(d)) {
-              message1(msg)
-               exit()
+             gstop(msg) #util #51)
           }
 
        
@@ -282,16 +257,14 @@ get.available.mran.date <- function(date0, date1) {
        if (is.character(entered_date)) { 
        d.parts <- strsplit(entered_date,"-")[[1]]     #split date by '-
         if (nchar(d.parts[3])>2) {
-            message1(msg)
-            exit()
+           gstop(msg) #util #51)
         }
        }
    
        
       # numeric
          if (is.numeric(entered_date)) {
-          message1(msg)
-          exit()
+           gstop(msg) #util #51)
         }
  
            
@@ -309,7 +282,7 @@ get.available.mran.date <- function(date0, date1) {
   }
   
   
-#19 Verify file was download
+#19 Verify file was downloaded
     exit.if.download.failed <- function(file.name,file.path)
     {
     if (!file.exists(file.path)) {
@@ -424,8 +397,8 @@ get.available.mran.date <- function(date0, date1) {
             if (x==TRUE | x==FALSE) {
               
                return() } else {
-                message('groundhog says: "' , substitute(x) , '" can only be TRUE or FALSE')
-                 exit()
+                msg=paste0('groundhog says: "' , substitute(x) , '" can only be TRUE or FALSE')
+                 gstop(msg) #util #51)
                }
         }
       
@@ -480,8 +453,7 @@ get.available.mran.date <- function(date0, date1) {
         
       #If it is a script, show batch_msg instead
        if (interactive()==FALSE) {
-         message(batch_msg)
-         exit()
+         gstop(batch_msg) #util #51
          }
       
       #Initialize values
@@ -908,8 +880,8 @@ get.available.mran.date <- function(date0, date1) {
   {
       #1. pkg & date included
              if (missing(pkg) || missing(date)) {
-              message("groundhog says: you must include both a package name and a date in 'groundhog.library()' ")
-              exit()
+              msg=paste0("You must include both a package name and a date in 'groundhog.library()' ")
+              gstop(msg)
              }
      
 
@@ -917,11 +889,17 @@ get.available.mran.date <- function(date0, date1) {
       #2 Valid date
             date.catch <- try(typeof(date),silent=TRUE)
             if (as.character(class(date.catch))=="try-error") {
-              message("Groundhog says: The object '" , as.character(substitute(date)) ,"', does not exist.")
-              exit()
+              msg=paste0("The object '" , as.character(substitute(date)) ,"', does not exist.")
+              gstop(msg) #util #51)
             }
             validate.date(date) #Function defined in utils.R
        
+      #2.5 Text pkg
+            if (!is.character(pkg)) {
+              msg=paste0("The pkg argument in groundhog.library() '",pkg,"', is not valid. It must be a character.")
+              gstop(msg)
+            }
+            
        #3 T/F options (utils.R - function 27)
           validate.TF(include.suggests)
           validate.TF(force.source)
@@ -931,10 +909,10 @@ get.available.mran.date <- function(date0, date1) {
       #4 ignore.deps
             if (length(ignore.deps)>0) {
              if (!all(ignore.deps %in% .packages())) {
-               message("All packages included in the ignore.deps() option must be loaded prior to running\n",
+               msg = paste0("All packages included in the ignore.deps() option must be loaded prior to running\n",
                        "groundhog.library(), but the following is/are not: ",
                         paste0(dQuote(ignore.deps [!ignore.deps %in% .packages()]), collapse=" ,"))
-               exit()
+                gstop(msg) #util #51)
               } #End if some are not loaded
               } #End if ignore.deps() are requested
   
@@ -945,8 +923,8 @@ get.available.mran.date <- function(date0, date1) {
         tot.cores<-parallel::detectCores()
         if (!is.numeric(cores) || cores %% 1!=0  || cores< -1 || cores==0 ||  cores> tot.cores)
         {
-        message('groundhog says: `cores` must be an integer values between 1 & ',tot.cores,' but you entered ',cores)
-        exit()
+        msg = paste0('`cores` must be an integer values between 1 & ',tot.cores,' but you entered ',cores)
+        gstop(msg)
         }
         
    
@@ -1001,7 +979,7 @@ get.parallel.time<-function(times,cores)
 #51 stop
   gstop <- function(msg) {
     message1(msg)
-    message("\n  ** groundhog stopped **")
+    message("**Groundhog stopped**")
     exit()
     }
   

@@ -44,8 +44,8 @@
         
     #8 iF package does not exist in groundhog folder, error    
         if (nrow(data.frame(utils::installed.packages(lib=installation.path), stringsAsFactors=FALSE))==0) {
-          message("groundhog says: failed to install '",pkg_vrs,"', localization failed (Error: localize.R #8 - try http://groundhogr.com/troubleshoot)")
-          exit()
+          msg = paste0("groundhog says: failed to install '",pkg_vrs,"', localization failed (Error: localize.R #8 - try http://groundhogr.com/troubleshoot)")
+          gstop(msg) #util #51
         }
 
     #9 all paths except the last one

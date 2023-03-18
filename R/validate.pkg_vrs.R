@@ -14,14 +14,12 @@
   #3 No 'groundhog'
         if ("groundhog" == pkg) {
         txt <- paste0(
-                "|IMPORTANT\n",
-                "|     groundhog says: You may not use groundhog.library() to load groundhog.\n",
-                "|     To load the version of groundhog available on '", date, "', you may run:\n",
-                "|     meta.groundhog('" ,  date , "')",
+                "You may not use groundhog.library() to load groundhog.\n",
+                "To load the version of groundhog available on '", date, "', you may run:\n",
+                "meta.groundhog('" ,  date , "')",
                  )
         
-        message(txt)
-        exit()
+         gstop(msg) #util #51)
         } #End if groundhog
 
     

@@ -77,9 +77,7 @@
         
         #Message
           msg<-paste0(msg, "\nRestart R session to unload conflicting packages." , f10)
-          message1(msg)
-          message(stop.txt)
-          exit()
+          gstop(msg) #utils #51
 
         } #End conflict 2.2
           
@@ -118,9 +116,7 @@
             msg<-paste0(msg,"\nThe conflicting packages are:",need.to.ignore)
             msg<-paste0(msg,"\nTo unload packages you need to restart the R Session",f10)
           #Show message
-            message1(msg)
-            message(stop.txt)
-            exit()
+           gstop(msg) #utils #51
           
             }
     }#End conflict 2
@@ -142,9 +138,9 @@
                       "argument of the groundhog.library() call.",
                       "The packages with a conflict are: ", 
                       pastcQC(pkg.conflict))
-          message1(msg)
-          message(stop.txt)
-          exit()
+            
+			gstop(msg) #utils #51
+
           }
         }
     
