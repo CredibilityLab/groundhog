@@ -26,10 +26,10 @@
               {
               
             #Show message that R-dev is being temporarily added
-              msg <- paste0("The version of R you are using, 'R-" , rv$r.using.full, "', is not included ",
-                            "in groundhog's database of R releases. Assuming this is because you are using ",
-                            "an R-dev version for testing purposes, the version 'R-" , rv$r.using.full, "'",
-                            "will be temporarily added to your local database as if it was released 2 days ago. ",
+              msg <- paste0("The version of R you are using, 'R-" , rv$r.using.full, "', is not included \n",
+                            "in groundhog's database of R releases. Assuming this is because you are using \n",
+                            "an R-dev version for testing purposes, the version 'R-" , rv$r.using.full, "'\n",
+                            "will be temporarily added to your local database as if it was released 2 days ago.\n ",
                             "This  modification will be undone when the R session is restarted.")
               
                 message(msg)
@@ -83,7 +83,7 @@
             
         
             msg <- paste0(
-                "Groundhog says: you are using R-", rv$r.using.full, ", but the version of R ",
+                "You are using R-", rv$r.using.full, ", but the version of R ",
                 "current for the entered date, '", date, "', is R-", rv$r.need.majmin, ".x. ",
                 "It is recommended that you either keep this date and switch to that version ",
                 "of R, or you keep the version of R you are using but switch the date to between ",
@@ -91,7 +91,7 @@
                 "You may bypass this R-version check by adding: `tolerate.R.version='",rv$r.using.full,"'`",
                 "as an option in your groundhog.library() call.")
 				
-			gstop(msg) #Util 51
+			gstop(msg,format=TRUE) #Util 51
       
       } else {
        return(invisible(TRUE))

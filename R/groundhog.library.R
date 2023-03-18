@@ -100,7 +100,15 @@
     #1.0 Save default libpaths to change back to them after exiting
         if (!exists("orig_lib_paths",envir=.pkgenv)) {
               .pkgenv[["orig_lib_paths"]] <- .libPaths()
-           }
+        }
+    
+
+      #1.8 put package name in quotes if it is not an object and was not put in quotes
+        pkg.catch <- try(typeof(pkg),silent=TRUE)
+        if (as.character(class(pkg.catch))=="try-error") {
+          pkg <- as.character(substitute(pkg))
+          } 
+    
      #1.4 Validate arguments entered (Utils.R #46)
         validate.groundhog.library(pkg, date,  quiet.install,  include.suggests ,ignore.deps, force.source , force.install, tolerate.R.version  ,cores)  
    
@@ -112,7 +120,7 @@
           if (n.remote>0 & length(pkg)>1 ) {
            msg =paste0("The list of packages you are trying to load includes a remote (e.g., Github) package.",
                        "But, remote packages need to be loaded on their own in separate groundhog.library() calls")
-		   gstop(msg)
+		      gstop(msg)
          }
     
     #Note: 1.2 & 1.3 could be done on loading, but, better here : (i) in case the user makes a change, and (ii) avoid writing files without authorization
@@ -140,11 +148,7 @@
         .libPaths('')
     
 
-    #1.8 put package name in quotes if it is not an object and was not put in quotes
-        pkg.catch <- try(typeof(pkg),silent=TRUE)
-        if (as.character(class(pkg.catch))=="try-error") {
-          pkg <- as.character(substitute(pkg))
-          } 
+  
           
     #1.9 Sandwich possible library() commands  
         pkg <- sandwich.library(pkg)  #utils.R function 34
@@ -163,7 +167,7 @@
         }   
         
     #1.12 Common messages
-      f10 <- ifelse(interactive(), "\n(in R Studio run CMD/CTRL-SHFT-F10 to restart R session.) ","")
+      f10 <- ifelse(interactive(), "\n(in R Studio run CMD/CTRL-SHFT-F10 to restart R session). ","")
 
 #------------------------------------------------------------------------ 
     
@@ -225,14 +229,14 @@
           #This same pkg_date loaded & attached early return
               if (git_usr_pkg_date %in% .pkgenv[['remotes.attached']]) {
                     message1("The package '", pkg_list$usr_pkg, "', for '",date,"', is already attached.")
-                    return(TRUE)
+					exit()
               }
             
           #Same remote did not trigger a match before, somethign must not match, exit
               if (pkg %in% .pkgenv[['session.remotes_df']]$pkg)
               {
                 msg=paste0("Another version of '", pkg, "' was previously loaded into your R session.\n",
-							"To unload all packages restart your R session ",f10)
+							"To unload all packages restart your R session. ",f10)
                 gstop(msg) #util #51)
                }
                 

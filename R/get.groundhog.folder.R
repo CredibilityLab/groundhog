@@ -23,7 +23,8 @@ get.groundhog.folder <- function() {
   #Verify folder with 'cookie files' and default for library exist. giving consent to save files
     consent <- check.consent() 
     if (consent==FALSE) {
-      stop(' -- not authorized to save to folder necessary for groundhog to work --')
+      message(' -- not authorized to save to folder necessary for groundhog to work --')
+      exit()
       return(FALSE)
       }
   

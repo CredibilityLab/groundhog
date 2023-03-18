@@ -55,7 +55,7 @@ all.already.attached<-function(pkg,date)
                       
         #This same pkg_date loaded & attached     : skip 
           if (git_usr_pkg_date %in% .pkgenv[['remotes.attached']]) {
-              message1("groundhog says: the package '", pkg_list$usr_pkg, "', for '",date,"', is already attached.")
+              #message1("The package '", pkg_list$usr_pkg, "', for '",date,"', is already attached.")
               return(TRUE)
           }
       

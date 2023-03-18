@@ -45,7 +45,7 @@
 #43 Get operating system       :  windows or mac or mac_arm?
 #44 Check consent              :  Does .../R_groundhog exists?
 #45 Turn path from '\' to '/'  :  c:\users --> c:/users
-#46 validate.groundhog.library()  :  Validate arguments in (new) groundhog.library call
+#46 MOVED
 #47 base.library.snowball.list
 #48 message.batch.installation.feedback() : feedback while installing a batch in parallel
 #49 - get.parallel.time()  :  estimate parallel time of installation
@@ -838,10 +838,12 @@
                         "'\n", "Enter 'OK' to provide authorization, and 'NO' not to.")
             
             batch_msg =  paste0("\n\n*********IMPORTANT MESSAGE FROM GROUNDHOG*****************************************\n",
-                         "groundhog needs to save files to '",main_folder,"' in order to work.\n",
+                         "groundhog needs to save packages in a local directory in order to work.\n",
                          "Per CRAN policy, you need to actively authorize groundhog to do this.\n",
-                         "To do so, simply create that folder, by e.g., running in R:\n",
-                         "       dir.create('",main_folder,"') \n",
+                         "Please run `set.groundhog.folder(<path>)` for the path you wish to use.\n",
+                         "If you are unsure which path to use, the following path is a reasonable default:\n",
+                         "   '", main_folder , "'\n",
+                         "(This only needs to be done once on a given computer)\n",
                          "**********************************************************************************\n\n")
           #For batch files
             if (interactive()==FALSE)
@@ -874,67 +876,8 @@
       
       
 
-#46 validate.groundhog.library()  :  Validate arguments in (new) groundhog.library call
-  validate.groundhog.library <- function(pkg, date,  quiet.install,  include.suggests ,  
-                            ignore.deps, force.source , force.install, tolerate.R.version  ,cores )
-  {
-      #1. pkg & date included
-             if (missing(pkg) || missing(date)) {
-              msg=paste0("You must include both a package name and a date in 'groundhog.library()' ")
-              gstop(msg)
-             }
-     
-
-           
-      #2 Valid date
-            date.catch <- try(typeof(date),silent=TRUE)
-            if (as.character(class(date.catch))=="try-error") {
-              msg=paste0("The object '" , as.character(substitute(date)) ,"', does not exist.")
-              gstop(msg) #util #51)
-            }
-            validate.date(date) #Function defined in utils.R
-       
-      #2.5 Text pkg
-            if (!is.character(pkg)) {
-              msg=paste0("The pkg argument in groundhog.library() '",pkg,"', is not valid. It must be a character.")
-              gstop(msg)
-            }
-            
-       #3 T/F options (utils.R - function 27)
-          validate.TF(include.suggests)
-          validate.TF(force.source)
-          validate.TF(force.install)
-            
-            
-      #4 ignore.deps
-            if (length(ignore.deps)>0) {
-             if (!all(ignore.deps %in% .packages())) {
-               msg = paste0("All packages included in the ignore.deps() option must be loaded prior to running\n",
-                       "groundhog.library(), but the following is/are not: ",
-                        paste0(dQuote(ignore.deps [!ignore.deps %in% .packages()]), collapse=" ,"))
-                gstop(msg) #util #51)
-              } #End if some are not loaded
-              } #End if ignore.deps() are requested
-  
-     #5 Validate R vs tolerate.R.version)
-        validate_R(date , tolerate.R.version)
-
-    #6 Validate Core
-        tot.cores<-parallel::detectCores()
-        if (!is.numeric(cores) || cores %% 1!=0  || cores< -1 || cores==0 ||  cores> tot.cores)
-        {
-        msg = paste0('`cores` must be an integer values between 1 & ',tot.cores,' but you entered ',cores)
-        gstop(msg)
-        }
-        
-   
-        
-  }
-  
-  
+#46 Moved to its own function
 #47 DROPPED
-
-  
 #48 Moved to its own function
  
   
@@ -977,7 +920,9 @@ get.parallel.time<-function(times,cores)
       
       
 #51 stop
-  gstop <- function(msg) {
+  gstop <- function(msg,format=FALSE) {
+    #Format the message with line breaks and border if requested
+    if (format==TRUE) msg=format.msg(msg) #uti #35
     message1(msg)
     message("**Groundhog stopped**")
     exit()

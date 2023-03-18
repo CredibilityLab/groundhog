@@ -20,7 +20,7 @@
         {
           
     #3 F10
-      f10 = ifelse(interactive(), "\n(in R Studio run CMD/CTRL-SHFT-F10 to restart R session.) ","")
+      f10 = ifelse(interactive(), "\n(in R Studio run CMD/CTRL-SHFT-F10 to restart R session).","")
       stop.txt = "\n\n ** Conflict with previously loaded packages **"
       
       
@@ -64,19 +64,19 @@
 
             
           #Start message flagging problem
-              msg<-paste0("Another version of '", requested_pkg[k] , "', was previously loaded with groundhog in this R session. ")
+              msg<-paste0("Another version of '", requested_pkg[k] , "' was previously loaded with groundhog in this R session.")
               
             #Add different dates warning if relevant
                 if (length(.pkgenv[['hogdays']])>1) {
                         msg<-paste0(msg, "\n",
-                                        "Across groundhog.library() calls you have used different dates:\n(",
+                                        "This may be because across groundhog.library() calls you have used different dates:\n(",
                                         pasteQC(.pkgenv[['hogdays']]),")."
                                 )
                           
                   } #End if multiple dates
         
         #Message
-          msg<-paste0(msg, "\nRestart R session to unload conflicting packages." , f10)
+          msg<-paste0(msg, "To unload all packages restart your R session." , f10)
           gstop(msg) #utils #51
 
         } #End conflict 2.2
@@ -97,7 +97,7 @@
           {
             
           #Character with list of packages that need to be ignored
-            need.to.ignore <- pasteQC(snowball$pkg[conflict3.TF])  #pasteQC(), Utils.R function #31
+            need.to.ignore <- pasteQC(snowball$pkg[conflict2.TF])  #pasteQC(), Utils.R function #31
     
           #Start saying there is a conflict
             msg <- paste0("Another version of a needed package was previously loaded with groundhog.")

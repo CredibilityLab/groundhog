@@ -40,10 +40,9 @@ library('groundhog')
         
       #Nonexistent pkg on cran
         groundhog.library('tio',test.day)
-            groundhog.library(2,test.day)
 
       #inexistent pkg on github
-        #groundhog.library('github::crsh/powerful_999',test.day)
+        groundhog.library('github::crsh/powerful_999',test.day)
     
         
         
@@ -74,20 +73,23 @@ library('groundhog')
     
   
     
-    
+    #Outdate R
+      library('groundhog')
+      groundhog.library('haven','2022-04-01')  
+
 
     
 #######################################    
-#Set 1 - Enumerated conflicts in 'check.snowball.conflict.R'
+#Set 1 - Enumerated conflicts '
 
     #Conflict 1: deprecated           
-    
-        
+        test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
+
     #Conflict 2: Same remote, different date
         library('groundhog')
         groundhog.library('heliosdrm/pwr',test.day)
         groundhog.library('heliosdrm/pwr',test.day+1)
-        ok
+        
         
 
     #Conflict 3: Requested package was previously loaded with groundhog but different version or repository
@@ -98,11 +100,11 @@ library('groundhog')
         
     #Conflict 4: Dependency conflicts with previously loaded groundhog package
         
-        #RUN THIS IN 4.1.x
+        #RUN THIS IN 4.2.x
           library('groundhog')
-          groundhog.library('haven','2021-08-01')  
-          groundhog.library('rio','2021-08-05')
-          groundhog.library('rio','2021-08-05',ignore.deps='haven') 
+          groundhog.library('haven','2022-05-01')  
+          groundhog.library('rio','2022-12-05')
+          groundhog.library('rio','2022-08-05',ignore.deps='haven') 
         
         #RUN THIS IN 4.1.x
           library('groundhog')
@@ -175,6 +177,8 @@ library('groundhog')
         library(groundhog)
         set.groundhog.folder(d0)
 
+        
+
 ########################################################################
 #SET OF TESTS 2 -  CHECKING PREVIOUSLY FOUND BUGS
     
@@ -204,7 +208,6 @@ library('groundhog')
   library('groundhog')
 
   groundhog.library('pwr',test.day-400)
-  ok
   groundhog.library('pwr',test.day-400,tolerate.R.version=groundhog:::get.rversion())
 
     
@@ -221,19 +224,21 @@ library('groundhog')
 #7) Update cran to
     groundhog:::load.cran.toc(TRUE)
     
-    
+
 #8 #DO THIS BY HAND:::elete R_groundhog ('main folder') verifying what happens if consent is given denied
-  
-    
-  library('groundhog')  #should be asked to give OK
-  
+  library('groundhog') 
   groundhog.library('pwr',test.day)
-    
+  
+  #Then run a .bat file taht executes R code doing library('groundhog') and trying to run groundhog.library(). 
+  #It should prompt running set.groundhog.folder()
+  #use files 'not_interactive.bat', modifying the location of the R script and R binary used to execute it"
+  
+
   
 #9 ) Base packages 
   groundhog.library('stats',test.day)
   groundhog.library('parallel',test.day)
- groundhog.library('mgcv',test.day)
+  groundhog.library('mgcv',test.day)
  
 ########################################################################
 #SET OF TESTS 3 -  INSTALLATION OF PACKAGES IN RANDOM ORDER

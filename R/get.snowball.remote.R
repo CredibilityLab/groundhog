@@ -45,8 +45,8 @@
            pkg_self_name <- baton$rows.toc[1,]$Package
          
          msg<-paste0(
-                 "The package you requested, '" , usr , "/" , pkg , "'\n",
-                 "appears to have a different name on ", remote_id,".\n",
+                 "The package you requested, '" , usr , "/" , pkg ,
+                 "appears to have a different name on ", remote_id,
                  "You could try running:  groundhog.library('",usr , "/" , pkg_self_name,"' , '",date,"').")
            
 		  gstop(msg) #utils #51

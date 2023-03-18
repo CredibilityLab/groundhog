@@ -22,20 +22,20 @@
         .pkgenv[['localized']] <- c()
       
       #4 Dataframe with snowballs loaded this session
-     .pkgenv[['session.snowballs']] <- data.frame(pkg=character(),
-                                                        vrs=character(), 
-                                                        pkg_vrs=character(), 
-                                                        repos=character(), 
-                                                        time=numeric(),
-                                                        sha=character(), 
-                                                        requested=logical())
+       .pkgenv[['session.snowballs']] <- data.frame(pkg=character(),
+                                                          vrs=character(), 
+                                                          pkg_vrs=character(), 
+                                                          repos=character(), 
+                                                          time=numeric(),
+                                                          sha=character(), 
+                                                          requested=logical())
 
      
      
        #5 Remotes loaded
          .pkgenv[['session.remotes_df']] <- data.frame(remote_id = character() ,  usr=character() , pkg=character() , date=character())
         
-      #5 Setup pkg variable values
+      #6 Setup pkg variable values
           .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
           .pkgenv[['default_libpath']] <-  .libPaths()
           .pkgenv[['hogdays']] <-c()
@@ -54,11 +54,11 @@
         set.default.mirror() #Function 36 -  utils.R
         
        #8 If background file script for installing snowball.list has not been copied, copy it
-          back_path<- file.path(get.groundhog.folder(), "background_install.snowball.list.R")
-          if (!file.exists(back_path) & system.file("background_install.snowball.list.R", package = "groundhog")!='')
-            {
-            file.copy  (system.file("background_install.snowball.list.R", package = "groundhog") , back_path)
-          }
+          #back_path<- file.path(get.groundhog.folder(), "background_install.snowball.list.R")
+          #if (!file.exists(back_path) & system.file("background_install.snowball.list.R", package = "groundhog")!='')
+           # {
+            #file.copy  (system.file("background_install.snowball.list.R", package = "groundhog") , back_path)
+          #}
 
        #9 Read manually set options
           #Path where option files are saved
