@@ -47,9 +47,9 @@
          txt<-paste0(
                  "The package you requested, '" , usr , "/" , pkg , "'\n",
                  "appears to have a different name on ", remote_id,".\n",
-                 "You could try running:  groundhog.library('",usr , "/" , pkg_self_name,"' , '",date,"')\n",
-        	     "Type 'OK' to confirm you have read this message.")
-         answer <- infinite.prompt(format.msg(txt),'ok')
+                 "You could try running:  groundhog.library('",usr , "/" , pkg_self_name,"' , '",date,"').")
+         message1(txt)
+		 message("   **  Problem with package name  **")
          exit()
        }
        

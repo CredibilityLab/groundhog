@@ -18,10 +18,9 @@
                 "|     groundhog says: You may not use groundhog.library() to load groundhog.\n",
                 "|     To load the version of groundhog available on '", date, "', you may run:\n",
                 "|     meta.groundhog('" ,  date , "')",
-                "|     Type 'OK' to confirm you have read this message."
                  )
         
-        answer <- infinite.prompt(txt,'ok')
+        message(txt)
         exit()
         } #End if groundhog
 

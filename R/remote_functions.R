@@ -156,9 +156,8 @@
             if (time<min(sha_time$time)) {
                 date0 <- as.Date(min(sha_time$time)/86400,origin='1970-01-01')
                 msg<-paste0("Groundhog says: the package '" , usr , "/" , pkg ,"' was not yet available on ",
-                            "'" , remote_id ,"' on '", date, "'. The first commit was on '",date0,"'. \n ",
-                            "Please type 'OK' to confirm you have read this message")
-                     infinite.prompt(format.msg(msg),'ok')
+                            "'" , remote_id ,"' on '", date, "'. The first commit was on '",date0,"'. \n ")
+                     message(msg)
                      exit()
               }
                     

@@ -632,27 +632,50 @@ get.available.mran.date <- function(date0, date1) {
   
  }
  
-#37 Does personalfolder to install R packages (not groundhog, but R's default) exist
+#37 Does personal folder to install R packages (not groundhog, but R's default) exist
     verify.personal.library.exists<-function()
       {
       #Create personal library if it does not exist
          default_library <- Sys.getenv("R_LIBS_USER")
       
-      if (length(.libPaths()) <= 1 & !file.exists(default_library)) {
-        msg <- paste0("R does not have a personal library to save packages to. ",
-               "The default location for it is: '", default_library,"'. \n ",
-               "   1) Type 'create' to create that directory \n ",
-               "   2) Otherwise type 'stop'")
-        
-        answer<-infinite.prompt(format.msg(msg),c('create','stop'))
-        if (answer=='create') {
-              dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)
-              }
-        
-        if (answer=='stop') {
-              exit()
-        }
+         
+      #Interactive Session
+        if (length(.libPaths()) <= 1 & !file.exists(default_library))
+          {
+          
+          #Start msg
+              msg <- paste0("R does not have a personal library to save packages to. ",
+                            "The default location for it is: '", default_library,"'. \n ")
+          
+          
+          #Interactive menu
+            if (interactive()==TRUE) {
+                  msg <-paste0(msg,
+                       "   1) Type 'create' to create that directory \n ",
+                       "   2) Otherwise type 'stop'")
+                
+                answer<-infinite.prompt(format.msg(msg),c('create','stop'))
+                if (answer=='create') {
+                      dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)
+                      }
+                
+                if (answer=='stop') {
+                      exit()
+                }} 
+          #If script
+            if (interactive()==FALSE) {
+                  msg <- paste0("To work with groundhog you need to create that library.",
+                                 "One way to do that is to run `dir.create('", default_library , "',recursive=TRUE)`")
+
+                  message(msg)
+                  exist()
+                }
+                
+                
       }#End if library does not exist
+         
+       
+    
     }#End function
         
 #38 restart.text()  - give instructions for restarting in R
@@ -975,4 +998,10 @@ get.parallel.time<-function(times,cores)
   }
       
       
+#51 stop
+  gstop <- function(msg) {
+    message1(msg)
+    message("\n  ** groundhog stopped **")
+    exit()
+    }
   

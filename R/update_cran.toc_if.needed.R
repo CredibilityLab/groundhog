@@ -20,10 +20,9 @@ update_cran.toc_if.needed <- function(date) {
         msg<-paste0(
           "To ensure reproducibility of your script, given timezone differences and ",
           "delays in updating different CRAN mirrors, don't use a date more ",
-          "recent than two days ago: ", format(Sys.Date() - 2), ". \n ",
-		  "To confirm you have read this message please type 'OK'"
-		  )
-		 answer<-infinite.prompt(format.msg(msg),"ok")
+          "recent than two days ago: ", format(Sys.Date() - 2), ". \n ")
+		  message1(msg)
+		  message("   ** groundhog stopped  **")
 		 exit()
       }
 

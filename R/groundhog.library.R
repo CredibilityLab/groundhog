@@ -97,21 +97,24 @@
 #--------------------------------------------------------------
     
   #1 Preliminaries
-    #1.0 If there is a remote, it needs to be alone
+    
+    
+    #1.0 Save default libpaths to change back to them after exiting
+        if (!exists("orig_lib_paths",envir=.pkgenv)) {
+              .pkgenv[["orig_lib_paths"]] <- .libPaths()
+           }
+    
+    
+    #1.1 If there is a remote, it needs to be alone
           remote <- basename(pkg)!=pkg      
           n.remote <- sum(remote)
           
           if (n.remote>0 & length(pkg)>1 ) {
            message1("The list of packages you are trying to load includes a remote (e.g., Github) package.")
            message1("But, remote packages need to be loaded on their own in separate groundhog.library() calls")
-           stop("\n                    ** Load remote packages separately **")
-           
+           message("\n                    ** Load remote packages separately **")
+           exit()
           }
-    
-    #1.1 Save default libpaths to change back to them after exiting
-        if (!exists("orig_lib_paths",envir=.pkgenv)) {
-              .pkgenv[["orig_lib_paths"]] <- .libPaths()
-           }
     
     #Note: 1.2 & 1.3 could be done on loading, but, better here : (i) in case the user makes a change, and (ii) avoid writing files without authorization
     #1.2  Verify a mirror has been set (utils.R #36)    
