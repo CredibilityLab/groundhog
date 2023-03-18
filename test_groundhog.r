@@ -338,13 +338,14 @@ library('groundhog')
             exec_line=paste0("groundhog.library('", pkgk, "'," , "'", groundhog.day , "')") #line to execute 
             eval(parse(text=exec_line))                                              
 
-          #Verify every package in snowball is active after running
+          #Verify every package in snowball is availablerunning
               snowball.k=groundhog:::get.snowball(pkgk,groundhog.day)
-              active=groundhog:::get.active()
-              
+              ip = data.frame(installed.packages())
+              ip.pkg_vrs = paste0(ip$Package , "_" , ip$Version)
           #ignore deps
+              
               ignore.deps <- groundhog:::ignore.deps_default()
-              if (!all(snowball.k$pkg_vrs %in% active$pkg_vrs | snowball.k$pkg %in% ignore.deps)) {
+              if (!all(snowball.k$pkg_vrs %in% ip.pkg_vrs | snowball.k$pkg %in% ignore.deps)) {
                   message("----------groundhog tester says:  INSTALLATION ERROR---------------")
                   message("active packages:\n")
                   cat(sort(active$pkg_vrs))
@@ -354,7 +355,7 @@ library('groundhog')
 
               break
                   } else {
-                  message("Groundhog tester says:\nSUCCESS\nAll pkg_vrs in snowball are active for j=",j," (",pkgk,")")
+                  message("Groundhog tester says:\nSUCCESS\nAll pkg_vrs in snowball are available for j=",j," (",pkgk,")")
                   message("############################")
                 } #End of check for installation/loading success
               j<-j+1
@@ -367,7 +368,7 @@ library('groundhog')
 # Installation can be tested with most downloaded packages as of the release of R's version matching that being used
 # or based on available packages when testing. 
     library('groundhog')
-    test.groundhog(1:10)         #Install the 10 most downloaded packages 
+    test.groundhog(11:100)         #Install the 10 most downloaded packages 
     test.groundhog(510:525)      #install the 501-510 most downloaded packages
     test.groundhog(-10, seed=9)  #install 10 random packages available right now for this version of R
 
