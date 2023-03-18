@@ -30,6 +30,10 @@
                                                         sha=character(), 
                                                         requested=logical())
 
+     
+     
+       #5 Remotes loaded
+         .pkgenv[['session.remotes_df']] <- data.frame(remote_id = character() ,  usr=character() , pkg=character() , date=character())
         
       #5 Setup pkg variable values
           .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")

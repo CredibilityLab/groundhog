@@ -50,52 +50,33 @@
       
         
               
-       #--------------------------             
-    #2 Checking specific Conflicts
-          
-          
-      #2.1 Conflict 1: Same remote, different date
-        pkg.conflict_remote_date <- snowball$pkg[ (snowball$pkg %in% .pkgenv[['remotes_df']]$pkg) & (!date %in%  .pkgenv[['remotes_df']]$date) ]
-        
-        
-        if (length(pkg.conflict_remote_date)>0)
-        {
-          message1("Some packages being requested were previously loaded from a non-CRAN repository, \n",
-                "using a date other than '",date,"': ",pasteQC(pkg.conflict_remote_date),".\n",
-                "Please modify your script to use the same date across groundhog.library() calls.\n",
-                "To unload packages restart your R session ",f10)
-          message(stop.txt)
-          exit()
+  #-----------------------------------------------------
+    #5 Different remote with same pkg name
+              
 
-        }
-
-       
-    #-----------------------------------------------------------------------------
-          
-      #2.2 Conflict 2 - a *requested.pkg* was previously loaded with groundhog but different version or repository
+      #5.1 Conflict 1 - a *requested.pkg* was previously loaded with groundhog but different version or repository
         for (k in 1:length(requested_pkg))  
         {      
         if   (requested_pkg[k]           %in% ss$pkg           &     #requested pkg was already loaded with groundhog
              !requested_pkg_vrs_repos[k] %in% ss$pkg_vrs_repos )     #but not same vrs or repository 
             
            {
-      #Note: conflict 1 already took care of same pkg_vrs_repos, but different date for remotes, which could be a conflict too.
-              
+
             
-      #Start message flagging problem
-          msg<-paste0("Another version of '", requested_pkg[k] , "', was previously loaded with groundhog in this R session. ")
-          
-        #Add different dates warning if relevant
-            if (length(.pkgenv[['hogdays']])>1) {
-                    msg<-paste0(msg, "\n",
-                                    "Across groundhog.library() calls you have used different dates:\n(",
-                                    pasteQC(.pkgenv[['hogdays']]),")."
+          #Start message flagging problem
+              msg<-paste0("Another version of '", requested_pkg[k] , "', was previously loaded with groundhog in this R session. ")
+              
+            #Add different dates warning if relevant
+                if (length(.pkgenv[['hogdays']])>1) {
+                        msg<-paste0(msg, "\n",
+                                        "Across groundhog.library() calls you have used different dates:\n(",
+                                        pasteQC(.pkgenv[['hogdays']]),")."
                                 )
                           
                   } #End if multiple dates
         
         #Message
-          msg<-paste0(msg, "\nChange the requested date and/or restart R session to unload conflicting packages." , f10)
+          msg<-paste0(msg, "\nRestart R session to unload conflicting packages." , f10)
           message1(msg)
           message(stop.txt)
           exit()
@@ -105,8 +86,8 @@
           
     #-----------------------------------------------------------------------------
           
-    #Conflict 3 A *dependency* was loaded for a different or repos date (add 'ignore.deps' option)
-    conflict3.TF <-   snowball$pkg           %in% ss$pkg           &    #pkg requested before
+    #Conflict 2 A *dependency* was loaded for a different or repos date (add 'ignore.deps' option)
+    conflict2.TF <-   snowball$pkg           %in% ss$pkg           &    #pkg requested before
                       !snowball$pkg_vrs_repos %in% ss$pkg_vrs_repos &    #but not same vrs or repository 
                       !snowball$pkg %in% ignore.deps                  #and we are not asked to ignore this conflict
         
@@ -114,7 +95,7 @@
              #(this includes the pkg requested now, but that was taken care of in conflict #3)
             
             
-          if   (sum(conflict3.TF>0))
+          if   (sum(conflict2.TF>0))
           {
             
           #Character with list of packages that need to be ignored
@@ -142,12 +123,12 @@
             exit()
           
             }
-    }#End conflict 3
+    }#End conflict 2
     
-          
+    #--------------------------------------      
           
     
-      #Conflict 4 - *Any* conflict on a non-interactive session (because we cannot request after installation they restart in  a forceful way)
+      #Conflict 3 - *Any* conflict on a non-interactive session (because we cannot request after installation they restart in  a forceful way)
       
         if (interactive()==FALSE)
         {

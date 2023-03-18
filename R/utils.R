@@ -49,6 +49,7 @@
 #47 base.library.snowball.list
 #48 message.batch.installation.feedback() : feedback while installing a batch in parallel
 #49 - get.parallel.time()  :  estimate parallel time of installation
+#50 get pkg_list from path
 ########################################################################
     
 
@@ -953,3 +954,25 @@ get.parallel.time<-function(times,cores)
   #The longest link is the estimated time
     return(max(y))
 }
+
+
+#50 get.pkg_list
+  get.remote_df.from.path<-function(snowball_path)
+  {
+    #Split path
+      parts <- strsplit(snowball_path,"/")[[1]]
+      n <- length(parts)
+      remote_id <- parts[n-1]
+      remote_id <- gsub("_", "", remote_id)
+    
+    #Split usr/pkg
+      parts2 <- strsplit(parts[n],"_")[[1]]
+      usr <- parts2[1]
+      pkg <- parts2[2]
+      sha <- parts2[3]
+      
+    return(data.frame(remote_id = remote_id , usr=usr, pkg=pkg, sha=sha))  
+  }
+      
+      
+  

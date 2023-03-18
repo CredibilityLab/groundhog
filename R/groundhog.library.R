@@ -160,11 +160,15 @@
     #1.11 how many cores? (totall -2 unless specified away from default of -1)
         if (cores == -1) {
           cores <- max(parallel::detectCores()-2,1)
-          }   
+        }   
+        
+    #1.12 Common messages
+      f10 <- ifelse(interactive(), "\n(in R Studio run CMD/CTRL-SHFT-F10 to restart R session.) ","")
+
 #------------------------------------------------------------------------ 
     
 #2 Non-remote packages, early return if everything is already attached 
-    if (remote==FALSE && all.already.attached(pkg , date)) return(invisible(TRUE))
+   if (n.remote==0 & all.already.attached(pkg , date) ) return(invisible(TRUE))
         
 #------------------------------------------------------------------------   
 
@@ -212,19 +216,29 @@
             pkg <- pkg_list$pkg
             git <- pkg_list$remote_id
         
+         #3.2.1 Possible early returns if already attached (or conflicting)
             
           #Full identifier of pkg called: remote, usr, pkg, date. ('github::crsh/papaja_2021_10-01')
             git_usr_pkg_date <- paste0(remote_id  , "_", usr, "_", pkg ,"_", gsub("-","_",date))
     
                       
-          #This same pkg_date loaded & attached     : skip 
+          #This same pkg_date loaded & attached early return
               if (git_usr_pkg_date %in% .pkgenv[['remotes.attached']]) {
-                    message1("groundhog says: the package '", pkg_list$usr_pkg, "', for '",date,"', is already attached.")
+                    message1("The package '", pkg_list$usr_pkg, "', for '",date,"', is already attached.")
                     return(TRUE)
               }
-          
-          
-          
+            
+          #Same remote did not trigger a match before, somethign must not match, exit
+              if (pkg %in% .pkgenv[['session.remotes_df']]$pkg)
+              {
+                
+                message1("Another version of '", pkg, "' was previously loaded into your R session.")
+                message1("To unload all packages restart your R session ",f10)
+                message("\n\n ** Conflict with previously loaded packages **")
+                exit()
+                            }
+                
+            
         #Get snowball
           snowball.all  <- get.snowball.remote(pkg,date,remote_id, usr,include.suggests,force.install=force.install)
             
@@ -369,7 +383,7 @@
                 snowball$installed <- (snowball$pkg %in% ip$Package | snowball$pkg %in% .pkgenv[['base_pkg']]) #if in packages or in base.packages
                 
 	      #10.7  Save snowball RDS 
-			      saveRDS(snowball, snowball_path, version = 2, compress=FALSE)
+			      saveRDS(snowball, snowball_path[k], version = 2, compress=FALSE)
 
         
           
@@ -377,6 +391,22 @@
 					  add.session.snowballs(snowball)  #utils.R -  function #41  
 					                                   #includes variables pkg, vrs, pkg_vrs, repos, requested, sha
 			
+				#10.9 Add to remotes_df
+					  if (n.remote>0) {
+					    
+					    #Add attached remote to session variable so that we can quickly say "already attached"
+					     .pkgenv[['remotes.attached']] <- c(.pkgenv[['remotes.attached']], git_usr_pkg_date )
+					    
+					    #Add all remotes to remotes.df
+					      snowball.remotes <- snowball[!is.na(snowball$sha), ]    
+					      for (k in 1:nrow(snowball.remotes)) {
+					        rdf_row <- get.remote_df.from.path(snowball.remotes$installation.path)
+					        rdf_row$date <- date
+					        .pkgenv[['session.remotes_df']] <- rbind (.pkgenv[['session.remotes_df']], rdf_row)
+					        
+					      } #End loop
+					  } #End if remote==1
+					     
 
 					} #End if (verified==TRUE)              
      
