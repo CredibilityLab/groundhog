@@ -8,10 +8,11 @@
  install.binaries <- function(snowball)
    {
       
-      #1  Directory for downloaded zips temp with timestamp 
+      #1  Directory for downloaded zips temp 
           temp_path <- paste0(get.groundhog.folder() ,"/temp/")
-          dir.create(temp_path, recursive = TRUE, showWarnings = FALSE)
-    
+          unlink(temp_path, recursive = TRUE)                         #delete everything
+          dir.create(temp_path,showWarnings = FALSE,recursive = TRUE) #create temp again
+       
     
       #1.5 Drop non-binaries and already installed
           snowball <- snowball[snowball$from %in% c("CRAN","GRAN"),]
@@ -117,7 +118,7 @@
           snowball$success <- snowball$pkg_vrs %in% ip$pkg_vrs
   
           
-      #6 delete temp folder
+      #6 delete temp folder again (have it here and at beginning so that if process is interrupted deleted in anyway next time
           unlink(temp_path, recursive = TRUE)
           dir.create(temp_path,showWarnings = FALSE,recursive = TRUE) #create temp again
           

@@ -18,12 +18,12 @@
   #Set 4 - Remotes (github and gitlab)
 
 #Version being tested (only locally available)
-install.packages('http://groundhogr.com/groundhog_1.9.9.2022.07.12-1539.tar.gz',repos=NULL)
-groundhog:::load.cran.toc(TRUE)
+
+install.packages('c:/dropbox/groundhogr/groundhog_2.9.9.2023.3.19.tar.gz',repos=NULL)
 library('groundhog')
 
 get.groundhog.folder()
-set.groundhog.folder('c:/temp/2929')
+set.groundhog.folder('c:/temp/2000')
     test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
 
 
@@ -50,7 +50,7 @@ set.groundhog.folder('c:/temp/2929')
   #Single package, with and without quotes
     library('groundhog')
     groundhog.library('pwr',test.day)  #quotes
-    groundhog.library(pwr,test.day)    #no quotes
+    groundhog.library(rio,test.day)    #no quotes
 
   #Object containing a single package
     pkg1='pwr'
@@ -61,8 +61,10 @@ set.groundhog.folder('c:/temp/2929')
     groundhog.library(pkg2,test.day)    #single package, no quotes, show warning to use ""
 
   #Direct cal to many packages
-    groundhog.library(c('pwr','metafor'),test.day)    
+    groundhog.library(c('pwr','metafor'),test.day)
     
+    
+
   #Sandwiching library
     library('groundhog')
     groundhog.library("
