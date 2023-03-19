@@ -22,7 +22,8 @@ install.packages('http://groundhogr.com/groundhog_1.9.9.2022.07.12-1539.tar.gz',
 groundhog:::load.cran.toc(TRUE)
 library('groundhog')
 
-
+get.groundhog.folder()
+set.groundhog.folder('c:/temp/2929')
     test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
 
 
@@ -370,16 +371,9 @@ library('groundhog')
     library('groundhog')
     test.groundhog(11:100)         #Install the 10 most downloaded packages 
     test.groundhog(510:525)      #install the 501-510 most downloaded packages
-    test.groundhog(-10, seed=9)  #install 10 random packages available right now for this version of R
+    test.groundhog(-10, seed=91)  #install 10 random packages available right now for this version of R
 
-    
-#---------------------------------------------  
-#4.  Remotes
-    mran.is.up()
 
-  
-
-      
 #4.1 - Run in 4.0.3
     #Test conflicts when a remote depends on a remote
     # Key is whether the second package, a dependency of the 1st, is loaded without an error 

@@ -37,8 +37,8 @@ get.gran.binary.date <- function(pkg_vrs , date) {
       if (nrow(gran.toc.sub)==0) return(as.Date('1970-01-01'))
     
   #5 Find date gaps (download vs wanted) and minimize
-      diff <- gran.toc.sub$download.date - date
-    
+     #  diff <- gran.toc.sub$download.date - date
+      diff <-   abs(difftime(gran.toc.sub$download.date,date))
     #Minimizing one 
       k <- which.min(diff)
       
