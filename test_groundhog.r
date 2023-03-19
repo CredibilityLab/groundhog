@@ -18,7 +18,7 @@
   #Set 4 - Remotes (github and gitlab)
 
 #Version being tested (only locally available)
-install.packages('http://groundhogr.com/groundhog_1.9.9.2022.07.12-1539.tar.gz',repos=NULL)
+install.packages('c:/dropbox/groundhogr/groundhog_2.9.99.tar.gz',repos=NULL,type='source')
 groundhog:::load.cran.toc(TRUE)
 library('groundhog')
 
@@ -26,6 +26,10 @@ get.groundhog.folder()
 set.groundhog.folder('c:/temp/2929')
     test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
 
+      library('groundhog')
+    groundhog.library('pwr',test.day)  #quotes
+  
+    
 
 #Set 0 - various forms of calling packages to be loaded
   
