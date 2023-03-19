@@ -103,19 +103,15 @@
         }
     
 
-  
-    
-     #1.4 Validate arguments entered (Utils.R #46)
-        validate.groundhog.library(pkg, date,  quiet.install,  include.suggests ,ignore.deps, force.source , force.install, tolerate.R.version  ,cores)  
-   
-        
-    #1.8 put package name in quotes if it is not an object and was not put in quotes
+      #1.8 put package name in quotes if it is not an object and was not put in quotes
         pkg.catch <- try(typeof(pkg),silent=TRUE)
         if (as.character(class(pkg.catch))=="try-error") {
           pkg <- as.character(substitute(pkg))
           } 
-        
-        
+    
+     #1.4 Validate arguments entered (Utils.R #46)
+        validate.groundhog.library(pkg, date,  quiet.install,  include.suggests ,ignore.deps, force.source , force.install, tolerate.R.version  ,cores)  
+   
     
     #1.1 If there is a remote, it needs to be alone
           remote <- basename(pkg)!=pkg      
@@ -182,7 +178,7 @@
 
 #3 Get snowballs for all requested packages
   #Save snowballs individually as a list and also as a single big snowball.all
-       
+        
       #3.1 Non-remote snowball
         if (n.remote==0)
         {
