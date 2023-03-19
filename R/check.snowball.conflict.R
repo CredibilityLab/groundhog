@@ -108,12 +108,12 @@
                           msg<-paste0(msg, "\n",
                                      "Across groundhog.library() calls you have used different dates (",
                                      pasteQC(.pkgenv[['hogdays']]),
-                                      ") that is a possible root cause for this conflict.")
+                                      ")\n. That is a possible root cause for this conflict.")
                           
                   } #End if more than 1 hogday 
           
           ##Add ignore deps
-            msg<-paste0(msg,"\nThe conflicting packages are:",need.to.ignore)
+            #msg<-paste0(msg,"\nThe conflicting packages are:",need.to.ignore)
             msg<-paste0(msg,"\nTo unload packages you need to restart the R Session",f10)
           #Show message
            gstop(msg) #utils #51

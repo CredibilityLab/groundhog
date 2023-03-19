@@ -97,12 +97,18 @@
 #--------------------------------------------------------------
     
   #1 Preliminaries
+    
+    
     #1.0 Save default libpaths to change back to them after exiting
         if (!exists("orig_lib_paths",envir=.pkgenv)) {
               .pkgenv[["orig_lib_paths"]] <- .libPaths()
         }
     
-
+  #1. pkg & date included
+             if (missing(pkg) || missing(date)) {
+              msg=paste0("You must include both a package name and a date in 'groundhog.library()' ")
+              gstop(msg)
+             }
       #1.8 put package name in quotes if it is not an object and was not put in quotes
         pkg.catch <- try(typeof(pkg),silent=TRUE)
         if (as.character(class(pkg.catch))=="try-error") {
