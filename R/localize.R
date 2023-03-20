@@ -15,8 +15,6 @@
         ip[1,] <- rep('',ncol(ip))
         }
         
-        #This is here because if installed.packages() and the dataframe is empty, creating pkg_vrs produces an error
-
     #2 Make pkg_vrs
         ip$pkg_vrs<-paste0(ip$Package,"_",ip$Version)
       
@@ -34,7 +32,7 @@
       pkg_vrs <- snowball$pkg_vrs[k]
       installation.path <- snowball$installation.path[k]
       sha <- snowball$sha[k]
-        
+         
     #6 If localized already, skip  
       if (pkg_vrs %in% .pkgenv[['localized']]) next
 
@@ -42,7 +40,7 @@
       if (pkg_vrs  %in% ip$pkg_vrs & sha %in% c('', NA)) next
       
         
-    #8 iF package does not exist in groundhog folder, error    
+    #8 If package does not exist in groundhog folder, error    
         if (nrow(data.frame(utils::installed.packages(lib=installation.path), stringsAsFactors=FALSE))==0) {
           msg = paste0("groundhog says: failed to install '",pkg_vrs,"', localization failed (Error: localize.R #8 - try http://groundhogr.com/troubleshoot)")
           gstop(msg) #util #51
@@ -51,12 +49,37 @@
     #9 all paths except the last one
          local_folder <- .pkgenv[["orig_lib_paths"]][-length(.pkgenv[["orig_lib_paths"]])]
       
-    #10 If this one is installed, uninstall it 
+    #10 If this one is installed, set it ready to be purged next time we load groundhog 
         if (pkg %in% ip$Package) {
-            old<- file.path(ip$LibPath[ip$Package==pkg] , pkg) 
-            random <- paste0(sample(letters,size=6),collapse = '')
-            new <- paste0(old , "_",random,"_PURGE")  #add 6 random letters and _PURGE
-            purged   <- file.rename(old , new)
+          
+            #10.1 Copy to groundohg folder if it does not exist 
+          
+             #File paths
+               non.groundhog.path <- file.path(ip$LibPath[ip$Package==pkg] , pkg) 
+               groundhog.path     <- paste0 (dirname(installation.path), "/", ip$pkg_vrs[ip$Package==pkg] , "/")
+               exists <- file.exists(groundhog.path) && nrow(installed.packages(groundhog.path))>0
+              
+            #10.2 If it does not exist and it is not remote, create and copy
+              message("#10.2 will now copy to the groundhog folder")
+               if (exists==FALSE & sha=="") {
+                 
+                #Create
+                  dir.create(groundhog.path,recursive = TRUE, showWarnings = FALSE)
+            
+                #Copy non-remote to groundhog.folder
+                  copy.outcome <- file.copy(non.groundhog.path ,        #copy contents of the "pkg_vrs/pkg" folder
+                              groundhog.path,           #to the local library listed first
+                              recursive = TRUE)          #include all files
+                  
+                message('copied \n  from: ', non.groundhog.path,"\n  to:   ",groundhog.path)
+              } #End 10.2
+               
+               
+            #10.3 to the purge list 
+              old<- file.path(ip$LibPath[ip$Package==pkg] , pkg) 
+              random <- paste0(sample(letters,size=6),collapse = '')
+              new <- paste0(old , "_",random,"_PURGE")  #add 6 random letters and _PURGE
+              purged   <- file.rename(old , new)
             
         }
          
@@ -64,7 +87,7 @@
     #11  Copy the folder from groundhog folder
          #path to copy pkg from and to
             from_path <-paste0(installation.path,'/',pkg)  #groundhog_folder
-            to_path <-  paste0(local_folder[1])    #local_folder
+            to_path <-  paste0(local_folder[1])            #local_folder
                                
         
         #Make to path if it does not exist (libpath with pkg specific folder)
