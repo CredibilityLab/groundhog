@@ -17,9 +17,11 @@ Set an option for groundhog
 \details{
 Current options that can be set manually include the following:
 
-\link{os}: operating system. It is supposed to be detected automatically, but if
-groundhog were to not correctly identify a user's 'os' it can be set manually.
-Accepted options are 'windows','mac', 'mac_arm' (for the x1+ chip), 'linux'.
+\link{os}: operating system. It is supposed to be detected automatically, and then
+used for finding binaries for that OS. The accepted options are
+'windows','mac', 'mac_arm' (for the x1+ chip). If you are using a different
+operating system it is coded as 'unknown' and always installs from source.
+If you are using a windows or mac machine, you can set it by hand with this function.
 
 \link{download.sequentially}. To speed up the download of binaries, they are
 by default downloaded with 'libcurl' simultaneously, if 'libcurl' is detected.

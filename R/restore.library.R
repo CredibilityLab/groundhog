@@ -1,4 +1,34 @@
+#' Restore version of packages in personal library replaced by groundhog.
+#'
+#' When groundhog installs a package, it saves two copies of it.
+#' One goes on the stable groundhog library (to find its location: `get.groundhog.folder()`)
+#' the other goes to the default personal library (to find its location: `.libPaths()[1]`.
+#' Because the personal library can only hold one version of a package, groundhog replaces the
+#' version in the personal library, but, it makes a copy. If you wish to return to the version 
+#' of a package you had prior to using groundhog, you can run `restore.library()` and that backup
+#' copy will be saved again in the personal library. By default all packages replaced by groundhog
+#' are returned to their original version, but this can be modified with the the optional parameters `date` or `minutes`.
+#' The main reason to use this function is if you switch back and forth between using groundhog.library()
+#' and library() and at some point you run into an incompatibility issue, namely, when you call on `library(pkg)`
+#' you may get a warning or error that a dependency is outdated. You could then either rely on `groundhog.library(pkg,date)`
+#' instead of `library(pkg)`, or you can restore the previous versions running `restore.library()` and then rely on `library(pkg)`.
+#' 
+#' #' 
+#' @param minutes Integer. If you want to restore only recently modified packages, 
+#' specify the number of minutes you want to restore. For example, if you use `minutes=60`, it will only
+#' restore packages replaced within the last hour.
+#' @param date Date. Alternatively, you can specify the date you want to return to, all packages replaced 
+#' since that date will be returned to their pre-groundhog version.
+#' 
 
+#' @examples
+#' \dontrun{
+#' restore.library()
+#' restore.library(minutes=90)
+#' }
+#'
+#' @export
+#'
 
 restore.library<-function(minutes = -Inf, date='1970-01-01')
   {
