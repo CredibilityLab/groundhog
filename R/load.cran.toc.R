@@ -17,7 +17,7 @@ load.cran.toc <- function(update.toc = FALSE) {
     #Names of files
       files.rds = c('cran.toc.rds' , 'cran.times.rds' )
 
-    #Add gran.toc if mac or windows
+    #Add gran.toc if mac or windows after version 3.1
       os <- get.os()
       if (os %in% c('windows','mac', 'mac_arm')) {
         
@@ -30,10 +30,17 @@ load.cran.toc <- function(update.toc = FALSE) {
           #rds with gran toc 
             gran.file.rds <- paste0(os, rv,'.rds')
             
-          #Add id
-            files.rds = c(files.rds, gran.file.rds)
+          #use mac for mac_arm for R<4.14
+            if (os=='mac_arm' & as.numeric(r.version)<4.1) {
+                  gran.file.rds <- paste0('mac', rv,'.rds')
+                }
+            
+          #Add gran.toc only if R=3.1 or newer
+            if (as.numeric(r.version)>3.1) {
+              files.rds = c(files.rds, gran.file.rds)
+              }
           
-      }
+      }#End os is mac or windows
       
   #3 Loop checking file exist, downloading if necessary, and assigning to .pkgenv
           for (rdsk in files.rds)
