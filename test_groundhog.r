@@ -473,3 +473,62 @@ set.groundhog.folder('c:/temp/2000')
 
     groundhog.library('jeroen/jsonlite',test.day)
 
+
+    
+    
+    
+#-----------------------------------------
+# test restore
+    #Start with installed.packages() in personal libreary, install a banch of all packages. Compare the installed.packages()\
+    #Then do restore and compare them again, there should be differences and the differences should go away.
+    #
+    
+
+#Time 0 
+  library('groundhog')
+  get.groundhog.folder()
+  groundhog.library('tidyverse','2023-03-01')
+  ip0=data.frame(installed.packages())
+  pv0=paste0(ip0$Package,"_",ip0$Version)
+  
+  
+#Time 1
+  groundhog.library('tidyverse','2023-01-01')
+  ip1=data.frame(installed.packages())
+  pv1=paste0(ip1$Package,"_",ip1$Version)
+
+  library('groundhog')
+  restore.library()
+  library('groundhog')
+
+  
+  ip2=data.frame(installed.packages())
+  pv2=paste0(ip2$Package,"_",ip2$Version)
+
+  
+  
+  sum(!pv0 %in% pv1) #35; there are 35 packages we had when we started, they are now gone
+  sum(!pv0 %in% pv2) #0;   but they all came back with restore.library()
+  
+  
+#Time 2
+  groundhog.library('tidyverse','2022-11-01')
+  ip3=data.frame(installed.packages())
+  pv3=paste0(ip3$Package,"_",ip3$Version)
+
+  library('groundhog')
+  restore.library()
+  library('groundhog')
+
+  
+  
+  groundhog.library('tidyverse','2022-07-01')
+  ip4=data.frame(installed.packages())
+  pv4=paste0(ip4$Package,"_",ip4$Version)
+  
+  sum(!pv0 %in% pv3) #45; there are 45 packages we had when we started, they are now gone
+  sum(!pv0 %in% pv4) #0;   but they all came back with restore.library()
+
+  
+  
+  
