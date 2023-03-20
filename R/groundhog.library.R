@@ -246,6 +246,16 @@
                 gstop(msg) #util #51)
                }
                 
+        #Stop if thehy specify "@"
+            if (regexpr('@', pkg)>0)
+            {
+              msg=paste0("Seems like you are specifying a version of the package on the remote repository with '@'.",
+                         "With groundhog.library() you may only access the default version of a Git package. Please, ",
+                         "remove the '@' from the package name")
+              message(msg)
+              exit()
+              
+            }
             
         #Get snowball
           snowball.all  <- get.snowball.remote(pkg,date,remote_id, usr,include.suggests,force.install=force.install)
