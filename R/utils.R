@@ -928,3 +928,41 @@ get.parallel.time<-function(times,cores)
     exit()
     }
   
+#52 read/save purge and grounhod.installed. rds
+  
+  read.local.rds <- function(filename)
+  {
+    #Using R 
+    r.version    <- get.r.majmin()
+    
+    #Path to files
+      dir <- paste0(get.groundhog.folder() , "/R-" , r.version ,"/rds_files/")
+      path <- file.path(dir,filename)
+      
+      
+    #Read the file
+      df <- data.frame()
+      if (file.exists(path)) df<-readRDS(path)
+
+    #Return 
+      return(df)
+  }
+  
+  save.local.rds <- function(df, filename)
+  {
+    #Using R 
+    r.version    <- get.r.majmin()
+    
+    
+  
+    #Path to files
+      dir<- paste0(get.groundhog.folder() , "/R-" , r.version ,"/rds_files/")
+      path <- file.path(dir,filename)
+  
+     #Ensure dir exists  
+      dir.create(dir,showWarnings = FALSE,recursive = TRUE)
+  
+    #Save
+      saveRDS(df,path,version=2)
+  }
+  
