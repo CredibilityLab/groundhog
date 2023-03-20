@@ -108,7 +108,7 @@
                           msg<-paste0(msg, "\n",
                                      "Across groundhog.library() calls you have used different dates (",
                                      pasteQC(.pkgenv[['hogdays']]),
-                                      ")\n. That is a possible root cause for this conflict.")
+                                      "), \nthat is the likely cause of this conflict.")
                           
                   } #End if more than 1 hogday 
           
