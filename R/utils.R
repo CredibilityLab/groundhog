@@ -984,7 +984,7 @@ get.parallel.time<-function(times,cores)
       for (bk in 1:btot)
       {
       if (btot>1) message2("Batch ",bk, " of ", btot,". Downloading the following files:")
-      message1("     ",paste(url.split[[bk]],collapse='\n     '))
+      message1("     ",paste(sort(url.split[[bk]]),collapse='\n     '))
       download.file(url.split[[bk]], zip.split[[bk]],quiet=TRUE,method='libcurl')
       }
       
