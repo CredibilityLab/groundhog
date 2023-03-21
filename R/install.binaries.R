@@ -54,39 +54,66 @@
             n.cran <- sum(snowball$from=="CRAN")
             n.gran <- sum(snowball$from=="GRAN")
 
-            if (n.cran>0 & n.gran>0)  message1("Will now download ",n.cran, " packages from CRAN, and ",n.gran," from GRAN")
-            if (n.cran>0 & n.gran==0) message1("Will now download ",n.cran, " packages from CRAN")
-            if (n.cran==0 & n.gran>0) message1("Will now download ",n.gran, " packages from GRAN")
+            if (n.cran>0 & n.gran>0)  message2("Will now download ",n.cran, " packages from CRAN, and ",n.gran," from GRAN")
+            if (n.cran>0 & n.gran==0) message2("Will now download ",n.cran, " packages from CRAN")
+            if (n.cran==0 & n.gran>0) message2("Will now download ",n.gran, " packages from GRAN")
 
-          #3.2 Download in parallel with libcurl, if available
-            if (capabilities("libcurl")==TRUE)  #does this user have libcurl available?
-            {
-            download.file(url.files, zip.files,method='libcurl', quiet=TRUE)
-            #Suppress output because it just shows the list of URLs which is not useful
-
-            } else {
-                          
             
-          #3.3 Else do loop and download sequentially
+            
+            
+          #3.2 Set higher limit for download time
+            options(timeout = max(400, getOption("timeout")))
+            
+            
+            
+          #3.3 Simultaneous libcurl download (if available)
+            
+              if (capabilities("libcurl")==TRUE)  #does this user have libcurl available?
+              {
+              #Total number
+                n.tot <- n.cran+n.gran
+                
+              #Per batch
+                batch.size = n.tot
+                if (n.tot >= 20) batch.size=10
+                if (n.tot >= 40) batch.size=20
+                
+              #Message about batches
+                if (n.tot==batch.size)   message2('The ',n.tot,' packages will be downloaded simultaneously in a single batch')
+                if (n.tot > batch.size)  message2('The ',n.tot,' packages will be downloaded in batches of ',batch.size, ' packages')
+                
+              #Download them all
+                download.files.in_batches(url.files , zip.files , batch.size=batch.size)   
+                    
+                      #util.R function #53
+                
               
+          #3.4 Sequential download if no libcurl or something fails
+              if (capabilities("libcurl")==FALSE)
                for (k in 1:length(url.files))
                 {
                 message2("Will download sequentially, one at a time, because 'libcurl' is not available.")
-                message2("(this is much slower)")
-                message1("Downloading ",k," of ",length(url.files))
+                message1("    Downloading ",k," of ",length(url.files))
                 
                 download.file(url.files[k], zip.files[k])
                 
                 } #End loop downloading
             
-            }
+              }
+              
 
-        #4 Install them
+        #4 Unzip / install
             
+            #4.0 Subset that did download
+              downloaded.TF <- file.exists(zip.files)              
+              zip.files     <- zip.files[downloaded.TF]
+              
+              
             #4.1 Read downloaded zip files
               n.zip <- length(zip.files)
-              if (n.zip>1) message1("Will now install ",n.zip, " packages.")
+              if (n.zip>1) message2("Will now install ",n.zip, " packages.")
             
+              
             #4.2 Unzip all files found
               for (k.zip in 1:n.zip)
               {
@@ -101,7 +128,7 @@
                   k.snowball <- match(pkg.k , snowball$pkg)
                   outfile    <- snowball$installation.path[k.snowball]
                 
-                  message1('Installing ',k.zip,' of ',n.zip,': ',basename(zk))
+                  message1('     Installing ',k.zip,' of ',n.zip,': ',basename(zk))
                 
                 #Unzip  
                   if (ext=="zip") utils::unzip(zk, exdir=outfile)

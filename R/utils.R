@@ -50,6 +50,10 @@
 #48 message.batch.installation.feedback() : feedback while installing a batch in parallel
 #49 - get.parallel.time()  :  estimate parallel time of installation
 #50 get pkg_list from path
+#51 gstop()                    :  show message in green then "** groundhog stopped**" in red and exit())
+#52 read/save loadl rds 
+#53 Download in batches        : breaks a list of pkgs into batches downloaded sequentially
+
 ########################################################################
     
 
@@ -965,4 +969,24 @@ get.parallel.time<-function(times,cores)
     #Save
       saveRDS(df,path,version=2)
   }
+  
+
+#53 Download in batches
+  download.files.in_batches <- function(url.files , zip.files , batch.size = 20)
+    {
+    #Split the vectors
+      #https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks
+      url.split <- split(url.files, ceiling(seq_along(url.files)/batch.size))
+      zip.split <- split(zip.files, ceiling(seq_along(zip.files)/batch.size))
+      btot <- length(url.split)  
+  
+    #Download in loop
+      for (bk in 1:btot)
+      {
+      if (btot>1) message2("Batch ",bk, " of ", btot,". Downloading the following files:")
+      message1("     ",paste(url.split[[bk]],collapse='\n     '))
+      download.file(url.split[[bk]], zip.split[[bk]],quiet=TRUE,method='libcurl')
+      }
+      
+  }#End of #53
   
