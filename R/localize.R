@@ -29,7 +29,6 @@
  #4 Start the loop over the snowball
   for (k in 1:nrow(snowball))
     {
-        
     #5 Short varnames
       pkg     <- snowball$pkg[k]
       pkg_vrs <- snowball$pkg_vrs[k]
@@ -63,7 +62,7 @@
                exists <- file.exists(groundhog.path) && nrow(installed.packages(groundhog.path))>0
               
             #10.2 If it does not exist and it is not remote, create and copy
-               if (exists==FALSE & sha=="") {
+               if (exists==FALSE & is.na(sha)) {
                  
                 #Create
                   dir.create(groundhog.path,recursive = TRUE, showWarnings = FALSE)
