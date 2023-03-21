@@ -1,5 +1,3 @@
-#PENDING CONVERSION TO SNOWFLAKES VERSION USED NOW
-#----------------------------------------------------------------------
 
 #Auxiliary function
 
@@ -24,8 +22,6 @@
 
 
 
-batch.installation.messages <- function(source.url, storm.source, snowflakes,  k , cores)
-  
 batch.installation.messages <- function(snowflakes,  k , cores)
   
   {
@@ -81,7 +77,7 @@ batch.installation.messages <- function(snowflakes,  k , cores)
             #Message 
                 #list with multiple files
                   if (n.batch>1) {
-                      message1("  -> ", pasteQC(storm.source$pkg_vrs[storm.source$url %in% source.url]))
+                      message1("  -> ", pasteQC(sort(storm.source$pkg_vrs[storm.source$url %in% source.url])))
                   }
                 
                 #Single file
