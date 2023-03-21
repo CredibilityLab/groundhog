@@ -974,17 +974,24 @@ get.parallel.time<-function(times,cores)
 #53 Download in batches
   download.files.in_batches <- function(url.files , zip.files , batch.size = 20)
     {
+    #Sort alphabetically by package name
+      j  <- order(basename(url.files))
+      url.files <- url.files[j]
+      zip.files <- zip.files[j]
+    
     #Split the vectors
       #https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks
       url.split <- split(url.files, ceiling(seq_along(url.files)/batch.size))
       zip.split <- split(zip.files, ceiling(seq_along(zip.files)/batch.size))
       btot <- length(url.split)  
+      
+     
   
     #Download in loop
       for (bk in 1:btot)
       {
       if (btot>1) message2("Batch ",bk, " of ", btot,". Downloading the following files:")
-      message1("     ",paste(sort(url.split[[bk]]),collapse='\n     '))
+      message1("     ",paste(url.split[[bk]],collapse='\n     '))
       download.file(url.split[[bk]], zip.split[[bk]],quiet=TRUE,method='libcurl')
       }
       

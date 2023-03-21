@@ -114,9 +114,14 @@
               if (n.zip>1) message2("Will now install ",n.zip, " packages.")
             
               
-            #4.2 Unzip all files found
+            #4.2 Sort alphabetically by package name
+               j <- order(basename(zip.files))
+               zip.files <- zip.files[j]
+              
+            #4.3 Unzip all files found
               for (k.zip in 1:n.zip)
               {
+                
                 #Short name
                   zk <- zip.files[k.zip]
       

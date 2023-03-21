@@ -3,6 +3,10 @@
    
       date=as.Date(date)
     
+    #0 Drop repeat packages
+      snowball<-snowball[!duplicated(snowball$pkg),]
+      
+      
     #1 Install all binaries
       snowball.binaries <- install.binaries(snowball)
   
