@@ -18,15 +18,15 @@ since that date will be returned to their pre-groundhog version.}
 When groundhog installs a package, it saves two copies of it.
 One goes on the stable groundhog library (to find its location: \code{get.groundhog.folder()})
 the other goes to the default personal library (to find its location: \code{.libPaths()[1]}.
-Because the personal library can only hold one version of a package, ground replaces the
+Because the personal library can only hold one version of a package, groundhog replaces the
 version in the personal library, but, it makes a copy. If you wish to return to the version
-of a package you had prior to using groundhog, you can run \code{restore.libary()} and that backup
-copy will be saved again in the personal library. The optional parameters \code{date} and \code{minutes}
-allow reversing a subset of all replacements groundhog has done.
+of a package you had prior to using groundhog, you can run \code{restore.library()} and that backup
+copy will be saved again in the personal library. By default all packages replaced by groundhog
+are returned to their original version, but this can be modified with the the optional parameters \code{date} or \code{minutes}.
 The main reason to use this function is if you switch back and forth between using groundhog.library()
-and library() and at some point you run into an incompatibility issue, namely, when you call on library(pkg)
-you may get a warning or error that a dependency is outdated. You could then either rely on groundhog.library(pkg,date)
-to prevent that, or if you can restore the previous versions running \code{restore.library()}
+and library() and at some point you run into an incompatibility issue, namely, when you call on \code{library(pkg)}
+you may get a warning or error that a dependency is outdated. You could then either rely on \code{groundhog.library(pkg,date)}
+instead of \code{library(pkg)}, or you can restore the previous versions running \code{restore.library()} and then rely on \code{library(pkg)}.
 }
 \details{
 #'
