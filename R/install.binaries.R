@@ -79,8 +79,8 @@
                 if (n.tot >= 40) batch.size=20
                 
               #Message about batches
-                if (n.tot==batch.size)   message2('The ',n.tot,' packages will be downloaded simultaneously in a single batch')
-                if (n.tot > batch.size)  message2('The ',n.tot,' packages will be downloaded in batches of ',batch.size, ' packages')
+                if (n.tot==batch.size &  n.tot>1)  message2('The ',n.tot,' packages will be downloaded simultaneously in a single batch')
+                if (n.tot > batch.size & n.tot>1)  message2('The ',n.tot,' packages will be downloaded in batches of ',batch.size)
                 
               #Download them all
                 download.files.in_batches(url.files , zip.files , batch.size=batch.size)   
