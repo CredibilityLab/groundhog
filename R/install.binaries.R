@@ -138,8 +138,11 @@
                   k.snowball <- match(pkg.k , snowball$pkg)
                   outfile    <- snowball$installation.path[k.snowball]
                 
-                  message1('     Installing ',k.zip,' of ',n.zip,': ',basename(zk))
+                #Show size so big files are undertandably slower
+                  size <- utils:::format.object_size(file.size(zk), "auto")
+                  message1('     Installing ',k.zip,' of ',n.zip,': ',basename(zk)," (",size,")")
                 
+
                 #Unzip  
                   if (ext=="zip") utils::unzip(zk, exdir=outfile)
                   if (ext!="zip") utils::untar(zk, exdir=outfile)        
