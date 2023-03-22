@@ -87,7 +87,7 @@
             
             #3.3 Inner parallel loop with pkgs from source
                 parallel::clusterExport(cluster_id, 
-                           unclass(lsf.str(envir = asNamespace("groundhog"), all = TRUE)),
+                           unclass(utils::lsf.str(envir = asNamespace("groundhog"), all = TRUE)),
                            envir = as.environment(asNamespace("groundhog")))
                            
                   #exporting all function to cluster, solution from 
@@ -109,7 +109,7 @@
             #3.7  Kill the cluster
                   parallel::stopCluster(cluster_id)   
                 
-            #3.7 Localize so that future snowflakes find these packages
+            #3.8 Localize so that future snowflakes find these packages
                 localize.snowball(snowball [snowball$pkg %in% snowflakes[[k]],])
                 
             

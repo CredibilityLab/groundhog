@@ -34,10 +34,10 @@
       write(paste0(t1, " - Attempting to install ",pkg_vrs," from ",url),log_path,append = TRUE)
       
     #Install
-      install.packages(url,type='source',repos=NULL, dependencies=FALSE,lib=installation_path)
+      utils::install.packages(url,type='source',repos=NULL, dependencies=FALSE,lib=installation_path)
       
     #Log success
-      ip <- installed.packages(installation_path)
+      ip <- utils::installed.packages(installation_path)
       t2 <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
 
       if (nrow(ip)>0)   write(paste0(t2," - Succeeded installing ",pkg_vrs),log_path,append=TRUE)
@@ -80,7 +80,7 @@
     
             
           #Log success 
-              ip <- installed.packages(installation_path)
+              ip <- utils::installed.packages(installation_path)
               t2 <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
 
               if (nrow(ip)>0)   write(paste0(t2," - Succeeded installing ",pkg),log_path,append=TRUE)

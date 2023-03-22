@@ -62,7 +62,7 @@ get.attached <- function()
 
   get.installed <- function()
   {
-  ip <- data.frame(installed.packages(.libPaths()))
+  ip <- data.frame(utils::installed.packages(.libPaths()))
   df <- data.frame(pkg=ip$Package, pkg_vrs=paste0(ip$Package,"_",ip$Version), stringsAsFactors = FALSE )
   df <- df[!duplicated(df$pkg),]  #Drop duplicate packages so we only consider the 1st one, which is the one that would get loaded
   return(df)

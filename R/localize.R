@@ -59,7 +59,7 @@
              #File paths
                non.groundhog.path <- file.path(ip$LibPath[ip$Package==pkg] , pkg) 
                groundhog.path     <- paste0 (dirname(installation.path), "/", ip$pkg_vrs[ip$Package==pkg] , "/")
-               exists <- file.exists(groundhog.path) && nrow(installed.packages(groundhog.path))>0
+               exists <- file.exists(groundhog.path) && nrow(utils::installed.packages(groundhog.path))>0
               
             #10.2 If it does not exist and it is not remote, create and copy
                if (exists==FALSE & is.na(sha)) {

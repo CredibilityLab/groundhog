@@ -1,7 +1,7 @@
 #This script has functions used throughout the package
 
 #1  get.pkg(), get.vsr()     : Extract package and version information from pkg_vrs
-#2  is.pkg_vrs.installed()   : Is pkg_vrs installed (within same R-minor version)?
+#2  is.pkg_vrs.installed()   : Is pkg_vrs installed (within same R-minor version)?Rin
 #3  as.DateYMD               : Format Y-M-D as date
 #4  get.rdate()              : Date for R being used
 #5  get.rversion()           : Get R Version major:minor:patch
@@ -455,10 +455,6 @@
       {
       
         
-      #If it is a script, show batch_msg instead
-       if (interactive()==FALSE) {
-         gstop(batch_msg) #util #51
-         }
       
       #Initialize values
         answer <- ''
@@ -644,7 +640,7 @@
                                  "One way to do that is to run `dir.create('", default_library , "',recursive=TRUE)`")
 
                   message(msg)
-                  exist()
+                  exit()
                 }
                 
                 
@@ -809,20 +805,29 @@
   {
     
   #Default
-    os <- 'unknown'
+    os <- 'other'
 
   #If it has been set by hand, read it
     path <-  paste0(path.expand("~"), "/R_groundhog/options/os.txt") #see groundhog.options.R
     if (file.exists(path)) {
       os = scan(path,what='character',quiet=TRUE)
-      }
+      if (os!='other') return(os)
+    }
+    
+    #There was a plan to have a groundhog.option() function but was abandoned.
+    #This is a placeholder, if there were to be an issue with some OS not being recognized
+    #users could by hand add this file, write their os and groundhog would work
+    #but if this ends up affecting more users groundhog will be changed to have a more robust os detection.
     
   # use contrib.url() to rely on R's processing of sys.info() alternatives
     repos <- as.character(getOption("repos"))
-    bin.url <- contrib.url(repos,type='binary')
+    bin.url <- utils::contrib.url(repos,type='binary')
     if (regexpr('windows', bin.url)[[1]]>0) os<-'windows'
     if (regexpr('macosx', bin.url)[[1]]>0)  os<-'mac'
     if (regexpr('arm64', bin.url)[[1]]>0 &  os=='mac') os<-'mac_arm'
+  
+    
+  #If other show warning
     return(os)
   }
     
@@ -994,7 +999,7 @@ get.parallel.time<-function(times,cores)
       {
       if (btot>1) message2("Batch ",bk, " of ", btot,". Downloading the following files:")
       message1("     ",paste(url.split[[bk]],collapse='\n     '))
-      download.file(url.split[[bk]], zip.split[[bk]],quiet=TRUE,method='libcurl')
+      utils::download.file(url.split[[bk]], zip.split[[bk]],quiet=TRUE,method='libcurl')
       }
       
   }#End of #53
