@@ -12,7 +12,7 @@
     check.conflict.before<-function(snowball, pkg.requested, ignore.deps, date)
     {
       
-     #1 Short name for session.snowbals
+     #1 Short name for session.snowballs
         ss <- .pkgenv[['session.snowballs']]
       
     #2 Check conflicts before only if groundhog has been used already and session.snowballs[] has rows
@@ -76,7 +76,7 @@
                   } #End if multiple dates
         
         #Message
-          msg<-paste0(msg, "To unload all packages restart your R session." , f10)
+          msg<-paste0(msg, "\nTo unload all packages restart your R session." , f10)
           gstop(msg) #utils #51
 
         } #End conflict 2.2
@@ -84,7 +84,7 @@
           
     #-----------------------------------------------------------------------------
           
-    #Conflict 2 A *dependency* was loaded for a different or repos date (add 'ignore.deps' option)
+    #Conflict 2 A *dependency* was loaded for a different or repos date (used to add  'ignore.deps' option, but not anymore)
     conflict2.TF <-   snowball$pkg           %in% ss$pkg           &    #pkg requested before
                       !snowball$pkg_vrs_repos %in% ss$pkg_vrs_repos &    #but not same vrs or repository 
                       !snowball$pkg %in% ignore.deps                  #and we are not asked to ignore this conflict
@@ -108,15 +108,17 @@
                           msg<-paste0(msg, "\n",
                                      "Across groundhog.library() calls you have used different dates (",
                                      pasteQC(.pkgenv[['hogdays']]),
-                                      "), \nthat is the likely cause of this conflict.")
-                          
-                  } #End if more than 1 hogday 
-          
-          ##Add ignore deps
-            #msg<-paste0(msg,"\nThe conflicting packages are:",need.to.ignore)
-            msg<-paste0(msg,"\nTo unload packages you need to restart the R Session",f10)
+                                      "), \nthat is the likely cause of this conflict.\n",
+                      "You may either keep the date of this groundhog.library() call and\n",
+                      "unload previosly loaded packages, or modify the date so that it matches\n",
+                      "a previously used date.\n\n")
+              
+              } #End if more than 1 hogday  
+              
+            msg<-paste0(msg, "To unload packages you need to restart the R Session",f10)
+            
           #Show message
-           gstop(msg) #utils #51
+            gstop(msg) #utils #51
           
             }
     }#End conflict 2
@@ -128,7 +130,7 @@
       
         if (interactive()==FALSE)
         {
-        pkg.conflict <- active$pkg[pactive$pkg %in% snowball.all$pkg & !active$pkg_vrs %in% snowball.all$pkg_vrs]
+        pkg.conflict <- active$pkg[active$pkg %in% snowball$pkg & !active$pkg_vrs %in% snowball$pkg_vrs]
         
         if (length(pkg.conflict) >0)
         {
@@ -137,7 +139,7 @@
                       "those conflicts by adding the package names in the `ignore.deps`",
                       "argument of the groundhog.library() call.",
                       "The packages with a conflict are: ", 
-                      pastcQC(pkg.conflict))
+                      pasteQC(pkg.conflict))
             
 			gstop(msg) #utils #51
 
