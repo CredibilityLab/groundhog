@@ -32,18 +32,16 @@
 
      
      
-       #5 Remotes loaded
+      #4.5 Remotes loaded
          .pkgenv[['session.remotes_df']] <- data.frame(remote_id = character() ,  usr=character() , pkg=character() , date=character())
         
-      #6 Setup pkg variable values
+      #5 Setup pkg variable values
           .pkgenv[["supportsANSI"]] <- Sys.getenv("TERM") %in% c("xterm-color", "xterm-256color", "screen", "screen-256color")
           .pkgenv[['default_libpath']] <-  .libPaths()
           .pkgenv[['hogdays']] <-c()
           .pkgenv[['acceptable.option.names']] <- c('os','download.sequentially')
           
 
-          
-    
       #6 Delete to be purged packages, if any (put here with disable.packages())
           packages_df <- get.packages_df() #utils.R #Function 33
           purge_df <- subset(packages_df, packages_df$purged==TRUE)
