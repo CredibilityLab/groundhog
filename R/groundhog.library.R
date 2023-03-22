@@ -167,13 +167,7 @@
         pkg <- sandwich.library(pkg)  #utils.R function 34
    
         
-    #1.10 Add groundhog.day to hogdays to alert of possible different days used in a snowball.conflict
-        if (!is.null(.pkgenv[['hogdays']])) {
-            .pkgenv[['hogdays']] <- unique(c(date, .pkgenv[['hogdays']]))
-            } else {
-            .pkgenv[['hogdays']]<- date
-        
-          }
+    
     #1.11 how many cores? (totall -2 unless specified away from default of -1)
         if (cores == -1) {
           cores <- max(parallel::detectCores()-2,1)
@@ -372,9 +366,7 @@
        
         if (verified==TRUE) { 
           
-        #10.3. Save it
-            #save.snowball(snowball, date, include.suggests)  #save.snowball.R
-          
+        
         #10.4 Path for CRAN snowball 
             if (!'sha' %in% names(snowball))
             {
@@ -430,7 +422,15 @@
 					        .pkgenv[['session.remotes_df']] <- rbind (.pkgenv[['session.remotes_df']], rdf_row)
 					        
 					      } #End loop
-					  } #End if remote==1
+					  } #End if n.remote>0
+					  
+				#10.10 Add groundhog.day to hogdays to alert of possible different days used in a snowball.conflict
+        if (!is.null(.pkgenv[['hogdays']])) {
+            .pkgenv[['hogdays']] <- unique(c(date, .pkgenv[['hogdays']]))
+            } else {
+            .pkgenv[['hogdays']]<- date
+        
+          } #ENd if 10.10
 					     
 
 					} #End if (verified==TRUE)              
