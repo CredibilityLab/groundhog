@@ -2,13 +2,11 @@
 
 export(cross.toc)
 export(get.groundhog.folder)
-export(get.groundhog.option)
 export(get.snowball)
 export(groundhog.library)
 export(meta.groundhog)
 export(restore.library)
 export(set.groundhog.folder)
-export(set.groundhog.option)
 export(toc)
 importFrom(utils,capture.output)
 importFrom(utils,compareVersion)
