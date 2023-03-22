@@ -97,7 +97,9 @@
 #--------------------------------------------------------------
     
   #1 Preliminaries
-    
+    #Check if new versin of groundhog exists 
+      check.groundhog.version(min.days=1) #Function 42  -  utils.R
+
     
     #1.0 Save default libpaths to change back to them after exiting
         if (!exists("orig_lib_paths",envir=.pkgenv)) {

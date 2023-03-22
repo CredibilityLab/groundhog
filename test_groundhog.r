@@ -16,7 +16,8 @@
   #Set 2 - Previously documented bugs
   #Set 3 - Automatized installation of packages in random order, via function
   #Set 4 - Remotes (github and gitlab)
-
+  #Set 5 -
+  #Set 6 - individual functions
 #Version being tested (only locally available)
 
 install.packages('c:/dropbox/groundhogr/groundhog_2.9.9.2023.3.19.tar.gz',repos=NULL)
@@ -478,7 +479,7 @@ set.groundhog.folder('c:/temp/2000')
     
     
 #-----------------------------------------
-# test restore
+#Set 5 test restore
     #Start with installed.packages() in personal libreary, install a banch of all packages. Compare the installed.packages()\
     #Then do restore and compare them again, there should be differences and the differences should go away.
     #
@@ -530,5 +531,10 @@ set.groundhog.folder('c:/temp/2000')
   sum(!pv0 %in% pv4) #0;   but they all came back with restore.library()
 
   
+#Set 6 - Individual functions
+  #Checking version
+    check.groundhog.version(1)                          #to fully check it one needs to run the fucntion
+    get.minutes.since.cookie('check_groundhog_version') #here we just test that it is updating the number of minutes since last check
+    
   
   

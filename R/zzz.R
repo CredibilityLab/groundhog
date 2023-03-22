@@ -80,6 +80,10 @@
                     }
                     
               } #End if file found
+            
+        #10 Check if new version of groundhog exists, if we have not checked today yet
+            check.groundhog.version(min.days=1) #Function 42  -  utils.R
+            
 
                   
     } #End of onLoad
@@ -97,8 +101,6 @@
           packageStartupMessage ("Loaded 'groundhog' (version:",packageVersion('groundhog'),  ")") 
           packageStartupMessage ("Tips and troubleshooting: https://groundhogR.com")
           
-      #2 check for need to update groundhog
-        check.groundhog.version(min.days=0) #Function 42  -  utils.R
   
         } #End on attach
     

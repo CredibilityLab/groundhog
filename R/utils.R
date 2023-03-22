@@ -744,11 +744,14 @@
       
  
       
-#42  check.groundhog.version()  - if more than `min.days' days since last check, check if goundhog needs to be updated
+#42  check.groundhog.version()  - if more than `min.days' days since last check, check if groundhog needs to be updated
       
       check.groundhog.version <- function(min.days=7)
       {
-      
+      #Early return if the folder with groundhog has not been set yet 
+          main_folder <-  fw(paste0(path.expand("~"), "/R_groundhog")) #fw: function #50
+          if (!file.exists(main_folder)) return(invisible(FALSE))
+        
       #Start with high numbers  
         last.check.days=9999  
         
@@ -756,9 +759,10 @@
           if (min.days>0)
           {
         
-      #How many days has it been
+      #How many days has it been since we checked
           last.check.minutes <- get.minutes.since.cookie('check_groundhog_version')
           last.check.days    <- (last.check.minutes/60)/24
+          save.cookie('check_groundhog_version')
         
       #If less than min.days, early return
           if (last.check.days<min.days) return(invisible(TRUE))
@@ -784,14 +788,12 @@
                 gv.cran  <- as.numeric(strsplit(groundhog.version_cran, "\\.")[[1]])
                 gv.using.majmin <-  10000*gv.using[1] + gv.using[2]
                 gv.cran.majmin  <-  10000*gv.cran[1]  + gv.cran[2]
-    
-    
+
               #If server's is bigger, prompt to update
                 if (isTRUE(gv.cran.majmin > gv.using.majmin)) {
                     message2()
                     message1(
-                    "\n\n\n",
-                    "          OUTDATED GROUNDHOG\n",
+                    "\n          OUTDATED GROUNDHOG\n",
                     "            You are using version  '" , groundhog.version_using, "\n",
                     "            The current version is '" , groundhog.version_cran, "'\n\n",
                     "            You can read about the changes here: https://groundhogr.com/changelog\n\n",
@@ -799,7 +801,7 @@
                     )
                     }  #End mismatch in version
                   
-            } #ENd last check more than `min.days`  ago
+            } #End last check more than `min.days`  ago
       }#End of function 42
       
 #43 Get operating system
@@ -829,7 +831,7 @@
 #44 Check consent has been given to save files locally
       check.consent <- function() {
         
-      #Folder with cookie with location of groundohg folder, its exsitence means consent
+      #Folder with cookie with location of groundhog folder, its existence means consent
          main_folder <-  fw(paste0(path.expand("~"), "/R_groundhog")) #fw: function #50
         
       #See if consent has been given by seeing if the folder exists
