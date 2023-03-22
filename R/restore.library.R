@@ -90,7 +90,7 @@ restore.library<-function(minutes = -Inf, date='1970-01-01')
   #8 Restore #k=1
         if (tolower(answer) == 'restore') {
           
-          message1("Will restore ", nrow(purged.df_subset), " package.")
+          message1("Will restore ", nrow(purged.df_subset), " packages.")
           reinstalled.pkg_vrs = c()
           for (k in 1:nrow(purged.df_subset))
           {
