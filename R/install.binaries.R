@@ -5,7 +5,7 @@
 
 ################################################################################
 
- install.binaries <- function(snowball)
+ install.binaries <- function(snowball,cores)
    {
       
       #1  Directory for downloaded zips temp 
@@ -29,7 +29,7 @@
         #2.0 Common beginning of URL
           #CRAN      
             repos     <- as.character(getOption("repos"))
-            url.cran  <- contrib.url(repos,type='binary')
+            url.cran  <- utils::contrib.url(repos,type='binary')
             
           #GRAN
             os  <- get.os()
@@ -53,22 +53,26 @@
           #3.1 Message
             n.cran <- sum(snowball$from=="CRAN")
             n.gran <- sum(snowball$from=="GRAN")
+            n.tot <- n.gran+n.cran
+            messagek <- message2
+            if (n.tot==1) messagek <- message1
+            
+            if (n.cran>0 & n.gran>0)  messagek("Will now download ",n.cran, " packages from CRAN, and ",n.gran," from GRAN")
+            if (n.cran>0 & n.gran==0) messagek("Will now download ",n.cran, " packages from CRAN")
+            if (n.cran==0 & n.gran>0) messagek("Will now download ",n.gran, " packages from GRAN")
 
-            if (n.cran>0 & n.gran>0)  message2("Will now download ",n.cran, " packages from CRAN, and ",n.gran," from GRAN")
-            if (n.cran>0 & n.gran==0) message2("Will now download ",n.cran, " packages from CRAN")
-            if (n.cran==0 & n.gran>0) message2("Will now download ",n.gran, " packages from GRAN")
-
             
             
             
-          #3.2 Set higher limit for download time
-            options(timeout = max(400, getOption("timeout")))
+          #3.2 Set higher limit for download time (return to default in #7 below)
+            time.out.before <- getOption("timeout")
+            options(timeout = max(400, time.out.before))
             
             
             
           #3.3 Simultaneous libcurl download (if available)
             
-              if (capabilities("libcurl")==TRUE)  #does this user have libcurl available?
+              if (capabilities("libcurl")==TRUE & cores!=1)  #does this user have libcurl available?
               {
               #Total number
                 n.tot <- n.cran+n.gran
@@ -84,22 +88,23 @@
                 
               #Download them all
                 download.files.in_batches(url.files , zip.files , batch.size=batch.size)   
-                    
-                      #util.R function #53
+                #util.R function #53
                 
+                
+              } else {
               
           #3.4 Sequential download if no libcurl or something fails
-              if (capabilities("libcurl")==FALSE)
+              
                for (k in 1:length(url.files))
                 {
                 message2("Will download sequentially, one at a time, because 'libcurl' is not available.")
                 message1("    Downloading ",k," of ",length(url.files))
                 
-                download.file(url.files[k], zip.files[k])
+                utils::download.file(url.files[k], zip.files[k])
                 
                 } #End loop downloading
             
-              }
+              } #End else
               
 
         #4 Unzip / install
@@ -143,7 +148,8 @@
 
           
       #5 Verify installation
-          ip <- data.frame(installed.packages(snowball$installation.path))      
+          message1("...verifying installation...")
+          ip <- data.frame(utils::installed.packages(snowball$installation.path))      
           ip$pkg_vrs <- paste0(ip$Package,"_",ip$Version)
           
         #Add success column to snowball
@@ -153,6 +159,10 @@
       #6 delete temp folder again (have it here and at beginning so that if process is interrupted deleted in anyway next time
           unlink(temp_path, recursive = TRUE)
           dir.create(temp_path,showWarnings = FALSE,recursive = TRUE) #create temp again
+          
+          
+      #7 Return timeout
+          options(timeout=time.out.before)
           
       #7 Output
           return(snowball)
