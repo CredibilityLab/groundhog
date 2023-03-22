@@ -38,6 +38,11 @@
 #'@param tolerate.R.version optional character string containing an R version 
 #'   which `groundhog.library()` will not throw an error for using, even if the 
 #'   date entered corresponds to a more recent major R release.  
+#'@param cores Integer. The maximum number of cores to use during parallel installation
+#' of source packages. The default, -1, uses the total number of cores available minus 2. 
+#' Setting `core`=1 leads to installing source packages, and also to downloading binaries,
+#' sequentially.
+
 #'@return a character vector containing all active packages for the session,
 #'   with their version number, under the format `pkg_vrs`.
 #'@examples

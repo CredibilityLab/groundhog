@@ -48,6 +48,11 @@ file and install it.}
 \item{tolerate.R.version}{optional character string containing an R version
 which \code{groundhog.library()} will not throw an error for using, even if the
 date entered corresponds to a more recent major R release.}
+
+\item{cores}{Integer. The maximum number of cores to use during parallel installation
+of source packages. The default, -1, uses the total number of cores available minus 2.
+Setting \code{core}=1 leads to installing source packages, and also to downloading binaries,
+sequentially.}
 }
 \value{
 a character vector containing all active packages for the session,
