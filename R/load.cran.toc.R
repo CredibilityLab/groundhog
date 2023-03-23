@@ -17,6 +17,9 @@ load.cran.toc <- function(update.toc = FALSE) {
     #Names of files
       files.rds = c('cran.toc.rds' , 'cran.times.rds' )
 
+    #Empty gran file so when linux checks whether it exists it does not check this one.
+      gran.file.rds =''
+      
     #Add gran.toc if mac or windows after version 3.1
       os <- get.os()
       if (os %in% c('windows','mac', 'mac_arm')) {
