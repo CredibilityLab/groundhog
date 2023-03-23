@@ -34,7 +34,7 @@
       write(paste0(t1, " - Attempting to install ",pkg_vrs," from ",url),log_path,append = TRUE)
       
     #Install
-      utils::install.packages(url,type='source',repos=NULL, dependencies=FALSE,lib=installation_path)
+      utils::install.packages(url,type='source',repos=NULL, dependencies=FALSE,lib=installation_path, Ncpus=1)
       
     #Log success
       ip <- utils::installed.packages(installation_path)
