@@ -107,11 +107,7 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
 
     
     
-  # 5 Snowball table, with installed | CRAN | GRAN | TARBALL | INSTALLATION TIME
-
-  # - Install from CRAN if possible
-  # - else, install from GRAN if possible
-  # - else, install from source
+  # 5 Snowball table with packages to be installed & necessary attributes (location, binary / source, etc)
 
   #Installed?
     snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs)
@@ -140,7 +136,10 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
     )
   }
 
-  
+  os <- get.os()
+  if (os!='other') {
+    
+  #For windows and mac get binaries information
     snowball.CRAN <- snowball.pkg_vrs %in% get.current.packages("binary")$pkg_vrs
     snowball.GRAN.date <- as.Date(sapply(snowball.pkg_vrs, get.gran.binary.date , date=date), origin = "1970-01-01") # 5.3 Binary date in MRAN?
     snowball.GRAN.date <- as.DateYMD(snowball.GRAN.date)
@@ -148,7 +147,14 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
     snowball.GRAN <- snowball.GRAN.date != "1970-01-01"
     snowball.from <- ifelse(snowball.GRAN, "GRAN", "source")      # GRAN if available, if not source
     snowball.from <- ifelse(snowball.CRAN, "CRAN", snowball.from) # Replace GRAN if CRAN is available and using most recent version of R
-
+  } else {
+    
+  #If os IS 'other'
+    n <- length(snowball.pkg_vrs)
+    snowball.CRAN <- rep(FALSE, n)
+    snowball.from <- rep('source', n)
+    snowball.GRAN.date <- rep(as.Date("1970-01-01"),n)
+    }
   
   # Installation time from source
   snowball.time <- round(mapply(get.installation.time, snowball.pkg, snowball.vrs), 0)
