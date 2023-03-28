@@ -32,8 +32,7 @@ toc <- function(pkg, dependencies = FALSE) {
 		#Date to include in example
 			date.example <- Sys.Date()-15
 	
-    message2()
-    message1(
+    msg=paste0(
       "There is no package '", pkg, "' in our database of all CRAN packages ever posted.\n",
       "   Keep in mind that:\n",
       "    1. Package names are cAsE seNsiTive\n",
@@ -41,7 +40,7 @@ toc <- function(pkg, dependencies = FALSE) {
 	  "    3. To load a 'GitHub' or 'Gitlab' package you need to include\n",
 	  "       the full path, e.g., groundhog.library('github::crsh/papaja','",date.example,"')"
     )
-    exit()
+   gstop(msg)
   }
 
 

@@ -1,4 +1,4 @@
-#' Install & load CRAN, GitHub, and GitLab packages as current on given date 
+ #' Install & load CRAN, GitHub, and GitLab packages as current on given date 
 #' 
 #' Groundhog maintains a separate local package library where it stores 
 #' version-controlled packages, with multiple versions of the same package saved 
@@ -24,12 +24,9 @@
 #'@param include.suggests logical, defaults to `FALSE`. When set to `TRUE`, 
 #'   loads dependencies classified in the DESCRIPTION file as `suggested`.
 #'@param ignore.deps an optional character vector containing dependencies which 
-#'   may be already loaded in the R session and even if the loaded version does 
-#'   not match the version implied by the entered date, groundhog.library() will 
-#'   proceed and ignore #'   this conflict. If one version of a package is loaded, 
-#'   and a different is needed for #'   groundhog, the default behavior is to 
-#'   stop the request and ask the user to restart #'   the R session to unload 
-#'   all packages. This will bypass that requirement.
+#'   are already loaded in the R session, and create a conflict with a needed 
+#'   dependency for the package being loaded (mismatch of version), but which should be ignored
+#'   and groundhog.library() should proceed tolerating the conflict. 
 #'@param force.source logical (defaults to `FALSE`). When set to `TRUE`, will 
 #'   not attempt installing binary from CRAN or MRAN and instead download source 
 #'   file and install it.
@@ -38,6 +35,11 @@
 #'@param tolerate.R.version optional character string containing an R version 
 #'   which `groundhog.library()` will not throw an error for using, even if the 
 #'   date entered corresponds to a more recent major R release.  
+#'@param cores Integer. The maximum number of cores to use during parallel installation
+#' of source packages. The default, -1, uses the total number of cores available minus 2. 
+#' Setting `core`=1 leads to installing source packages, and also to downloading binaries,
+#' sequentially.
+
 #'@return a character vector containing all active packages for the session,
 #'   with their version number, under the format `pkg_vrs`.
 #'@examples
@@ -71,60 +73,78 @@
 #' @details For more information about groundhog check out [groundhogr.com](http://groundhogr.com)
 #' @export
 #'
-  groundhog.library <- function(pkg, date,  quiet.install = TRUE,  include.suggests = FALSE,  
-                            ignore.deps=c(), force.source = FALSE,
-                            force.install = FALSE, tolerate.R.version = "" )
-    {
-     
-  #0) Save default libpaths to return to it after exiting
+#----------------------------------------------------------------------
+#OUTLINE 
+  #1 Preliminaries
+  #2 Early return if everything is already attached
+  #3 Get snowballs for all requested packages
+  #4 Create libpaths
+  #5 Install snowball 
+    #5.2 Background (with R Script if source conflicts with it)
+    #5.3 Forground
+  #6 localize the snowballs
+  #7 Check conflict now that it is all installed 
+  #8 library() all pkgs
+  #9 Verify each snowball, saving snowball .rds if successful  
+#----------------------------------------------------------------------
+
+
+
+  groundhog.library <- function(pkg, date,        quiet.install = TRUE,  
+                            include.suggests = FALSE, ignore.deps=c(), 
+                            force.source = FALSE,     force.install = FALSE, 
+                            tolerate.R.version = "" , cores = -1)
+  {
+    
+#--------------------------------------------------------------
+    
+  #1 Preliminaries
+    #Check if new versin of groundhog exists 
+      check.groundhog.version(min.days=1) #Function 42  -  utils.R
+
+    
+    #1.0 Save default libpaths to change back to them after exiting
         if (!exists("orig_lib_paths",envir=.pkgenv)) {
               .pkgenv[["orig_lib_paths"]] <- .libPaths()
-           }
-    
-        #This is executed first so that upon exit() and setting it back to this, it exists for sure.
-
-    
-  #0.5) Verify a mirror has been set    
-     set.default.mirror() #Function 36
-    
-  #0.6 Verify a personal library has been assigned
-     verify.personal.library.exists()
-     
-  #1) Validation     
-    #1.0 if ignore deps is not empty, check that it is already loaded
-       if (length(ignore.deps)>0) {
-         if (!all(ignore.deps %in% .packages())) {
-           message1("\nGroundhog says: Error.\nAll packages included in the ignore.deps() option must be loaded prior to running\n",
-                   "groundhog.library(), but the following is/are not: ",
-                    paste0(dQuote(ignore.deps [!ignore.deps %in% .packages()]), collapse=" ,"))
-           exit()
-          } #End if some are not loaded
-          } #End if ignore.deps() are requested
-    
-    #1.0.5) Are pkg and date set?
-      if (missing(pkg) || missing(date)) {
-        message1("groundhog says: you must include both a package name and a date in 'groundhog.library()' ")
-        exit()
-      }
-     
-     #1.1) Is date valid?
-        date.catch <- try(typeof(date),silent=TRUE)
-        if (as.character(class(date.catch))=="try-error") {
-          message("Groundhog says: The object '" , as.character(substitute(date)) ,"', does not exist.")
-          exit()
         }
-        validate.date(date) #Function defined in utils.R
+    
+  #1. pkg & date included
+             if (missing(pkg) || missing(date)) {
+              msg=paste0("You must include both a package name and a date in 'groundhog.library()' ")
+              gstop(msg)
+             }
+      #1.8 put package name in quotes if it is not an object and was not put in quotes
+        pkg.catch <- try(typeof(pkg),silent=TRUE)
+        if (as.character(class(pkg.catch))=="try-error") {
+          pkg <- as.character(substitute(pkg))
+          } 
+    
+     #1.4 Validate arguments entered (Utils.R #46)
+        validate.groundhog.library(pkg, date,  quiet.install,  include.suggests ,ignore.deps, force.source , force.install, tolerate.R.version  ,cores)  
    
-    #1.2) Reload databases if necessary and change them back on existr  so that any changes to cran.toc are undone (previous groundhog.library() call loading remotes)
-        if (is.null(.pkgenv[['cran.toc']])) load.cran.toc()
+    
+    #1.1 If there is a remote, it needs to be alone
+          remote <- basename(pkg)!=pkg      
+          n.remote <- sum(remote)
+          
+          if (n.remote>0 & length(pkg)>1 ) {
+           msg =paste0("The list of packages you are trying to load includes a remote (e.g., Github) package.",
+                       "But, remote packages need to be loaded on their own in separate groundhog.library() calls")
+		      gstop(msg)
+         }
+    
+    #Note: 1.2 & 1.3 could be done on loading, but, better here : (i) in case the user makes a change, and (ii) avoid writing files without authorization
+    #1.2  Verify a mirror has been set (utils.R #36)    
+        set.default.mirror() 
+    
+    #1.3 Verify a personal library to save non-groundhog packages has been assigned (Utils.R #37)
+        verify.personal.library.exists() 
+    
        
-    #1.4) Verify options are T/F (utils.R - function 27)
-          validate.TF(include.suggests)
-          validate.TF(force.source)
-          validate.TF(force.install)
-
-              
-    #2) On Exit refresh libpath and cran.toc
+    #1.5 Reload databases if needed
+        update_cran.toc_if.needed(date) 
+ 
+    #1.6 On Exit refresh libpath and cran.toc (cran toc can be modified temporarily by a remote)
           
             on.exit({
                     #Read cran toc again to undo any changes with remote
@@ -134,54 +154,296 @@
 					            if  (exists("orig_lib_paths",envir=.pkgenv)) .libPaths(.pkgenv[["orig_lib_paths"]])
                     })
             
-    #2.5 Drop pre-existing libpaths        
+    #1.7 Drop pre-existing .libPaths to avoid finding pkg in path without version match
         .libPaths('')
     
-    #3 If the day merits, update the database
-        update_cran.toc_if.needed(date) 
 
-    #4 validate R
-        validate_R(date , tolerate.R.version)
-
-    #5 Set of ignorable conflicts
-        ignore.deps <- c(ignore.deps_default() , ignore.deps) #Add any ignore.deps explicitly stated to the default set in utils
-        
-        
-    #6 put package name in quotes if it is not an object and was not put in quotes
-        pkg.catch <- try(typeof(pkg),silent=TRUE)
-        if (as.character(class(pkg.catch))=="try-error") {
-          pkg <- as.character(substitute(pkg))
-          } 
+  
           
-        
-         
-    #6.5 Sandwich possible library() commands  
+    #1.9 Sandwich possible library() commands  
         pkg <- sandwich.library(pkg)  #utils.R function 34
    
         
-    #7 Add groundhog.day to hogdays to alert of possible different days used in a snowball.conflict
+    
+    #1.11 how many cores? (totall -2 unless specified away from default of -1)
+        if (cores == -1) {
+          cores <- max(parallel::detectCores()-2,1)
+        }   
+        
+    #1.12 Common messages
+      f10 <- ifelse(interactive(), "\n(in R Studio run CMD/CTRL-SHFT-F10 to restart R session). ","")
+
+#------------------------------------------------------------------------ 
+    
+#2 Non-remote packages, early return if everything is already attached 
+   if (n.remote==0 & all.already.attached(pkg , date) ) return(invisible(TRUE))
+        
+#------------------------------------------------------------------------   
+
+#3 Get snowballs for all requested packages
+  #Save snowballs individually as a list and also as a single big snowball.all
+        
+      #3.1 Non-remote snowball
+        if (n.remote==0)
+        {
+        
+        k <- 0 
+        snowball.list <- list()
+
+     
+        for (pkgk in pkg)
+          {
+          k <- k+1
+          snowball.k  <- get.snowball(pkgk , date , include.suggests)
+    
+        #options
+           if (force.source==TRUE)   snowball.k$from      = 'source'
+           if (force.install==TRUE)  snowball.k$installed = FALSE
+     
+        #Add to snowball.all
+            if (k==1) snowball.all <- snowball.k
+            if (k> 1) snowball.all <- rbind(snowball.all, snowball.k)
+            
+        #Add to list
+            snowball.list[[k]] <- snowball.k
+          
+         } #End loop over pkgs
+        } #End of non-remote
+        
+      
+     #3.2 Remote snowball (always only 1 to avoid conflicts between dependencies)
+        if (n.remote==1)
+        {
+          #Empty list
+           snowball.list <- list()
+         
+          # Process pkg-->usr, remote_id
+            pkg_list<-make.pkg_list(pkg)
+            usr <- pkg_list$usr
+            remote_id <- pkg_list$remote_id
+            pkg <- pkg_list$pkg
+            git <- pkg_list$remote_id
+        
+         #3.2.1 Possible early returns if already attached (or conflicting)
+            
+          #Full identifier of pkg called: remote, usr, pkg, date. ('github::crsh/papaja_2021_10-01')
+            git_usr_pkg_date <- paste0(remote_id  , "_", usr, "_", pkg ,"_", gsub("-","_",date))
+    
+                      
+          #This same pkg_date loaded & attached early return
+              if (git_usr_pkg_date %in% .pkgenv[['remotes.attached']]) {
+                    message1("The package '", pkg_list$usr_pkg, "', for '",date,"', is already attached.")
+					exit()
+              }
+            
+          #Same remote did not trigger a match before, somethign must not match, exit
+              if (pkg %in% .pkgenv[['session.remotes_df']]$pkg)
+              {
+                msg=paste0("Another version of '", pkg, "' was previously loaded into your R session.\n",
+							"To unload all packages restart your R session. ",f10)
+                gstop(msg) #util #51)
+               }
+                
+        #Stop if thehy specify "@"
+            if (regexpr('@', pkg)>0)
+            {
+              msg=paste0("Seems like you are specifying a version of the package on the remote repository with '@'.",
+                         "With groundhog.library() you may only access the default version of a Git package. Please, ",
+                         "remove the '@' from the package name")
+              message(msg)
+              exit()
+              
+            }
+            
+        #Get snowball
+          snowball.all  <- get.snowball.remote(pkg,date,remote_id, usr,include.suggests,force.install=force.install)
+            
+          #Force source: Set from to source for non-remote packages 
+            if (force.source  == TRUE)  snowball.all$from[is.na(snowball.all$sha)] <- 'source'
+
+        #list
+            snowball.list[[1]] <- snowball.all
+      }
+        
+#------------------------------------------------------------
+        
+#4 Create libpaths
+
+    #4.1 Create all paths if they don't exist (so that they can be added to libpath in 3.5)
+          for (j in 1:nrow(snowball.all))
+          {
+            dir.create(snowball.all$installation.path[j],recursive = TRUE, showWarnings = FALSE)
+            
+          }
+          
+    #4.2 Set libpaths for big snowball
+          .libPaths(unique(snowball.all$installation.path))
+          
+        
+#5 Check conflict with previously groundhog-loaded packages
+    #Get currently active packages
+      .pkgenv[['active']] = active = get.active()
+      check.conflict.before(snowball=snowball.all, pkg.requested=pkg, ignore.deps, date)  #check.snowball.conflict.R
+        
+#6 Install snowball 
+  
+    #6.1 Do we need to install on background?
+    #   Any source package that needs install is loaded and thus needs background install?
+            snowball.install.source <- snowball.all[snowball.all$from=='source' & snowball.all$installed==FALSE,]
+            n.source.conflict       <- sum(snowball.install.source$pkg %in% .pkgenv[['active']]$pkg)
+        
+    #6.2 BACKGROUND Install
+        
+        if (n.source.conflict > 0) 
+         {
+          
+          #Save the snowball as an rds file
+              arguments_path <- file.path(get.groundhog.folder(), paste0("temp/background_install_arguments.rds"))
+              dir.create(dirname(arguments_path),showWarnings = FALSE,recursive=TRUE)
+              arguments <- list(snowball=snowball.all, date=date, cores=cores)
+              saveRDS(arguments , arguments_path,version=2 , compress=FALSE)
+              
+          #Execute snowball.install in background with system
+              script_path <- system.file("background_scripts/backgroung_install.snowball.R", package = "groundhog")
+              system(paste0("Rscript ",script_path , " " , arguments_path) )
+              
+            #Delete temp path
+              unlink(arguments_path)
+              
+        } #End n conflict>0
+
+    #6.3  FOREGROUND INSTALL
+        if (n.source.conflict == 0)  {
+             install.snowball(snowball.all,date, cores)        
+
+          } 
+       
+  
+#------------------------------------------------------------------------ 
+   
+            
+#7 localize the snowballs
+            
+    #Drop base pkgs from snowball.all
+      snowball.all<-snowball.all [!snowball.all$pkg %in% base_pkg(),]
+        
+    #localize
+      localize.snowball(snowball.all)   
+      
+      #localizing means copying the folder of the installed package to the default (non-groundhog) folder  
+
+#------------------------------------------------------------------------ 
+
+      
+#8 Check conflict now that it is all installed (will prompt a restart if a conflict exists, will not occur again because they are localized)
+    check.conflict.after(snowball.all, pkg.requested=pkg ,ignore.deps=ignore.deps, date=date)
+
+#------------------------------------------------------------------------ 
+
+#9 Library all pkgs
+      for (pkgk in pkg)  base.library(pkgk, character.only=TRUE)
+
+      
+#------------------------------------------------------------------------ 
+
+#10 Verify each snowball, saving snowball .rds if successful  
+      
+  for (k in 1:length(snowball.list))
+       {
+         
+    #10.1 Take one snowball
+       snowball<-snowball.list[[k]]
+         
+    #10.2 Verified: TRUE or FALSE?
+       verified <- verify.snowball.loaded(snowball, ignore.deps)  
+       
+       #Includes 'successfully attached' msg, see #verify.snowball.loaded.R
+  
+	  #10.3 IF VERIFIED
+       
+        if (verified==TRUE) { 
+          
+        
+        #10.4 Path for CRAN snowball 
+            if (!'sha' %in% names(snowball))
+            {
+               #dir
+                snowball_dir <- paste0(get.groundhog.folder() , '/snowballs_v2' )
+               
+              #file
+                  if (include.suggests==FALSE) snowball_file <- paste0(pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
+                  if (include.suggests==TRUE)  snowball_file <- paste0(pkg , "_" ,  gsub( "-", "_" , date) , '_with_suggests.rds')  
+            
+              #path
+                  snowball_path <- file.path(snowball_dir, snowball_file)
+            } else {
+          
+        #10.5 Path for Remote snowball
+         
+            #dir
+              snowball_dir <- paste0(get.groundhog.folder() , '/snowballs_v2/' , remote_id )
+            
+            #FILE
+               if (include.suggests==FALSE) snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
+               if (include.suggests==TRUE)  snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '_with_suggests.rds')  
+            
+            #FULL PATH
+               snowball_path <- file.path(snowball_dir, snowball_file)
+            }#End 10.5
+          
+         #10.6 Save snowball
+            #Update  column `installed` in  snowball
+                ip <- data.frame(utils::installed.packages(snowball$installation.path), stringsAsFactors=FALSE)
+                snowball$installed <- (snowball$pkg %in% ip$Package | snowball$pkg %in% .pkgenv[['base_pkg']]) #if in packages or in base.packages
+                
+	      #10.7  Save snowball RDS 
+			      saveRDS(snowball, snowball_path[k], version = 2, compress=FALSE)
+
+        
+          
+        #10.8 Add snowball to session
+					  add.session.snowballs(snowball)  #utils.R -  function #41  
+					                                   #includes variables pkg, vrs, pkg_vrs, repos, requested, sha
+			
+				#10.9 Add to remotes_df
+					  if (n.remote>0) {
+					    
+					    #Add attached remote to session variable so that we can quickly say "already attached"
+					     .pkgenv[['remotes.attached']] <- c(.pkgenv[['remotes.attached']], git_usr_pkg_date )
+					    
+					    #Add all remotes to remotes.df
+					      snowball.remotes <- snowball[!is.na(snowball$sha), ]    
+					      for (k in 1:nrow(snowball.remotes)) {
+					        rdf_row <- get.remote_df.from.path(snowball.remotes$installation.path)
+					        rdf_row$date <- date
+					        .pkgenv[['session.remotes_df']] <- rbind (.pkgenv[['session.remotes_df']], rdf_row)
+					        
+					      } #End loop
+					  } #End if n.remote>0
+					  
+				#10.10 Add groundhog.day to hogdays to alert of possible different days used in a snowball.conflict
         if (!is.null(.pkgenv[['hogdays']])) {
             .pkgenv[['hogdays']] <- unique(c(date, .pkgenv[['hogdays']]))
-          
-          } else {
-          
+            } else {
             .pkgenv[['hogdays']]<- date
         
-          }
-        
-        
-  #8 Loop running groundhog
-        for (pkgk in pkg) {
-              #Identify as remote based on '/'package (remotes need a /)'
-                cran <- TRUE
-                if (basename(pkgk)!=pkgk) cran <- FALSE
-                
-              #Process based on remote
-                  if (cran==TRUE)   groundhog.library.single(pkgk, date, quiet.install ,  include.suggests ,  ignore.deps, force.source , force.install)
-                  if (cran==FALSE)  groundhog.library.single.remote(pkgk, date, quiet.install ,  include.suggests ,  ignore.deps, force.source , force.install)
-                }
-  
+          } #ENd if 10.10
+					     
 
- 
-  } #End of groundhog.library
-        
+					} #End if (verified==TRUE)              
+     
+         
+         
+  #10.7 If FALSE, delete snowball
+      if (verified==FALSE) {
+        if (file.exists(snowball_path)) file.remove(snowball_path)
+      }    
+         
+      }#End of  #10
+                 
+#----------------------------------
+      
+      
+}  #End new.groundhog.folder()
+  
+  

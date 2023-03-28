@@ -90,14 +90,14 @@
               #Delete folder
                 unlink(clone_path,recursive=TRUE,force=TRUE)
                 
-              msg <- paste0 ("groundhog says: Unable to obtain R package '",usrk,"/",pkgk,"' from '",remote_idk, "'. ",
-							 "Check spelling of package, make sure it is an R package, and that it is available ",
+              msg <- paste0 ("Unable to obtain R package '",usrk,"/",pkgk,"' from '",remote_idk, "'.\n",
+							 "Check spelling of package, make sure it is an R package, and that it is available\n",
 							 "on '",remote_idk, "',  check your internet connection, and/or visit ",
-							 "http://groundhogR.com/troubleshoot \n ",
-							 "Type 'OK' to confirm you have read this message.")
-				       infinite.prompt(format.msg(msg),'ok')   
-                exit()
-              }  #End of if local exists
+							 "http://groundhogR.com/troubleshoot.")
+							 
+			gstop(msg) #utils #51
+			
+          }  #End of if local exists
 
           
           

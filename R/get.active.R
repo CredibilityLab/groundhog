@@ -10,7 +10,7 @@ get.active <- function() {
   si <- utils::sessionInfo()
 
     loaded.list   <- si$loadedOnly # pkgs in name space
-    attached.list <- si$otherPkgs # pkgs in attached
+    attached.list <- si$otherPkgs  # pkgs in attached
     base.pkg <- si$basePkgs
     active.pkg <- c(names(loaded.list), names(attached.list)) # Get names of active packages
     active.vrs <- c(lapply(loaded.list, function(x) x$Version), lapply(attached.list, function(x) x$Version))
@@ -59,4 +59,12 @@ get.attached <- function()
    return(df)
 }
 
+
+  get.installed <- function()
+  {
+  ip <- data.frame(utils::installed.packages(.libPaths()))
+  df <- data.frame(pkg=ip$Package, pkg_vrs=paste0(ip$Package,"_",ip$Version), stringsAsFactors = FALSE )
+  df <- df[!duplicated(df$pkg),]  #Drop duplicate packages so we only consider the 1st one, which is the one that would get loaded
+  return(df)
+}
 

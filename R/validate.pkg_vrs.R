@@ -13,16 +13,13 @@
     
   #3 No 'groundhog'
         if ("groundhog" == pkg) {
-        txt <- paste0(
-                "|IMPORTANT\n",
-                "|     groundhog says: You may not use groundhog.library() to load groundhog.\n",
-                "|     To load the version of groundhog available on '", date, "', you may run:\n",
-                "|     meta.groundhog('" ,  date , "')",
-                "|     Type 'OK' to confirm you have read this message."
+        msg <- paste0(
+                "You may not use groundhog.library() to load groundhog.\n",
+                "To load the version of groundhog available on '", date, "', you may run:\n",
+                "meta.groundhog('" ,  date , "')",
                  )
         
-        answer <- infinite.prompt(txt,'ok')
-        exit()
+         gstop(msg) #util #51)
         } #End if groundhog
 
     
@@ -42,7 +39,7 @@
 
   #5 Early return if already attached
         if (pkg_vrs %in% attached.pkg_vrs) {
-          message1("The package '", pkg_vrs, "' is already attached.")
+          #message1("The package '", pkg_vrs, "' is already attached.")
           return('already_attached')  
         }
   

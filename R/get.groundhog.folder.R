@@ -19,17 +19,21 @@
 # Function that gets the groundhog folder, or prompts user to create it.
 get.groundhog.folder <- function() {
   
+  
   #Verify folder with 'cookie files' and default for library exist. giving consent to save files
     consent <- check.consent() 
     if (consent==FALSE) {
-      stop(' -- not authorized to save to folder necessary for groundhog to work --')
+      message(' -- not authorized to save to folder necessary for groundhog to work --')
+      exit()
       return(FALSE)
       }
-    
-    
+  
+  #Set main folder with 'cookie files' and default for library
     main_folder <-  paste0(path.expand("~"), "/R_groundhog")
-    
-    
+ 
+  #Create main folder 
+      dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
+
   #Path to cookie file with location of folder
     path_file_storing_groundhog_library_location <- paste0(main_folder ,"/current_groundhog_folder.txt")
     
@@ -81,19 +85,27 @@ set.groundhog.folder <- function(path) {
     
   #Path to file saving groundhog folder
     path_file_storing_groundhog_library_location <- paste0(main_folder ,"current_groundhog_folder.txt")
-
-  #See if cookie existed
+    
+   #See if cookie existed
       cookie_existed <- file.exists(path_file_storing_groundhog_library_location)
-        
+    
   #Save the cookie
-
     path <- trimws(path)
     cat(path, file = path_file_storing_groundhog_library_location)
   
-  #Create groundhog library
+  #Create groundhog_folder
     dir.create(path, showWarnings = FALSE, recursive = TRUE)
 
+  #Verify we can save there
+    path1 <- file.path(path,"testing ability to save.txt")
+    write('testing ability to save',path1)
+    saved.succesfully <- file.exists(path1) 
+    unlink(path1)
     
+    if (!saved.succesfully) {
+      gstop("groundhog says: Unable to save to '",path,"'. Make sure you are allowed to save files to that directory.")
+      } 
+      
   #Assign it to the live environment
     Sys.setenv(GROUNDHOG_FOLDER = path)
  
@@ -101,9 +113,10 @@ set.groundhog.folder <- function(path) {
     load.cran.toc() #this will copy the rds files
     
   #Show confirmation message
-    message1("\nThe groundhog folder where downloaded packages are saved is now:\n",path)
+    message1("The groundhog folder where downloaded packages are saved is now:\n",path)
     
   #Reminder they can change it if it is the default path
     if (paste0(fw(dirname(path)),"/")==fw(main_folder)) message1("\nYou can change the location at any time running  `set.groundhog.folder(<path>)`")
     #fw() utils.R #50
+      
     }

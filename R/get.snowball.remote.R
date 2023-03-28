@@ -1,6 +1,5 @@
 
-#This script is called from groundhog.library.single.remote()
-#It modifies cran.toc to include the remote package and its remote dependencies, and then
+#Script modifies cran.toc to include the remote package and its remote dependencies, and then
 #generates a snowball using the default get.snowball() function
 #
 
@@ -15,7 +14,7 @@
   #1  If snowball already exists early return it  
     
         #Path to snowball
-            snowball_dir <- paste0(get.groundhog.folder() , '/snowballs/' , remote_id )
+            snowball_dir <- paste0(get.groundhog.folder() , '/snowballs_v2/' , remote_id )
            
              if (include.suggests==FALSE) snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
              if (include.suggests==TRUE)  snowball_file <- paste0(usr ,"_", pkg , "_" ,  gsub( "-", "_" , date) , '_with_suggests.rds')  
@@ -45,13 +44,13 @@
          #Last row in the baton has name of DESCRIPTION pkg on its own
            pkg_self_name <- baton$rows.toc[1,]$Package
          
-         txt<-paste0(
-                 "The package you requested, '" , usr , "/" , pkg , "'\n",
-                 "appears to have a different name on ", remote_id,".\n",
-                 "You could try running:  groundhog.library('",usr , "/" , pkg_self_name,"' , '",date,"')\n",
-        	     "Type 'OK' to confirm you have read this message.")
-         answer <- infinite.prompt(format.msg(txt),'ok')
-         exit()
+         msg<-paste0(
+                 "The package you requested, '" , usr , "/" , pkg ,
+                 "appears to have a different name on ", remote_id,
+                 "You could try running:  groundhog.library('",usr , "/" , pkg_self_name,"' , '",date,"').")
+           
+		  gstop(msg) #utils #51
+
        }
        
        

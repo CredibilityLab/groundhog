@@ -22,9 +22,8 @@ get.version <- function(pkg, date, patch = c("current")) {
 
   # 2.2 Check if date request comes after first date for that package
     if (dfk$Published[1] > date) {
-      message2()
-      message1("According to our records, the package '", pkg, "' was not yet available on CRAN on '", date, "'")
-      exit()
+      msg = paste0("According to our records, the package '", pkg, "' was not yet available on CRAN on '", date, "'")
+      gstop(msg)
     }
     
   # 2.3 Update cran.toc if  requested date comes before most up to date date

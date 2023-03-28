@@ -77,44 +77,70 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
 get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
 
 
-  # 5.1. Populate the starting point with this package and its dependencies
-  # [a] Vector with pending deps, for looping install
-  pending <- get.dependencies(pkg, date, include.suggests = include.suggests) # include.suggests=TRUE means that suggested dependencies and their dependencies are installed.
-
-  if (length(pending) == 0) {
-    return(data.frame(pkg = character(), dep2 = character(),stringsAsFactors = FALSE))
-  }
-
-  # [b] dep12: data.frame with two columns, pkg-left, dependency-right, for snowball loading
-  dep12 <- data.frame(pkg = pkg, dep2 = pending, stringsAsFactors = FALSE)
-
-  # 5.2 Loop over pending, adding to dep12, and both adding and subtracting from pending till it's empty
-  k <- 1
-  while (length(pending) != 0) {
-    # 5.3 Grab the first among the pending dependencies
-    depk <- pending[1]
-
-    # 5.4 Get its dependencies
-    pendingk <- get.dependencies(pkg = depk, date = date, include.suggests = FALSE) # Note: never include suggested deps for deps
-
-    # 5.5 Drop depk from pending
-    pending <- pending[-match(depk, pending)]
+  #1 If saved before, load it
+        #Path to dep12
+            dep12_dir <- paste0(get.groundhog.folder() , '/dep12' )
+            
+        #With and without suggests are different files
+            if (include.suggests==FALSE) dep12_file <- paste0(pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
+            if (include.suggests==TRUE)  dep12_file <- paste0(pkg , "_" ,  gsub( "-", "_" , date) , '_with_suggests.rds')  
+        
+            
+        #Final path    
+            dep12_path <- file.path(dep12_dir, dep12_file)
+            
+        #Create directory if it does not exist
+            if (!file.exists(dep12_dir)) dir.create(dep12_dir,recursive=TRUE, showWarnings = FALSE)  
+            
+        #If dep12 has been saved, load and return it
+            if (file.exists(dep12_path)) {
+                dep12 <- readRDS(dep12_path)
+                return(dep12)
+              } 
+            
+  
+      # 2. Populate the starting point with this package and its dependencies
+      # [a] Vector with pending deps, for looping install
+      pending <- get.dependencies(pkg, date, include.suggests = include.suggests) # include.suggests=TRUE means that suggested dependencies and their dependencies are installed.
     
-    #5.6 Add new pairs to  dep12 
-      if (length(pendingk) > 0) {
-        dep12k <- data.frame(pkg = depk, dep2 = pendingk, stringsAsFactors=FALSE)
-        dep12 <- rbind(dep12, dep12k)
-        }
-
-    #5.7 Add new dependencies to pending 
-    if (length(pendingk) > 0) {
-      already.processed <- pendingk %in% dep12[, 1] # identify in pending those already processed
-      pendingk.net <- pendingk[!already.processed] # drop them
-      pending <- unique(c(pending, pendingk.net)) # Unique so that if we add something already pending we don't add it
-    } # End 5.5 if some new dependencies to add
+      if (length(pending) == 0) {
+        return(data.frame(pkg = character(), dep2 = character(),stringsAsFactors = FALSE))
+      }
     
-    k <- k + 1
-    if (k > 50000) break # In case the loop does not converge to a stable dataframe
-  } # End while
-  return(dep12)
+      # [b] dep12: data.frame with two columns, pkg-left, dependency-right, for snowball loading
+      dep12 <- data.frame(pkg = pkg, dep2 = pending, stringsAsFactors = FALSE)
+    
+      # 5.2 Loop over pending, adding to dep12, and both adding and subtracting from pending till it's empty
+      k <- 1
+      while (length(pending) != 0) {
+        # 5.3 Grab the first among the pending dependencies
+        depk <- pending[1]
+    
+        # 5.4 Get its dependencies
+        pendingk <- get.dependencies(pkg = depk, date = date, include.suggests = FALSE) # Note: never include suggested deps for deps
+    
+        # 5.5 Drop depk from pending
+        pending <- pending[-match(depk, pending)]
+        
+        #5.6 Add new pairs to  dep12 
+          if (length(pendingk) > 0) {
+            dep12k <- data.frame(pkg = depk, dep2 = pendingk, stringsAsFactors=FALSE)
+            dep12 <- rbind(dep12, dep12k)
+            }
+    
+        #5.7 Add new dependencies to pending 
+        if (length(pendingk) > 0) {
+          already.processed <- pendingk %in% dep12[, 1] # identify in pending those already processed
+          pendingk.net <- pendingk[!already.processed] # drop them
+          pending <- unique(c(pending, pendingk.net)) # Unique so that if we add something already pending we don't add it
+        } # End 5.5 if some new dependencies to add
+        
+        k <- k + 1
+        if (k > 50000) break # In case the loop does not converge to a stable dataframe
+      } # End while
+      
+      #Save copy
+        saveRDS(dep12, dep12_path, version=2)
+        
+      return(dep12)
 } # End function get.all.dependencies

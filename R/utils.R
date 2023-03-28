@@ -1,7 +1,7 @@
 #This script has functions used throughout the package
 
 #1  get.pkg(), get.vsr()     : Extract package and version information from pkg_vrs
-#2  is.pkg_vrs.installed()   : Is pkg_vrs installed (within same R-minor version)?
+#2  is.pkg_vrs.installed()   : Is pkg_vrs installed (within same R-minor version)?Rin
 #3  as.DateYMD               : Format Y-M-D as date
 #4  get.rdate()              : Date for R being used
 #5  get.rversion()           : Get R Version major:minor:patch
@@ -40,8 +40,20 @@
 #38 restart.text()             :  tells user to either quit() R or use CMD-SHIF-F10 based on whether they use R Studio
 #39 get.minutes.since.cookie() :  reads csv file with Sys.time() of last time this cookie was saved
 #40 get.repos_from.snowball()  :  infer repository (cran, github, gitlab) from other information already in the snowball
-#41 update.groundhog.session() :  Update groundhog session with new packages loaded and requested with groundhog
+#41 add.session.snowballs() :     Update session dataframe with info on all groundhog loaded snowballs
 #42 check.groundhog.version()  :  if more than `min.days' days since last check, check if groundhog needs to be updated
+#43 Get operating system       :  windows or mac or mac_arm?
+#44 Check consent              :  Does .../R_groundhog exists?
+#45 Turn path from '\' to '/'  :  c:\users --> c:/users
+#46 MOVED
+#47 base.library.snowball.list
+#48 message.batch.installation.feedback() : feedback while installing a batch in parallel
+#49 - get.parallel.time()  :  estimate parallel time of installation
+#50 get pkg_list from path
+#51 gstop()                    :  show message in green then "** groundhog stopped**" in red and exit())
+#52 read/save loadl rds 
+#53 Download in batches        : breaks a list of pkgs into batches downloaded sequentially
+
 ########################################################################
     
 
@@ -166,32 +178,8 @@
         invokeRestart("abort")
   }
 
-#11 Available mran dates
-get.available.mran.date <- function(date0, date1) {
-  missing.mran.dates <- .pkgenv[["missing.mran.dates"]]
+#11 Available mran dates (DROPPED)
 
-  all.dates <- date0:date1 # All dates in range
-  available.dates <- all.dates[!all.dates %in% missing.mran.dates] # Those that are not missing
-  if (length(available.dates) == 0) {
-    return(as.Date("1970-01-01"))
-  } # If none remain, end
-
-  # Report mid value
-  n.dates <- length(available.dates)
-
-  if (n.dates == 0) {
-    message1(
-      "We looked for the version of the package you need in MRAN ",
-      "but it was not found there"
-    )
-    exit()
-  }
-
-  # ceiling() rather than floor() or round() to work when n.dates <- 1
-  mid.date.k <- ceiling(n.dates / 2)
-  mid.date <- available.dates[mid.date.k]
-  return(as.Date(mid.date, origin = "1970-01-01"))
-} # End of function
 
 #12 Base packages
     base_pkg <- function() {
@@ -256,7 +244,7 @@ get.available.mran.date <- function(date0, date1) {
 #17 validate date  
   validate.date <- function(entered_date)
       {
-       msg=paste0("\ngroundhog says: The date you entered '", entered_date,"', is not valid.\n",
+       msg=paste0("The date you entered '", entered_date,"', is not valid.\n",
                 "Please use the 'yyyy-mm-dd' format"
           )
     
@@ -264,8 +252,7 @@ get.available.mran.date <- function(date0, date1) {
        # correct format
         d <- try(as.Date(entered_date, format="%Y-%m-%d"),silent = TRUE)
           if ("try-error" %in% class(d) || is.na(d)) {
-              message1(msg)
-               exit()
+             gstop(msg) #util #51)
           }
 
        
@@ -274,16 +261,14 @@ get.available.mran.date <- function(date0, date1) {
        if (is.character(entered_date)) { 
        d.parts <- strsplit(entered_date,"-")[[1]]     #split date by '-
         if (nchar(d.parts[3])>2) {
-            message1(msg)
-            exit()
+           gstop(msg) #util #51)
         }
        }
    
        
       # numeric
          if (is.numeric(entered_date)) {
-          message1(msg)
-          exit()
+           gstop(msg) #util #51)
         }
  
            
@@ -301,7 +286,7 @@ get.available.mran.date <- function(date0, date1) {
   }
   
   
-#19 Verify file was download
+#19 Verify file was downloaded
     exit.if.download.failed <- function(file.name,file.path)
     {
     if (!file.exists(file.path)) {
@@ -416,8 +401,8 @@ get.available.mran.date <- function(date0, date1) {
             if (x==TRUE | x==FALSE) {
               
                return() } else {
-                message('groundhog says: "' , substitute(x) , '" can only be TRUE or FALSE')
-                 exit()
+                msg=paste0('groundhog says: "' , substitute(x) , '" can only be TRUE or FALSE')
+                 gstop(msg) #util #51)
                }
         }
       
@@ -468,7 +453,8 @@ get.available.mran.date <- function(date0, date1) {
     
     infinite.prompt <- function(text_msg, valid_answers,must.restart=FALSE)
       {
-  
+      
+        
       
       #Initialize values
         answer <- ''
@@ -618,27 +604,50 @@ get.available.mran.date <- function(date0, date1) {
   
  }
  
-#37 Does personal folder to install R packages exist?
+#37 Does personal folder to install R packages (not groundhog, but R's default) exist
     verify.personal.library.exists<-function()
       {
       #Create personal library if it does not exist
-        default_library <- Sys.getenv("R_LIBS_USER")
+         default_library <- Sys.getenv("R_LIBS_USER")
       
-      if (length(.libPaths()) <= 1 & !file.exists(default_library)) {
-        msg <- paste0("R does not have a personal library to save packages to. ",
-               "The default location for it is: '", default_library,"'. \n ",
-               "   1) Type 'create' to create that directory \n ",
-               "   2) Otherwise type 'stop'")
-        
-        answer<-infinite.prompt(format.msg(msg),c('create','stop'))
-        if (answer=='create') {
-              dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)
-              }
-        
-        if (answer=='stop') {
-              exit()
-        }
+         
+      #Interactive Session
+        if (length(.libPaths()) <= 1 & !file.exists(default_library))
+          {
+          
+          #Start msg
+              msg <- paste0("R does not have a personal library to save packages to. ",
+                            "The default location for it is: '", default_library,"'. \n ")
+          
+          
+          #Interactive menu
+            if (interactive()==TRUE) {
+                  msg <-paste0(msg,
+                       "   1) Type 'create' to create that directory \n ",
+                       "   2) Otherwise type 'stop'")
+                
+                answer<-infinite.prompt(format.msg(msg),c('create','stop'))
+                if (answer=='create') {
+                      dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)
+                      }
+                
+                if (answer=='stop') {
+                      exit()
+                }} 
+          #If script
+            if (interactive()==FALSE) {
+                  msg <- paste0("To work with groundhog you need to create that library.",
+                                 "One way to do that is to run `dir.create('", default_library , "',recursive=TRUE)`")
+
+                  message(msg)
+                  exit()
+                }
+                
+                
       }#End if library does not exist
+         
+       
+    
     }#End function
         
 #38 restart.text()  - give instructions for restarting in R
@@ -696,58 +705,65 @@ get.available.mran.date <- function(date0, date1) {
       get.repos_from.snowball <- function(snowball)
       {
       #If missing, or explicitly MRAN or CRAN, then it is a CRAN package.
-        repos <- ifelse(snowball$from %in% c(NA< 'CRAN','MRAN'),'CRAN',snowball$from)
+        repos <- ifelse(snowball$from %in% c(NA,'', 'CRAN','GRAN','MRAN'),'CRAN',snowball$from)
       return(repos)
       }
 
     
-#41 Update groundhog session with new packages loaded and requested with groundhog
-      update.groundhog.session <- function(snowball)
+#41 Add snowball so session data.frame
+    
+      add.session.snowballs <- function(snowball)
       {
-      #The fucntion has as argument snowball_with_repos, to make sure the snowball submitted includes $repos
+      #The function has as argument snowball_with_repos, to make sure the snowball submitted includes $repos
       # this variable is set in groundhog.library.single() and groundhog.library.single.remote() just before
       # calling on the function update.groundhog.session()
+        
+      #Add sha if CRAN (this allows later knowing if a package has been loaded from remote)
+          if (!'sha'  %in% names(snowball)) snowball$sha=NA
         
       #Add repos
             snowball$repos <- get.repos_from.snowball(snowball)  #function 40,  just above
             
-      #Get requested pkg from snowball
-            pkg <- snowball$pkg[nrow(snowball)]
-          
-      #Subset from snowball
-				    groundhog.session_df.k <-snowball[,c('pkg','vrs','pkg_vrs','repos')]
+      #Subset of columns from snowball
+				    session.snowballs.k      <-snowball[,c('pkg','vrs','pkg_vrs','repos')]
 					  
 			#Add time
-					  groundhog.session_df.k$time <- as.numeric(Sys.time())
+					  session.snowballs.k$time <- as.numeric(Sys.time())
 					  
-			#TRUE FALSE for whether package was explicitly requested
-					  groundhog.session_df.k $requested <- groundhog.session_df.k$pkg == pkg     
-					  
-			#ADD NEW ROWS
-					  .pkgenv[['groundhog.session_df']] <- 	rbind(.pkgenv[['groundhog.session_df']] , groundhog.session_df.k )
+			#Requested
+					  session.snowballs.k$requested <- FALSE                  #No package was requested
+					  session.snowballs.k$requested[nrow(snowball)] <- TRUE   #Except the last one
+					
+			#Add to session
+					  .pkgenv[['session.snowballs']] <- 	rbind(.pkgenv[['session.snowballs']] , session.snowballs.k )
       }
       
-        
+ 
+      
 #42  check.groundhog.version()  - if more than `min.days' days since last check, check if groundhog needs to be updated
       
       check.groundhog.version <- function(min.days=7)
       {
-      ######
-        last.check.days=9999  #give high value so that when unassigned it works fine
+      #Early return if the folder with groundhog has not been set yet 
+          main_folder <-  fw(paste0(path.expand("~"), "/R_groundhog")) #fw: function #50
+          if (!file.exists(main_folder)) return(invisible(FALSE))
+        
+      #Start with high numbers  
+        last.check.days=9999  
         
       #Skip cookie time if min.days=0
           if (min.days>0)
           {
         
-      #How many days has it been
+      #How many days has it been since we checked
           last.check.minutes <- get.minutes.since.cookie('check_groundhog_version')
           last.check.days    <- (last.check.minutes/60)/24
+          save.cookie('check_groundhog_version')
         
       #If less than min.days, early return
           if (last.check.days<min.days) return(invisible(TRUE))
-          } 
-          #END IF MIN.days>0
-        
+      
+          } #End if min.days>0
         
       #If more than `min.days` days, check version on server
           if (last.check.days>=min.days)
@@ -768,14 +784,12 @@ get.available.mran.date <- function(date0, date1) {
                 gv.cran  <- as.numeric(strsplit(groundhog.version_cran, "\\.")[[1]])
                 gv.using.majmin <-  10000*gv.using[1] + gv.using[2]
                 gv.cran.majmin  <-  10000*gv.cran[1]  + gv.cran[2]
-    
-    
+
               #If server's is bigger, prompt to update
                 if (isTRUE(gv.cran.majmin > gv.using.majmin)) {
                     message2()
                     message1(
-                    "\n\n\n",
-                    "          OUTDATED GROUNDHOG\n",
+                    "\n          OUTDATED GROUNDHOG\n",
                     "            You are using version  '" , groundhog.version_using, "\n",
                     "            The current version is '" , groundhog.version_cran, "'\n\n",
                     "            You can read about the changes here: https://groundhogr.com/changelog\n\n",
@@ -783,14 +797,46 @@ get.available.mran.date <- function(date0, date1) {
                     )
                     }  #End mismatch in version
                   
-            } #ENd last check more than `min.days`  ago
+            } #End last check more than `min.days`  ago
       }#End of function 42
       
-      
-#49 Check consent has been given to save files locally
+#43 Get operating system
+  get.os <- function()
+  {
+    
+  #Default
+    os <- 'other'
+
+  #If it has been set by hand, read it
+    path <-  paste0(path.expand("~"), "/R_groundhog/options/os.txt") #see groundhog.options.R
+    if (file.exists(path)) {
+      os = scan(path,what='character',quiet=TRUE)
+      if (os!='other') return(os)
+    }
+    
+    #There was a plan to have a groundhog.option() function but was abandoned.
+    #This is a placeholder, if there were to be an issue with some OS not being recognized
+    #users could by hand add this file, write their os and groundhog would work
+    #but if this ends up affecting more users groundhog will be changed to have a more robust os detection.
+    
+  # use contrib.url() to rely on R's processing of sys.info() alternatives
+    repos <- as.character(getOption("repos"))
+    bin.url <- utils::contrib.url(repos,type='binary')
+    if (regexpr('windows', bin.url)[[1]]>0) os<-'windows'
+    if (regexpr('macosx', bin.url)[[1]]>0)  os<-'mac'
+    if (regexpr('arm64', bin.url)[[1]]>0 &  os=='mac') os<-'mac_arm'
+  
+    
+  #If other show warning
+    return(os)
+  }
+    
+
+    
+#44 Check consent has been given to save files locally
       check.consent <- function() {
         
-      #Folder with cookie with location of groundohg folder, its exsitence means consent
+      #Folder with cookie with location of groundhog folder, its existence means consent
          main_folder <-  fw(paste0(path.expand("~"), "/R_groundhog")) #fw: function #50
         
       #See if consent has been given by seeing if the folder exists
@@ -803,10 +849,12 @@ get.available.mran.date <- function(date0, date1) {
                         "'\n", "Enter 'OK' to provide authorization, and 'NO' not to.")
             
             batch_msg =  paste0("\n\n*********IMPORTANT MESSAGE FROM GROUNDHOG*****************************************\n",
-                         "groundhog needs to save files to '",main_folder,"' in order to work.\n",
+                         "groundhog needs to save packages in a local directory in order to work.\n",
                          "Per CRAN policy, you need to actively authorize groundhog to do this.\n",
-                         "To do so, simply create that folder, by e.g., running in R:\n",
-                         "       dir.create('",main_folder,"') \n",
+                         "Please run `set.groundhog.folder(<path>)` for the path you wish to use.\n",
+                         "If you are unsure which path to use, the following path is a reasonable default:\n",
+                         "   '", main_folder , "'\n",
+                         "(This only needs to be done once on a given computer)\n",
                          "**********************************************************************************\n\n")
           #For batch files
             if (interactive()==FALSE)
@@ -834,6 +882,125 @@ get.available.mran.date <- function(date0, date1) {
         
       }#End of function
           
-#50 Turn \ into /
+#45 Turn \ into /
       fw <- function(x) gsub("\\\\", "/", x)
       
+      
+
+#46 Moved to its own function
+#47 DROPPED
+#48 Moved to its own function
+ 
+  
+#49 - get.parallel.time()  :  estimate parallel time of installation
+get.parallel.time<-function(times,cores)
+{
+  #Sort times
+    times <- sort(times,decreasing=TRUE)
+    
+  #initiates times with small but sortable values
+    y = seq(0,.01,length.out=cores) 
+
+  #In loop, assign the next one, to the lowest total so far
+    for (k in 1:length(times))
+    {
+    y[which.min(y)]=y[which.min(y)] + times[k]  
+    }
+  #The longest link is the estimated time
+    return(max(y))
+}
+
+
+#50 get.pkg_list
+  get.remote_df.from.path<-function(snowball_path)
+  {
+    #Split path
+      parts <- strsplit(snowball_path,"/")[[1]]
+      n <- length(parts)
+      remote_id <- parts[n-1]
+      remote_id <- gsub("_", "", remote_id)
+    
+    #Split usr/pkg
+      parts2 <- strsplit(parts[n],"_")[[1]]
+      usr <- parts2[1]
+      pkg <- parts2[2]
+      sha <- parts2[3]
+      
+    return(data.frame(remote_id = remote_id , usr=usr, pkg=pkg, sha=sha))  
+  }
+      
+      
+#51 stop
+  gstop <- function(msg,format=FALSE) {
+    #Format the message with line breaks and border if requested
+    if (format==TRUE) msg=format.msg(msg) #uti #35
+    message1(msg)
+    message("**Groundhog stopped**")
+    exit()
+    }
+  
+#52 read/save purge and grounhod.installed. rds
+  
+  read.local.rds <- function(filename)
+  {
+    #Using R 
+    r.version    <- get.r.majmin()
+    
+    #Path to files
+      dir <- paste0(get.groundhog.folder() , "/R-" , r.version ,"/rds_files/")
+      path <- file.path(dir,filename)
+      
+      
+    #Read the file
+      df <- data.frame()
+      if (file.exists(path)) df<-readRDS(path)
+
+    #Return 
+      return(df)
+  }
+  
+  save.local.rds <- function(df, filename)
+  {
+    #Using R 
+    r.version    <- get.r.majmin()
+    
+    
+  
+    #Path to files
+      dir<- paste0(get.groundhog.folder() , "/R-" , r.version ,"/rds_files/")
+      path <- file.path(dir,filename)
+  
+     #Ensure dir exists  
+      dir.create(dir,showWarnings = FALSE,recursive = TRUE)
+  
+    #Save
+      saveRDS(df,path,version=2)
+  }
+  
+
+#53 Download in batches
+  download.files.in_batches <- function(url.files , zip.files , batch.size = 20)
+    {
+    #Sort alphabetically by package name
+      j  <- order(basename(url.files))
+      url.files <- url.files[j]
+      zip.files <- zip.files[j]
+    
+    #Split the vectors
+      #https://stackoverflow.com/questions/3318333/split-a-vector-into-chunks
+      url.split <- split(url.files, ceiling(seq_along(url.files)/batch.size))
+      zip.split <- split(zip.files, ceiling(seq_along(zip.files)/batch.size))
+      btot <- length(url.split)  
+      
+     
+  
+    #Download in loop
+      for (bk in 1:btot)
+      {
+      if (btot>1) message2("Batch ",bk, " of ", btot,". Downloading the following files:")
+      message1("     ",paste(url.split[[bk]],collapse='\n     '))
+      utils::download.file(url.split[[bk]], zip.split[[bk]],quiet=TRUE,method='libcurl')
+      }
+      
+  }#End of #53
+  

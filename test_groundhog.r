@@ -16,18 +16,17 @@
   #Set 2 - Previously documented bugs
   #Set 3 - Automatized installation of packages in random order, via function
   #Set 4 - Remotes (github and gitlab)
-
+  #Set 5 -
+  #Set 6 - individual functions
 #Version being tested (only locally available)
-install.packages('http://groundhogr.com/groundhog_1.9.9.2022.07.12-1539.tar.gz',repos=NULL)
-groundhog:::load.cran.toc(TRUE)
+
+install.packages('c:/dropbox/groundhogr/groundhog_2.9.9.2023.3.19.tar.gz',repos=NULL)
 library('groundhog')
 
-
-
-#Date to use for testing individual packages
+get.groundhog.folder()
+set.groundhog.folder('c:/temp/2000')
     test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
-    set.groundhog.folder('c:/temp/full_test3')
-    
+
 
 #Set 0 - various forms of calling packages to be loaded
   
@@ -42,18 +41,17 @@ library('groundhog')
         groundhog.library(2,2)
         
       #Nonexistent pkg on cran
-        groundhog.library(2,test.day)
-    
+        groundhog.library('tio',test.day)
+
       #inexistent pkg on github
         groundhog.library('github::crsh/powerful_999',test.day)
     
         
-        set.groundhog.folder('c:/temp/20221001')
         
   #Single package, with and without quotes
     library('groundhog')
     groundhog.library('pwr',test.day)  #quotes
-    groundhog.library(pwr,test.day)    #no quotes
+    groundhog.library(rio,test.day)    #no quotes
 
   #Object containing a single package
     pkg1='pwr'
@@ -64,8 +62,10 @@ library('groundhog')
     groundhog.library(pkg2,test.day)    #single package, no quotes, show warning to use ""
 
   #Direct cal to many packages
-    groundhog.library(c('pwr','metafor'),test.day)    
+    groundhog.library(c('pwr','metafor'),test.day)
     
+    
+
   #Sandwiching library
     library('groundhog')
     groundhog.library("
@@ -77,31 +77,23 @@ library('groundhog')
     
   
     
-    
-    
+    #Outdate R
+      library('groundhog')
+      groundhog.library('haven','2022-04-01')  
+
+
     
 #######################################    
-#Set 1 - Enumerated conflicts in 'check.snowball.conflict.R'
+#Set 1 - Enumerated conflicts '
 
-    #Conflict 1: force Install (is any package that needs to be *installed*  loaded)
-    
-        #Conflict caused by R Studio loading the pkg
-          library('groundhog')
-            pwr::cohen.ES()
-            groundhog.library('pwr',test.day,force.install=TRUE)
-            ok
+    #Conflict 1: deprecated           
+        test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
 
-        #Conflict caused by groundhog
-            groundhog.library('pwr',test.day)
-            groundhog.library('pwr',test.day,force.install=TRUE)
-            ok
-    
-        
     #Conflict 2: Same remote, different date
         library('groundhog')
         groundhog.library('heliosdrm/pwr',test.day)
         groundhog.library('heliosdrm/pwr',test.day+1)
-        ok
+        
         
 
     #Conflict 3: Requested package was previously loaded with groundhog but different version or repository
@@ -112,11 +104,11 @@ library('groundhog')
         
     #Conflict 4: Dependency conflicts with previously loaded groundhog package
         
-        #RUN THIS IN 4.1.x
+        #RUN THIS IN 4.2.x
           library('groundhog')
-          groundhog.library('haven','2021-08-01')  
-          groundhog.library('rio','2021-08-05')
-          groundhog.library('rio','2021-08-05',ignore.deps='haven') 
+          groundhog.library('haven','2022-05-01')  
+          groundhog.library('rio','2022-12-05')
+          groundhog.library('rio','2022-08-05',ignore.deps='haven') 
         
         #RUN THIS IN 4.1.x
           library('groundhog')
@@ -189,6 +181,8 @@ library('groundhog')
         library(groundhog)
         set.groundhog.folder(d0)
 
+        
+
 ########################################################################
 #SET OF TESTS 2 -  CHECKING PREVIOUSLY FOUND BUGS
     
@@ -218,7 +212,6 @@ library('groundhog')
   library('groundhog')
 
   groundhog.library('pwr',test.day-400)
-  ok
   groundhog.library('pwr',test.day-400,tolerate.R.version=groundhog:::get.rversion())
 
     
@@ -235,19 +228,21 @@ library('groundhog')
 #7) Update cran to
     groundhog:::load.cran.toc(TRUE)
     
-    
+
 #8 #DO THIS BY HAND:::elete R_groundhog ('main folder') verifying what happens if consent is given denied
-  
-    
-  library('groundhog')  #should be asked to give OK
-  
+  library('groundhog') 
   groundhog.library('pwr',test.day)
-    
+  
+  #Then run a .bat file taht executes R code doing library('groundhog') and trying to run groundhog.library(). 
+  #It should prompt running set.groundhog.folder()
+  #use files 'not_interactive.bat', modifying the location of the R script and R binary used to execute it"
+  
+
   
 #9 ) Base packages 
   groundhog.library('stats',test.day)
   groundhog.library('parallel',test.day)
- groundhog.library('mgcv',test.day)
+  groundhog.library('mgcv',test.day)
  
 ########################################################################
 #SET OF TESTS 3 -  INSTALLATION OF PACKAGES IN RANDOM ORDER
@@ -347,13 +342,14 @@ library('groundhog')
             exec_line=paste0("groundhog.library('", pkgk, "'," , "'", groundhog.day , "')") #line to execute 
             eval(parse(text=exec_line))                                              
 
-          #Verify every package in snowball is active after running
+          #Verify every package in snowball is availablerunning
               snowball.k=groundhog:::get.snowball(pkgk,groundhog.day)
-              active=groundhog:::get.active()
-              
+              ip = data.frame(installed.packages())
+              ip.pkg_vrs = paste0(ip$Package , "_" , ip$Version)
           #ignore deps
+              
               ignore.deps <- groundhog:::ignore.deps_default()
-              if (!all(snowball.k$pkg_vrs %in% active$pkg_vrs | snowball.k$pkg %in% ignore.deps)) {
+              if (!all(snowball.k$pkg_vrs %in% ip.pkg_vrs | snowball.k$pkg %in% ignore.deps)) {
                   message("----------groundhog tester says:  INSTALLATION ERROR---------------")
                   message("active packages:\n")
                   cat(sort(active$pkg_vrs))
@@ -363,7 +359,7 @@ library('groundhog')
 
               break
                   } else {
-                  message("Groundhog tester says:\nSUCCESS\nAll pkg_vrs in snowball are active for j=",j," (",pkgk,")")
+                  message("Groundhog tester says:\nSUCCESS\nAll pkg_vrs in snowball are available for j=",j," (",pkgk,")")
                   message("############################")
                 } #End of check for installation/loading success
               j<-j+1
@@ -376,18 +372,11 @@ library('groundhog')
 # Installation can be tested with most downloaded packages as of the release of R's version matching that being used
 # or based on available packages when testing. 
     library('groundhog')
-    test.groundhog(1:10)         #Install the 10 most downloaded packages 
+    test.groundhog(11:100)         #Install the 10 most downloaded packages 
     test.groundhog(510:525)      #install the 501-510 most downloaded packages
-    test.groundhog(-10, seed=9)  #install 10 random packages available right now for this version of R
+    test.groundhog(-10, seed=91)  #install 10 random packages available right now for this version of R
 
-    
-#---------------------------------------------  
-#4.  Remotes
-    mran.is.up()
 
-  
-
-      
 #4.1 - Run in 4.0.3
     #Test conflicts when a remote depends on a remote
     # Key is whether the second package, a dependency of the 1st, is loaded without an error 
@@ -425,6 +414,13 @@ library('groundhog')
     
   # remote dependency already loaded, but wrong date
     library('groundhog')
+    
+    
+        groundhog.library('jeroen/jsonlite','2022-10-01')
+
+        
+        force.source=TRUE
+        
     groundhog.library('tidymodels/broom','2020-04-02')  
     groundhog.library('crsh/papaja','2020-04-01')
     
@@ -456,19 +452,20 @@ library('groundhog')
             "ropensci/skimr")
     
     
+    groundhog.library('git2r','2022-10-01',tolerate.R.version = '4.2.2',force.source = TRUE)
     
-    groundhog.library('mlr-org/mlr',test.day)
+    groundhog.library('mlr-org/mlr','2022-10-01',force.source=TRUE)
     
     library('groundhog')    
       test.day <- groundhog:::get.r.majmin.release()+95 #release of this R version + 45 days
 
-    k=2
+    k=1
     for (pk in popular_github_packages[k:length(popular_github_packages)])
     {
     message('-------------------------------------------------------')
     message('---   groundhog testser: [',k,']  ',pk,'       ---')
     
-    groundhog.library(pk,test.day)    
+    groundhog.library(pk,'2022-01-01')    
     k=k+1
       
     }
@@ -477,3 +474,67 @@ library('groundhog')
 
     groundhog.library('jeroen/jsonlite',test.day)
 
+
+    
+    
+    
+#-----------------------------------------
+#Set 5 test restore
+    #Start with installed.packages() in personal libreary, install a banch of all packages. Compare the installed.packages()\
+    #Then do restore and compare them again, there should be differences and the differences should go away.
+    #
+    
+
+#Time 0 
+  library('groundhog')
+  get.groundhog.folder()
+  groundhog.library('tidyverse','2023-03-01')
+  ip0=data.frame(installed.packages())
+  pv0=paste0(ip0$Package,"_",ip0$Version)
+  
+  
+#Time 1
+  groundhog.library('tidyverse','2023-01-01')
+  ip1=data.frame(installed.packages())
+  pv1=paste0(ip1$Package,"_",ip1$Version)
+
+  library('groundhog')
+  restore.library()
+  library('groundhog')
+
+  
+  ip2=data.frame(installed.packages())
+  pv2=paste0(ip2$Package,"_",ip2$Version)
+
+  
+  
+  sum(!pv0 %in% pv1) #35; there are 35 packages we had when we started, they are now gone
+  sum(!pv0 %in% pv2) #0;   but they all came back with restore.library()
+  
+  
+#Time 2
+  groundhog.library('tidyverse','2022-11-01')
+  ip3=data.frame(installed.packages())
+  pv3=paste0(ip3$Package,"_",ip3$Version)
+
+  library('groundhog')
+  restore.library()
+  library('groundhog')
+
+  
+  
+  groundhog.library('tidyverse','2022-07-01')
+  ip4=data.frame(installed.packages())
+  pv4=paste0(ip4$Package,"_",ip4$Version)
+  
+  sum(!pv0 %in% pv3) #45; there are 45 packages we had when we started, they are now gone
+  sum(!pv0 %in% pv4) #0;   but they all came back with restore.library()
+
+  
+#Set 6 - Individual functions
+  #Checking version
+    check.groundhog.version(1)                          #to fully check it one needs to run the fucntion
+    get.minutes.since.cookie('check_groundhog_version') #here we just test that it is updating the number of minutes since last check
+    
+  
+  

@@ -18,13 +18,10 @@ update_cran.toc_if.needed <- function(date) {
   # Stop if date is in the future
       if (date > Sys.Date() - 2) {
         msg<-paste0(
-          "To ensure reproducibility of your script, given timezone differences and ",
-          "delays in updating different CRAN mirrors, don't use a date more ",
-          "recent than two days ago: ", format(Sys.Date() - 2), ". \n ",
-		  "To confirm you have read this message please type 'OK'"
-		  )
-		 answer<-infinite.prompt(format.msg(msg),"ok")
-		 exit()
+          "To ensure reproducibility of your script, given timezone differences and\n",
+          "delays in updating different CRAN mirrors, don't use a date more\n",
+          "recent than two days ago: ", format(Sys.Date() - 2), ".")
+		  gstop(msg) #util #51
       }
 
   # 2 Load cran.toc if not yet loaded

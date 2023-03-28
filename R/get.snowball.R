@@ -41,7 +41,7 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
     #0  If snowball already exists early return it  
     
         #Path to snowball
-            snowball_dir <- paste0(get.groundhog.folder() , '/snowballs' )
+            snowball_dir <- paste0(get.groundhog.folder() , '/snowballs_v2' )
             
         #Snowball with and without suggests are different snowballs, so two possible rds files for any given pkg date
             if (include.suggests==FALSE) snowball_file <- paste0(pkg , "_" ,  gsub( "-", "_" , date) , '.rds')  
@@ -107,17 +107,13 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
 
     
     
-  # 5 Snowball table, with installed | CRAN | MRAN | TARBALL | INSTALLATION TIME
-
-  # - Install from CRAN if possible
-  # - else, install from MRAN if possible
-  # - else, install from source
+  # 5 Snowball table with packages to be installed & necessary attributes (location, binary / source, etc)
 
   #Installed?
     snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs)
 
   #Over-rule it if requested to install all
-    if (force.install==TRUE) snowball.installed<-FALSE
+    if (force.install==TRUE) snowball.installed < -FALSE
     
   # Vector with paths
     snowball.installation.path <- mapply(get.pkg_search_paths, snowball.pkg, snowball.vrs)
@@ -129,26 +125,36 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
       data.frame(
         "pkg" = snowball.pkg,
         "vrs" = snowball.vrs,
-        "pkg_vrs" = snowball.pkg_vrs, # Identify pkg
-        "installed" = TRUE, # Installed?
-        "from" =  NA_character_, # Where to install from
-        "MRAN.date" = NA_character_, # MRAN date, in case MRAN is tried
-        "installation.time" = NA_real_, # time to install
+        "pkg_vrs" = snowball.pkg_vrs,       # Identify pkg
+        "installed" = TRUE,                  # Installed?
+        "from" = '',                         # Where to install from
+        "GRAN.date" = as.Date('1970-01-01'), # GRAN date, in case MRAN is tried
+        "installation.time" = 0,             # time to install
         "installation.path" = snowball.installation.path,
         stringsAsFactors = FALSE
       )
     )
   }
 
-  
+  os <- get.os()
+  if (os!='other') {
+    
+  #For windows and mac get binaries information
     snowball.CRAN <- snowball.pkg_vrs %in% get.current.packages("binary")$pkg_vrs
-    snowball.MRAN.date <- as.Date(sapply(snowball.pkg_vrs, get.date.for.install.binary,date=date), origin = "1970-01-01") # 5.3 Binary date in MRAN?
-    snowball.MRAN.date <- as.DateYMD(snowball.MRAN.date)
+    snowball.GRAN.date <- as.Date(sapply(snowball.pkg_vrs, get.gran.binary.date , date=date), origin = "1970-01-01") # 5.3 Binary date in MRAN?
+    snowball.GRAN.date <- as.DateYMD(snowball.GRAN.date)
 
-    snowball.MRAN <- snowball.MRAN.date != "1970-01-01"
-    snowball.from <- ifelse(snowball.MRAN, "MRAN", "source")      # MRAN if available, if not source
-    snowball.from <- ifelse(snowball.CRAN, "CRAN", snowball.from) # Replace MRAN if CRAN is available and using most recent version of R
-
+    snowball.GRAN <- snowball.GRAN.date != "1970-01-01"
+    snowball.from <- ifelse(snowball.GRAN, "GRAN", "source")      # GRAN if available, if not source
+    snowball.from <- ifelse(snowball.CRAN, "CRAN", snowball.from) # Replace GRAN if CRAN is available and using most recent version of R
+  } else {
+    
+  #If os IS 'other'
+    n <- length(snowball.pkg_vrs)
+    snowball.CRAN <- rep(FALSE, n)
+    snowball.from <- rep('source', n)
+    snowball.GRAN.date <- rep(as.Date("1970-01-01"),n)
+    }
   
   # Installation time from source
   snowball.time <- round(mapply(get.installation.time, snowball.pkg, snowball.vrs), 0)
@@ -161,11 +167,11 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
   snowball <- data.frame(
     "pkg" = snowball.pkg,
     "vrs" = snowball.vrs,
-    "pkg_vrs" = snowball.pkg_vrs, # Identify pkg
-    "installed" = snowball.installed, # Installed?
-    "from" = snowball.from, # Where to install from
-    "MRAN.date" = snowball.MRAN.date, # MRAN date, in case MRAN is tried
-    "installation.time" = snowball.time, # time to install
+    "pkg_vrs" = snowball.pkg_vrs,         # Identify pkg
+    "installed" = snowball.installed,     # Installed?
+    "from" = snowball.from,               # Where to install from
+    "GRAN.date" = snowball.GRAN.date,     # GRAN date, in case GRAN is tried
+    "installation.time" = snowball.time,  # time to install
     "installation.path" = snowball.installation.path,
     stringsAsFactors = FALSE
   )

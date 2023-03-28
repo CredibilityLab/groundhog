@@ -23,17 +23,17 @@
             
         #2.1 Pkg not attached
           if (!pkg %in% attached$pkg) {
-              message("groundhog says: FAILED to load '", pkg_vrs,"'")
-              exit()
+              msg = paste0("groundhog says: FAILED to load '", pkg_vrs,"'")
+              gstop(msg)
               }
     
         #2.2 Unexpected version attached
                 if ((pkg %in% attached$pkg) & (!pkg_vrs %in% attached$pkg_vrs))
                       {
-                      message("groundhog says: WARNING, loaded unexpected version of '", pkg, "'\n",
+                      msg <- paste0("groundhog says: WARNING, loaded unexpected version of '", pkg, "'\n",
                              "expected: '", pkg_vrs, "'\n",
                              "loaded  : '", attached$pkg_vrs[attached$pkg == pkg], "'\n")
-                      exit()
+                      gstop(msg)
                       }
        
         #2.3 Successfully attached pkg_vrs
@@ -47,9 +47,10 @@
      
       #3.1 active
          active <- get.active()                          
-    
+         ip <- get.installed()  #get.active.R (if multiple versions available, it returns the first one in .libPaths())
+         
       #3.2 Counts of mismatches
-          snowball.match <- snowball$pkg_vrs %in% active$pkg_vrs  | snowball$pkg %in% base_pkg() | snowball$pkg %in% ignore.deps
+          snowball.match <- snowball$pkg_vrs %in% ip$pkg_vrs  | snowball$pkg %in% base_pkg() | snowball$pkg %in% ignore.deps
           
             #There is an or statement so that base packages are not checked against available ones because
             #those have their own library structure
