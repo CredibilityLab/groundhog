@@ -108,7 +108,18 @@
               
             #3.7  Kill the cluster
                   parallel::stopCluster(cluster_id)   
-                
+                  
+            #3.8 Check that everything was installed.
+                  ip <- data.frame(installed.packages())
+                  ip$pkg_vrs = paste0(ip$Package,"_",ip$Version)
+                  snowflake.pkg_vrs <- snowball$pkg_vrs[snowball$pkg %in% snowflakes[[k]] ]
+                  missing.pkg_vrs <-  snowflake.pkg_vrs[!snowflake.pkg_vrs %in% ip$pkg_vrs]
+                  if (length(missing.pkg_vrs)>0) {
+                    msg=paste("Installation of ",pasteQC(missing.pkg_vrs)," failed.")
+                    gstop(msg)
+                  }
+                  
+
             #3.8 Localize so that future snowflakes find these packages
                 localize.snowball(snowball [snowball$pkg %in% snowflakes[[k]],])
                 

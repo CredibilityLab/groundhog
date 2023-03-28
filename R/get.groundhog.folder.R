@@ -96,7 +96,16 @@ set.groundhog.folder <- function(path) {
   #Create groundhog_folder
     dir.create(path, showWarnings = FALSE, recursive = TRUE)
 
+  #Verify we can save there
+    path1 <- file.path(path,"testing ability to save.txt")
+    write('testing ability to save',path1)
+    saved.succesfully <- file.exists(path1) 
+    unlink(path1)
     
+    if (!saved.succesfully) {
+      gstop("groundhog says: Unable to save to '",path,"'. Make sure you are allowed to save files to that directory.")
+      } 
+      
   #Assign it to the live environment
     Sys.setenv(GROUNDHOG_FOLDER = path)
  

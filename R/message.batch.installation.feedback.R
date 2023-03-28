@@ -53,10 +53,13 @@
                     message1("  It is: ", snowball$pkg_vrs[snowball$pkg %in% snowflakes[[k]] ])
                   }
 
-       #5.3 Log file
+       #5.3 Log file for windows and Mac (Ubuntu seems to show feedback
+			os=get.os()
+			if (os!='other')
+			{
             message1("\n  No messages will be shown on the console  while installing, unless an error occurs.")
             message1("  You may consult the log file to monitor progress in real time:\n   '",log_path,"'\n")
-        
+			}
             
             
       #5.4 how much time  left 

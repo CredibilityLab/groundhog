@@ -115,7 +115,7 @@
               
               } #End if more than 1 hogday  
               
-            msg<-paste0(msg, "To unload packages you need to restart the R Session",f10)
+            msg<-paste0(msg, "\nTo unload packages you need to restart the R Session",f10)
             
           #Show message
             gstop(msg) #utils #51

@@ -24,12 +24,9 @@
 #'@param include.suggests logical, defaults to `FALSE`. When set to `TRUE`, 
 #'   loads dependencies classified in the DESCRIPTION file as `suggested`.
 #'@param ignore.deps an optional character vector containing dependencies which 
-#'   may be already loaded in the R session and even if the loaded version does 
-#'   not match the version implied by the entered date, groundhog.library() will 
-#'   proceed and ignore #'   this conflict. If one version of a package is loaded, 
-#'   and a different is needed for #'   groundhog, the default behavior is to 
-#'   stop the request and ask the user to restart #'   the R session to unload 
-#'   all packages. This will bypass that requirement.
+#'   are already loaded in the R session, and create a conflict with a needed 
+#'   dependency for the package being loaded (mismatch of version), but which should be ignored
+#'   and groundhog.library() should proceed tolerating the conflict. 
 #'@param force.source logical (defaults to `FALSE`). When set to `TRUE`, will 
 #'   not attempt installing binary from CRAN or MRAN and instead download source 
 #'   file and install it.
