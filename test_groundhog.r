@@ -20,13 +20,11 @@
   #Set 6 - individual functions
 #Version being tested (only locally available)
 
-install.packages('c:/dropbox/groundhogr/groundhog_2.9.9.2023.3.19.tar.gz',repos=NULL)
+install.packages('c:/dropbox/groundhogr/groundhog_3.0.0.tar.gz',repos=NULL)
 library('groundhog')
-
-get.groundhog.folder()
-set.groundhog.folder('c:/temp/2000')
-    test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
-
+set.groundhog.folder('c:/temp/2007')
+test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
+groundhog.library('rio',test.day)
 
 #Set 0 - various forms of calling packages to be loaded
   
@@ -185,7 +183,8 @@ set.groundhog.folder('c:/temp/2000')
 
 ########################################################################
 #SET OF TESTS 2 -  CHECKING PREVIOUSLY FOUND BUGS
-    
+        test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
+
 #1) Loading but not attaching dependencies (verify one can run lmer() without lme4::)
     library('groundhog')
     
@@ -371,10 +370,18 @@ set.groundhog.folder('c:/temp/2000')
     
 # Installation can be tested with most downloaded packages as of the release of R's version matching that being used
 # or based on available packages when testing. 
-    library('groundhog')
-    test.groundhog(11:100)         #Install the 10 most downloaded packages 
+  library('groundhog')
+  install.packages('c:/dropbox/groundhogr/groundhog_3.0.0.tar.gz',repos=NULL)
+
+  
+  set.groundhog.folder('c:/temp2/2')
+
+
+
+    test.groundhog(46:60)         #Install the 10 most downloaded packages 
     test.groundhog(510:525)      #install the 501-510 most downloaded packages
-    test.groundhog(-10, seed=91)  #install 10 random packages available right now for this version of R
+    test.groundhog(-10, seed=92)  #install 10 random packages available right now for this version of R
+
 
 
 #4.1 - Run in 4.0.3
