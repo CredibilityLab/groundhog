@@ -43,7 +43,7 @@
       
         
     #8 If package does not exist in groundhog folder, error    
-        if (nrow(data.frame(utils::installed.packages(lib=installation.path), stringsAsFactors=FALSE))==0) {
+        if (nrow(data.frame(utils::installed.packages(lib=installation.path), stringsAsFactors=FALSE,row.names=NULL))==0) {
           msg = paste0("groundhog says: failed to install '",pkg_vrs,"', localization failed (Error: localize.R #8 - try http://groundhogr.com/troubleshoot)")
           gstop(msg) #util #51
         }

@@ -393,7 +393,7 @@
           
          #10.6 Save snowball
             #Update  column `installed` in  snowball
-                ip <- data.frame(utils::installed.packages(snowball$installation.path), stringsAsFactors=FALSE)
+                ip <- data.frame(utils::installed.packages(snowball$installation.path), stringsAsFactors=FALSE,row.names=NULL)
                 snowball$installed <- (snowball$pkg %in% ip$Package | snowball$pkg %in% .pkgenv[['base_pkg']]) #if in packages or in base.packages
                 
 	      #10.7  Save snowball RDS 

@@ -152,7 +152,7 @@
           
       #5 Verify installation
           message1("      ...verifying installation...")
-          ip <- data.frame(utils::installed.packages(snowball$installation.path))      
+          ip <- data.frame(utils::installed.packages(snowball$installation.path),row.names=NULL)      
           ip$pkg_vrs <- paste0(ip$Package,"_",ip$Version)
           
         #Add success column to snowball
