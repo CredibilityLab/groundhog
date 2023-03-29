@@ -59,8 +59,8 @@
 
 
 #1. get.pkg get.vrs -  Exract package and version information from pkg_vrs
-  get.pkg <- function(x) substr(x, 1, regexpr("_", basename(x)) - 1)
-  get.vrs <- function(x) substr(x, regexpr("_", basename(x)) + 1, nchar(x))
+  get.pkg <- function(x) substr(x, 1, regexpr("_", basename(as.character(x)))- 1)
+  get.vrs <- function(x) substr(x, regexpr("_", basename(as.character(x))) + 1, nchar(x))
 
 #2.  Is pkg_vrs installed (within same R-minor version)?
       is.pkg_vrs.installed <- function(pkg, vrs) {
