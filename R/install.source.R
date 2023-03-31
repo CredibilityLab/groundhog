@@ -2,10 +2,14 @@
 
   install.source <- function(snowball,date,cores)
   {
-    
+     
      
     #0 Add all paths so that it is found when attempted
       .libPaths(unique(snowball$installation.path))
+    
+    #0.5 Parallel installation if more than 1 core and more than 1 package
+      batches.failed <- 0 #flag turns to 1 if batches attempted and fail                      
+
 
     #1 Keep only source  packages that are not yet installed
         snowball <- snowball[snowball$from  %in% c('source', 'github','gitlab') & snowball$installed==FALSE, ]
@@ -59,10 +63,9 @@
         #2.5 Start message
           message1("Will now install ",nrow(snowball), " packages from source")
     
-   #3 Parallel installation if more than 1 core and more than 1 package
+
       if (cores>1 & nrow(snowball)>1)
       {
-        
         
           #3.0 Log path
               log_cores_path <- paste0(get.groundhog.folder(),"/batch_installation_console.txt")
@@ -81,6 +84,7 @@
             
             
           #3.2 Loop over snowflakes
+              
               for (k in 1:length(snowflakes))
               {  
                 cluster_id <- parallel::makeCluster(getOption("cl.cores", min(cores,length(snowflakes[[k]]))),outfile=log_cores_path)
@@ -114,16 +118,35 @@
                   ip$pkg_vrs = paste0(ip$Package,"_",ip$Version)
                   snowflake.pkg_vrs <- snowball$pkg_vrs[snowball$pkg %in% snowflakes[[k]] ]
                   missing.pkg_vrs <-  snowflake.pkg_vrs[!snowflake.pkg_vrs %in% ip$pkg_vrs]
+                  
+                    
+                  #Localize pkgs in snowball that succeeded to be installed 
+                   localize.snowball(snowball [(snowball$pkg %in% snowflakes[[k]]) & 
+                                               (snowball$pkg_vrs %in% ip$pkg_vrs), ])
+                  
+                   
+                
+            #3.9 If it was not, try sequentially
                   if (length(missing.pkg_vrs)>0) {
-                    msg=paste("Installation of ",pasteQC(missing.pkg_vrs)," failed.")
-                    gstop(msg)
+                    
+            
+                    
+                    #Message end batch installation
+                      msg=paste("Installation of ",pasteQC(missing.pkg_vrs)," failed.\n",
+                              "Will attempt installing sequentially")
+                    
+                      message(msg)
+                    
+                    #Flag that batch installation failed
+                      batches.failed <- 1
+                    
+                    #recheck if packages are installed or not
+                      snowball$installed <- snowball$pkg_vrs %in% ip$pkg_vrs
+                    
+                    break
                   }
                   
-
-            #3.8 Localize so that future snowflakes find these packages
-                localize.snowball(snowball [snowball$pkg %in% snowflakes[[k]],])
-                
-            
+                  
                 
             } #Loop installing snowflakes
               
@@ -132,7 +155,7 @@
           
           
     #4 Sequential installation
-      if (cores==1 | nrow(snowball)==1)
+      if (cores==1 | nrow(snowball)==1 | batches.failed==1)
       {
           
           #4.2 Start clock for install feedback
@@ -146,6 +169,17 @@
 
               #Install
                 install.one (snowball$source_url[k])       
+              
+                
+              #Verify installation
+                  ip <- data.frame(utils::installed.packages(),stringsAsFactors = FALSE,row.names = NULL)
+                  ip$pkg_vrs = paste0(ip$Package,"_",ip$Version)
+                  if (!snowball$pkg_vrs[k] %in% ip$pkg_vrs) {
+                    msg=paste0("The package ",snowball$pkg_vrs[k]," failed to install.")
+                    gstop(msg)
+                    
+                  }
+         
               
               #localize
                 localize.snowball(snowball [k,])

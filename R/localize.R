@@ -66,10 +66,6 @@
 
                 #Create
                   dir.create(groundhog.path,recursive = TRUE, showWarnings = FALSE)
-            
-                                  message("   from: ",non.groundhog.path)
-                                  message("   to: ",groundhog.path)
-                                  
 
                 #Copy non-remote to groundhog.folder
                   copy.outcome <- file.copy(non.groundhog.path ,        #copy contents of the "pkg_vrs/pkg" folder

@@ -33,8 +33,11 @@
 
       write(paste0(t1, " - Attempting to install ",pkg_vrs," from ",url),log_path,append = TRUE)
       
-    #Install
+    #Install (turning off warnings since we have our own message feedback)
+      warn_before <- getOption("warn") 
+      options(warn = -1) 
       utils::install.packages(url,type='source',repos=NULL, dependencies=FALSE,lib=installation_path, Ncpus=1)
+      options(warn = warn_before) 
       
     #Log success
       ip <- utils::installed.packages(installation_path)
