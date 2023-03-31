@@ -31,10 +31,12 @@
             
       #4 ignore.deps
             if (length(ignore.deps)>0) {
-             if (!all(ignore.deps %in% .packages())) {
+              active<-get.active()
+             if (!all(ignore.deps %in% active$pkg )) {
+               
                msg = paste0("All packages included in the ignore.deps() option must be loaded prior to running\n",
                        "groundhog.library(), but the following is/are not: ",
-                        paste0(dQuote(ignore.deps [!ignore.deps %in% .packages()]), collapse=" ,"))
+                        paste0(dQuote(ignore.deps [!ignore.deps %in% active$pkg]), collapse=" ,"))
                 gstop(msg) #util #51)
               } #End if some are not loaded
               } #End if ignore.deps() are requested
