@@ -1,7 +1,6 @@
 #Takes a snowball and it copies all packages from the groundhog library to the default one
 #This serves the following purposes
 
-
   localize.snowball <- function(snowball , localize.quietly = TRUE)
   {
     #0 Early return if empty snowball
@@ -25,7 +24,7 @@
     #3 If entire snowball is not remote, assign sha='' to snowball
       if (!'sha' %in% names(snowball)) snowball$sha=''
     
-        
+
  #4 Start the loop over the snowball
   for (k in 1:nrow(snowball))
     {
@@ -61,19 +60,22 @@
                groundhog.path     <- paste0 (dirname(installation.path), "/", ip$pkg_vrs[ip$Package==pkg] , "/")
                exists <- file.exists(groundhog.path) && nrow(utils::installed.packages(groundhog.path))>0
               
+                  
             #10.2 If it does not exist and it is not remote, create and copy
-               if (exists==FALSE & is.na(sha)) {
-                 
+               if (exists==FALSE  & sha %in% c('', NA)) {
+
                 #Create
                   dir.create(groundhog.path,recursive = TRUE, showWarnings = FALSE)
             
+                                  message("   from: ",non.groundhog.path)
+                                  message("   to: ",groundhog.path)
+                                  
+
                 #Copy non-remote to groundhog.folder
                   copy.outcome <- file.copy(non.groundhog.path ,        #copy contents of the "pkg_vrs/pkg" folder
                               groundhog.path,           #to the local library listed first
                               recursive = TRUE)          #include all files
-                
-                  
-                  
+
               } #End 10.2
                
                
@@ -103,9 +105,9 @@
           dir.create(to_path,recursive=TRUE)
           }
         
-        copy.outcome <- file.copy(from_path ,        #copy contents of the "pkg_vrs/pkg" folder
-                        to_path,           #to the local library listed first
-                        recursive = TRUE)          #include all files
+        copy.outcome <- file.copy(from_path ,    #copy contents of the "pkg_vrs/pkg" folder
+                        to_path,                 #to the local library listed first
+                        recursive = TRUE)        #include all files
         
         if (copy.outcome==FALSE) {
           message("groundhog says: failed to copy '", pkg_vrs,"' to default personal library")
