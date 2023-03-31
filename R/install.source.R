@@ -176,6 +176,19 @@
                   ip$pkg_vrs = paste0(ip$Package,"_",ip$Version)
                   if (!snowball$pkg_vrs[k] %in% ip$pkg_vrs) {
                     msg=paste0("The package ",snowball$pkg_vrs[k]," failed to install.")
+                    
+                    #r tools?
+                     if (get.os()=='windows')
+                      {
+                       make<-Sys.which("make")
+                        if (nchar(make)<2) {
+                          paste0(msg,"\n",
+                               "It seems you do not have R Tools installed which may explain the problem.\n",
+                               "Check out https://groundhogr.com/rtools/")
+                          } #End no R Tools
+                          }#End windows
+                        
+                    
                     gstop(msg)
                     
                   }
