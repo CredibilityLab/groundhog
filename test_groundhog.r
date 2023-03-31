@@ -22,9 +22,9 @@
 
 install.packages('c:/dropbox/groundhogr/groundhog_3.0.0.tar.gz',repos=NULL)
 library('groundhog')
-set.groundhog.folder('c:/temp/2007')
-test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
-groundhog.library('rio',test.day)
+
+set.groundhog.folder('c:/temp/1001')
+test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 45 days
 
 #Set 0 - various forms of calling packages to be loaded
   
@@ -62,8 +62,11 @@ groundhog.library('rio',test.day)
   #Direct cal to many packages
     groundhog.library(c('pwr','metafor'),test.day)
     
-    
 
+    pkg=c('pwr','metafor')
+    date=test.day
+    
+    
   #Sandwiching library
     library('groundhog')
     groundhog.library("
@@ -104,9 +107,9 @@ groundhog.library('rio',test.day)
         
         #RUN THIS IN 4.2.x
           library('groundhog')
-          groundhog.library('haven','2022-05-01')  
+          groundhog.library('gio','2022-05-01')  
           groundhog.library('rio','2022-12-05')
-          groundhog.library('rio','2022-08-05',ignore.deps='haven') 
+          groundhog.library('rio','2022-08-05',ignore.deps='haven')  #will not work either
         
         #RUN THIS IN 4.1.x
           library('groundhog')
@@ -120,7 +123,18 @@ groundhog.library('rio',test.day)
           groundhog.library('rio',test.day)                              #load rio
           groundhog.library('haven',test.day-80,tolerate=groundhog:::get.rversion()) #try to load a depenency, haven, with diff date
   
+          
+    #Conflict fixed with ignore deps
+          
+          library('groundhog')
+          groundhog.library('haven','2022-05-11')
+          
+          #*restart
+          library('haven')
+          groundhog.library('rio','2023-01-01')
+          groundhog.library('rio','2023-03-01',ignore.deps = 'haven')
         
+          toc('haven')
         
     #Conflict 5: Any pkg in snowball was already loaded, different version, not with groundhog
         library('groundhog')
@@ -243,6 +257,8 @@ groundhog.library('rio',test.day)
   groundhog.library('parallel',test.day)
   groundhog.library('mgcv',test.day)
  
+  
+  
 ########################################################################
 #SET OF TESTS 3 -  INSTALLATION OF PACKAGES IN RANDOM ORDER
   #Function 
@@ -324,7 +340,7 @@ groundhog.library('rio',test.day)
           j <- 1
           
       #4.1 Base and recommended packages
-          ip <- data.frame(installed.packages(),stringsAsFactors = FALSE)
+          ip <- data.frame(installed.packages(),stringsAsFactors = FALSE,row.names = NULL)
           base <- subset(ip, Priority=="base")$Package
           recommended <- subset(ip, Priority=="recommended")$Package
           
@@ -343,7 +359,7 @@ groundhog.library('rio',test.day)
 
           #Verify every package in snowball is availablerunning
               snowball.k=groundhog:::get.snowball(pkgk,groundhog.day)
-              ip = data.frame(installed.packages())
+              ip = data.frame(installed.packages(),row.names = NULL,stringsAsFactors = FALSE)
               ip.pkg_vrs = paste0(ip$Package , "_" , ip$Version)
           #ignore deps
               
@@ -374,15 +390,20 @@ groundhog.library('rio',test.day)
   install.packages('c:/dropbox/groundhogr/groundhog_3.0.0.tar.gz',repos=NULL)
 
   
-  set.groundhog.folder('c:/temp2/2')
+    test.groundhog(1:25)         #Install the 10 most downloaded packages 
+    test.groundhog(501:510)      #install the 501-510 most downloaded packages
+    test.groundhog(-10, seed=192)  #install 10 random packages available right now for this version of R
 
-
-
-    test.groundhog(46:60)         #Install the 10 most downloaded packages 
-    test.groundhog(510:525)      #install the 501-510 most downloaded packages
-    test.groundhog(-10, seed=92)  #install 10 random packages available right now for this version of R
-
-
+    
+    
+    
+    groundhog.library('shiny',test.day+100)
+    pkg='pollen'
+    date='2016-05-14'
+    warnings()
+    
+  ip <- data.frame(utils::installed.packages(), stringsAsFactors=FALSE, row.names=FALSE)
+groundhog.library('pbdMPI', test.day,force.source = TRUE,force.install = TRUE)
 
 #4.1 - Run in 4.0.3
     #Test conflicts when a remote depends on a remote
@@ -429,7 +450,9 @@ groundhog.library('rio',test.day)
         force.source=TRUE
         
     groundhog.library('tidymodels/broom','2020-04-02')  
-    groundhog.library('crsh/papaja','2020-04-01')
+    groundhog.library('crsh/papaja','2022-07-01')
+    groundhog.library('weirichs/eatModel','2022-07-01')
+    
     
     
 
@@ -459,33 +482,37 @@ groundhog.library('rio',test.day)
             "ropensci/skimr")
     
     
-    groundhog.library('git2r','2022-10-01',tolerate.R.version = '4.2.2',force.source = TRUE)
-    
-    groundhog.library('mlr-org/mlr','2022-10-01',force.source=TRUE)
-    
     library('groundhog')    
-      test.day <- groundhog:::get.r.majmin.release()+95 #release of this R version + 45 days
+    test.day <- groundhog:::get.r.majmin.release()+95 #release of this R version + 45 days
 
     k=1
+    set.groundhog.folder("c:/temp500")
     for (pk in popular_github_packages[k:length(popular_github_packages)])
     {
     message('-------------------------------------------------------')
     message('---   groundhog testser: [',k,']  ',pk,'       ---')
     
-    groundhog.library(pk,'2022-01-01')    
+    groundhog.library(pk,test.day)    
     k=k+1
       
     }
-    test.day='2022-06-09'
-    Sys.setenv(PATH = paste("C:/Rtools/bin", Sys.getenv("PATH"), sep=";"))
-
-    groundhog.library('jeroen/jsonlite',test.day)
-
-
     
     
+   library('groundhog')
+
+    set.groundhog.folder('c:/temp/askilon')
+    groundhog.library("satijalab/Seurat",'2022-09-01')
+    groundhog.library( "yihui/knitr",'2022-09-01')
+    groundhog.library( "crsh/papaja",'2022-09-01')
+    groundhog.library( "weirichs/eatModel",'2022-09-01')
+    groundhog.library( "jcrodriguez1989/chatgpt",'2023-03-01')
+    groundhog.library( "joey711/phyloseq",'2023-03-15')
     
-#-----------------------------------------
+    
+        groundhog.library( "rio",'2023-03-15',force.source=TRUE)
+
+    groundhog.library('cli','2023-03-01',force.source=TRUE)
+    #-----------------------------------------
 #Set 5 test restore
     #Start with installed.packages() in personal libreary, install a banch of all packages. Compare the installed.packages()\
     #Then do restore and compare them again, there should be differences and the differences should go away.
