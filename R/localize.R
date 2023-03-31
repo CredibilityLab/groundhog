@@ -10,7 +10,7 @@
         purged.pkg_vrs = c()
         
     #1 Load installed packages
-        ip <- data.frame(utils::installed.packages(lib.loc =.pkgenv[["orig_lib_paths"]][1] ), stringsAsFactors=FALSE)
+        ip <- data.frame(utils::installed.packages(lib.loc =.pkgenv[["orig_lib_paths"]][1] ), stringsAsFactors=FALSE, row.names=NULL)
         
       #If none, create empty row to avoid errors when combining pkg_vrs
         if (nrow(ip)==0) {
