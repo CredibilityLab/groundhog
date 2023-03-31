@@ -1,17 +1,14 @@
  #' Install & load CRAN, GitHub, and GitLab packages as current on given date 
 #' 
-#' Groundhog maintains a separate local package library where it stores 
-#' version-controlled packages, with multiple versions of the same package saved 
-#' side-by-side. The `date` argument in the `groundhog.library()` function 
-#' determines the version of the package that is loaded (the most recently 
-#' available version on that date). #' If that version of the package is not 
-#' already installed in the local `groundhog` library, #' it is automatically 
-#' installed. `groundhog.library()` thus substitutes both `library()` and 
-#' `install.packages()`. No changes to how R manages packages are made 
-#' (e.g., no change to  #' .libPaths(), to .Rprofile, or to R Studio global 
-#' settings). Therefore, to discontinue relying on `groundhog`, all you do is go 
-#' back to #' executing the `install.packages()` and `library()` #' functions, 
-#' instead of the `groundhog.library()` function.
+#' Achieve reproducible code which does not break when packages it relies on are changed, by
+#' always loading the same version of a package in a given script. Specifically, use
+#' `groundhog.library()` to load the requested package(s) and all of their dependencies, 
+#' as current on CRAN (or Github/Gitlab) on the requested date. If the needed version 
+#' of a package is not already installed, groundhog automatically 
+#' installs it. `groundhog.library()` thus substitutes both `library()` 
+#' and `install.packages()`. There is no change in setup or configuration parameters 
+#' needed to start or stop using groundhog; simply edit your script going between 
+#' `library()`<->`groundhog.library()` to do so.
 #'  
 #'@param pkg character string or vector with name of target package(s). 
 #'Single package names need not be in quotes.
@@ -142,6 +139,7 @@
     
        
     #1.5 Reload databases if needed
+        load.cran.toc()
         update_cran.toc_if.needed(date) 
  
     #1.6 On Exit refresh libpath and cran.toc (cran toc can be modified temporarily by a remote)

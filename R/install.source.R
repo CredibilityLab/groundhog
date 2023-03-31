@@ -110,7 +110,7 @@
                   parallel::stopCluster(cluster_id)   
                   
             #3.8 Check that everything was installed.
-                  ip <- data.frame(installed.packages())
+                  ip <- data.frame(utils::installed.packages(),stringsAsFactors = FALSE,row.names = NULL)
                   ip$pkg_vrs = paste0(ip$Package,"_",ip$Version)
                   snowflake.pkg_vrs <- snowball$pkg_vrs[snowball$pkg %in% snowflakes[[k]] ]
                   missing.pkg_vrs <-  snowflake.pkg_vrs[!snowflake.pkg_vrs %in% ip$pkg_vrs]

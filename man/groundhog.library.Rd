@@ -56,18 +56,15 @@ a character vector containing all active packages for the session,
 with their version number, under the format \code{pkg_vrs}.
 }
 \description{
-Groundhog maintains a separate local package library where it stores
-version-controlled packages, with multiple versions of the same package saved
-side-by-side. The \code{date} argument in the \code{groundhog.library()} function
-determines the version of the package that is loaded (the most recently
-available version on that date). #' If that version of the package is not
-already installed in the local \code{groundhog} library, #' it is automatically
-installed. \code{groundhog.library()} thus substitutes both \code{library()} and
-\code{install.packages()}. No changes to how R manages packages are made
-(e.g., no change to  #' .libPaths(), to .Rprofile, or to R Studio global
-settings). Therefore, to discontinue relying on \code{groundhog}, all you do is go
-back to #' executing the \code{install.packages()} and \code{library()} #' functions,
-instead of the \code{groundhog.library()} function.
+Achieve reproducible code which does not break when packages it relies on are changed, by
+always loading the same version of a package in a given script. Specifically, use
+\code{groundhog.library()} to load the requested package(s) and all of their dependencies,
+as current on CRAN (or Github/Gitlab) on the requested date. If the needed version
+of a package is not already installed, groundhog automatically
+installs it. \code{groundhog.library()} thus substitutes both \code{library()}
+and \code{install.packages()}. There is no change in setup or configuration parameters
+needed to start or stop using groundhog; simply edit your script going between
+\code{library()}<->\code{groundhog.library()} to do so.
 }
 \details{
 For more information about groundhog check out \href{http://groundhogr.com}{groundhogr.com}

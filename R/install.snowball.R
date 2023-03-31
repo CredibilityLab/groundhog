@@ -1,5 +1,5 @@
 
-  install.snowball <- function(snowball, date, cores,skip.remotes=FALSE) {
+  install.snowball <- function(snowball, date, cores=-1,skip.remotes=FALSE) {
    
       date=as.Date(date)
     

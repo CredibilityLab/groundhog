@@ -19,9 +19,10 @@ When groundhog installs a package, it saves two copies of it.
 One goes on the stable groundhog library (to find its location: \code{get.groundhog.folder()})
 the other goes to the default personal library (to find its location: \code{.libPaths()[1]}.
 Because the personal library can only hold one version of a package, groundhog replaces the
-version in the personal library, but, it makes a copy. If you wish to return to the version
-of a package you had prior to using groundhog, you can run \code{restore.library()} and that backup
-copy will be saved again in the personal library. By default all packages replaced by groundhog
+version in the personal library, but makes a copy of it in groundhog's stable library.
+To restore to your default personal library the version
+of packages it had prior to using groundhog, run \code{restore.library()} and the backup
+copy of the original package version will be copied to the personal library. By default all packages replaced by groundhog
 are returned to their original version, but this can be modified with the the optional parameters \code{date} or \code{minutes}.
 The main reason to use this function is if you switch back and forth between using groundhog.library()
 and library() and at some point you run into an incompatibility issue, namely, when you call on \code{library(pkg)}

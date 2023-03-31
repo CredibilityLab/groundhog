@@ -4,7 +4,7 @@
 
 
 # installed base packages
-        .pkgenv[['base_pkg']] <- data.frame(utils::installed.packages(priority = 'base'))$Package
+        .pkgenv[['base_pkg']] <- data.frame(utils::installed.packages(priority = 'base'),row.names=NULL)$Package
       
         
 

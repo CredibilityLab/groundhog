@@ -103,7 +103,7 @@ set.groundhog.folder <- function(path) {
     unlink(path1)
     
     if (!saved.succesfully) {
-      gstop("groundhog says: Unable to save to '",path,"'. Make sure you are allowed to save files to that directory.")
+      gstop(paste0("groundhog says: Unable to save to '",path,"'. Make sure you are allowed to save files to that directory."))
       } 
       
   #Assign it to the live environment

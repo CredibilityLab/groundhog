@@ -100,7 +100,7 @@
                 message2("Will download sequentially, one at a time, because 'libcurl' is not available.")
                 message1("    Downloading ",k," of ",length(url.files))
                 
-                utils::download.file(url.files[k], zip.files[k])
+                try(utils::download.file(url.files[k], zip.files[k]))
                 
                 } #End loop downloading
             
@@ -139,7 +139,7 @@
                   outfile    <- snowball$installation.path[k.snowball]
                 
                 #Show size so big files are undertandably slower
-                  size <- utils:::format.object_size(file.size(zk), "auto")
+				  size <- filesize_format(file.size(zk))
                   message1('     Installing ',k.zip,' of ',n.zip,': ',basename(zk)," (",size,")")
                 
 

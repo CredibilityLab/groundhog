@@ -992,15 +992,32 @@ get.parallel.time<-function(times,cores)
       zip.split <- split(zip.files, ceiling(seq_along(zip.files)/batch.size))
       btot <- length(url.split)  
       
-     
+  
   
     #Download in loop
       for (bk in 1:btot)
       {
       if (btot>1) message2("Batch ",bk, " of ", btot,". Downloading the following files:")
       message1("     ",paste(url.split[[bk]],collapse='\n     '))
-      utils::download.file(url.split[[bk]], zip.split[[bk]],quiet=TRUE,method='libcurl')
+      try (utils::download.file(url.split[[bk]], zip.split[[bk]],quiet=TRUE,method='libcurl'))
+      
+      
       }
       
   }#End of #53
   
+  
+#54 File size
+  #(writte by chatGPT, to avoid relying on utils:::)
+  filesize_format <- function(size_in_bytes) {
+  if(size_in_bytes < 1024) {
+    return(paste0(size_in_bytes, " B"))
+  }
+  units <- c("KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+  u <- -1
+  while(size_in_bytes >= 1024 & u < length(units)) {
+    size_in_bytes <- size_in_bytes / 1024
+    u <- u + 1
+  }
+  return(paste0(round(size_in_bytes, 1), " ", units[u+1]))
+}
