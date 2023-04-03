@@ -4,15 +4,7 @@
 \alias{restore.library}
 \title{Restore version of packages in personal library replaced by groundhog.}
 \usage{
-restore.library(minutes = -Inf, date = "1970-01-01")
-}
-\arguments{
-\item{minutes}{Integer. If you want to restore only recently modified packages,
-specify the number of minutes you want to restore. For example, if you use \code{minutes=60}, it will only
-restore packages replaced within the last hour.}
-
-\item{date}{Date. Alternatively, you can specify the date you want to return to, all packages replaced
-since that date will be returned to their pre-groundhog version.}
+restore.library(days)
 }
 \description{
 When groundhog installs a package, it saves two copies of it.
@@ -22,20 +14,11 @@ Because the personal library can only hold one version of a package, groundhog r
 version in the personal library, but makes a copy of it in groundhog's stable library.
 To restore to your default personal library the version
 of packages it had prior to using groundhog, run \code{restore.library()} and the backup
-copy of the original package version will be copied to the personal library. By default all packages replaced by groundhog
-are returned to their original version, but this can be modified with the the optional parameters \code{date} or \code{minutes}.
-The main reason to use this function is if you switch back and forth between using groundhog.library()
-and library() and at some point you run into an incompatibility issue, namely, when you call on \code{library(pkg)}
-you may get a warning or error that a dependency is outdated. You could then either rely on \code{groundhog.library(pkg,date)}
-instead of \code{library(pkg)}, or you can restore the previous versions running \code{restore.library()} and then rely on \code{library(pkg)}.
-}
-\details{
-#'
+copy of the original package version will be copied to the personal library.
 }
 \examples{
 \dontrun{
 restore.library()
-restore.library(minutes=90)
 }
 
 }

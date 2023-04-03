@@ -6,6 +6,23 @@
     #0 Early return if empty snowball
       if (nrow(snowball)==0) return(TRUE)
     
+    #0.5 Restore point: save installed packages with today's date if not yet saved, for possible restore late
+
+      ip_path <- paste0(get.groundhog.folder(),"/installed_packages/", get.r.majmin(), "/",Sys.Date(),".rds")
+      if (!file.exists(ip_path)) {
+        
+        #Create directory for IP  
+          dir.create(dirname(ip_path),showWarnings = FALSE,recursive = TRUE)
+        #Get IP
+          ip <- data.frame(installed.packages( .pkgenv[["orig_lib_paths"]][-length(.pkgenv[["orig_lib_paths"]])]),row.names = NULL,stringsAsFactors = FALSE)
+        #Drop base pkgs
+          ip <- ip[!ip$Package %in% base_pkg(), ]
+        #Get pkg_vrs
+          ip.pkg_vrs <- paste0(ip$Package,"_",ip$Version)
+        #Save it
+          saveRDS(ip.pkg_vrs , ip_path)
+      }
+    
     #0.5 Vector with purged 
         purged.pkg_vrs = c()
         

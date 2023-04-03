@@ -84,10 +84,10 @@
           
     #-----------------------------------------------------------------------------
           
-    #Conflict 2 A *dependency* was loaded for a different or repos date (used to add  'ignore.deps' option, but not anymore)
-    conflict2.TF <-   snowball$pkg           %in% ss$pkg           &    #pkg requested before
+    #Conflict 2 A *dependency* was loaded for a different repos or date 
+    conflict2.TF <-   snowball$pkg           %in% ss$pkg           &     #pkg requested before
                       !snowball$pkg_vrs_repos %in% ss$pkg_vrs_repos &    #but not same vrs or repository 
-                      !snowball$pkg %in% ignore.deps                  #and we are not asked to ignore this conflict
+                      !snowball$pkg %in% ignore.deps                     #and we are not asked to ignore this conflict
         
             #vector with T/F for each pkg having been previously loaded in different version with groundhog
              #(this includes the pkg requested now, but that was taken care of in conflict #3)
@@ -130,7 +130,9 @@
       
         if (interactive()==FALSE)
         {
-        pkg.conflict <- active$pkg[active$pkg %in% snowball$pkg & !active$pkg_vrs %in% snowball$pkg_vrs]
+        pkg.conflict <- active$pkg[ active$pkg %in% snowball$pkg & 
+                                   !active$pkg_vrs %in% snowball$pkg_vrs & 
+                                    !active$pkg %in% ignore.deps]
         
         if (length(pkg.conflict) >0)
         {
