@@ -3,16 +3,25 @@
 #' When groundhog installs a package, it saves two copies of it.
 #' One goes on the stable groundhog library (to find its location: `get.groundhog.folder()`)
 #' the other goes to the default personal library (to find its location: `.libPaths()[1]`.
-#' Because the personal library can only hold one version of a package, groundhog replaces the
-#' version in the personal library, but makes a copy of it in groundhog's stable library. 
-#' To restore to your default personal library the version 
-#' of packages it had prior to using groundhog, run `restore.library()` and the backup
+#' Because the personal library can only hold one version of a package, groundhog replaces 
+#' existing versions of packages that already exist in the personal library (if any), but 
+#' it makes a copy of those versions in groundhog's stable library. You can restore your 
+#' personal non-groundhog library to how it was on a previous date (e.g., prior to 
+#' testing groundhog for the first time). Run `restore.library()` and the backup
 #' copy of the original package version will be copied to the personal library. 
+#' 
+#'@param days an optional numeric argument used to choose among alternative restore points.
+#'When set, groundhog restores the personal library to the  most recent restore point, that is at least `days` days ago.
+#'For example, if `days=5`, the library is restored to the most recent restore point more than 5 days ago.
+#'`restore.library()` by default restores the oldest restore point recorded, while `restore.library(0)` will 
+#'restore the most recent (e.g., earlier today if any changes have been made with groundhog today).
 
 
 #' @examples
 #' \dontrun{
 #' restore.library()
+#' restore.library(1)
+
 #' }
 #'
 #' @export
@@ -25,18 +34,22 @@ restore.library<-function(days)
     ip <- data.frame(installed.packages(.libPaths()[-length(.libPaths())]),row.names=NULL)
     ip$pkg_vrs <- paste0(ip$Package,"_",ip$Version)
            
+    #drop already set to be purged by previous actions (e.g., installs) as they are not really 'installed' anymore
+     ip <- ip[regexpr('_PURGE', ip$Package)<0,] 
+
+
   #2 Chose restore point to use 
     #2.1 Set the path
-      ip_dir <- paste0(get.groundhog.folder(),"/installed_packages/", get.r.majmin())
-      dir.create(ip_dir, recursive = TRUE,showWarnings = FALSE)    
+      restore_dir <- paste0(get.groundhog.folder(),"/restore_points/", get.r.majmin())
+      dir.create(restore_dir, recursive = TRUE,showWarnings = FALSE)    
 
       
     #2.3 Files available
-      ip_files <- list.files(ip_dir)
+      ip_files <- list.files(restore_dir)
         
         #if none, end
-        if (length(ip_files)==0) 
-            {   message1("No restore points are available.")
+        if (length(ip_files)==0) {  
+            message1("No restore points are available.")
             exit()
           }
         
@@ -51,26 +64,32 @@ restore.library<-function(days)
     #2.6 else, get the latest date prior to `days`
       if (!missing(days)) {
           days.since <- Sys.Date() - ip_dates
-          ip_dates <- ip.dates[days.since > days]
+          ip_dates <- ip_dates[days.since > days]
+          if (length(ip_dates)==0) {
+            message("The oldest restore point is from ",max(days.since)," days ago.")
+            exit()
+          }
           datek <- max(ip_dates)
       }
       
     #2.7 Read pkg_vrs to be restored
-      pkg_vrs.restore <- readRDS(paste0(ip_dir, "/", datek, ".rds"))
-
+      ip.restore <- readRDS(paste0(restore_dir, "/", datek, ".rds"))
     
   #3 Compare
-      pkg_vrs.add   <-  pkg_vrs.restore[!pkg_vrs.restore %in% ip$pkg_vrs]
-      pkg_vrs.purge <-  ip$pkg_vrs[!ip$pkg_vrs %in% pkg_vrs.restore] 
+      ip.add   <-  ip.restore[!ip.restore$pkg_vrs %in% ip$pkg_vrs,]
+      ip.purge <-  ip        [!ip$pkg_vrs %in% ip.restore$pkg_vrs,] 
 
-      if (length(pkg_vrs.add)+length(pkg_vrs.purge)==0) {
+      n.add   <- nrow(ip.add)
+      n.purge <- nrow(ip.purge)
+      
+      if (n.add+n.purge==0) {
         message1("The library already matches the restore point, no need to install/uninstall any packages.")
         return(invisible(TRUE))
         }
       
 
   #4 Inform what would be restored
-      #4.0 Back to ONLY date
+      #4.0 Restore back to ONLY date
        if (length(ip_dates)==1) 
         {
         msg <- paste0(
@@ -78,7 +97,7 @@ restore.library<-function(days)
                 "to any changes made on '", datek ,"'")
         }
       
-      #4.1 Back to 1st date
+      #4.1 Restore back to 1st date
       if (missing(days) & length(ip_dates)>1) 
         {
         msg <- paste0(
@@ -87,24 +106,21 @@ restore.library<-function(days)
                 "different restore point use the 'days' argument (indicating # of days to go back).")
         }
 
-      #4.2 Back to # days ago
+      #4.2 Restore back to # days ago
       if (!missing(days))
         {
             msg <- paste0(
                 "Will restore the (non-groundhog) library of packages as it was prior to any changes\n",
-                "made on '", datek , "' (the latest restore point available > ",days," days ago.")
+                "made on '", datek , "' (the most recent restore point available from more than the \n",
+                "requested '",days,"' days ago).")
       }
       
       #4.3 Package counts
           msg <- paste0(msg, "\n", 
-               "\nThis entails re-installing ", length(pkg_vrs.add), " and uninstalling ",length(pkg_vrs.purge) ," packages.\n",
-               "This process takes only seconds to execute.\n")
+               "\nThis entails restoring ", n.add, " and uninstalling ", n.purge ," packages.\n",
+               "This process usually takes a few seconds to execute.\n")
 
-      #4.4 Where they are being reinstalled to
-          if (length(pkg_vrs.add)>0) {
-            
-            msg<-paste0(msg, "Packages will be installed in: '",.libPaths()[1],"'")
-          }
+    
           
       #4.5. Print message out
         msg<-paste0(msg, "\nTo proceed type 'restore', to stop type anything else.")
@@ -123,11 +139,11 @@ restore.library<-function(days)
       
        
   #5.1 Purge  k=1
-      if (length(pkg_vrs.purge)>0)
+      if (n.purge>0)
       {
               
           #Subset of IP that need to be purged
-             sub <-ip$pkg_vrs %in% pkg_vrs.purge
+             sub <-ip$pkg_vrs %in% ip.purge$pkg_vrs 
              
           #Their old name
              old <- file.path(ip$LibPath[sub],ip$Package[sub])
@@ -143,28 +159,36 @@ restore.library<-function(days)
               new <- paste0(old , "_",random,"_PURGE")  #add 6 random letters and _PURGE
               purged   <- file.rename(old , new)
               
-              message1('The following packages have been prepared for uninstallation:\n   ',pasteQC(ip$pkg_vrs[sub]))
+              message1('Will now prepare ',n.purge,' packages for uninstallation:\n',
+                       paste0(1:n.purge, ") ", sort(ip$pkg_vrs[sub]),"\n"))
        
       } #ENd if somethign to purge.
       
 
   #6 Restore deleted packages
         
-          if (length(pkg_vrs.add)>0)
+          if (n.add > 0)
           {
           outcome <- c()
-          message1("\nWill now restore ", length(pkg_vrs.add), " packages.")
+          message1("\nWill now restore ", n.add , " packages.")
 
-          for (k in 1:length(pkg_vrs.add))
+          for (k in 1:n.add)
           {
           #8.1 Setup paths 
-              pkg_vrs <- pkg_vrs.add[k]
+              pkg_vrs <- ip.add$pkg_vrs[k]
               pkg <-get.pkg(pkg_vrs)
               vrs <-get.vrs(pkg_vrs)
               installation.path <- get.pkg_search_paths(pkg,vrs)
               from <- paste0(installation.path , "/" ,pkg)
-              to   <- .libPaths()[1] 
-              old  <- paste0(to,"/",pkg)
+              to   <- ip.add$LibPath  #this is the folder where it was deleted from 
+              
+              #if the folder has been deleted or no longer available, go to default
+              if (!file.exists(to[k])) {
+                message("Note: package ",pkg_vrs," used to be installed in ",to[k], " but that folder\n",
+                        "no longer exists. Will re-install in ",.libPaths()[1] ," instead.")
+                to[k] <- .libPaths()[1]
+              }
+              old  <- paste0(to[k],"/",pkg)
               
           #8.2 Purge destination package if it exists 
               if (file.exists(old)) {
@@ -175,7 +199,7 @@ restore.library<-function(days)
                 
           #8.3 Copy from groundhog to local
               #Message
-                message1("Re-installing " , k , " of " , length(pkg_vrs.add), ":  '",basename(installation.path),"'")
+                message1("Restoring " , k , " of " , n.add, ":  '",basename(installation.path),"'")
                
               #Copy
                 outcome[k] <- file.copy(from , to, recursive = TRUE)    
@@ -184,10 +208,13 @@ restore.library<-function(days)
           
           } #End if anything to reinstall
          
-             
+          #9 Save restore cookie so when groundhog restarts it says erstore complete
+            restore_cookie <- file.path(restore_dir , "restore_pending_restart_cookie.rds")
+            saveRDS(as.numeric(Sys.time()) , restore_cookie)
             
           #10 Message
-            msg = paste0("===============================================================\n",
+            msg = paste0("done.\n\n\n",
+                         "===============================================================\n",
                          "                  ***  VERY IMPORTANT  ***  \n\n",
                          "   To finalize the library restore you need to:\n",
                          "       1) Restart the R session (in R Studio CMD/SHFT-CTRL-F10)\n",

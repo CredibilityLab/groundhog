@@ -6,19 +6,28 @@
 \usage{
 restore.library(days)
 }
+\arguments{
+\item{days}{an optional numeric argument used to choose among alternative restore points.
+When set, groundhog restores the personal library to the  most recent restore point, that is at least \code{days} days ago.
+For example, if \code{days=5}, the library is restored to the most recent restore point more than 5 days ago.
+\code{restore.library()} by default restores the oldest restore point recorded, while \code{restore.library(0)} will
+restore the most recent (e.g., earlier today if any changes have been made with groundhog today).}
+}
 \description{
 When groundhog installs a package, it saves two copies of it.
 One goes on the stable groundhog library (to find its location: \code{get.groundhog.folder()})
 the other goes to the default personal library (to find its location: \code{.libPaths()[1]}.
-Because the personal library can only hold one version of a package, groundhog replaces the
-version in the personal library, but makes a copy of it in groundhog's stable library.
-To restore to your default personal library the version
-of packages it had prior to using groundhog, run \code{restore.library()} and the backup
+Because the personal library can only hold one version of a package, groundhog replaces
+existing versions of packages that already exist in the personal library (if any), but
+it makes a copy of those versions in groundhog's stable library. You can restore your
+personal non-groundhog library to how it was on a previous date (e.g., prior to
+testing groundhog for the first time). Run \code{restore.library()} and the backup
 copy of the original package version will be copied to the personal library.
 }
 \examples{
 \dontrun{
 restore.library()
+restore.library(1)
 }
 
 }

@@ -47,6 +47,22 @@
           purge_df <- subset(packages_df, packages_df$purged==TRUE)
           if (nrow(purge_df)>0) unlink(purge_df$path , recursive = TRUE)   
     
+      #6.5 restore library complete message
+          restore_dir <- paste0(get.groundhog.folder(),"/restore_points/", get.r.majmin())
+          restore_cookie <- file.path(restore_dir , "restore_pending_restart_cookie.rds")  #see restore.library() #9
+          if (file.exists(restore_cookie)) {
+            restore_cookie_time <- readRDS(restore_cookie)
+            #If a restore was requested within 1 hour, show message to confirm completed
+            #more than 1 hour probabably means they went away and came back and msg would be confusing
+            
+              if (as.numeric(Sys.time())-restore_cookie_time < 1*60*60)
+                {
+                message2('Restore library process completed.')
+              }
+            #Delete cookie
+            unlink(restore_cookie)
+            
+          }
           
       #7 Verify a mirror has been set    
         set.default.mirror() #Function 36 -  utils.R
