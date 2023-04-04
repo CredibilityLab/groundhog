@@ -165,7 +165,7 @@ restore.library<-function(days)
       } #ENd if somethign to purge.
       
 
-  #6 Restore deleted packages
+  #6 Restore deleted packages #k=1
         
           if (n.add > 0)
           {
@@ -175,31 +175,44 @@ restore.library<-function(days)
           for (k in 1:n.add)
           {
           #8.1 Setup paths 
+            #pkg info
               pkg_vrs <- ip.add$pkg_vrs[k]
               pkg <-get.pkg(pkg_vrs)
               vrs <-get.vrs(pkg_vrs)
-              installation.path <- get.pkg_search_paths(pkg,vrs)
-              from <- paste0(installation.path , "/" ,pkg)
-              to   <- ip.add$LibPath  #this is the folder where it was deleted from 
               
-              #if the folder has been deleted or no longer available, go to default
-              if (!file.exists(to[k])) {
-                message("Note: package ",pkg_vrs," used to be installed in ",to[k], " but that folder\n",
-                        "no longer exists. Will re-install in ",.libPaths()[1] ," instead.")
-                to[k] <- .libPaths()[1]
+            #8.2 location in the backup folder
+              backup.dir <- paste0(get.groundhog.folder(),"/restore_library/" , get.r.majmin() , "/")
+               from       <- paste0(backup.dir, pkg_vrs,"/",pkg)
+               to         <- ip.add$LibPath[k]  #this is the folder where it was deleted from 
+              
+               
+             #8.3 If package not found in backup, skip
+               ip.k <- data.frame(installed.packages(dirname(from)),row.names=NULL, stringsAsFactors = FALSE)
+               if (nrow(ip.k)==0)
+               {
+                 message("Did not find backup for ",pkg_vrs," will skip and not restore it.")
+                 next 
+                 
+               }
+              
+            #8.4 if the destination local folder has been deleted or no longer available, go to default
+              if (!file.exists(to)) {
+                message("Note: package ",pkg_vrs," used to be installed in '",to[k], "' but that folder\n",
+                        "no longer exists. Will re-install in '",.libPaths()[1] ,"' instead.")
+                to <- .libPaths()[1]
               }
-              old  <- paste0(to[k],"/",pkg)
+              pkg.local_path  <- paste0(to,"/",pkg)
               
-          #8.2 Purge destination package if it exists 
-              if (file.exists(old)) {
+          #8.5 Purge destination package if it exists 
+              if (file.exists(pkg.local_path)) {
                 random <- paste0(sample(letters,size=6),collapse = '')
-                new <- paste0(old , "_",random,"_PURGE")  #add 6 random letters and _PURGE
-                purged   <- file.rename(old , new)
+                new <- paste0(pkg.local_path , "_",random,"_PURGE")  #add 6 random letters and _PURGE
+                purged   <- file.rename(pkg.local_path , new)
               } #ENd purge
                 
-          #8.3 Copy from groundhog to local
+          #8.6 Copy from groundhog to local
               #Message
-                message1("Restoring " , k , " of " , n.add, ":  '",basename(installation.path),"'")
+                message1("Restoring " , k , " of " , n.add, ":  '",basename(from),"'")
                
               #Copy
                 outcome[k] <- file.copy(from , to, recursive = TRUE)    
