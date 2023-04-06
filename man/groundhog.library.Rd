@@ -14,7 +14,6 @@ groundhog.library(
   force.install = FALSE,
   force.source.main = FALSE,
   force.install.main = FALSE,
-  install.only = FALSE,
   tolerate.R.version = "",
   cores = -1
 )
@@ -50,9 +49,6 @@ requested package needs to be installed it will be installed from source
 
 \item{force.install.main}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will re-install the requested packages even
 if they are already installed (but dependencies will not be re-installed).}
-
-\item{install.only}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will only install packages and not load them
-to the environment (like running \code{install.packages(pkg)} without following with \code{library(pkg)}).}
 
 \item{tolerate.R.version}{optional character string containing an R version
 which \code{groundhog.library()} will not throw an error for using, even if the
