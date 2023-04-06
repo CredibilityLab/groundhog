@@ -100,34 +100,43 @@
 #--------------------------------------------------------------
     
   #1 Preliminaries
-    #Check if new versin of groundhog exists 
+    #1.1 Check if new versin of groundhog exists 
       check.groundhog.version(min.days=1) #Function 42  -  utils.R
 
     
-    #Erase conflicts hidden var
+    #1.2 Erase conflicts hidden var
       .view.conflicts<<-''
     
-    #1.0 Save default libpaths to change back to them after exiting
+    #1.3 Save default libpaths to change back to them after exiting
         if (!exists("orig_lib_paths",envir=.pkgenv)) {
               .pkgenv[["orig_lib_paths"]] <- .libPaths()
-        }
+              }
     
-  #1. pkg & date included
+    #1.4 pkg & date included
              if (missing(pkg) || missing(date)) {
               msg=paste0("You must include both a package name and a date in 'groundhog.library()' ")
               gstop(msg)
              }
-      #1.8 put package name in quotes if it is not an object and was not put in quotes
+      
+           date.catch <- try(typeof(date),silent=TRUE)
+            if (as.character(class(date.catch))=="try-error") {
+              msg=paste0("The object you entered as date, '" , as.character(substitute(date)) ,"', does not exist.")
+              gstop(msg) #util #51)
+            }
+      
+      #1.5 put package name in quotes if it is not an object and was not put in quotes
         pkg.catch <- try(typeof(pkg),silent=TRUE)
         if (as.character(class(pkg.catch))=="try-error") {
           pkg <- as.character(substitute(pkg))
           } 
     
-     #1.4 Validate arguments entered (Utils.R #46)
-        validate.groundhog.library(pkg, date,  quiet.install,  include.suggests ,ignore.deps, force.source , force.install, tolerate.R.version  ,cores)  
+     #1.6 Validate arguments entered (Utils.R #46)
+        validate.groundhog.library(pkg, date,  quiet.install,  include.suggests ,ignore.deps, 
+                                   force.source , force.install,  force.source.main , force.install.main, 
+                                   tolerate.R.version  ,cores)  
    
     
-    #1.1 If there is a remote, it needs to be alone 
+    #1.7 If there is a remote, it needs to be alone 
           remote <- basename(pkg)!=pkg      
           n.remote <- sum(remote)
           
@@ -136,23 +145,21 @@
                        "But, remote packages need to be loaded on their own in separate groundhog.library() calls")
 		      gstop(msg)
           }
-          
-       
-          
+
     
-    #Note: 1.2 & 1.3 could be done on loading, but, better here : (i) in case the user makes a change, and (ii) avoid writing files without authorization
-    #1.2  Verify a mirror has been set (utils.R #36)    
+    #Note: 1,8 & 1.9 could be done on loading, but, better here : (i) in case the user makes a change, and (ii) avoid writing files without authorization
+    #1.8  Verify a mirror has been set (utils.R #36)    
         set.default.mirror() 
     
-    #1.3 Verify a personal library to save non-groundhog packages has been assigned (Utils.R #37)
+    #1.9 Verify a personal library to save non-groundhog packages has been assigned (Utils.R #37)
         verify.personal.library.exists() 
     
        
-    #1.5 Reload databases if needed
+    #1.10 Reload databases if needed
         load.cran.toc()
         update_cran.toc_if.needed(date) 
  
-    #1.6 On Exit refresh libpath and cran.toc (cran toc can be modified temporarily by a remote)
+    #1.11 On Exit refresh libpath and cran.toc (cran toc can be modified temporarily by a remote)
           
             on.exit({
                     #Read cran toc again to undo any changes with remote
@@ -162,29 +169,28 @@
 					            if  (exists("orig_lib_paths",envir=.pkgenv)) .libPaths(.pkgenv[["orig_lib_paths"]])
                     })
             
-    #1.7 Drop pre-existing .libPaths to avoid finding pkg in path without version match
+    #1.12 Drop pre-existing .libPaths to avoid finding pkg in path without version match
         .libPaths('')
     
 
-  
-          
-    #1.9 Sandwich possible library() commands  
+    #1.13 Sandwich possible library() commands  
         pkg <- sandwich.library(pkg)  #utils.R function 34
    
-        
-    
-    #1.11 how many cores? (totall -2 unless specified away from default of -1)
+
+    #1.14 how many cores? (totall -2 unless specified away from default of -1)
         if (cores == -1) {
           cores <- max(parallel::detectCores()-2,1)
         }   
         
-    #1.12 Common messages
+    #1.15 Common messages
       f10 <- ifelse(interactive(), "\n(in R Studio run CMD/CTRL-SHFT-F10 to restart R session). ","")
 
 #------------------------------------------------------------------------ 
     
 #2 Non-remote packages, early return if everything is already attached 
    if (n.remote==0 & all.already.attached(pkg , date) ) return(invisible(TRUE))
+      #all.already.attached.R produced: message1("All requested packages are already attached")
+
         
 #------------------------------------------------------------------------   
 
@@ -214,7 +220,10 @@
            if (force.install.main==TRUE)  snowball.k[snowball.k$pkg==pkg,]$installed = FALSE
 
           #ignore deps (drop from snowball to avoid installing (and replacing locally)
-          #note; we already checked that they are active, so we know they will be availble.
+          #note1: we already checked that they are active, so we know they will be available
+          #note2: we do not save snowballs generated with ignore.deps so that next time the ignore deps are loaded
+          #      see #10.7 below
+          
            if (length(ignore.deps)>0)
            {
              snowball.k <- snowball.k[!snowball.k$pkg %in% ignore.deps,]
@@ -366,7 +375,7 @@
         for (pkgk in pkg) {
           base.library(pkgk, character.only=TRUE)
         }
--------------------------------------------------------------------- 
+#-------------------------------------------------------------------- 
 
 #10 Verify each snowball, saving snowball .rds if successful  
       
