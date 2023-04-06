@@ -32,10 +32,12 @@
       #4 ignore.deps
             if (length(ignore.deps)>0) {
               active<-get.active()
-             if (!all(ignore.deps %in% active$pkg )) {
+              ss <- .pkgenv[['session.snowballs']]
+
+             if (!all(ignore.deps %in% active$pkg | ignore.deps %in% ss$pkg)) {
                
-               msg = paste0("All packages included in the ignore.deps() option must be loaded prior to running\n",
-                       "groundhog.library(), but the following is/are not: ",
+               msg = paste0("All packages included in the ignore.deps() option must be already loaded or be\n",
+                       "be dependencies for packages loaded in this session, but the following is/are not: ",
                         paste0(dQuote(ignore.deps [!ignore.deps %in% active$pkg]), collapse=" ,"))
                 gstop(msg) #util #51)
               } #End if some are not loaded

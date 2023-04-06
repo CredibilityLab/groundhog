@@ -28,6 +28,10 @@
           
         #Save it
           saveRDS(ip , restore_path)
+          
+        #Add to restore points in environment
+          .available.restore.points <<- get.restore.points() #utils #55, loaded in zzz.R, now we add the new date
+
       }
     
         
@@ -147,6 +151,7 @@ for (k in 1:nrow(snowball))
       
     #7  Copy the folder from groundhog folder
          #path to copy pkg from and to
+		    local_folder <- .pkgenv[["orig_lib_paths"]][-length(.pkgenv[["orig_lib_paths"]])]
             from_path <-paste0(installation.path,'/',pkg)  #groundhog_folder
             to_path <-  paste0(local_folder[1])            #local_folder
                                

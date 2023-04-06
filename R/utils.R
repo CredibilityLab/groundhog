@@ -53,7 +53,8 @@
 #51 gstop()                    :  show message in green then "** groundhog stopped**" in red and exit())
 #52 read/save loadl rds 
 #53 Download in batches        : breaks a list of pkgs into batches downloaded sequentially
-
+#54 filesize_format            : turn bytes file size to human readable
+#55 get.restore.points         : vector with dates available 
 ########################################################################
     
 
@@ -1007,7 +1008,7 @@ get.parallel.time<-function(times,cores)
   }#End of #53
   
   
-#54 File size
+#54 filesize_format
   #(writte by chatGPT, to avoid relying on utils:::)
   filesize_format <- function(size_in_bytes) {
   if(size_in_bytes < 1024) {
@@ -1020,4 +1021,34 @@ get.parallel.time<-function(times,cores)
     u <- u + 1
   }
   return(paste0(round(size_in_bytes, 1), " ", units[u+1]))
-}
+  }
+  
+  
+#55 get.restore.points  
+  
+  get.restore.points <- function()
+  {
+  
+    #1 Path
+      restore_dir <- paste0(get.groundhog.folder(),"/restore_points/", get.r.majmin())
+      dir.create(restore_dir, recursive = TRUE,showWarnings = FALSE)    
+
+      
+    #2 Files available
+      restore_files <- list.files(restore_dir)
+        
+    #3 If none, end
+        if (length(restore_files)==0) {  
+          return(data.frame(date='',days='')[0,])
+          }
+        
+    #4 Turn filenames to dates
+      restore_dates <- as.Date(substr(restore_files, 0,10))  
+    
+    #5 Make data.frame
+      df <- data.frame(dates=restore_dates, days = as.numeric(Sys.Date()- restore_dates))
+      
+    #6 Return it
+      return(df)
+    
+  }

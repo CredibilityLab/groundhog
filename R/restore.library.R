@@ -2,28 +2,38 @@
 #'
 #' When groundhog installs a package, it saves two copies of it.
 #' One goes on the stable groundhog library (to find its location: `get.groundhog.folder()`)
-#' the other goes to the default personal library (to find its location: `.libPaths()[1]`.
+#' the other goes to the default personal library (to find its location: `.libPaths()[1]`).
 #' Because the personal library can only hold one version of a package, groundhog replaces 
-#' existing versions of packages that already exist in the personal library (if any), but 
-#' it makes a copy of those versions in groundhog's stable library. You can restore your 
-#' personal non-groundhog library to how it was on a previous date (e.g., prior to 
-#' testing groundhog for the first time). Run `restore.library()` and the backup
-#' copy of the original package version will be copied to the personal library. 
+#' existing versions of packages that already exist in the personal library (if any), just like 
+#' `install.packages()` does. But, it makes a backup copy of those replaced packages. 
+#' You can restore your personal non-groundhog library to how it was prior to groundhog modifying it 
+#' (e.g., you can test groundhog for the first time, and then undo any modifications to your
+#' personal library). Run `restore.library()` and the backup
+#' copy of the original package version will be restored to the personal library. 
+#' Thanks to keeping the backup copies, restoring an entire library takes but a few seconds.
+#' Groundhog makes a single restore point for every day that `groundhog.library()` 
+#' leads to replacing even a single package into the personal library.
+#' View available dates with `.available.restore.points`. 
+#' 
 #' 
 #'@param days an optional numeric argument used to choose among alternative restore points.
-#'When set, groundhog restores the personal library to the  most recent restore point, that is at least `days` days ago.
-#'For example, if `days=5`, the library is restored to the most recent restore point more than 5 days ago.
-#'`restore.library()` by default restores the oldest restore point recorded, while `restore.library(0)` will 
-#'restore the most recent (e.g., earlier today if any changes have been made with groundhog today).
+#' When `days` is set, groundhog restores the personal library to the  most recent restore point, that 
+#' is at least `days` days ago. `restore.library()` by default restores
+#' the most current restore point (e.g., if some packages were installed with groundhog today, to 
+#' how the library was before today's installations). `days = -1` will restore back to the first
+#'restore point available.
 
 
 #' @examples
 #' \dontrun{
 #' restore.library()
-#' restore.library(1)
+#' restore.library(7)
+#' restore.library(-1)
 
 #' }
 #'
+#' @details For more information about groundhog check out [groundhogr.com](http://groundhogr.com)
+
 #' @export
 #'
 
@@ -56,12 +66,12 @@ restore.library<-function(days)
     #2.4 Turn filenames to dates
       ip_dates <- as.Date(substr(ip_files, 0,10))  
       
-    #2.5 If missing `days` argument, get the first  
+    #2.5 If missing `days` argument, get the latest
       if (missing(days)) {
-        datek <- ip_dates[order(ip_dates)[1]]
+        datek <- max(ip_dates)
       }
       
-    #2.6 else, get the latest date prior to `days`
+    #2.6 else, get the new date prior to `days`
       if (!missing(days)) {
           days.since <- Sys.Date() - ip_dates
           ip_dates <- ip_dates[days.since > days]

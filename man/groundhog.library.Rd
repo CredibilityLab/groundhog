@@ -12,13 +12,15 @@ groundhog.library(
   ignore.deps = c(),
   force.source = FALSE,
   force.install = FALSE,
+  force.source.main = FALSE,
+  force.install.main = FALSE,
+  install.only = FALSE,
   tolerate.R.version = "",
   cores = -1
 )
 }
 \arguments{
-\item{pkg}{character string or vector with name of target package(s).
-Single package names need not be in quotes.}
+\item{pkg}{character string or vector with name of package(s) to load/install.}
 
 \item{date}{character string  (yyyy-mm-dd), or date value, with the date which
 determines the version of the package, and all dependencies, to be loaded
@@ -36,11 +38,21 @@ are already loaded in the R session, and create a conflict with a needed
 dependency for the package being loaded (mismatch of version), but which should be ignored
 and groundhog.library() should proceed tolerating the conflict.}
 
-\item{force.source}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will
-not attempt installing binary from CRAN or MRAN and instead download source
-file and install it.}
+\item{force.source}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, if the requested package,
+or its dependencies, needs to be installed, they will be installed from source (much slower than from binaries).}
 
-\item{force.install}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will}
+\item{force.install}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will re-install the requested packages and
+their depencies even if they are already installed.}
+
+\item{force.source.main}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, if the
+requested package needs to be installed it will be installed from source
+(but dependencies are installed from binaries if needed and available).}
+
+\item{force.install.main}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will re-install the requested packages even
+if they are already installed (but dependencies will not be re-installed).}
+
+\item{install.only}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will only install packages and not load them
+to the environment (like running \code{install.packages(pkg)} without following with \code{library(pkg)}).}
 
 \item{tolerate.R.version}{optional character string containing an R version
 which \code{groundhog.library()} will not throw an error for using, even if the

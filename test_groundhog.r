@@ -23,7 +23,7 @@
 install.packages('c:/dropbox/groundhogr/groundhog_3.0.0.tar.gz',repos=NULL)
 library('groundhog')
 
-set.groundhog.folder('c:/temp/1001')
+set.groundhog.folder('c:/temp/11')
 test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 45 days
 
 #Set 0 - various forms of calling packages to be loaded
@@ -49,7 +49,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
   #Single package, with and without quotes
     library('groundhog')
     groundhog.library('pwr',test.day)  #quotes
-    groundhog.library(rio,test.day)    #no quotes
+    groundhog.library(pwr,test.day)    #no quotes
 
   #Object containing a single package
     pkg1='pwr'
@@ -63,8 +63,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     groundhog.library(c('pwr','metafor'),test.day)
     
 
-    pkg=c('pwr','metafor')
-    date=test.day
+    
     
     
   #Sandwiching library
@@ -73,7 +72,8 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
           library('pwr')
           library(metafor)
           library(tidyr)
-          ", 
+          library(jsonlite)
+                      ", 
       test.day)
     
   
@@ -86,94 +86,72 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     
 #######################################    
 #Set 1 - Enumerated conflicts '
+  test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 45 days
 
-    #Conflict 1: deprecated           
-        test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
+      
+      
+    # 2.1) A *requested.pkg* was previously loaded with groundhog but different version or repository
+      
+        #Groundhog CRAN date 1 & CRAN date 2
+          library('groundhog')
+          groundhog.library('pwr',test.day)
+          groundhog.library('pwr',test.day-900,tolerate.R.version = groundhog:::get.rversion())
 
-    #Conflict 2: Same remote, different date
-        library('groundhog')
-        groundhog.library('heliosdrm/pwr',test.day)
-        groundhog.library('heliosdrm/pwr',test.day+1)
+        #Groundhog CRAN date 1 & GIT 2
+          library('groundhog')
+          groundhog.library('pwr',test.day)
+          groundhog.library('heliosdrm/pwr',test.day)
         
-        
+         #Groundhog GIT date 1 & GIT 2
+          library('groundhog')
+          groundhog.library('heliosdrm/pwr',test.day)
+          groundhog.library('heliosdrm/pwr',test.day+1)
 
-    #Conflict 3: Requested package was previously loaded with groundhog but different version or repository
-        library('groundhog')
-        groundhog.library('pwr',test.day)
-        groundhog.library('heliosdrm/pwr',test.day)
-  
-        
-    #Conflict 4: Dependency conflicts with previously loaded groundhog package
-        
-        #RUN THIS IN 4.2.x
-          library('groundhog')
-          groundhog.library('gio','2022-05-01')  
-          groundhog.library('rio','2022-12-05')
-          groundhog.library('rio','2022-08-05',ignore.deps='haven')  #will not work either
-        
-        #RUN THIS IN 4.1.x
-          library('groundhog')
-          groundhog.library('crsh/papaja',test)  
-          groundhog.library('rio','2021-08-05') 
-        
+    # 2.2) A *dependency* was loaded for a different repos or date 
+         #Groundhog CRAN date 1 & CRAN date 2
           
+          test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 45 days
 
-        #Other R     
-          library('groundhog')
-          groundhog.library('rio',test.day)                              #load rio
-          groundhog.library('haven',test.day-80,tolerate=groundhog:::get.rversion()) #try to load a depenency, haven, with diff date
-  
           
-    #Conflict fixed with ignore deps
+          #1 conflicting pkg, show it
+            library('groundhog')
+            set.groundhog.folder('c:/temp/203')
+            groundhog.library('zip',test.day-800,tolerate.R.version = groundhog:::get.rversion())
+            groundhog.library('rio',test.day)
+            groundhog.library('rio',test.day,ignore.deps = 'zip')  #this does not download the new zip, uses the old one instead
           
-          library('groundhog')
-          groundhog.library('haven','2022-05-11')
-          
-          #*restart
-          library('haven')
-          groundhog.library('rio','2023-01-01')
-          groundhog.library('rio','2023-03-01',ignore.deps = 'haven')
-        
-          toc('haven')
-        
-    #Conflict 5: Any pkg in snowball was already loaded, different version, not with groundhog
-        library('groundhog')
-
-        #1 Install one version of pwr (v1.2-2)
-            groundhog.library('pwr','2020-01-01',tolerate.R.version=groundhog:::get.rversion()) # Date 1
-          #--->  Restart R session (that version will now be the default pkg)
-        
-        #2 load it
-          library('groundhog')
-          pwr::pwr.2p.test()
-          
-        #3 Now try to groundhog another date (v1.3.0)
-            groundhog.library('pwr','2022-01-01',tolerate.R.version=groundhog:::get.rversion()) # Date 2
-    
             
+          #2 conflicting pkg, show it
+            library('groundhog')
+            set.groundhog.folder('c:/temp/203')
+            groundhog.library('haven',test.day-80,tolerate.R.version = groundhog:::get.rversion())
+            groundhog.library('rio',test.day+80)
             
-    #Conflict 5 with recommended pkg:
-        library('groundhog')
-
-        #1 Install one version v7.3-51.5
-            groundhog.library('MASS','2020-01-01',tolerate.R.version=groundhog:::get.rversion()) # Date 1
-  
-          #--->  Restart R session (that version will now be the default pkg)
-        
-        #2 load it
-          library('groundhog')
-          x=MASS::abbey      #different version
-
+            #Solve with ignore.deps()
+              groundhog.library('rio',test.day+80,ignore.deps = .view.conflicts)
+            
+            .view.conflicts
           
-        #3 Now try to groundhog another date (v7.3-54)
-            groundhog.library('MASS','2022-01-01',tolerate.R.version=groundhog:::get.rversion()) # Date 2
-    
-        #4 restrat again (now it should load without a problem
-          library('groundhog')
-          x=MASS::abbey      
-          groundhog.library('MASS','2022-01-01',tolerate.R.version=groundhog:::get.rversion()) # Date 2
+    # 2.3) *Any* conflict on a non-interactive session (because we cannot request after installation they restart in  a forceful way)
+            #Run this from R script non-interactively
+            
+            library('groundhog')
+            test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 45 days
+
+            set.groundhog.folder('c:/temp/203')
+            groundhog.library('haven',test.day-20,tolerate.R.version = groundhog:::get.rversion())         
+            groundhog.library('rio',test.day+80)
 
             
+#3 AFTER (so a conflict with a non-groundhog loaded pkg)
+          library('groundhog')
+        groundhog.library('pwr',test.day-1200,tolerate.R.version = groundhog:::get.rversion()) 
+     
+        #restart session
+        library('groundhog')
+        library('pwr')  #loading the older version
+        groundhog.library('pwr',test.day) 
+
     
   #Date is too recent for CRAN
     library('groundhog')
@@ -232,12 +210,28 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
   library('groundhog')
    groundhog.library('jsonlite',test.day-400,force.install=TRUE,force.source = TRUE,tolerate.R.version=groundhog:::get.rversion())
     
+#5.5) Main source and main install.
+  library('groundhog')
+   groundhog.library('metafor',test.day,force.install.main=TRUE,force.source.main= TRUE)
+   groundhog.library('rio',test.day,force.install.main=TRUE,force.source.main= TRUE)
 
-#6) Include suggests
+
+  #6) Include suggests
     library('groundhog')
     pks=c('jsonlite','metafor')
     groundhog.library(pks, test.day ,include.suggests = TRUE)
 
+    
+  #7) Install only
+    library('groundhog')
+    set.groundhog.folder('c:/temp/50046')
+    test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
+
+    groundhog.library('this.path',test.day, install.only=TRUE)
+    
+    pkg='this.path'
+    date=test.day
+    
 #7) Update cran to
     groundhog:::load.cran.toc(TRUE)
     
