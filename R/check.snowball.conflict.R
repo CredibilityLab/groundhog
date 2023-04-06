@@ -106,7 +106,9 @@
             
           #Character with list of packages that need to be ignored
             need.to.ignore <- pasteQC(snowball$pkg[conflict2.TF])  #pasteQC(), Utils.R function #31
-            .view.conflicts <<- snowball$pkg[conflict2.TF]
+            #.view.conflicts <<- snowball$pkg[conflict2.TF]
+			.view.conflicts <<- need.to.ignore  #make it a bit more difficult to copy-paste into ignore.deps the name of the variable
+			                                    #avoid users doing ignore.deps=.view.conflicts for it would make for less reproducible code
 
           #Start saying there is a conflict
             msg <- paste0("Another version of a needed package was previously loaded with groundhog.")
