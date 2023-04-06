@@ -1,5 +1,8 @@
-  validate.groundhog.library <- function(pkg, date,  quiet.install,  include.suggests ,  
-                            ignore.deps, force.source , force.install, tolerate.R.version  ,cores )
+# 
+
+ validate.groundhog.library <- function(pkg, date,  quiet.install,  include.suggests ,  
+                            ignore.deps, force.source , force.install, force.source.main, force.install.main, 
+                            tolerate.R.version  ,cores )
   {
       #1. pkg & date included
              if (missing(pkg) || missing(date)) {
@@ -10,12 +13,7 @@
 
            
       #2 Valid date
-            date.catch <- try(typeof(date),silent=TRUE)
-            if (as.character(class(date.catch))=="try-error") {
-              msg=paste0("The object '" , as.character(substitute(date)) ,"', does not exist.")
-              gstop(msg) #util #51)
-            }
-            validate.date(date) #Function defined in utils.R
+           validate.date(date) #Function defined in utils.R
        
       #2.5 Text pkg
             if (!is.character(pkg)) {
@@ -27,7 +25,9 @@
           validate.TF(include.suggests)
           validate.TF(force.source)
           validate.TF(force.install)
-            
+          validate.TF(force.source.main)
+          validate.TF(force.install.main)
+        
             
       #4 ignore.deps
             if (length(ignore.deps)>0) {
