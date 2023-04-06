@@ -46,7 +46,7 @@
         purge_df <- subset(packages_df, packages_df$purged==TRUE)
         if (nrow(purge_df)>0) unlink(purge_df$path , recursive = TRUE)   
   
-    #4 restore library complete message
+    #4 if completing a library restore, show msg 
         restore_dir <- paste0(get.groundhog.folder(),"/restore_points/", get.r.majmin())
         restore_cookie <- file.path(restore_dir , "restore_pending_restart_cookie.rds")  #see restore.library() #9
         if (file.exists(restore_cookie)) {
@@ -69,7 +69,7 @@
     #6 Check if new version of groundhog exists, if we have not checked today yet
        check.groundhog.version(min.days=1) #Function 42  -  utils.R
           
-
+  
                   
     } #End of onLoad
 

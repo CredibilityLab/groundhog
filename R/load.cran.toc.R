@@ -3,6 +3,11 @@
 
 load.cran.toc <- function(update.toc = FALSE) {
   
+  #0 If update is false and already loaded, early return
+    if  (update.toc==FALSE & !is.null(.pkgenv[['cran.toc']])) {
+       return(invisible(TRUE))
+      }
+  
   #1. URL with rds files
     groundhogR.url <- "https://groundhogR.com/"
     wasabi.url     <- "https://s3.wasabisys.com/groundhog/"  

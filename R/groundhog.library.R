@@ -98,7 +98,7 @@
   {
     
 #--------------------------------------------------------------
-    
+
   #1 Preliminaries
     #1.1 Check if new versin of groundhog exists 
       check.groundhog.version(min.days=1) #Function 42  -  utils.R
@@ -148,6 +148,10 @@
           }
           
           
+     #1.13 Sandwich possible library() commands  
+        pkg <- sandwich.library(pkg)  #utils.R function 34
+   
+
           
     #1.7.5 Non-remote packages, early return if everything is already attached 
         if (n.remote==0 & all.already.attached(pkg , date) ) return(invisible(TRUE))
@@ -164,9 +168,13 @@
     
        
     #1.10 Reload databases if needed
-        load.cran.toc()
-        update_cran.toc_if.needed(date) 
+        if (is.null(.pkgenv[["cran.toc"]])) load.cran.toc(update.toc = FALSE)
+        
+        update_cran.toc_if.needed(date) #This will load.cran.toc() if needed as well
  
+        #note: it is redundant to run load.cran.toc first since it is part of update_cran.toc
+        #but the latter depends on the date, we have not yet checked that date is correct
+        
     #1.11 On Exit refresh libpath and cran.toc (cran toc can be modified temporarily by a remote)
           
             on.exit({
@@ -175,16 +183,14 @@
                     
                     #Return libpath, if it has been set.
 					            if  (exists("orig_lib_paths",envir=.pkgenv)) .libPaths(.pkgenv[["orig_lib_paths"]])
+
                     })
             
     #1.12 Drop pre-existing .libPaths to avoid finding pkg in path without version match
         .libPaths('')
     
 
-    #1.13 Sandwich possible library() commands  
-        pkg <- sandwich.library(pkg)  #utils.R function 34
-   
-
+  
     #1.14 how many cores? (totall -2 unless specified away from default of -1)
         if (cores == -1) {
           cores <- max(parallel::detectCores()-2,1)
@@ -193,11 +199,8 @@
     #1.15 Common messages
       f10 <- ifelse(interactive(), "\n(in R Studio run CMD/CTRL-SHFT-F10 to restart R session). ","")
 
-#------------------------------------------------------------------------ 
-    
+      
 
-        
-#------------------------------------------------------------------------   
 
 #3 Get snowballs for all requested packages
   #Save snowballs individually as a list and also as a single big snowball.all
@@ -300,7 +303,7 @@
       }
         
 #------------------------------------------------------------
-        
+
 #4 Create libpaths
 
     #4.1 Create all paths if they don't exist (so that they can be added to libpath in 3.5)
@@ -357,7 +360,7 @@
   
 #------------------------------------------------------------------------ 
    
-            
+
 #7 localize the snowballs
             
     #Drop base pkgs from snowball.all
@@ -370,11 +373,12 @@
 
 #------------------------------------------------------------------------ 
 
-      
+
 #8 Check conflict now that it is all installed (will prompt a restart if a conflict exists, will not occur again because they are localized)
     check.conflict.after(snowball.all, pkg.requested=pkg ,ignore.deps=ignore.deps, date=date)
 
 #------------------------------------------------------------------------ 
+
 
 #9 Library all pkgs
         for (pkgk in pkg) {
@@ -472,7 +476,7 @@
       }#End of  #10
                  
 #----------------------------------
-      
+
       
 }  #End new.groundhog.folder()
   
