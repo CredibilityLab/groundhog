@@ -140,13 +140,21 @@
           remote <- basename(pkg)!=pkg      
           n.remote <- sum(remote)
           
-         if (n.remote>0 & length(pkg)>1 ) {
+          
+          if (n.remote>0 & length(pkg)>1 ) {
            msg =paste0("The list of packages you are trying to load includes a remote (e.g., Github) package.",
                        "But, remote packages need to be loaded on their own in separate groundhog.library() calls")
 		      gstop(msg)
           }
+          
+          
+          
+    #1.7.5 Non-remote packages, early return if everything is already attached 
+        if (n.remote==0 & all.already.attached(pkg , date) ) return(invisible(TRUE))
+          #all.already.attached.R produced: message1("All requested packages are already attached")
 
-    
+          
+      
     #Note: 1,8 & 1.9 could be done on loading, but, better here : (i) in case the user makes a change, and (ii) avoid writing files without authorization
     #1.8  Verify a mirror has been set (utils.R #36)    
         set.default.mirror() 
@@ -163,7 +171,7 @@
           
             on.exit({
                     #Read cran toc again to undo any changes with remote
-                       .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
+                      if (n.remote>0) .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
                     
                     #Return libpath, if it has been set.
 					            if  (exists("orig_lib_paths",envir=.pkgenv)) .libPaths(.pkgenv[["orig_lib_paths"]])
@@ -187,9 +195,6 @@
 
 #------------------------------------------------------------------------ 
     
-#2 Non-remote packages, early return if everything is already attached 
-   if (n.remote==0 & all.already.attached(pkg , date) ) return(invisible(TRUE))
-      #all.already.attached.R produced: message1("All requested packages are already attached")
 
         
 #------------------------------------------------------------------------   
