@@ -1,20 +1,4 @@
-#verify.snowball.loaded & verify.snowball.installed()
-#
-#
 
-
-#Installed? (used when install.only=TRUE)
-  verify.snowball.installed <-function(snowball, ignore.deps)
-  {
-    
-  pkgs_path <- paste0(get.groundhog.folder(),'/R-',get.r.majmin())
-  ip.groundhog<-data.frame(installed.packages(list.files(pkgs_path,full.names=TRUE )), row.names = NULL, stringsAsFactors = FALSE)
-  if (nrow(ip.groundhog)==0) ip.groundhog=data.frame(pkg='',vrs='')
-  ip.groundhog$pkg_vrs = paste0(ip.groundhog$Package,"_",ip.groundhog$Version)
-  verified<-all(snowball$pkg_vrs %in% ip.groundhog$pkg_vrs | snowball$pkg %in% ignore.deps)
-  return(verified)
-      
-  }
 
   
 #--------------------------------------------------------------

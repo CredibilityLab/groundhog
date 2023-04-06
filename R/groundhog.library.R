@@ -32,8 +32,6 @@
 #'their depencies even if they are already installed.
 #'@param force.install.main logical (defaults to `FALSE`). When set to `TRUE`, will re-install the requested packages even 
 #'if they are already installed (but dependencies will not be re-installed).
-#'@param install.only logical (defaults to `FALSE`). When set to `TRUE`, will only install packages and not load them 
-#'to the environment (like running `install.packages(pkg)` without following with `library(pkg)`).
 #'@param tolerate.R.version optional character string containing an R version 
 #'   which `groundhog.library()` will not throw an error for using, even if the 
 #'   date entered corresponds to a more recent major R release.  
@@ -96,7 +94,6 @@
                             include.suggests = FALSE, ignore.deps=c(), 
                             force.source = FALSE,      force.install = FALSE, 
                             force.source.main = FALSE, force.install.main=FALSE,
-                            install.only=FALSE,
                             tolerate.R.version = "" , cores = -1)
   {
     
@@ -130,7 +127,7 @@
         validate.groundhog.library(pkg, date,  quiet.install,  include.suggests ,ignore.deps, force.source , force.install, tolerate.R.version  ,cores)  
    
     
-    #1.1 If there is a remote, it needs to be alone and (install.only=TRUE) is not accepted
+    #1.1 If there is a remote, it needs to be alone 
           remote <- basename(pkg)!=pkg      
           n.remote <- sum(remote)
           
@@ -139,11 +136,6 @@
                        "But, remote packages need to be loaded on their own in separate groundhog.library() calls")
 		      gstop(msg)
           }
-          
-         if (n.remote>0 & install.only==TRUE ) {
-           msg =paste0("Remote (GitHub/Gitlab) packages may not be called with the `install.only=TRUE` option.")
-		      gstop(msg)
-         }
           
        
           
@@ -311,7 +303,7 @@
 #5 Check conflict with previously groundhog-loaded packages
     #Get currently active packages
       .pkgenv[['active']] = active = get.active()
-      check.conflict.before(snowball=snowball.all, pkg.requested=pkg, ignore.deps, date,install.only)  #check.snowball.conflict.R
+      check.conflict.before(snowball=snowball.all, pkg.requested=pkg, ignore.deps, date)  #check.snowball.conflict.R
         
       
 
@@ -371,13 +363,10 @@
 #------------------------------------------------------------------------ 
 
 #9 Library all pkgs
-      if (install.only==FALSE)
-      {
         for (pkgk in pkg) {
           base.library(pkgk, character.only=TRUE)
         }
-      }
-#------------------------------------------------------------------------ 
+-------------------------------------------------------------------- 
 
 #10 Verify each snowball, saving snowball .rds if successful  
       
@@ -388,18 +377,9 @@
        snowball<-snowball.list[[k]]
          
     #10.2 Verified: TRUE or FALSE?
-      if (install.only==FALSE) verified <- verify.snowball.loaded(snowball, ignore.deps)  
-      if (install.only==TRUE)  {
-        verified  <- verify.snowball.installed(snowball, ignore.deps)  
-        if (verified==TRUE) message1("Installed succesfully")
-        if (verified==FALSE) message("Installation failed")
-        
-        #note: show message for install.only=TRUE because when FALSE, they will see more output later as packages attach
-        }
+        verified <- verify.snowball.loaded(snowball, ignore.deps)  
       
-       #With install==FALSE includes 'successfully attached' msg, 
-       #see #verify.snowball.loaded.R
-  
+      
 	  #10.3 IF VERIFIED
        
         if (verified==TRUE) { 
