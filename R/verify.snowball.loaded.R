@@ -1,8 +1,4 @@
 
-
-  
-#--------------------------------------------------------------
-  
   verify.snowball.loaded<-function(snowball, ignore.deps)
   {
     

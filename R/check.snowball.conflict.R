@@ -18,7 +18,7 @@
 
   #1 BEFORE
     #Before downloading packages, check if there is a *groundhog induced* conflict
-    check.conflict.before<-function(snowball, pkg.requested, ignore.deps, date,install.only)
+    check.conflict.before<-function(snowball, pkg.requested, ignore.deps, date)
     {
 
      #1.1 Short name for session.snowballs
