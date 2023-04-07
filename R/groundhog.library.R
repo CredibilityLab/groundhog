@@ -104,9 +104,9 @@
       check.groundhog.version(min.days=1) #Function 42  -  utils.R
 
     
-    #1.2 Erase conflicts hidden var
-      .view.conflicts<<-''
-    
+    #1.2 Erase conflicts pkg var
+      .pkgenv[['conflicts']] <- ''
+      
     #1.3 Save default libpaths to change back to them after exiting
         if (!exists("orig_lib_paths",envir=.pkgenv)) {
               .pkgenv[["orig_lib_paths"]] <- .libPaths()
@@ -320,10 +320,9 @@
 #5 Check conflict with previously groundhog-loaded packages
     #Get currently active packages
       .pkgenv[['active']] = active = get.active()
+      .pkgenv[['attached']] = get.attached() 
       check.conflict.before(snowball=snowball.all, pkg.requested=pkg, ignore.deps, date)  #check.snowball.conflict.R
         
-      
-
 #6 Install snowball 
   
     #6.1 Do we need to install on background?

@@ -55,6 +55,7 @@
 #53 Download in batches        : breaks a list of pkgs into batches downloaded sequentially
 #54 filesize_format            : turn bytes file size to human readable
 #55 get.restore.points         : vector with dates available 
+
 ########################################################################
     
 
@@ -1051,4 +1052,13 @@ get.parallel.time<-function(times,cores)
     #6 Return it
       return(df)
     
+  }
+  
+  
+#56 View conflicts
+  view.conflicts <- function()
+  {
+  conflicts<-''
+  if (!is.null(.pkgenv[['conflicts']])) conflicts<-.pkgenv[['conflicts']]
+  return(conflicts)  
   }
