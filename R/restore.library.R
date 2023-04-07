@@ -41,7 +41,7 @@ restore.library<-function(days)
   {
   
   #1 Current IP
-    ip <- data.frame(installed.packages(.libPaths()[-length(.libPaths())]),row.names=NULL)
+    ip <- data.frame(utils::installed.packages(.libPaths()[-length(.libPaths())]),row.names=NULL)
     ip$pkg_vrs <- paste0(ip$Package,"_",ip$Version)
            
     #drop already set to be purged by previous actions (e.g., installs) as they are not really 'installed' anymore
@@ -197,7 +197,7 @@ restore.library<-function(days)
               
                
              #8.3 If package not found in backup, skip
-               ip.k <- data.frame(installed.packages(dirname(from)),row.names=NULL, stringsAsFactors = FALSE)
+               ip.k <- data.frame(utils::installed.packages(dirname(from)),row.names=NULL, stringsAsFactors = FALSE)
                if (nrow(ip.k)==0)
                {
                  message("Did not find backup for ",pkg_vrs," will skip and not restore it.")

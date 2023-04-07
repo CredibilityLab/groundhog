@@ -14,7 +14,7 @@
         #Create directory for IP  
           dir.create(dirname(restore_path),showWarnings = FALSE,recursive = TRUE)
         #Get IP
-          ip <- data.frame(installed.packages( .pkgenv[["orig_lib_paths"]][-length(.pkgenv[["orig_lib_paths"]])]),row.names = NULL,stringsAsFactors = FALSE)
+          ip <- data.frame(utils::installed.packages( .pkgenv[["orig_lib_paths"]][-length(.pkgenv[["orig_lib_paths"]])]),row.names = NULL,stringsAsFactors = FALSE)
         #Drop base pkgs
           ip <- ip[!ip$Package %in% base_pkg(), ]
       
