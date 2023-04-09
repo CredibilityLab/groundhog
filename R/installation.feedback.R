@@ -45,7 +45,7 @@ installation.feedback <- function(k, date, snowball, start.time) {
 		  "> Installation would be faster in R-", rv$r.need.full, ", which was current on: '",date,"'.\n",
 		  "> Instructions for running other versions of R:  https://groundhogR.com/many"
 		)
-	  } # End if R mismatch
+	  } # end if R mismatch
 
 
 	  

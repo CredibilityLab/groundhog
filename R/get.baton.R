@@ -6,7 +6,7 @@
 
 #0 Auxiliary function that cleans fields of text
                   clean_text <- function(y) {
-                  return(gsub("\\s*\\([^\\)]+\\)|\\n| ","",as.character(y))) #Kill the parenthense, \n, and space
+                  return(gsub("\\s*\\([^\\)]+\\)|\\n| ","",as.character(y))) #Kill the parentheses, \n, and space
                   }
 
 
@@ -39,7 +39,7 @@
                 load.pkg_utility('git2r' , date)
 
             #3.3 read the raw description file
-                #  https://github.com/ropensci/git2r/issues/255   --  reading description with git2r
+                #  https://GitHub.com/ropensci/git2r/issues/255   --  reading description with git2r
                 
                 dir_path <- paste0(get.groundhog.folder() , "/git_clones/" , remote_id)
                 clone_path <- paste0(dir_path , "/", usr, "_" ,pkg)
@@ -87,7 +87,7 @@
                   new.remotes.vector <- unlist(strsplit(new.remotes,","))
                   
 
-                #Split pkg_usr becuase suggest column only has pkg, not usr
+                #Split pkg_usr because suggest column only has pkg, not usr
                   new.remotes.vector_pkg <- sapply(strsplit(new.remotes.vector,"/") , "[" ,2)
                   new.remotes.vector_usr <- sapply(strsplit(new.remotes.vector,"/") , "[" ,1)
                   
@@ -107,7 +107,7 @@
                       new.remotes <- paste0(new.remotes.vector_usr[keep] , "/" , new.remotes.vector_pkg[keep], collapse=',')
                       }#End if sum(keep)>0
                   
-                }# End if include.suggests==FALSE
+                }# end if include.suggests==FALSE
                 
                 
        #5) Produce row of toc (for cran.toc)

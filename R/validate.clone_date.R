@@ -63,7 +63,7 @@
 				
 					#remote_functions.R - Function 2
           
-			#4.2 Clone github repository
+			#4.2 Clone GitHub repository
             
               #Create folder if it does not exist
                   if (!file.exists(clone_path)) dir.create(clone_path,recursive=TRUE)

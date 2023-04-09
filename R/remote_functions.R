@@ -3,7 +3,7 @@
 #Function 3 get.sha_time()        - Get sha_time data.frame (reading clone's commits with git2r)
 #Function 4 get sha for a particular package date
 #Function 5 Get lib for remote install of the package
-#Function 6 Identify remote ('github' vs 'gitlab';)
+#Function 6 Identify remote ('GitHub' vs 'GitLab';)
 #Function 7 make_package take a value entered by user, pkg or usr/pkg, or git::usr/pkg and turns it into a list with all the parts
 #Function 8 try_install_git()   - attempt to install a package from a local git repository
 
@@ -34,13 +34,13 @@
         
         if (date<'2018-10-15') {
             msg <- paste0("groundhog relies on `gitr` and `remotes` to install packages from GitHub ",
-                          "and Gitlab. To address a  backwards incompatible change in `git2r` ",
+                          "and GitLab. To address a  backwards incompatible change in `git2r` ",
                           "introduced in 2018, when groundhog loads those packages in order ",
-                          "to install packages from Github or Gitlab, and the requested date is ",
+                          "to install packages from GitHub or GitLab, and the requested date is ",
                           "prior to '2018-10-15', that date is used instead, ",
                           "loading `git2r_0.23.0` and `remotes_2.0.0`. You *can* load earlier ",
                           "versions of those packages directly with groundhog, but those earlier ",
-                          "versions will not allow loading github and gitlab packages with groundhog. \n \n ")
+                          "versions will not allow loading GitHub and GitLab packages with groundhog. \n \n ")
             
             if (pkg_utility=='git2r') message1(format.msg(msg,header="NOTE"))
             date2<-'2018-10-15'
@@ -193,7 +193,7 @@
 #----------------------------------------------------  
   
     
- #Function 6 Identify remote ('github' vs 'gitlab';)
+ #Function 6 Identify remote ('GitHub' vs 'GitLab';)
        get.remote_id <- function(pkg)
        {
           #0 cran
@@ -201,20 +201,20 @@
                 return('cran')
               }
          
-          #1 github:  If none specified or if github specified, 
+          #1 GitHub:  If none specified or if GitHub specified, 
                 remote_id = ''
-                if (strpos1('::',pkg)==-1 | strpos1('github::',pkg)>-1 | strpos1('github.com',pkg)>-1) {
-                  return('github')
+                if (strpos1('::',pkg)==-1 | strpos1('GitHub::',pkg)>-1 | strpos1('GitHub.com',pkg)>-1) {
+                  return('GitHub')
                 }
                 
-          #2 gitlab: if gitlab is specified
-                if (strpos1('gitlab::',pkg)> -1 | strpos1('gitlab.com',pkg)>-1) {
-                  return('gitlab')
+          #2 GitLab: if GitLab is specified
+                if (strpos1('GitLab::',pkg)> -1 | strpos1('GitLab.com',pkg)>-1) {
+                  return('GitLab')
                 }
       
-          #3 End if remote is unknown
+          #3 end if remote is unknown
                if (remote_id=="") {
-                    msg <- paste0('groundhog can only install non-CRAN packages from  GitHub and Gitlab.',
+                    msg <- paste0('groundhog can only install non-CRAN packages from  GitHub and GitLab.',
                                     'The package "',pkg,'" is not recognized as either.')
                     gstop(msg) #util #51)
                }
@@ -238,7 +238,7 @@
       
     
       
-    #2 Fill in alterantive sytnaxes for pkg
+    #2 Fill in alternative sytnaxes for pkg
       #type=pkg
       
       if (pkg.type=='pkg')    {
@@ -252,9 +252,9 @@
       
         if (pkg.type=='usr_pkg') {
           usr_pkg <- pkg
-          git_usr_pkg <- paste0('github::',usr_pkg)
+          git_usr_pkg <- paste0('GitHub::',usr_pkg)
           pkg     <- basename(pkg)
-          git    <- 'github'
+          git    <- 'GitHub'
         }
       
       
@@ -317,7 +317,7 @@
             path2<-path
           } else {
         
-        #But if itshould be the 2nd, do that
+        #But if it should be the 2nd, do that
           path1<-path
           path2<-file_path
         } #End if we should try 'file://' first

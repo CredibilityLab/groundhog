@@ -6,7 +6,7 @@ get.snowflakes = function(snowball, date)
 {
   
    #1 Keep source and remotes
-     snowball <- snowball[snowball$from %in% c('source', 'github','gitlab'),]
+     snowball <- snowball[snowball$from %in% c('source', 'GitHub','GitLab'),]
         
    #2 Start empty 
         

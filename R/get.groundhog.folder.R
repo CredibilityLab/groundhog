@@ -99,10 +99,10 @@ set.groundhog.folder <- function(path) {
   #Verify we can save there
     path1 <- file.path(path,"testing ability to save.txt")
     write('testing ability to save',path1)
-    saved.succesfully <- file.exists(path1) 
+    saved.successfully <- file.exists(path1) 
     unlink(path1)
     
-    if (!saved.succesfully) {
+    if (!saved.successfully) {
       gstop(paste0("groundhog says: Unable to save to '",path,"'. Make sure you are allowed to save files to that directory."))
       } 
       
@@ -110,7 +110,8 @@ set.groundhog.folder <- function(path) {
     Sys.setenv(GROUNDHOG_FOLDER = path)
  
   #Load cran toc rds
-    load.cran.toc() #this will copy the rds files
+    .pkgenv[['cran.toc']] <- NULL  #this variable is used to check whether to read the .rds file, set back to NULL to force checking
+    load.cran.toc()                #this will copy the rds files
     
   #Show confirmation message
     message1("The folder where groundhog packages will be saved is:\n",path)

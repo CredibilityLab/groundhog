@@ -108,7 +108,7 @@ load.cran.toc <- function(update.toc = FALSE) {
                       dl2 <- try(utils::download.file(url.g , file.path(gf, rdsk), mode = "wb", method = "libcurl" ))
                       if (dl2!=0) stop('Error.\nGroundhog says: could not download "', rdsk, "'")
                     } #End if download failed  from groundhogR.com
-               } #ENd if version 3.4
+               } #End if version 3.4
               
                #R Version before 3.4
                if (getRversion()<"3.4") {
@@ -119,7 +119,7 @@ load.cran.toc <- function(update.toc = FALSE) {
                       dl2 <- try(utils::download.file(url.g , file.path(gf, rdsk), mode = "wb" ))
                       if (dl2!=0) stop('Error.\nGroundhog says: could not download "', rdsk, "'")
                     } #End if download failed from groundhogR.com
-               } #ENd if version 3.4
+               } #End if version 3.4
               
               } #End case 2
             

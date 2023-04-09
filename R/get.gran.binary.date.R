@@ -1,5 +1,5 @@
   #1 Preliminaries
-  #2 If operating system is unknown (mostly, unix) don't look for binaires
+  #2 If operating system is unknown (mostly, unix) don't look for binaries
   #3 Read the gran toc
   #4 Keep the wanted version
   #5 Find date gaps (download vs wanted) and minimize
@@ -12,13 +12,14 @@ get.gran.binary.date <- function(pkg_vrs , date) {
     date <- as.Date(date)
 
 
-  #2 If operating system is unknown (mostly, unix) don't look for binaires
-    if (os=='uknown') {
+  #2 If operating system is neither windows nor mac, don't look for binaries
+    if (os=='other') {
       return(as.Date('1970-01-01'))
       }
      
 
   #3 Read the gran toc
+    if (is.null(.pkgenv[["gran.toc"]])) load.cran.toc(TRUE)
     gran.toc <- .pkgenv[["gran.toc"]]
 
   

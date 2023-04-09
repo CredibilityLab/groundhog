@@ -12,7 +12,7 @@
 
 
     #1 Keep only source  packages that are not yet installed
-        snowball <- snowball[snowball$from  %in% c('source', 'github','gitlab') & snowball$installed==FALSE, ]
+        snowball <- snowball[snowball$from  %in% c('source', 'GitHub','GitLab') & snowball$installed==FALSE, ]
         
     #1.5 early return if nothing to install
           snowball$success = snowball$installed
@@ -43,10 +43,10 @@
                 #If a sha is found, it's remote
                   if (!is.na(snowball$sha[k]))
                   {
-                    #We figure out github vs gitlab from installation path  
+                    #We figure out GitHub vs GitLab from installation path  
                       remote_id <- ''
-                      if  (regexpr('/_github/', snowball$installation.path[k])[[1]] > 0) remote_id <- 'github'
-                      if  (regexpr('/_gitlab/', snowball$installation.path[k])[[1]] > 0) remote_id <- 'gitlab'
+                      if  (regexpr('/_GitHub/', snowball$installation.path[k])[[1]] > 0) remote_id <- 'GitHub'
+                      if  (regexpr('/_GitLab/', snowball$installation.path[k])[[1]] > 0) remote_id <- 'GitLab'
                       
                     #Then provide the 'url' (a ";;" separated string with all the fields needed to provide clone installation instructions)
                       snowball$source_url <- ifelse(!is.na(snowball$sha), 

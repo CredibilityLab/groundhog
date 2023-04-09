@@ -123,7 +123,7 @@
                                      pasteQC(.pkgenv[['hogdays']]),
                                       "), \nthat is the likely cause of this conflict.\n",
                       "You may either keep the date of this groundhog.library() call and\n",
-                      "unload previosly loaded packages, or modify the date so that it matches\n",
+                      "unload previously loaded packages, or modify the date so that it matches\n",
                       "a previously used date.\n")
               
               } #End if more than 1 hogday  
@@ -172,7 +172,7 @@
           }
         }
     
-        } #ENd if nrow(ss)>0
+        } #End if nrow(ss)>0
         } #End check.before
               
               
@@ -206,7 +206,7 @@
       #If installation just happened
       msg <- ''
       if (sum(snowball$installed==FALSE)>0) {
-        message2( "Installation succesfull.")
+        message2( "Installation successfull.")
         }
         
         msg <- paste0(msg, 
@@ -217,4 +217,4 @@
         
         
       
-      } # End function
+      } # end function

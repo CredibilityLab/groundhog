@@ -10,6 +10,8 @@
 
   .onLoad <- function(libname, pkgname) {
   
+    
+    
     #1 pkgenv values
     
           #1.1 Empty paths for groundhog loaded packages
@@ -47,31 +49,16 @@
         purge_df <- subset(packages_df, packages_df$purged==TRUE)
         if (nrow(purge_df)>0) unlink(purge_df$path , recursive = TRUE)   
   
-    #4 if completing a library restore, show msg 
-        restore_dir <- paste0(get.groundhog.folder(),"/restore_points/", get.r.majmin())
-        restore_cookie <- file.path(restore_dir , "restore_pending_restart_cookie.rds")  #see restore.library() #9
-        if (file.exists(restore_cookie)) {
-          restore_cookie_time <- readRDS(restore_cookie)
-          #If a restore was requested within 1 hour, show message to confirm completed
-          #more than 1 hour probabably means they went away and came back and msg would be confusing
-          
-            if (as.numeric(Sys.time())-restore_cookie_time < 1*60*60)
-              {
-              message2('Restore library process completed.')
-            }
-          #Delete cookie
-          unlink(restore_cookie)
-          
-        }
-        
-    #5 Verify a mirror has been set    
+  
+    #4 Verify a mirror has been set    
       set.default.mirror() #Function 36 -  utils.R
   
-    #6 Check if new version of groundhog exists, if we have not checked today yet
-       check.groundhog.version(min.days=1) #Function 42  -  utils.R
-          
   
-                  
+    #5 Check if new version of groundhog exists, if we have not checked today yet
+       check.groundhog.version(min.days=1) #Function 42  -  utils.R
+        
+  
+  
     } #End of onLoad
 
 
@@ -79,8 +66,7 @@
     #' @importFrom utils packageVersion compareVersion
      
     .onAttach <- function(libname, pkgname) {
-      
-  
+         
       #1 Report versions being used
           groundhog.version_using <- as.character(packageVersion("groundhog"))
           r.using.full= get.rversion() 

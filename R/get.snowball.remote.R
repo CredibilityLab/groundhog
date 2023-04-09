@@ -95,7 +95,7 @@
       #6.1 Which packages in snowball are remote?
           kj <- match(snowball$pkg, baton$rows.toc$Package  )  
           
-          #kj is a vector indcating the match between row k in snowball and row j in baton
+          #kj is a vector indicating the match between row k in snowball and row j in baton
           #NA--> not in baton, kj>0 is the jth row in baton matching the kth row in snowball
       
       #6.3 Add sha and usr to snowball

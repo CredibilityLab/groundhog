@@ -61,7 +61,7 @@
         #Subset of R.toc with current version   
           R.toc.current <-subset(R.toc, as.numeric(regexpr(rv$r.using.majmin, R.toc$Version) )==1)
 
-        #To avoid breaking errors, if the version were not to be found, simply give a warnin
+        #To avoid breaking errors, if the version were not to be found, simply give a warning
           if (nrow(R.toc.current)==0)
           {
             message('Warning: was not able to find dates for current version of R being used.')

@@ -25,7 +25,7 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
   cran.toc <- .pkgenv[["cran.toc"]]
 
   
-  #If a base R package, return empty character vector (cannot lookup in crant.toc.rds for it is not on cran)
+  #If a base R package, return empty character vector (cannot lookup in cran.toc.rds for it is not on cran)
     if (pkg %in% base_pkg()) {
       return(as.character())
     }
@@ -55,7 +55,7 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
   dep <- dep[!is.na(dep)] # drop NA
 
   return(dep)
-} # End get.dependencies()
+} # end get.dependencies()
 
 #' Get recursive dependencies
 #'
@@ -133,14 +133,14 @@ get.all.dependencies <- function(pkg, date, include.suggests = FALSE) {
           already.processed <- pendingk %in% dep12[, 1] # identify in pending those already processed
           pendingk.net <- pendingk[!already.processed] # drop them
           pending <- unique(c(pending, pendingk.net)) # Unique so that if we add something already pending we don't add it
-        } # End 5.5 if some new dependencies to add
+        } # end 5.5 if some new dependencies to add
         
         k <- k + 1
         if (k > 50000) break # In case the loop does not converge to a stable dataframe
-      } # End while
+      } # end while
       
       #Save copy
         saveRDS(dep12, dep12_path, version=2)
         
       return(dep12)
-} # End function get.all.dependencies
+} # end function get.all.dependencies

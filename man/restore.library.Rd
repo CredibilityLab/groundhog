@@ -2,7 +2,7 @@
 % Please edit documentation in R/restore.library.R
 \name{restore.library}
 \alias{restore.library}
-\title{Restore version of packages in personal library replaced by groundhog.}
+\title{Restore in a few seconds packages in personal library replaced by groundhog.}
 \usage{
 restore.library(days)
 }
@@ -11,7 +11,7 @@ restore.library(days)
 When \code{days} is set, groundhog restores the personal library to the  most recent restore point, that
 is at least \code{days} days ago. \code{restore.library()} by default restores
 the most current restore point (e.g., if some packages were installed with groundhog today, to
-how the library was before today's installations). \code{days = -1} will restore back to the first
+how the library was before today's installations). Setting \code{days = -1} will restore back to the first
 restore point available.}
 }
 \description{
@@ -28,10 +28,23 @@ copy of the original package version will be restored to the personal library.
 Thanks to keeping the backup copies, restoring an entire library takes but a few seconds.
 Groundhog makes a single restore point for every day that \code{groundhog.library()}
 leads to replacing even a single package into the personal library.
-View available dates with \code{.available.restore.points}.
 }
 \details{
-For more information about groundhog check out \href{http://groundhogr.com}{groundhogr.com}
+You may view available restore points dates running  \code{.available.restore.points}.
+
+The first time on a calendar day when groundhog deletes or adds a package
+to the personal library, it saves a dataframe with all installed packages in it.
+The dataframe consists of a new 'restore point',  and it is saved as an .rds file.
+To see restore points
+saved in your computer navigate to groundhog folder (find it with \code{get.groundhog.folder()})
+and then the directory '/restore_points/<r_version>/' (where 'r_version' is the version of
+R you are using). When \code{restore.library()} is run the .rds file implied by the number of days chose
+(or the most recent .rds file if days is not specified) is read, and all packages in that dataframe
+which are not in the personal library are copied from the backup library
+(to see that library, navigate from the groundhog folder, to '/restore_library/<r_version/'), and
+all packages in the personal library not in the dataframe are deleted (and copied to the backup)
+library. Because this process involves copying files from one directory to another in the same
+hard drive, it takes seconds to move across restore points.
 }
 \examples{
 \dontrun{
