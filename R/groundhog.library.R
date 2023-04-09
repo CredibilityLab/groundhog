@@ -3,7 +3,7 @@
 #' Achieve reproducible code which does not break when packages it relies on are changed, by
 #' always loading the same version of a package in a given script. Specifically, use
 #' `groundhog.library()` to load the requested package(s) and all of their dependencies, 
-#' as current on CRAN (or GitHub/GitLab) on the requested date. If the needed version 
+#' as current on CRAN (or Github/Gitlab) on the requested date. If the needed version 
 #' of a package is not already installed, groundhog automatically 
 #' installs it. `groundhog.library()` thus substitutes both `library()` 
 #' and `install.packages()`. There is no change in setup or configuration parameters 
@@ -29,7 +29,7 @@
 #'requested package needs to be installed it will be installed from source 
 #'(but dependencies are installed from binaries if needed and available).
 #'@param force.install logical (defaults to `FALSE`). When set to `TRUE`, will re-install the requested packages and 
-#'their dependencies even if they are already installed.
+#'their depencies even if they are already installed.
 #'@param force.install.main logical (defaults to `FALSE`). When set to `TRUE`, will re-install the requested packages even 
 #'if they are already installed (but dependencies will not be re-installed).
 #'@param tolerate.R.version optional character string containing an R version 
@@ -81,7 +81,7 @@
   #4 Create libpaths
   #5 Install snowball 
     #5.2 Background (with R Script if source conflicts with it)
-    #5.3 foreground
+    #5.3 Forground
   #6 localize the snowballs
   #7 Check conflict now that it is all installed 
   #8 library() all pkgs
@@ -100,7 +100,7 @@
 #--------------------------------------------------------------
 
   #1 Preliminaries
-    #1.1 Check if new version of groundhog exists 
+    #1.1 Check if new versin of groundhog exists 
       check.groundhog.version(min.days=1) #Function 42  -  utils.R
 
     
@@ -142,7 +142,7 @@
           
           
           if (n.remote>0 & length(pkg)>1 ) {
-           msg =paste0("The list of packages you are trying to load includes a remote (e.g., GitHub) package.",
+           msg =paste0("The list of packages you are trying to load includes a remote (e.g., Github) package.",
                        "But, remote packages need to be loaded on their own in separate groundhog.library() calls")
 		      gstop(msg)
           }
@@ -191,7 +191,7 @@
     
 
   
-    #1.14 how many cores? (total -2 unless specified away from default of -1)
+    #1.14 how many cores? (totall -2 unless specified away from default of -1)
         if (cores == -1) {
           cores <- max(parallel::detectCores()-2,1)
         }   
@@ -263,7 +263,7 @@
         
          #3.2.1 Possible early returns if already attached (or conflicting)
             
-          #Full identifier of pkg called: remote, usr, pkg, date. ('GitHub::crsh/papaja_2021_10-01')
+          #Full identifier of pkg called: remote, usr, pkg, date. ('github::crsh/papaja_2021_10-01')
             git_usr_pkg_date <- paste0(remote_id  , "_", usr, "_", pkg ,"_", gsub("-","_",date))
     
                       
@@ -273,7 +273,7 @@
 					exit()
               }
             
-          #Same remote did not trigger a match before, something must not match, exit
+          #Same remote did not trigger a match before, somethign must not match, exit
               if (pkg %in% .pkgenv[['session.remotes_df']]$pkg)
               {
                 msg=paste0("Another version of '", pkg, "' was previously loaded into your R session.\n",
@@ -281,7 +281,7 @@
                 gstop(msg) #util #51)
                }
                 
-        #Stop if they specify "@"
+        #Stop if thehy specify "@"
             if (regexpr('@', pkg)>0)
             {
               msg=paste0("Seems like you are specifying a version of the package on the remote repository with '@'.",
@@ -342,7 +342,7 @@
               saveRDS(arguments , arguments_path,version=2 , compress=FALSE)
               
           #Execute snowball.install in background with system
-              script_path <- system.file("background_scripts/background_install.snowball.R", package = "groundhog")
+              script_path <- system.file("background_scripts/backgroung_install.snowball.R", package = "groundhog")
               system(paste0("Rscript ",script_path , " " , arguments_path) )
               
             #Delete temp path
@@ -466,7 +466,7 @@
             } else {
             .pkgenv[['hogdays']]<- date
         
-          } #End if 10.10
+          } #ENd if 10.10
 					     
 
 					} #End if (verified==TRUE)              
