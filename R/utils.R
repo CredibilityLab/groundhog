@@ -1,7 +1,7 @@
 #This script has functions used throughout the package
 
 #1  get.pkg(), get.vsr()     : Extract package and version information from pkg_vrs
-#2  is.pkg_vrs.installed()   : Is pkg_vrs installed (within same R-minor version)?Rin
+#2  is.pkg_vrs.installed()   : Is pkg_vrs installed (within same R-minor version)? 
 #3  as.DateYMD               : Format Y-M-D as date
 #4  get.rdate()              : Date for R being used
 #5  get.rversion()           : Get R Version major:minor:patch
@@ -19,7 +19,7 @@
 #17 validate.date()           : Validate date  
 #18 strip.prompt)_            : Clean up prompt answer, lowercase and no quotes
 #19 exit.if.download.failed() : Verify file was download
-#20 Check if lib is for github (possibly a legacy function)
+#20 Check if lib is for GitHub (possibly a legacy function)
 #21 Robust reading of text online : try_readlines ()
 #22 Turn dates to unix time
 #23 strpos1()                - string position - simpler gregexpr for strpos  
@@ -37,9 +37,9 @@
 #35 format.msg()               :  format output to have fixed width and starting symbol (e.g., "|    ")
 #36 set.default.mirror()       :  set a CRAN mirror if none is already set
 #37 verify.personal.library.exists(): if no folder for saving personal packages exists, prompted to create it
-#38 restart.text()             :  tells user to either quit() R or use CMD-SHIF-F10 based on whether they use R Studio
+#38 restart.text()             :  tells user to either quit() R or use CMD-SHFT-F10 based on whether they use R Studio
 #39 get.minutes.since.cookie() :  reads csv file with Sys.time() of last time this cookie was saved
-#40 get.repos_from.snowball()  :  infer repository (cran, github, gitlab) from other information already in the snowball
+#40 get.repos_from.snowball()  :  infer repository (cran, GitHub, GitLab) from other information already in the snowball
 #41 add.session.snowballs() :     Update session dataframe with info on all groundhog loaded snowballs
 #42 check.groundhog.version()  :  if more than `min.days' days since last check, check if groundhog needs to be updated
 #43 Get operating system       :  windows or mac or mac_arm?
@@ -55,12 +55,13 @@
 #53 Download in batches        : breaks a list of pkgs into batches downloaded sequentially
 #54 filesize_format            : turn bytes file size to human readable
 #55 get.restore.points         : vector with dates available 
-
+#56 View conflicts             : view conflicting pkgs in recent call
+#57 warning.off()              : turn warning of
 ########################################################################
     
 
 
-#1. get.pkg get.vrs -  Exract package and version information from pkg_vrs
+#1. get.pkg get.vrs -  Extract package and version information from pkg_vrs
   get.pkg <- function(x) substr(x, 1, regexpr("_", basename(as.character(x)))- 1)
   get.vrs <- function(x) substr(x, regexpr("_", basename(as.character(x))) + 1, nchar(x))
 
@@ -79,7 +80,7 @@
 #3.  Format Y-M-D as date
   as.DateYMD <- function(x) as.Date(x, format = "%Y-%m-%d",origin='1970-01-01')
 
-#4. R beind used
+#4. R being used
   get.rdate <- function() {
     date <- paste0(R.version$year, "-", R.version$month, "-", R.version$day)
     return(as.DateYMD(date))
@@ -158,10 +159,10 @@
       message1("You typed ", x, " so script stops...")
       msg.R.switch(date)
       exit("---")
-    } # End if quit
+    } # end if quit
   
     message1("You typed '", x, "' the script continues...")
-  } # End quit.menu
+  } # end quit.menu
 
 #10 exit() Stop message which does not say error
   exit <- function(...) {
@@ -169,7 +170,7 @@
     
      #Read cran toc again to undo any changes with remote
         #Only run if main folder exists, otherwise we have loop, 
-        #exiting when it does not exist, and asking that it exist when exitin
+        #exiting when it does not exist, and asking that it exist when exiting
           main_folder <-  paste0(path.expand("~"), "/R_groundhog")
           if (file.exists(main_folder)) {
             .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
@@ -204,7 +205,7 @@
   
   #Recommended and thus hard to uninstall packages
       ip <- data.frame(utils::installed.packages(),stringsAsFactors = FALSE,row.names=NULL)
-      recommended.pkgs <- unique(subset(ip, ip$Priority=="recommended")$Package) #unique becuase there may be two versions of the same package in different libraries
+      recommended.pkgs <- unique(subset(ip, ip$Priority=="recommended")$Package) #unique because there may be two versions of the same package in different libraries
       
   #Combine
       ignore.deps <- c(Rstudio.deps, recommended.pkgs)
@@ -259,7 +260,7 @@
 
        
               
-      #The format check does not verify that the day is at most 2 charcters long,  (e.g., it accepts 2022-01-109)
+      #The format check does not verify that the day is at most 2 characters long,  (e.g., it accepts 2022-01-109)
        if (is.character(entered_date)) { 
        d.parts <- strsplit(entered_date,"-")[[1]]     #split date by '-
         if (nchar(d.parts[3])>2) {
@@ -303,9 +304,9 @@
     }#End if path exists
   } #End function
 
-#20 Check if lib is for github
-    is.lib.github=function(lib.path) {
-      pos = regexpr('_github', lib.path)[[1]] 
+#20 Check if lib is for GitHub
+    is.lib.GitHub=function(lib.path) {
+      pos = regexpr('_GitHub', lib.path)[[1]] 
       return(pos>0) #TRUE if pos>0
       
       }
@@ -344,7 +345,7 @@
       date.to.time      <- function(date)       as.numeric(as.POSIXct(date,      format="%Y-%m-%d"))
       
 
-#Function 23 - string positiong - simpler gregexpr for strpos
+#Function 23 - string position - simpler gregexpr for strpos
       strpos1 <- function(needle, haystack) as.numeric(gregexpr(needle, haystack)[[1]])
       
 
@@ -472,7 +473,7 @@
           text.max<-20
           answer2 <- ifelse(nchar(answer)>text.max, paste0(substr(answer,1, text.max),"..."), answer)
       
-        #Draft text showign answer
+        #Draft text showing answer
           msg.answer <- paste0('You typed --> "' , answer2 , '".  That is sadly not an accepted response.')
         
         #Add counter if k>1
@@ -493,7 +494,7 @@
         
         #Add counter
           k=k+1
-        } #end while
+        } #End while
         return(answer)
     } #End prompt    
 
@@ -537,7 +538,7 @@
           x <- strsplit(x," ")[[1]]
           x <- x[x!=""]
           return(x)
-        } #ENd of function
+        } #End of function
     
     
 #35 Format msg: format output to have fixed width and starting symbol (e.g., "|    ")
@@ -666,7 +667,6 @@
       
     }
 
-    cookie_name='warng1'
     
 #39 save.cookie() and read.cookie()
     
@@ -836,7 +836,7 @@
 
     
 #44 Check consent has been given to save files locally
-      check.consent <- function() {
+      check.consent <- function(ask=TRUE) {
         
       #Folder with cookie with location of groundhog folder, its existence means consent
          main_folder <-  fw(paste0(path.expand("~"), "/R_groundhog")) #fw: function #50
@@ -844,9 +844,11 @@
       #See if consent has been given by seeing if the folder exists
         consent <- (file.exists(main_folder))
         if (consent==TRUE) return(TRUE)
+        if (consent==FALSE & ask==FALSE) return(FALSE)
+
         
        #If no consent, ask 
-         if (consent == FALSE) {
+         if (consent == FALSE & ask==TRUE) {
             msg       = paste0("groundhog needs authorization to save files to '",main_folder,
                         "'\n", "Enter 'OK' to provide authorization, and 'NO' not to.")
             
@@ -879,7 +881,7 @@
               message("You did not provide permission to save files locally, groundhog will not work until you do.")
               return(FALSE)
               }
-         } #end 
+         } #End  if no consent and we are asking for it
         
         
       }#End of function
@@ -941,7 +943,7 @@ get.parallel.time<-function(times,cores)
     exit()
     }
   
-#52 read/save purge and grounhod.installed. rds
+#52 read/save purge and grounhog.installed. rds
   
   read.local.rds <- function(filename)
   {
@@ -1010,7 +1012,7 @@ get.parallel.time<-function(times,cores)
   
   
 #54 filesize_format
-  #(writte by chatGPT, to avoid relying on utils:::)
+  #(written by chatGPT, to avoid relying on utils:::)
   filesize_format <- function(size_in_bytes) {
   if(size_in_bytes < 1024) {
     return(paste0(size_in_bytes, " B"))
@@ -1029,6 +1031,10 @@ get.parallel.time<-function(times,cores)
   
   get.restore.points <- function()
   {
+    #0 Check consent to avoid zzz..R triggering loop
+        if (check.consent(ask=FALSE)==FALSE) {  
+          return(data.frame(date='',days='')[0,])
+          }
   
     #1 Path
       restore_dir <- paste0(get.groundhog.folder(),"/restore_points/", get.r.majmin())
@@ -1061,4 +1067,18 @@ get.parallel.time<-function(times,cores)
   conflicts<-''
   if (!is.null(.pkgenv[['conflicts']])) conflicts<-.pkgenv[['conflicts']]
   return(conflicts)  
+  }
+
+#57 warning off/on
+  warning.off<-function()
+  {
+   w0 <- getOption('warn')
+   options(warn=-1)
+   return(w0)
+  }
+  
+  warning.on<-function(w0)
+  {
+   options(warn=w0)
+    
   }
