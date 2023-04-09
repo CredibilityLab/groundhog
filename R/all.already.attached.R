@@ -2,7 +2,7 @@
 
 #pkg: vector
 
-#Checks if all packages in the vector are already attached, used by groundhog.library() to early return
+#Checks if all pacakges in the vector are already attached, used by groundhog.library() to early return
 
 
 
@@ -36,7 +36,7 @@ all.already.attached<-function(pkg,date)
           return(TRUE)
           }
        
-      } #End if not-remote
+      } #ENd if not-remote
      
         
     #3 Remote requested pkg  
@@ -49,7 +49,7 @@ all.already.attached<-function(pkg,date)
             pkg <- pkg_list$pkg
             git <- pkg_list$remote_id
 
-        #Full identifier of pkg called: remote, usr, pkg, date. ('GitHub::crsh/papaja_2021_10-01')
+        #Full identifier of pkg called: remote, usr, pkg, date. ('github::crsh/papaja_2021_10-01')
             git_usr_pkg_date <- paste0(remote_id  , "_", usr, "_", pkg ,"_", gsub("-","_",date))
   
                       

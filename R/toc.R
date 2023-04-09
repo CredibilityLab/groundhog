@@ -5,7 +5,7 @@
 #'    package dependencies (`Imports`, `Depends` and `Suggests`) for `pkg`.
 #'
 #' @return a `data.frame` where each row corresponds to one version of `pkg`, a date column contains the publication date,
-#' and when `dependencies`=TRUE, columns show package dependencies over time as well.
+#' and when `dependecies`=TRUE, columns show package dependencies over time as well.
 #'
 #' @examples
 #' \dontrun{
@@ -37,8 +37,8 @@ toc <- function(pkg, dependencies = FALSE) {
       "   Keep in mind that:\n",
       "    1. Package names are cAsE seNsiTive\n",
       "    2. By default requested packages are looked for only on CRAN\n",
-	  "    3. To load a 'GitHub' or 'GitLab' package you need to include\n",
-	  "       the full path, e.g., groundhog.library('GitHub::crsh/papaja','",date.example,"')"
+	  "    3. To load a 'GitHub' or 'Gitlab' package you need to include\n",
+	  "       the full path, e.g., groundhog.library('github::crsh/papaja','",date.example,"')"
     )
    gstop(msg)
   }

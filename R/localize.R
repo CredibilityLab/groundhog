@@ -38,7 +38,7 @@
   #--------------------------------------------------------------------------               
         
         
-    #1  Installed packages: local, groundhog and backup
+    #1  Installed packages: local, groundohg and backup
        
       #1.1 Locally
          ip <- data.frame(utils::installed.packages(lib.loc =.pkgenv[["orig_lib_paths"]][1] ), stringsAsFactors=FALSE, row.names=NULL)
@@ -113,10 +113,10 @@ for (k in 1:nrow(snowball))
         }
 
       
-    #6 PURGE: With conflict
+    #6 PURGE: With conflit
     #  If different version of this pkg is already local, purge and ensure backup exists
          
-         #Same pkg, different vrs
+         #Same pkg, diferent vrs
           if (pkg %in% ip$Package &  !(pkg_vrs %in% ip$pkg_vrs)) 
             {
           

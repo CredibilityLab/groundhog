@@ -43,7 +43,7 @@
           return('already_attached')  
         }
   
-  #6 end otherwise              
+  #6 End otherwise              
         return(invisible(''))
         
     } #End function

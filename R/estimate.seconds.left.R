@@ -31,7 +31,7 @@ estimate.seconds.left <- function(k, start.time, snowball) {
 
     progress <- estimated.past / estimated.total
 
-    ae.ratio <- (actual.past / estimated.past) * progress + 1 * (1 - progress) # The ratio of actual/adjustment is a weighted average of just 1 (use estimate as is), and the empirical ratio so far in this installation progress so fart
+    ae.ratio <- (actual.past / estimated.past) * progress + 1 * (1 - progress) # The ratio of actual/adjustment is a weighted average of just 1 (use estimate as is), and the empirical reatio so far in this intallation progress so fart
     return(ae.ratio * estimated.left)
   }
 }

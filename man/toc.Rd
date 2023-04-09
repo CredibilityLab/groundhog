@@ -14,7 +14,7 @@ package dependencies (\code{Imports}, \code{Depends} and \code{Suggests}) for \c
 }
 \value{
 a \code{data.frame} where each row corresponds to one version of \code{pkg}, a date column contains the publication date,
-and when \code{dependencies}=TRUE, columns show package dependencies over time as well.
+and when \code{dependecies}=TRUE, columns show package dependencies over time as well.
 }
 \description{
 Show CRAN publication dates for all versions of a given package

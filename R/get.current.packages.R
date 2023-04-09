@@ -39,4 +39,4 @@ get.current.packages <- function(type) {
     
   return(current.packages)
    
-  } #End function
+  } #ENd function
