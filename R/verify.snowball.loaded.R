@@ -35,9 +35,15 @@
                       }
        
         #2.3 Successfully attached pkg_vrs (if it is attached now, and was not attached before
+          #Already attached
+          if (pkg_vrs %in% attached$pkg_vrs & pkg_vrs %in% .pkgenv[['attached']]$pkg_vrs) #See groundhog.library #5
+              {
+              message1("Previously attached  '", pkg_vrs,"'")
+           } 
+          #Newly attached
             if (pkg_vrs %in% attached$pkg_vrs & !pkg_vrs %in% .pkgenv[['attached']]$pkg_vrs) #See groundhog.library #5
               {
-              message1("Succesfully attached '", pkg_vrs,"'")
+              message1("Successfully attached '", pkg_vrs,"'")
               } 
       
 
