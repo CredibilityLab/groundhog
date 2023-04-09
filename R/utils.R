@@ -935,7 +935,7 @@ get.parallel.time<-function(times,cores)
 #51 stop
   gstop <- function(msg,format=FALSE) {
     #Format the message with line breaks and border if requested
-    if (format==TRUE) msg=format.msg(msg) #uti #35
+    if (format==TRUE) msg=format.msg(msg) #util #35
     message1(msg)
     message("**Groundhog stopped**")
     exit()
