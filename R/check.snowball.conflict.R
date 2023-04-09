@@ -123,7 +123,7 @@
                                      pasteQC(.pkgenv[['hogdays']]),
                                       "), \nthat is the likely cause of this conflict.\n",
                       "You may either keep the date of this groundhog.library() call and\n",
-                      "unload previosly loaded packages, or modify the date so that it matches\n",
+                      "unload previously loaded packages, or modify the date so that it matches\n",
                       "a previously used date.\n")
               
               } #End if more than 1 hogday  
