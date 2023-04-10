@@ -1,7 +1,7 @@
 #Takes a snowball and it copies all packages from the groundhog library to the default one
 #This serves the following purposes
 
-  localize.snowball <- function(snowball , localize.quietly = TRUE)
+  localize.snowball <- function(snowball , localize.quietly = FALSE)
   {
     #0 Early return if empty snowball
       if (nrow(snowball)==0) return(TRUE)
@@ -40,7 +40,7 @@
   #--------------------------------------------------------------------------               
         
         
-    #1  Installed packages: local, groundohg and backup
+    #1  Installed packages: local, groundhog and backup
        
       #1.1 Locally
          ip <- data.frame(utils::installed.packages(lib.loc =.pkgenv[["orig_lib_paths"]][1] ), stringsAsFactors=FALSE, row.names=NULL)
@@ -57,6 +57,11 @@
           if (all(snowball$pkg_vrs %in% ip$pkg_vrs)) return(invisible(TRUE))
 
     ##############################################################################
+          
+    
+    #1.2 Message on how many
+          n.localize <- sum(!snowball$pkg_vrs %in% ip$pkg_vrs)
+          message2("\nWill now copy ",n.localize," packages to default personal library")
                 
     #1.2 In Groundhog 
          #Master path   
@@ -94,7 +99,13 @@
     
 
 # Start the loop over the snowball  #k=6
-        
+      k.copied = 1  #how many have we copied
+      
+      #Sort snowball
+      snowball<-snowball[order(snowball$pkg),]
+  
+      
+      
 for (k in 1:nrow(snowball))
       {
   
@@ -105,11 +116,9 @@ for (k in 1:nrow(snowball))
         installation.path <- snowball$installation.path[k]
         sha <- snowball$sha[k]
 
-
                  
     #4 SKIP if already local 
       if (pkg_vrs  %in% ip$pkg_vrs & sha %in% c('', NA)) next
-      
         
     #5 If package does not exist in groundhog folder, error    
         if (nrow(data.frame(utils::installed.packages(lib=installation.path), stringsAsFactors=FALSE,row.names=NULL))==0) {
@@ -117,6 +126,10 @@ for (k in 1:nrow(snowball))
           gstop(msg) #util #51
         }
 
+        
+    #6 Show feedback 
+      if (localize.quietly==FALSE) message1("     Copying ",k.copied," of " , n.localize,": ",pkg_vrs)
+       k.copied <- k.copied+1
       
     #6 PURGE: With conflict
     #  If different version of this pkg is already local, purge and ensure backup exists
@@ -140,6 +153,10 @@ for (k in 1:nrow(snowball))
                   copy.outcome <- file.copy(local.pkg_path , #copy contents from personal folder
                                             backup.pkg_path,                       
                                             recursive = TRUE)   #include all files
+                
+                  
+                  
+                  
 
                 } #End 6.2
                
@@ -174,11 +191,7 @@ for (k in 1:nrow(snowball))
           message("groundhog says: failed to copy '", pkg_vrs,"' to default personal library")
         }
         
- #-------------------------------------------------------------   
-        
-    #8 Show feedback 
-      if (localize.quietly==FALSE & copy.outcome==TRUE) message1("  copying to personal folder: ",pkg_vrs)
-     
+ 
    
     } #End snowball loop
         
