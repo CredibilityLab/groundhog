@@ -10,7 +10,7 @@
       
       #1  Directory for downloaded zips temp 
           temp_path <- paste0(get.groundhog.folder() ,"/temp/")
-          unlink(temp_path, recursive = TRUE)                         #delete everything
+          #unlink(temp_path, recursive = TRUE)                         #delete everything
           dir.create(temp_path,showWarnings = FALSE,recursive = TRUE) #create temp again
        
     
@@ -145,14 +145,17 @@
 
                 #Unzip  
                   if (ext=="zip") utils::unzip(zk, exdir=outfile)
-                  if (ext!="zip") utils::untar(zk, exdir=outfile)        
+                  if (ext!="zip") utils::untar(zk, exdir=outfile)  
+					
+				#Delete it
+					unlink(zk)
              
               }
 
           
       #5 Verify installation
           message1("      ...verifying installation...")
-          ip <- data.frame(utils::installed.packages(snowball$installation.path),row.names=NULL)      
+          ip <- data.frame(utils::installed.packages(snowball$installation.path),row.names=NULL,stringsAsFactors = FALSE)      
           ip$pkg_vrs <- paste0(ip$Package,"_",ip$Version)
           
         #Add success column to snowball
@@ -160,8 +163,8 @@
   
           
       #6 delete temp folder again (have it here and at beginning so that if process is interrupted deleted in anyway next time
-          unlink(temp_path, recursive = TRUE)
-          dir.create(temp_path,showWarnings = FALSE,recursive = TRUE) #create temp again
+          #unlink(temp_path, recursive = TRUE)
+          #dir.create(temp_path,showWarnings = FALSE,recursive = TRUE) #create temp again
           
           
       #7 Return timeout
