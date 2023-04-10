@@ -41,7 +41,9 @@
         
         
     #1  Installed packages: local, groundhog and backup
-       
+        if (!'sha' %in% names(snowball)) snowball$sha=''
+ 
+      
       #1.1 Locally
          ip <- data.frame(utils::installed.packages(lib.loc =.pkgenv[["orig_lib_paths"]][1] ), stringsAsFactors=FALSE, row.names=NULL)
         
@@ -60,7 +62,7 @@
           
     
     #1.2 Message on how many
-          n.localize <- sum(!snowball$pkg_vrs %in% ip$pkg_vrs)
+          n.localize <- sum(!snowball$pkg_vrs %in% ip$pkg_vrs  | !snowball$sha %in% c('', NA))
           message2("\nWill now copy ",n.localize," packages to default personal library")
           message1("(you may undo changes at any time with `restore.library()`)")
                 
@@ -96,7 +98,6 @@
                  
                  
    #2 If entire snowball is not remote, assign sha='' to snowball
-      if (!'sha' %in% names(snowball)) snowball$sha=''
     
 
 # Start the loop over the snowball  #k=6
