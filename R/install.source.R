@@ -61,7 +61,7 @@
           
 
         #2.5 Start message
-          message1("Will now install ",nrow(snowball), " packages from source")
+          message2("Will now install ",nrow(snowball), " packages from source")
     
 
       if (cores>1 & nrow(snowball)>1)
