@@ -62,6 +62,7 @@
     #1.2 Message on how many
           n.localize <- sum(!snowball$pkg_vrs %in% ip$pkg_vrs)
           message2("\nWill now copy ",n.localize," packages to default personal library")
+          message1("(you may undo changes at any time with `restore.library()`)")
                 
     #1.2 In Groundhog 
          #Master path   
