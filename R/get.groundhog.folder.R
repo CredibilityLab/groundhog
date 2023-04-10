@@ -110,6 +110,7 @@ set.groundhog.folder <- function(path) {
     Sys.setenv(GROUNDHOG_FOLDER = path)
  
   #Load cran toc rds
+    .pkgenv[['cran.toc']] <- NULL  #set it to null so that load.cran.toc() will not early return
     load.cran.toc() #this will copy the rds files
     
   #Show confirmation message
