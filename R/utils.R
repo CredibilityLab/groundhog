@@ -1067,3 +1067,8 @@ get.parallel.time<-function(times,cores)
     
   }
   
+#57 view conflicts
+  view.conflicts.function <- function() {
+    return(.pkgenv[['conflicts']])
+    }
+  

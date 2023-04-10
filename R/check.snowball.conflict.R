@@ -107,7 +107,7 @@
           #Character with list of packages that need to be ignored
             need.to.ignore <- pasteQC(snowball$pkg[conflict2.TF])  #pasteQC(), Utils.R function #31
             .pkgenv[['conflicts']] <- need.to.ignore
-            .view.conflicts <<- view.conflicts() #utils #57
+            .view.conflicts <<- view.conflicts.function() #utils #57
             
             #used pasteQC to make it a bit more difficult to copy-paste into ignore.deps the name of the variable
 			      #avoid users doing ignore.deps=.view.conflicts for it would make for less reproducible code

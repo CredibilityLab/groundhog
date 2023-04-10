@@ -36,11 +36,11 @@
               .pkgenv[['default_libpath']] <-  .libPaths()
               .pkgenv[['hogdays']] <-c()
               .pkgenv[['acceptable.option.names']] <- c('os','download.sequentially')
-              
+              .pkgenv[['conflicts']] <- ''
 
     #2 Hidden variables in local environment
         .available.restore.points <<- get.restore.points()
-        .view.conflicts <<- ""
+        .view.conflicts <<- view.conflicts.function()
         
     #3 Delete to be purged packages, if any (put here with disable.packages())
         packages_df <- get.packages_df() #utils.R #Function 33
