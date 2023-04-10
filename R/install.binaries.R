@@ -116,7 +116,7 @@
               
             #4.1 Read downloaded zip files
               n.zip <- length(zip.files)
-              if (n.zip>1) message2("Will now install ",n.zip, " packages.")
+              if (n.zip>1) message2("Will now install ",n.zip, " packages:")
             
               
             #4.2 Sort alphabetically by package name
@@ -154,7 +154,7 @@
 
           
       #5 Verify installation
-          message1("      ...verifying installation...")
+          #message1("      ...verifying installation...")
           ip <- data.frame(utils::installed.packages(snowball$installation.path),row.names=NULL,stringsAsFactors = FALSE)      
           ip$pkg_vrs <- paste0(ip$Package,"_",ip$Version)
           
