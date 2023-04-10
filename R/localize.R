@@ -6,6 +6,7 @@
     #0 Early return if empty snowball
       if (nrow(snowball)==0) return(TRUE)
     
+
     #0.5 Restore point: save dataframe with installed packages with today's date if not yet saved, for possible restore late
 
       restore_path <- paste0(get.groundhog.folder(),"/restore_points/", get.r.majmin(), "/",Sys.Date(),".rds")
@@ -34,7 +35,8 @@
 
       }
     
-        
+
+
   #--------------------------------------------------------------------------               
         
         
@@ -83,7 +85,7 @@
     
             
                
-              #
+          #
   #--------------------------------------------------------------------------               
                  
                  
@@ -96,12 +98,15 @@
 for (k in 1:nrow(snowball))
       {
   
+
       #3 Short varnames
         pkg     <- snowball$pkg[k]
         pkg_vrs <- snowball$pkg_vrs[k]
         installation.path <- snowball$installation.path[k]
         sha <- snowball$sha[k]
-         
+
+
+                 
     #4 SKIP if already local 
       if (pkg_vrs  %in% ip$pkg_vrs & sha %in% c('', NA)) next
       
@@ -113,7 +118,7 @@ for (k in 1:nrow(snowball))
         }
 
       
-    #6 PURGE: With conflit
+    #6 PURGE: With conflict
     #  If different version of this pkg is already local, purge and ensure backup exists
          
          #Same pkg, diferent vrs
@@ -172,7 +177,7 @@ for (k in 1:nrow(snowball))
  #-------------------------------------------------------------   
         
     #8 Show feedback 
-      if (localize.quietly==FALSE & copy.outcome==TRUE) message1("  copying: ",pkg_vrs)
+      if (localize.quietly==FALSE & copy.outcome==TRUE) message1("  copying to personal folder: ",pkg_vrs)
      
    
     } #End snowball loop
