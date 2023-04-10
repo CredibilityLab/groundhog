@@ -56,7 +56,6 @@
 #54 filesize_format            : turn bytes file size to human readable
 #55 get.restore.points         : vector with dates available 
 #56 View conflicts             : view conflicting pkgs in recent call
-#57 warning.off()              : turn warning of
 ########################################################################
     
 
@@ -997,14 +996,22 @@ get.parallel.time<-function(times,cores)
       btot <- length(url.split)  
       
   
-  
+
     #Download in loop
       for (bk in 1:btot)
       {
       if (btot>1) message2("Batch ",bk, " of ", btot,". Downloading the following files:")
       message1("     ",paste(url.split[[bk]],collapse='\n     '))
-      try (utils::download.file(url.split[[bk]], zip.split[[bk]],quiet=TRUE,method='libcurl'))
       
+      #In R-3.6.3 a warning is show about using a vector, but it works with vectors, so turning it off here
+        w0 <- getOption('warn')
+        options(warn=-1)      
+        
+        try (utils::download.file(url.split[[bk]], zip.split[[bk]],quiet=TRUE,method='libcurl'))
+        
+        #Turn warning back on
+        options(warn=w0) 
+          
       
       }
       
@@ -1060,25 +1067,3 @@ get.parallel.time<-function(times,cores)
     
   }
   
-  
-#56 View conflicts
-  view.conflicts <- function()
-  {
-  conflicts<-''
-  if (!is.null(.pkgenv[['conflicts']])) conflicts<-.pkgenv[['conflicts']]
-  return(conflicts)  
-  }
-
-#57 warning off/on
-  warning.off<-function()
-  {
-   w0 <- getOption('warn')
-   options(warn=-1)
-   return(w0)
-  }
-  
-  warning.on<-function(w0)
-  {
-   options(warn=w0)
-    
-  }

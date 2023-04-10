@@ -41,7 +41,7 @@ and groundhog.library() should proceed tolerating the conflict.}
 or its dependencies, needs to be installed, they will be installed from source (much slower than from binaries).}
 
 \item{force.install}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will re-install the requested packages and
-their depencies even if they are already installed.}
+their dependencies even if they are already installed.}
 
 \item{force.source.main}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, if the
 requested package needs to be installed it will be installed from source
@@ -67,7 +67,7 @@ with their version number, under the format \code{pkg_vrs}.
 Achieve reproducible code which does not break when packages it relies on are changed, by
 always loading the same version of a package in a given script. Specifically, use
 \code{groundhog.library()} to load the requested package(s) and all of their dependencies,
-as current on CRAN (or Github/Gitlab) on the requested date. If the needed version
+as current on CRAN (or GitHub/GitLab) on the requested date. If the needed version
 of a package is not already installed, groundhog automatically
 installs it. \code{groundhog.library()} thus substitutes both \code{library()}
 and \code{install.packages()}. There is no change in setup or configuration parameters
