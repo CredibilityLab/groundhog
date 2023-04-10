@@ -77,6 +77,8 @@ get.groundhog.folder <- function() {
 #'
 set.groundhog.folder <- function(path) {
   
+  if (missing(path)) gstop("You forgot to enter the <path> you wanted to set.")
+  
   #Set main folder with 'cookie files' and default for library
     main_folder <-  paste0(path.expand("~"), "/R_groundhog/")
     
