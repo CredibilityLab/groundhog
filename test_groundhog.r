@@ -20,10 +20,12 @@
   #Set 6 - individual functions
 #Version being tested (only locally available)
 
-install.packages('C:/Dropbox (Penn)/groundhogR/groundhog_3.0.0.tar.gz',repos=NULL)
+install.packages('https://groundhogr.com/groundhog_3.0.0.tar.gz',repos=NULL)
 library('groundhog')
 
-set.groundhog.folder('c:/temp/101')
+gd=get.groundhog.folder()
+gd1=file.path(dirname(gd),'2023_04_11')
+set.groundhog.folder(gd1)
 test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 45 days
 
 #Set 0 - various forms of calling packages to be loaded
@@ -361,12 +363,11 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
 # Installation can be tested with most downloaded packages as of the release of R's version matching that being used
 # or based on available packages when testing. 
   
-  install.packages('c:/dropbox/groundhogr/groundhog_3.0.0.tar.gz',repos=NULL)
-  library('groundhog')
 
-    set.groundhog.folder('c:/temp/1001')
+    library('groundhog')
+
     
-    test.groundhog(1:25,groundhog.day = '2022-07-18')         #Install the 10 most downloaded packages 
+    test.groundhog(1:25)         #Install the 10 most downloaded packages 
     test.groundhog(501:510)      #install the 501-510 most downloaded packages
     test.groundhog(2501:2510)     #install the 2501-2510 most downloaded packages
   
