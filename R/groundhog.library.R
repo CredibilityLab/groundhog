@@ -108,7 +108,7 @@
       .pkgenv[['conflicts']] <- ''
       
     #1.3 Save default libpaths to change back to them after exiting
-        if (!exists("orig_lib_paths",envir=.pkgenv)) {
+        if (is.null(.pkgenv[["orig_lib_paths"]])) {
               .pkgenv[["orig_lib_paths"]] <- .libPaths()
               }
     
@@ -181,10 +181,10 @@
                     #Read cran toc again to undo any changes with remote
                       if (n.remote>0) .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
                     
-                    #Return libpath, if it has been set.
-					            if  (!is.null(.pkgenv[["orig_lib_paths"]])) {
-					              .libPaths(.pkgenv[["orig_lib_paths"]])
-					              }
+#                     #Return libpath, if it has been set.
+# 					            if  (!is.null(.pkgenv[["orig_lib_paths"]])) {
+# 					              .libPaths(.pkgenv[["orig_lib_paths"]])
+# 					              }
 
                     })
             
@@ -308,7 +308,7 @@
 
 #4 Create libpaths
 
-    #4.1 Create all paths if they don't exist (so that they can be added to libpath in 3.5)
+    #4.1 Create all paths if they don't exist (so that they can be added to libpath)
           for (j in 1:nrow(snowball.all))
           {
             dir.create(snowball.all$installation.path[j],recursive = TRUE, showWarnings = FALSE)
@@ -370,7 +370,7 @@
     #localize
       localize.snowball(snowball.all)   
       
-      #localizing means copying the folder of the installed package to the default (non-groundhog) folder  
+    #localizing means copying the folder of the installed package to the default (non-groundhog) folder  
 
 #------------------------------------------------------------------------ 
 
@@ -381,7 +381,13 @@
 #------------------------------------------------------------------------ 
 
 
-#9 Library all pkgs
+      
+      
+#10 Library all pkgs
+      #10.1 - Return to libpath and load pkgs
+      .libPaths(.pkgenv[["orig_lib_paths"]])
+      
+      #10.2 do library
         for (pkgk in pkg) {
           base.library(pkgk, character.only=TRUE)
         }

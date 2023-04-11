@@ -468,6 +468,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
    library('groundhog')
 
     set.groundhog.folder('c:/temp/askilon')
+    .libPaths()
     groundhog.library("satijalab/Seurat",'2022-09-01')
     groundhog.library( "yihui/knitr",test.day)
     groundhog.library( "crsh/papaja",'2022-09-01')

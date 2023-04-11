@@ -54,8 +54,9 @@
 #53 Download in batches        : breaks a list of pkgs into batches downloaded sequentially
 #54 filesize_format            : turn bytes file size to human readable
 #55 get.restore.points         : vector with dates available 
-#56 View conflicts             : view conflicting pkgs in recent call
-########################################################################
+#57 View conflicts             : view conflicting pkgs in recent call
+#58 Get ip.groundhog():        : installed.packages data.frame for all pacakges in groundhog library and loans
+####################################################################################
     
 
 
@@ -1073,4 +1074,62 @@ get.parallel.time<-function(times,cores)
   view.conflicts.function <- function() {
     return(.pkgenv[['conflicts']])
     }
+
+#58 Get ip.groundhog()
+  get.ip.groundhog<-function(){
+          
+     #Master path   
+        groundhog.master_path <- paste0(get.groundhog.folder() , "/R-" , get.r.majmin())
+          
+      #All pkgs in that path    
+        all.paths<- list.files(groundhog.master_path,full.names=TRUE)
+      
+      #Installed.pacakges
+      ip.groundhog <- data.frame(utils::installed.packages(all.paths), row.names = NULL, stringsAsFactors = FALSE)
+      
+     #Create pkg_vrs
+        if (nrow(ip.groundhog)>0)  ip.groundhog$pkg_vrs <- paste0(ip.groundhog$Package,"_",ip.groundhog$Version)
+        if (nrow(ip.groundhog)==0) ip.groundhog$pkg_vrs <- character()
+      
+    return(ip.groundhog)
+  }
   
+#58.5 get ip.backup
+   get.ip.backup<-function(){
+          
+     #Dir   
+        backup.master_path <- paste0(get.groundhog.folder(),"/restore_library/" , get.r.majmin() , "/")
+                
+          
+      #All pkgs in that path    
+        all.paths<- list.files(backup.master_path, full.names=TRUE)
+      
+      #Installed.pacakges
+        ip.backup <- data.frame(utils::installed.packages(all.paths), row.names = NULL, stringsAsFactors = FALSE)
+      
+     #Create pkg_vrs
+        if (nrow(ip.backup)>0)  ip.backup$pkg_vrs <- paste0(ip.backup$Package,"_",ip.backup$Version)
+        if (nrow(ip.backup)==0) ip.backup$pkg_vrs <- character()
+      
+    return(ip.backup)
+  }
+  
+#59 Loans
+  #59.1 get 
+  get.loans<-function() {
+    loans <- ""
+    loans_path<-paste0(get.groundhog.folder(),"/loans/",get.r.majmin(),".rds")  
+    dir.create(dirname(loans_path), showWarnings = FALSE,recursive = TRUE)
+    if (file.exists(loans_path)) loans<-readRDS(loans_path)
+    loans<-loans[loans!=''] #drop empty
+    loans<-sort(loans)
+    return(loans)
+  }
+  
+  #59.2 Save loans
+   save.loans<-function(loans) {
+     loans<-loans[loans!=''] #drop empty
+     loans_path<-paste0(get.groundhog.folder(),"/loans/",get.r.majmin(),".rds")  
+     dir.create(dirname(loans_path), showWarnings = FALSE,recursive = TRUE)
+     saveRDS(loans,loans_path,version=2,compress=FALSE)
+      }

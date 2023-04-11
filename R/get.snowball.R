@@ -110,7 +110,10 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
   # 5 Snowball table with packages to be installed & necessary attributes (location, binary / source, etc)
 
   #Installed?
-    snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs)
+    #snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs)
+    ip.groundhog <- get.ip.groundhog() #utils #58
+    loans<-get.loans()                 #utils #59
+    snowball.installed <- snowball.pkg_vrs %in% c(ip.groundhog$pkg_vrs, loans)
 
   #Over-rule it if requested to install all
     if (force.install==TRUE) snowball.installed < -FALSE
