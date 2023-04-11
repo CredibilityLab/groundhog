@@ -1,5 +1,4 @@
 #This script has functions used throughout the package
-
 #1  get.pkg(), get.vsr()     : Extract package and version information from pkg_vrs
 #2  is.pkg_vrs.installed()   : Is pkg_vrs installed (within same R-minor version)? 
 #3  as.DateYMD               : Format Y-M-D as date
