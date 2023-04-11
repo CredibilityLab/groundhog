@@ -83,9 +83,9 @@
               default.date <- NULL
               
           #1st year of R version, after June 1st, year/06/01
-              if (today.year==R.year & today.month>=6) default.date <- paste0(R.year,"/06/01")
+              if (today.year==R.year & today.month>=6) default.date <- paste0(today.year,"/06/01")
           #2st year of R version, year/01/01
-              if (today.year==R.year+1)                default.date <- paste0(R.year,"/01/01")
+              if (today.year==R.year+1)                default.date <- paste0(today.year,"/01/01")
               
           if (!is.null(default.date)) {    
               packageStartupMessage ("--> Suggested default groundhog day: '",default.date,"'")
@@ -115,7 +115,7 @@
         } #End consent
           
 
-packageStartupMessage ("##########################################\n DEBUGGING: 2023 04 11 - 13:08")
+packageStartupMessage ("##########################################\n This version: 2023 04 11 - 15:53")
 
   } #End on attach
     
