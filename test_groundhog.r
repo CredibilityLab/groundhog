@@ -20,10 +20,10 @@
   #Set 6 - individual functions
 #Version being tested (only locally available)
 
-install.packages('c:/dropbox/groundhogr/groundhog_3.0.0.tar.gz',repos=NULL)
+install.packages('C:/Dropbox (Penn)/groundhogR/groundhog_3.0.0.tar.gz',repos=NULL)
 library('groundhog')
 
-set.groundhog.folder('c:/temp/11')
+set.groundhog.folder('c:/temp/101')
 test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 45 days
 
 #Set 0 - various forms of calling packages to be loaded
@@ -43,8 +43,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
 
       #inexistent pkg on github
         groundhog.library('github::crsh/powerful_999',test.day)
-    
-        
+
         
   #Single package, with and without quotes
     library('groundhog')
@@ -62,21 +61,16 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
   #Direct cal to many packages
     groundhog.library(c('pwr','metafor'),test.day)
     
-
     
-    
-    
-  #Sandwiching library
+  #Sandwiching library and combine already attached with successfully atched
     library('groundhog')
     groundhog.library("
           library('pwr')
           library(metafor)
           library(tidyr)
-          library(jsonlite)
-                      ", 
+          library(jsonlite)", 
       test.day)
-    
-  
+
     
     #Outdate R
       library('groundhog')
@@ -113,24 +107,19 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
           test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 45 days
 
           
-          #1 conflicting pkg, show it
+          #1 Single conflicting pkg, show it
             library('groundhog')
-            set.groundhog.folder('c:/temp/203')
             groundhog.library('zip',test.day-800,tolerate.R.version = groundhog:::get.rversion())
             groundhog.library('rio',test.day)
             groundhog.library('rio',test.day,ignore.deps = 'zip')  #this does not download the new zip, uses the old one instead
           
             
-          #2 conflicting pkg, show it
+          #2 Five conflicting pkg, mention them only, not liste
             library('groundhog')
-            set.groundhog.folder('c:/temp/203')
-            groundhog.library('haven',test.day-80,tolerate.R.version = groundhog:::get.rversion())
-            groundhog.library('rio',test.day+80)
+            groundhog.library('haven',test.day-10,tolerate.R.version = groundhog:::get.rversion())
+            groundhog.library('rio',test.day+150)
             
-            #Solve with ignore.deps()
-              groundhog.library('rio',test.day+80,ignore.deps = .view.conflicts)
-            
-            .view.conflicts
+          
           
     # 2.3) *Any* conflict on a non-interactive session (because we cannot request after installation they restart in  a forceful way)
             #Run this from R script non-interactively
@@ -171,7 +160,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
         library(groundhog)
         set.groundhog.folder(d0)
 
-        
+
 
 ########################################################################
 #SET OF TESTS 2 -  CHECKING PREVIOUSLY FOUND BUGS
@@ -212,31 +201,22 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     
 #5.5) Main source and main install.
   library('groundhog')
-   groundhog.library('metafor',test.day,force.install.main=TRUE,force.source.main= TRUE)
-   groundhog.library('rio',test.day,force.install.main=TRUE,force.source.main= TRUE)
+   groundhog.library('metafor',test.day,force.install.main=TRUE , force.source.main= TRUE)
+   groundhog.library('rio',test.day,    force.install.main=TRUE , force.source.main= FALSE)
 
 
   #6) Include suggests
+   
     library('groundhog')
     pks=c('jsonlite','metafor')
     groundhog.library(pks, test.day ,include.suggests = TRUE)
 
     
-  #7) Install only
-    library('groundhog')
-    set.groundhog.folder('c:/temp/50046')
-    test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
-
-    groundhog.library('this.path',test.day, install.only=TRUE)
-    
-    pkg='this.path'
-    date=test.day
-    
 #7) Update cran to
     groundhog:::load.cran.toc(TRUE)
     
 
-#8 #DO THIS BY HAND:::elete R_groundhog ('main folder') verifying what happens if consent is given denied
+#8 #DO THIS BY HAND:::delete R_groundhog ('main folder') verifying what happens if consent is given denied
   library('groundhog') 
   groundhog.library('pwr',test.day)
   
@@ -380,24 +360,16 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     
 # Installation can be tested with most downloaded packages as of the release of R's version matching that being used
 # or based on available packages when testing. 
-  library('groundhog')
-  install.packages('c:/dropbox/groundhogr/groundhog_3.0.0.tar.gz',repos=NULL)
-
   
-    test.groundhog(1:25)         #Install the 10 most downloaded packages 
-    test.groundhog(501:510)      #install the 501-510 most downloaded packages
-    test.groundhog(-10, seed=192)  #install 10 random packages available right now for this version of R
+  install.packages('c:/dropbox/groundhogr/groundhog_3.0.0.tar.gz',repos=NULL)
+  library('groundhog')
 
+    set.groundhog.folder('c:/temp/1001')
     
-    
-    
-    groundhog.library('shiny',test.day+100)
-    pkg='pollen'
-    date='2016-05-14'
-    warnings()
-    
-  ip <- data.frame(utils::installed.packages(), stringsAsFactors=FALSE, row.names=FALSE)
-groundhog.library('pbdMPI', test.day,force.source = TRUE,force.install = TRUE)
+    test.groundhog(1:25,groundhog.day = '2022-07-18')         #Install the 10 most downloaded packages 
+    test.groundhog(501:510)      #install the 501-510 most downloaded packages
+    test.groundhog(2501:2510)     #install the 2501-2510 most downloaded packages
+  
 
 #4.1 - Run in 4.0.3
     #Test conflicts when a remote depends on a remote
@@ -436,18 +408,18 @@ groundhog.library('pbdMPI', test.day,force.source = TRUE,force.install = TRUE)
     
   # remote dependency already loaded, but wrong date
     library('groundhog')
+    test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 45 days
     
+    get.groundhog.folder()
+    groundhog.library('jeroen/jsonlite',test.day)
+    groundhog.library('tidymodels/broom',test.day)  
+    groundhog.library('crsh/papaja'      ,test.day)
+    groundhog.library('weirichs/eatModel',test.day)
     
-        groundhog.library('jeroen/jsonlite','2022-10-01')
-
-        
-        force.source=TRUE
-        
-    groundhog.library('tidymodels/broom','2020-04-02')  
-    groundhog.library('crsh/papaja','2022-07-01')
-    groundhog.library('weirichs/eatModel','2022-07-01')
-    
-    
+    pkg='weirichs/eatModel'
+    date=test.day
+    pkg=
+    .libPaths()
     
 
 #4.2 - Popular github packages
@@ -496,7 +468,7 @@ groundhog.library('pbdMPI', test.day,force.source = TRUE,force.install = TRUE)
 
     set.groundhog.folder('c:/temp/askilon')
     groundhog.library("satijalab/Seurat",'2022-09-01')
-    groundhog.library( "yihui/knitr",'2022-09-01')
+    groundhog.library( "yihui/knitr",test.day)
     groundhog.library( "crsh/papaja",'2022-09-01')
     groundhog.library( "weirichs/eatModel",'2022-09-01')
     groundhog.library( "jcrodriguez1989/chatgpt",'2023-03-01')
