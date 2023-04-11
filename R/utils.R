@@ -746,7 +746,7 @@
       {
       #Early return if the folder with groundhog has not been set yet 
           main_folder <-  fw(paste0(path.expand("~"), "/R_groundhog")) #fw: function #50
-          if (!file.exists(main_folder)) return(invisible(FALSE))
+          if (!file.exists(main_folder)) return(invisible(""))
         
       #Start with high numbers  
         last.check.days=9999  
@@ -761,7 +761,7 @@
           save.cookie('check_groundhog_version')
         
       #If less than min.days, early return
-          if (last.check.days<min.days) return(invisible(TRUE))
+          if (last.check.days<min.days) return(invisible(""))
       
           } #End if min.days>0
         
@@ -776,7 +776,7 @@
                 )
               
               #If NULL then early return
-                  if (is.null(groundhog.version_cran)) return(invisible(FALSE))
+                  if (is.null(groundhog.version_cran)) return(invisible(""))
               
               #Get majmin
                 groundhog.version_using <- as.character(packageVersion("groundhog"))
@@ -787,17 +787,19 @@
 
               #If server's is bigger, prompt to update
                 if (isTRUE(gv.cran.majmin > gv.using.majmin)) {
-                    message2()
-                    message1(
-                    "\n          OUTDATED GROUNDHOG\n",
-                    "            You are using version  '" , groundhog.version_using, "\n",
-                    "            The current version is '" , groundhog.version_cran, "'\n\n",
-                    "            You can read about the changes here: https://groundhogr.com/changelog\n\n",
-                    "Update by running: \ninstall.packages('groundhog')\n",
-                    "#######################################\n"
+                    msg<-paste0(
+                    "########################################################\n",
+                    "OUTDATED GROUNDHOG\n",
+                    "You are using version  '" , groundhog.version_using, "'\n",
+                    "The current version is '" , groundhog.version_cran, "'\n\n",
+                    "You can read about the changes here:\n",
+                    "https://groundhogr.com/changelog\n\n",
+                    "Update by running: `install.packages('groundhog')`\n",
+                    "########################################################\n"
                     )
-                    
+                    return(msg)
                     }  #End mismatch in version
+                
                   
             } #End last check more than `min.days`  ago
       }#End of function 42
