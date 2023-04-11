@@ -25,7 +25,7 @@ get.dependencies <- function(pkg, date, include.suggests = FALSE) {
   cran.toc <- .pkgenv[["cran.toc"]]
 
   
-  #If a base R package, return empty character vector (cannot lookup in crant.toc.rds for it is not on cran)
+  #If a base R package, return empty character vector (cannot lookup in cran.toc.rds for it is not on cran)
     if (pkg %in% base_pkg()) {
       return(as.character())
     }

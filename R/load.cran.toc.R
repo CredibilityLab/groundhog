@@ -1,5 +1,5 @@
 
-#Load all databases, optional parameter update.toc leads to downloading from groundhogr.com as wasaby as backup
+#Load all databases, optional parameter update.toc leads to downloading from groundhogr.com as wasabi as backup
 
 load.cran.toc <- function(update.toc = FALSE) {
   

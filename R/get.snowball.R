@@ -128,7 +128,7 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
         "pkg_vrs" = snowball.pkg_vrs,       # Identify pkg
         "installed" = TRUE,                  # Installed?
         "from" = '',                         # Where to install from
-        "GRAN.date" = as.Date('1970-01-01'), # GRAN date, in case MRAN is tried
+        "GRAN.date" = as.Date('1970-01-01'), # GRAN date
         "installation.time" = 0,             # time to install
         "installation.path" = snowball.installation.path,
         stringsAsFactors = FALSE
@@ -141,7 +141,7 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
     
   #For windows and mac get binaries information
     snowball.CRAN <- snowball.pkg_vrs %in% get.current.packages("binary")$pkg_vrs
-    snowball.GRAN.date <- as.Date(sapply(snowball.pkg_vrs, get.gran.binary.date , date=date), origin = "1970-01-01") # 5.3 Binary date in MRAN?
+    snowball.GRAN.date <- as.Date(sapply(snowball.pkg_vrs, get.gran.binary.date , date=date), origin = "1970-01-01") # 5.3 Binary date in GRAN?
     snowball.GRAN.date <- as.DateYMD(snowball.GRAN.date)
 
     snowball.GRAN <- snowball.GRAN.date != "1970-01-01"

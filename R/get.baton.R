@@ -6,7 +6,7 @@
 
 #0 Auxiliary function that cleans fields of text
                   clean_text <- function(y) {
-                  return(gsub("\\s*\\([^\\)]+\\)|\\n| ","",as.character(y))) #Kill the parenthense, \n, and space
+                  return(gsub("\\s*\\([^\\)]+\\)|\\n| ","",as.character(y))) #Kill the parentheses, \n, and space
                   }
 
 
@@ -87,7 +87,7 @@
                   new.remotes.vector <- unlist(strsplit(new.remotes,","))
                   
 
-                #Split pkg_usr becuase suggest column only has pkg, not usr
+                #Split pkg_usr because suggest column only has pkg, not usr
                   new.remotes.vector_pkg <- sapply(strsplit(new.remotes.vector,"/") , "[" ,2)
                   new.remotes.vector_usr <- sapply(strsplit(new.remotes.vector,"/") , "[" ,1)
                   

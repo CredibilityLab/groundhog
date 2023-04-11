@@ -136,7 +136,7 @@ for (k in 1:nrow(snowball))
     #6 PURGE: With conflict
     #  If different version of this pkg is already local, purge and ensure backup exists
          
-         #Same pkg, diferent vrs
+         #Same pkg, different vrs
           if (pkg %in% ip$Package &  !(pkg_vrs %in% ip$pkg_vrs)) 
             {
           

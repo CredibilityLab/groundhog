@@ -5,7 +5,7 @@
 #'    package dependencies (`Imports`, `Depends` and `Suggests`) for `pkg`.
 #'
 #' @return a `data.frame` where each row corresponds to one version of `pkg`, a date column contains the publication date,
-#' and when `dependecies`=TRUE, columns show package dependencies over time as well.
+#' and when `dependencies`=TRUE, columns show package dependencies over time as well.
 #'
 #' @examples
 #' \dontrun{

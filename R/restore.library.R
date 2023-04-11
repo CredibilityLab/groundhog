@@ -231,7 +231,7 @@ restore.library<-function(days)
           
           } #End if anything to reinstall
          
-          #9 Save restore cookie so when groundhog restarts it says erstore complete
+          #9 Save restore cookie so when groundhog restarts it says restore complete
             restore_cookie <- file.path(restore_dir , "restore_pending_restart_cookie.rds")
             saveRDS(as.numeric(Sys.time()) , restore_cookie)
             

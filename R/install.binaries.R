@@ -138,7 +138,7 @@
                   k.snowball <- match(pkg.k , snowball$pkg)
                   outfile    <- snowball$installation.path[k.snowball]
                 
-                #Show size so big files are undertandably slower
+                #Show size so big files are understandably slower
 				  size <- filesize_format(file.size(zk))
                   message1('     Installing ',k.zip,' of ',n.zip,': ',basename(zk)," (",size,")")
                 
