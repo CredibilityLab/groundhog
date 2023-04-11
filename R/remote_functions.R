@@ -238,7 +238,7 @@
       
     
       
-    #2 Fill in alterantive sytnaxes for pkg
+    #2 Fill in alternative sytnaxes for pkg
       #type=pkg
       
       if (pkg.type=='pkg')    {
