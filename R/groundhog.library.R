@@ -182,7 +182,9 @@
                       if (n.remote>0) .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
                     
                     #Return libpath, if it has been set.
-					            if  (exists("orig_lib_paths",envir=.pkgenv)) .libPaths(.pkgenv[["orig_lib_paths"]])
+					            if  (!is.null(.pkgenv[["orig_lib_paths"]])) {
+					              .libPaths(.pkgenv[["orig_lib_paths"]])
+					              }
 
                     })
             
