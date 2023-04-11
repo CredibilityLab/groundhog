@@ -10,7 +10,7 @@
 #8  namedList()              : automatically name object in list 
 #9  quit.menu()              : prompt to quit call upon mismatch oR0f dates
 #10 exit()                   : Stop message which does not say error
-#11 get.available.mran.date: Available mran dates
+#11 Dropped (mran related)
 #12 base_pkg()                : Output vector with all base packages
 #13 ignore.deps_default()     :  Default packages to ignore conflicts with (but gives warning)
 #14 Is this on R studio
@@ -180,7 +180,6 @@
         invokeRestart("abort")
   }
 
-#11 Available mran dates (DROPPED)
 
 
 #12 Base packages
@@ -232,7 +231,7 @@
      return(majmin)
      }
    
-#16 Get major minor pach
+#16 Get major minor patch
  get.r.majmin.release <- function()
  {
    r.majmin <- get.r.majmin()
@@ -794,8 +793,10 @@
                     "            You are using version  '" , groundhog.version_using, "\n",
                     "            The current version is '" , groundhog.version_cran, "'\n\n",
                     "            You can read about the changes here: https://groundhogr.com/changelog\n\n",
-                    "Update by running: \ninstall.packages('groundhog')"
+                    "Update by running: \ninstall.packages('groundhog')\n",
+                    "#######################################\n"
                     )
+                    
                     }  #End mismatch in version
                   
             } #End last check more than `min.days`  ago
