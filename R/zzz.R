@@ -63,14 +63,14 @@
     #' @importFrom utils packageVersion compareVersion
      
     .onAttach <- function(libname, pkgname) {
-        
       
-      
+
      #Startup msgs
       #7.1 Version and URL for website
           packageStartupMessage ("Attached: 'Groundhog' (Version: ",packageVersion('groundhog'),  ")") 
           packageStartupMessage ("Tips and troubleshooting: https://groundhogR.com")
-      
+
+
       #7.2  Default date suggestion
           #suggested default date on the year when R is released and next year, no default otherwise
           if (check.consent(ask=FALSE)==TRUE)
@@ -92,6 +92,7 @@
               }
           } #End if consent given before
           
+
           
         #7.3 if completing a library restore, show msg 
           if (check.consent(ask=FALSE)==TRUE) 
@@ -110,11 +111,12 @@
               } 
           #Delete cookie
              unlink(restore_cookie)
-            } #ENd cookie
+            } #End cookie
         } #End consent
           
-packageStartupMessage ("##########################################\n DEBUGGING: 2023 04 11 - 10:36")
-          
+
+packageStartupMessage ("##########################################\n DEBUGGING: 2023 04 11 - 13:08")
+
   } #End on attach
     
     
