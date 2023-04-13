@@ -43,23 +43,30 @@
       
           #4.1 Local
               
-            #Get installed.packages in the local library (the first of them if many, for restore, ip.all above,  we have ALL local libraries)
-             #usually there will be just one local and ip.all[] and ip[] will be the same
+            #Get installed.packages in the local library (the first of them if many, for restore, 
+            #ip.all above,  we have ALL local libraries)
+            #usually there will be just one local and ip.all[] and ip[] will be the same
       
                 ip <- get.ip('local')  #utils #59 
               
                 
             #Early return if we have all we need   
              
-                #package lent already from groundhoog to personal library[1] (#utils #60)
+                #package lent already from groundhog to personal library[1] (#utils #60)
                   loans <- get.loans()    
                   
-                #Combine pkg_vrs with sha (pvs) to uniquely identify remotes with same pkg_vrs but differnt commits, 
-                 #(note: sha is "" for pkgs originally on CRAN) 
-                  snowball$sha[is.na(snowball$sha)] <-''
-                  snowball.pvs <- ifelse(snowball$sha=="",  snowball$pkg_vrs,  paste0(snowball$pkg_vrs , "@" , snowball$sha))
-                  loans.pvs    <- ifelse(loans$sha=="",     loans$pkg_vrs,     paste0(loans$pkg_vrs    , "@" , loans$sha)) 
-                  borrowed <- snowball.pvs %in% loans.pvs
+                #Combine pkg_vrs with sha ('pvs': packge_vesion_sha) to uniquely identify remotes with 
+                #same pkg_vrs but different commits, and remotes from CRAN pkgs with same pkg_vrs
+                #(sha is "" for pkgs originally on CRAN) 
+                  
+                  #if sha is NA, make it "", plays more nicely with paste() functions
+                    snowball$sha[is.na(snowball$sha)] <-''
+                    
+                  #pvs for snowball and lons
+                    snowball.pvs <- ifelse(snowball$sha=="",  snowball$pkg_vrs,  paste0(snowball$pkg_vrs , "@" , snowball$sha))
+                    loans.pvs    <- ifelse(loans$sha=="",     loans$pkg_vrs,     paste0(loans$pkg_vrs    , "@" , loans$sha)) 
+                  #Subset of the snowball that we have borrowed
+                    borrowed <- snowball.pvs %in% loans.pvs
                   
                 #If all of them are, nothing left to do, done localizing
                 if (all(borrowed)) return(invisible(TRUE))
