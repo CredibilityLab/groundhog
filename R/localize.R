@@ -2,6 +2,9 @@
 
   localize.snowball <- function(snowball)
   {
+    #0 Drop duplicates
+    snowball<-snowball[!duplicated(snowball$pkg_vrs),]
+    
     #1 Early return if empty snowball
       if (nrow(snowball)==0) return(TRUE)
     
@@ -89,18 +92,19 @@
       
       #Get DESCRIPTION MD5 for all packages in ip.return
         description.path <- paste0(ip.return$LibPath, "/" , ip.return$Package , "/DESCRIPTION")
-        ip.return$md5 <- tools::md5sum(description.path)
+        
         
       
-        #FROM
-          from.local_to_groundhog <- paste0(ip.return$LibPath, "/",ip.return$Package)
-          
-        #Get the location where those files were before they were borrowed
+        #Merge with loans via md5 (this resorts the data.frame, so it is important to get both from/to after it)
+          ip.return$md5 <- tools::md5sum(description.path)
           ip.return <-merge(ip.return, loans, by='md5')
+        
+        
+        #FROM/TO
+          from.local_to_groundhog <- paste0(ip.return$LibPath, "/",ip.return$Package)
           to.local_to_groundhog <- paste0(ip.return$groundhog_location, "/", ip.return$Package)
         
         
-    
       #As precaution, delete any destination folder, and create the parent
         for (fk in to.local_to_groundhog)
           {
@@ -160,6 +164,7 @@
         from.groundhog_to_local <- paste0(snowball.lend$installation.path, "/", snowball.lend$pkg)
         to.groundhog_to_local   <- paste0(local.library,"/",snowball.lend$pkg)
       
+        
        #As precaution, delete any destination folder
         for (fk in to.groundhog_to_local)
           {
@@ -169,7 +174,7 @@
         
       #Move to local
         outcome.loans <- file.rename(from.groundhog_to_local , to.groundhog_to_local)
-
+        
       #add to loans
         #vector with path to all DESCRIPTION files to store md5 in loans[]
           description.path <- paste0(to.groundhog_to_local , "/DESCRIPTION")  
