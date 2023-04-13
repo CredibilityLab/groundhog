@@ -181,17 +181,17 @@
                     #Read cran toc again to undo any changes with remote
                       if (n.remote>0) .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
                     
-#                     #Return libpath, if it has been set.
-# 					            if  (!is.null(.pkgenv[["orig_lib_paths"]])) {
-# 					              .libPaths(.pkgenv[["orig_lib_paths"]])
-# 					              }
+                    #Return libpath, if it has been set.
+					            if  (!is.null(.pkgenv[["orig_lib_paths"]])) {
+					              .libPaths(.pkgenv[["orig_lib_paths"]])
+					              }
 
                     })
             
     #1.12 Drop pre-existing .libPaths to avoid finding pkg in path without version match
-        .libPaths('')
+        #.libPaths('')
+        
     
-
   
     #1.14 how many cores? (total -2 unless specified away from default of -1)
         if (cores == -1) {
@@ -316,9 +316,38 @@
           }
           
     #4.2 Set libpaths for big snowball
-          .libPaths(unique(snowball.all$installation.path))
+			
+          .libPaths(c(unique(snowball.all$installation.path), .pkgenv[["orig_lib_paths"]]))
           
-        
+    #4.3 Return loan needed for  snowball
+          #Get loans, data.frame with groundhog packages that have been sent to local library
+        #    loans<-get.loans()
+        #    
+        #  #Find ones we need for this package based on where they are saved in the groundhog path
+        #    loans.returning<-loans[loans$groundhog_location %in% snowball.all$installation.path,]
+        #  
+        # if (nrow(loans.returning)>0) {
+        #     
+        #   #Process them
+        #       #FROM: where this files are at now
+        #           local.folder   <-.pkgenv[["orig_lib_paths"]][1]
+        #           pkgs.to.return <-get.pkg(loans.returning$pkg_vrs)
+        #           from.local_to_groundhog <- paste0(local.folder,"/",pkgs.to.return)
+        #           
+        #       #To: where they are going
+        #           to.local_to_groundhog <- paste0(loans.returning$groundhog_location,"/",pkgs.to.return)
+        #     
+        #       #Ranem from->to
+        #           file.rename(from.local_to_groundhog, to.local_to_groundhog)
+        #           
+        #       #Drop from loans.rds 
+        #           loans<-loans[!loans$groundhog_location %in% loans.returning$groundhog_location,]
+        #           save.loans(loans.returning)
+        #   
+        # } #End if returning loans
+        #     
+            
+            
 #5 Check conflict with previously groundhog-loaded packages
     #Get currently active packages
       .pkgenv[['active']] = active = get.active()
@@ -438,9 +467,11 @@
             }#End 10.5
           
          #10.6 Save snowball
-            #Update  column `installed` in  snowball
-                ip <- data.frame(utils::installed.packages(snowball$installation.path), stringsAsFactors=FALSE,row.names=NULL)
-                snowball$installed <- (snowball$pkg %in% ip$Package | snowball$pkg %in% .pkgenv[['base_pkg']]) #if in packages or in base.packages
+            #Update  column `installed` in  snowball based on what's availalbe
+                ip.path <- get.ip('groundhog')$LibPath 
+                loans.path<- get.loans()$groundhog_location
+                snowball$installed <- (snowball$installation.path %in% c(ip.path , loans.path) |  #if the path we want exists or is in borrwoed set
+                                       snowball$pkg %in% .pkgenv[['base_pkg']])          #if in packages or in base.packages
                 
 	      #10.7  Save snowball RDS (unless they did ignore.deps for that drops dependencies)
               if (length(ignore.deps)==0) {

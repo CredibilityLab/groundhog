@@ -111,9 +111,9 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
 
   #Installed?
     #snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs)
-    ip.groundhog <- get.ip.groundhog() #utils #58
+    ip.groundhog <- get.ip('groundhog') #utils #58
     loans<-get.loans()                 #utils #59
-    snowball.installed <- snowball.pkg_vrs %in% c(ip.groundhog$pkg_vrs, loans)
+    snowball.installed <- snowball.pkg_vrs %in% c(ip.groundhog$pkg_vrs, loans$pkg_vrs)
 
   #Over-rule it if requested to install all
     if (force.install==TRUE) snowball.installed < -FALSE

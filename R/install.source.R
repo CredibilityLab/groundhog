@@ -121,8 +121,8 @@
                   
                     
                   #Localize pkgs in snowball that succeeded to be installed 
-                   localize.snowball(snowball [(snowball$pkg %in% snowflakes[[k]]) & 
-                                               (snowball$pkg_vrs %in% ip$pkg_vrs), ])
+                   #localize.snowball(snowball [(snowball$pkg %in% snowflakes[[k]]) & 
+                                               #(snowball$pkg_vrs %in% ip$pkg_vrs), ])
                   
                    
                 
@@ -195,7 +195,7 @@
          
               
               #localize
-                localize.snowball(snowball [k,])
+                #localize.snowball(snowball [k,])
               
               }  #End install loop
       

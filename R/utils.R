@@ -45,7 +45,7 @@
 #44 Check consent              :  Does .../R_groundhog exists?
 #45 Turn path from '\' to '/'  :  c:\users --> c:/users
 #46 MOVED
-#47 base.library.snowball.list
+#47 DROPPED
 #48 message.batch.installation.feedback() : feedback while installing a batch in parallel
 #49 - get.parallel.time()  :  estimate parallel time of installation
 #50 get pkg_list from path
@@ -55,7 +55,9 @@
 #54 filesize_format            : turn bytes file size to human readable
 #55 get.restore.points         : vector with dates available 
 #57 View conflicts             : view conflicting pkgs in recent call
-#58 Get ip.groundhog():        : installed.packages data.frame for all pacakges in groundhog library and loans
+#58 Get ip.groundhog():        : installed.packages data.frame for all packages in groundhog library and loans
+#59 get ip.backup()            : same for all packages that have been saved to the backup folder
+#60 get.loans() & /save.loans(): load and save database with all lent packages
 ####################################################################################
     
 
@@ -1075,60 +1077,76 @@ get.parallel.time<-function(times,cores)
     return(.pkgenv[['conflicts']])
     }
 
+  
 #58 Get ip.groundhog()
-  get.ip.groundhog<-function(){
+  get.ip <- function(location)
+  {
+    #1 Get all subfolders for backup and groundhog
+    
+        #1.1 For groundhog. backup, all_local there is a folder with subfolders for each pkg, get all pkgs
+            if (location %in% c('backup','groundhog','all_local'))
+                {
+                 #Path containing all subfolders with pkg_vrs   
+                  if (location=='groundhog') {
+                        cran_path   <- paste0(get.groundhog.folder() , "/R-" , get.r.majmin())
+                        github_path <- paste0(cran_path,"/_github")
+                        gitlab_path <- paste0(cran_path,"/_gitlab")
+                        master_path=c(cran_path, github_path, gitlab_path)
+                      }
+                    
+                    
+                  if (location=='backup')    master_path <- paste0(get.groundhog.folder(),"/restore_library/" , get.r.majmin() , "/")
+                  if (location=='all_local') master_path <- .pkgenv[["orig_lib_paths"]]
+
+                #All pkgs in that path    
+                  all.paths<- list.files(master_path,full.names=TRUE)
+            }
+
+        #1.2 For local there is just one 
+          if (location=='local') all.paths <- .pkgenv[["orig_lib_paths"]][1]
+      
           
-     #Master path   
-        groundhog.master_path <- paste0(get.groundhog.folder() , "/R-" , get.r.majmin())
-          
-      #All pkgs in that path    
-        all.paths<- list.files(groundhog.master_path,full.names=TRUE)
-      
-      #Installed.pacakges
-      ip.groundhog <- data.frame(utils::installed.packages(all.paths), row.names = NULL, stringsAsFactors = FALSE)
-      
-     #Create pkg_vrs
-        if (nrow(ip.groundhog)>0)  ip.groundhog$pkg_vrs <- paste0(ip.groundhog$Package,"_",ip.groundhog$Version)
-        if (nrow(ip.groundhog)==0) ip.groundhog$pkg_vrs <- character()
-      
-    return(ip.groundhog)
-  }
   
-#58.5 get ip.backup
-   get.ip.backup<-function(){
-          
-     #Dir   
-        backup.master_path <- paste0(get.groundhog.folder(),"/restore_library/" , get.r.majmin() , "/")
-                
-          
-      #All pkgs in that path    
-        all.paths<- list.files(backup.master_path, full.names=TRUE)
+     #2 Get the installed.packages
+        ip <- data.frame(utils::installed.packages(all.paths), row.names = NULL, stringsAsFactors = FALSE)
+         
+     #4 Create pkg_vrs
+        if (nrow(ip)>0)  ip$pkg_vrs <- paste0(ip$Package,"_",ip$Version)
+        if (nrow(ip)==0) ip$pkg_vrs <- character()
       
-      #Installed.pacakges
-        ip.backup <- data.frame(utils::installed.packages(all.paths), row.names = NULL, stringsAsFactors = FALSE)
+      #4 Select columns
+        ip <- ip[,c(names(ip) %in% c("LibPath", "Package","Version","pkg_vrs"))]
+        
       
-     #Create pkg_vrs
-        if (nrow(ip.backup)>0)  ip.backup$pkg_vrs <- paste0(ip.backup$Package,"_",ip.backup$Version)
-        if (nrow(ip.backup)==0) ip.backup$pkg_vrs <- character()
-      
-    return(ip.backup)
-  }
+    #4 End
+        return(ip)
+    }
+        
   
-#59 Loans
-  #59.1 get 
+#60 Loans
+  #60.1 get 
+  #pkg_vrs, location, 
   get.loans<-function() {
-    loans <- ""
-    loans_path<-paste0(get.groundhog.folder(),"/loans/",get.r.majmin(),".rds")  
-    dir.create(dirname(loans_path), showWarnings = FALSE,recursive = TRUE)
-    if (file.exists(loans_path)) loans<-readRDS(loans_path)
-    loans<-loans[loans!=''] #drop empty
-    loans<-sort(loans)
-    return(loans)
+    
+    #Start empty
+    loans <- data.frame(pkg_vrs=character() , 
+                        groundhog_location=character(),    #to move it back here
+                        sha=c(),                           #sha to match a pkg in snowball with what's already loaded
+                        md5=c())                           #MD5 of DESCRIPTION file to ensure right pkg is selected
+    
+    #Read it if it exists
+      loans_path<-paste0(get.groundhog.folder(),"/loans/",get.r.majmin(),".rds")  
+      dir.create(dirname(loans_path), showWarnings = FALSE,recursive = TRUE)
+      if (file.exists(loans_path)) loans<-readRDS(loans_path)
+      
+    #Sort it
+      loans<-loans[order(loans$pkg_vrs),]
+    #output
+      return(loans)
   }
   
-  #59.2 Save loans
+  #60.2 Save loans
    save.loans<-function(loans) {
-     loans<-loans[loans!=''] #drop empty
      loans_path<-paste0(get.groundhog.folder(),"/loans/",get.r.majmin(),".rds")  
      dir.create(dirname(loans_path), showWarnings = FALSE,recursive = TRUE)
      saveRDS(loans,loans_path,version=2,compress=FALSE)
