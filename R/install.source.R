@@ -4,9 +4,9 @@
   {
      
      
-    #0 Add all paths so that it is found when attempted
-      .libPaths(unique(snowball$installation.path))
-    
+    # #0 Add all paths so that it is found when attempted
+    #   .libPaths(unique(snowball$installation.path))
+    # 
     #0.5 Parallel installation if more than 1 core and more than 1 package
       batches.failed <- 0 #flag turns to 1 if batches attempted and fail                      
 
@@ -158,7 +158,7 @@
       if (cores==1 | nrow(snowball)==1 | batches.failed==1)
       {
           
-          #4.2 Start clock for install feedback
+          #4.2 Start clock for install feedback k=1
               start.time=Sys.time()
             
           #4.3 Loop over individual packages
@@ -168,8 +168,9 @@
                 installation.feedback(k, date, snowball, start.time) 
 
               #Install
-                install.one (snowball$source_url[k])       
+                install.one (url=snowball$source_url[k])       
               
+                
                 
               #Verify installation
                   ip <- data.frame(utils::installed.packages(),stringsAsFactors = FALSE,row.names = NULL)

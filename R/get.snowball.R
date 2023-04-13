@@ -64,19 +64,16 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
                 
               #Update if necessary if a borrowed package from groundhog-library to local-library goes missing
                 
-                #Get packages currently in the local folder
-                    ip<-get.ip('local') #Util #58
+                #Check for lost packages
+                    loans.all   <- get.loans(verfiy.package.exists=FALSE)
+                    loans.still <- get.loans(verfiy.package.exists=TRUE)  
+                    loans.lost  <- loans.all[loans.all$md5 %in% loans.still$md5,]
                     
-                #Get file with packages that should be there because they are on loan
-                    loans<-get.loans()
-                    
-                #Find lost packages
-                    loans.lost <- loans[!loans$md5 %in% ip$md5,]
                     
                 #Update snowball setting lost packages (if any) as not installed
                     if (nrow(loans.lost)>0)
                     {
-                    snowball$installed <- ifelse(snowball$pkg_vrs %in% loans.lost$pkg_vrs, FALSE, snowball$installed)
+                    snowball$installed <- ifelse(snowball$md5 %in% loans.lost$md5, FALSE, snowball$installed)
                     
                     #If a pkg is lost, we force installed=FALSE, otherwise we keed what it is (which should be TRUE)
                     #since we only save a snowball upon installing succesfully all of it
@@ -138,10 +135,12 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
   # 5 Snowball table with packages to be installed & necessary attributes (location, binary / source, etc)
 
   #Installed?
-    #snowball.installed <- mapply(is.pkg_vrs.installed, snowball.pkg, snowball.vrs)
-    ip.groundhog <- get.ip('groundhog') #utils #58
-    loans<-get.loans()                 #utils #59
-    snowball.installed <- snowball.pkg_vrs %in% c(ip.groundhog$pkg_vrs, loans$pkg_vrs)
+      ip.groundhog <- get.ip('groundhog')                    #utils #58
+      loans<-get.loans(verfiy.package.exists=TRUE)  #utils #59: get data.frame with borrowed packages 
+                                                             #           that are still found in local library
+
+    #If the pkg is found in either the local or groundhog folder, deem this TRUE    
+      snowball.installed <- snowball.pkg_vrs %in% c(ip.groundhog$pkg_vrs, loans$pkg_vrs) 
 
   #Over-rule it if requested to install all
     if (force.install==TRUE) snowball.installed < -FALSE

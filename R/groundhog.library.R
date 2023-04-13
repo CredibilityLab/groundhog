@@ -188,11 +188,7 @@
 
                     })
             
-    #1.12 Drop pre-existing .libPaths to avoid finding pkg in path without version match
-        #.libPaths('')
-        
     
-  
     #1.14 how many cores? (total -2 unless specified away from default of -1)
         if (cores == -1) {
           cores <- max(parallel::detectCores()-2,1)
@@ -317,6 +313,7 @@
           
     #4.2 Set libpaths for big snowball
 			     new_paths<-snowball.all$installation.path[snowball.all$installed==FALSE]
+           # new_paths<-snowball.all$installation.path
           .libPaths(c(unique(new_paths), .pkgenv[["orig_lib_paths"]]))
           
     #4.3 Return loan needed for  snowball
@@ -415,14 +412,14 @@
 #10 Library all pkgs
       #10.1 - Return to libpath and load pkgs
       .libPaths(.pkgenv[["orig_lib_paths"]])
-      
-      #10.2 do library
+ 
+     #10.2 do library
         for (pkgk in pkg) {
           base.library(pkgk, character.only=TRUE)
         }
 #-------------------------------------------------------------------- 
 
-#10 Verify each snowball, saving snowball .rds if successful  
+#10 Verify each snowball, saving snowball .rds if successful   k=1
       
   for (k in 1:length(snowball.list))
        {

@@ -25,7 +25,7 @@ installation.feedback <- function(k, date, snowball, start.time) {
 
 
   # Msg of how many are being installed
-	  msg.header <- paste0("\n\n\ngroundhog says: Installing '", snowball[k, "pkg_vrs"], "', package #", k, 
+	  msg.header <- paste0("\ngroundhog says: Installing '", snowball[k, "pkg_vrs"], "', package #", k, 
 	                       " (from source) out of ", N, " needed")
 	  
 	#Give estimate time

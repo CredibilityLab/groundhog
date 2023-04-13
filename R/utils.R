@@ -1127,8 +1127,6 @@ get.parallel.time<-function(times,cores)
           
         if (nrow(ip)==0) ip$md5 <- character()
         
-        
-        
     #6 End
         return(ip)
     }
@@ -1137,7 +1135,7 @@ get.parallel.time<-function(times,cores)
 #60 Loans
   #60.1 get 
   #pkg_vrs, location, 
-  get.loans<-function() {
+  get.loans<-function(verfiy.package.exists=TRUE) {
     
     #Start empty
     loans <- data.frame(pkg_vrs=character() , 
@@ -1153,6 +1151,12 @@ get.parallel.time<-function(times,cores)
     #Sort it
       loans<-loans[order(loans$pkg_vrs),]
       
+    #Verify package exists in local folder
+      if (verfiy.package.exists==TRUE)
+      {
+        ip.local <- get.ip('local') #utils #58
+        loans   <- loans[loans$md5 %in% ip.local$md5,]
+      }
        
     #output
       return(loans)
