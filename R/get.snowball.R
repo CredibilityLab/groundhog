@@ -56,8 +56,36 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
             
         #If snowball has been saved, load and return it, but delete it so that if it fails next time it won't be here
             if (file.exists(snowball_path)) {
+              #Load
                 snowball <- readRDS(snowball_path)
+                
+              #Delete
                 unlink(snowball_path)
+                
+              #Update if necessary if a borrowed package from groundhog-library to local-library goes missing
+                
+                #Get packages currently in the local folder
+                    ip<-get.ip('local') #Util #58
+                    
+                #Get file with packages that should be there because they are on loan
+                    loans<-get.loans()
+                    
+                #Find lost packages
+                    loans.lost <- loans[!loans$md5 %in% ip$md5,]
+                    
+                #Update snowball setting lost packages (if any) as not installed
+                    if (nrow(loans.lost)>0)
+                    {
+                    snowball$installed <- ifelse(snowball$pkg_vrs %in% loans.lost$pkg_vrs, FALSE, snowball$installed)
+                    
+                    #If a pkg is lost, we force installed=FALSE, otherwise we keed what it is (which should be TRUE)
+                    #since we only save a snowball upon installing succesfully all of it
+                    
+                      
+                    }
+
+                
+                
                 return(snowball)
               } 
             
