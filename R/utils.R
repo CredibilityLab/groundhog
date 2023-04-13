@@ -1079,6 +1079,7 @@ get.parallel.time<-function(times,cores)
 
   
 #58 Get ip.groundhog()
+  location='backup'
   get.ip <- function(location)
   {
     #1 Get all subfolders for backup and groundhog
@@ -1110,15 +1111,25 @@ get.parallel.time<-function(times,cores)
      #2 Get the installed.packages
         ip <- data.frame(utils::installed.packages(all.paths), row.names = NULL, stringsAsFactors = FALSE)
          
-     #4 Create pkg_vrs
+     #3 Create pkg_vrs
         if (nrow(ip)>0)  ip$pkg_vrs <- paste0(ip$Package,"_",ip$Version)
         if (nrow(ip)==0) ip$pkg_vrs <- character()
-      
-      #4 Select columns
-        ip <- ip[,c(names(ip) %in% c("LibPath", "Package","Version","pkg_vrs"))]
         
       
-    #4 End
+     #4 Select columns
+        ip <- ip[,c(names(ip) %in% c("LibPath", "Package","Version","pkg_vrs"))]
+        
+     #5 Add MD5 for DESCRIPTION file to merge & compare with `loans`
+        if (nrow(ip)>0)  {
+            description.path <- paste0(ip$LibPath, "/" , ip$Package , "/DESCRIPTION")
+            ip$md5 <- tools::md5sum(description.path)
+            }
+          
+        if (nrow(ip)==0) ip$md5 <- character()
+        
+        
+        
+    #6 End
         return(ip)
     }
         
@@ -1141,6 +1152,8 @@ get.parallel.time<-function(times,cores)
       
     #Sort it
       loans<-loans[order(loans$pkg_vrs),]
+      
+       
     #output
       return(loans)
   }
