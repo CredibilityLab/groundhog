@@ -117,7 +117,7 @@
               msg=paste0("You must include both a package name and a date in 'groundhog.library()' ")
               gstop(msg)
              }
-      
+####ALBA STARTS HERE ALBA      
            date.catch <- try(typeof(date),silent=TRUE)
             if (as.character(class(date.catch))=="try-error") {
               msg=paste0("The object you entered as date, '" , as.character(substitute(date)) ,"', does not exist.")
@@ -308,16 +308,16 @@
 
 #4 Create libpaths
 
-    #4.1 Create all paths if they don't exist (so that they can be added to libpath)
+    #4.1 Create paths of packages we will install, so that they can be added to libpath
           for (j in 1:nrow(snowball.all))
           {
-            dir.create(snowball.all$installation.path[j],recursive = TRUE, showWarnings = FALSE)
+            if (snowball.all$installed[j]==FALSE) dir.create(snowball.all$installation.path[j],recursive = TRUE, showWarnings = FALSE)
             
           }
           
     #4.2 Set libpaths for big snowball
-			
-          .libPaths(c(unique(snowball.all$installation.path), .pkgenv[["orig_lib_paths"]]))
+			     new_paths<-snowball.all$installation.path[snowball.all$installed==FALSE]
+          .libPaths(c(unique(new_paths), .pkgenv[["orig_lib_paths"]]))
           
     #4.3 Return loan needed for  snowball
           #Get loans, data.frame with groundhog packages that have been sent to local library

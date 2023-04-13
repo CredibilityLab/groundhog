@@ -96,7 +96,7 @@
           from.local_to_groundhog <- paste0(ip.return$LibPath, "/",ip.return$Package)
           
         #Get the location where those files were before they were borrowed
-          ip.return<-merge(ip.return, loans, by='md5')
+          ip.return <-merge(ip.return, loans, by='md5')
           to.local_to_groundhog <- paste0(ip.return$groundhog_location, "/", ip.return$Package)
         
         
