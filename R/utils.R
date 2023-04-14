@@ -1077,15 +1077,13 @@ get.parallel.time<-function(times,cores)
     return(.pkgenv[['conflicts']])
     }
 
-  
 #58 Get ip.groundhog()
-  location='backup'
   get.ip <- function(location)
   {
     #1 Get all subfolders for backup and groundhog
     
         #1.1 For groundhog. backup, all_local there is a folder with subfolders for each pkg, get all pkgs
-            if (location %in% c('backup','groundhog','all_local'))
+            if (location %in% c('backup','groundhog'))
                 {
                  #Path containing all subfolders with pkg_vrs   
                   if (location=='groundhog') {
@@ -1097,17 +1095,17 @@ get.parallel.time<-function(times,cores)
                     
                     
                   if (location=='backup')    master_path <- paste0(get.groundhog.folder(),"/restore_library/" , get.r.majmin() , "/")
-                  if (location=='all_local') master_path <- .pkgenv[["orig_lib_paths"]]
 
                 #All pkgs in that path    
                   all.paths<- list.files(master_path,full.names=TRUE)
             }
 
-        #1.2 For local there is just one 
-          if (location=='local') all.paths <- .pkgenv[["orig_lib_paths"]][1]
-      
+        #1.2 Local  
+          if (location=='local')     all.paths <- .pkgenv[["orig_lib_paths"]][1]
+          if (location=='all_local') all.paths <- .pkgenv[["orig_lib_paths"]][[-length(.pkgenv[["orig_lib_paths"]])]]
+
           
-  
+        
      #2 Get the installed.packages
         ip <- data.frame(utils::installed.packages(all.paths), row.names = NULL, stringsAsFactors = FALSE)
          
@@ -1131,7 +1129,7 @@ get.parallel.time<-function(times,cores)
         return(ip)
     }
         
-  
+
 #60 Loans
   #60.1 get 
   #pkg_vrs, location, 
