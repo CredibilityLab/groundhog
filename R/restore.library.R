@@ -1,27 +1,31 @@
 #' Restore version of packages in personal library replaced by groundhog.
 #'
-#' When groundhog installs a package, it saves two copies of it.
-#' One goes on the stable groundhog library (to find its location: `get.groundhog.folder()`)
-#' the other goes to the default personal library (to find its location: `.libPaths()[1]`).
-#' Because the personal library can only hold one version of a package, groundhog replaces 
-#' existing versions of packages that already exist in the personal library (if any), just like 
-#' `install.packages()` does. But, it makes a backup copy of those replaced packages. 
-#' You can restore your personal non-groundhog library to how it was prior to groundhog modifying it 
-#' (e.g., you can test groundhog for the first time, and then undo any modifications to your
-#' personal library). Run `restore.library()` and the backup
-#' copy of the original package version will be restored to the personal library. 
-#' Thanks to keeping the backup copies, restoring an entire library takes but a few seconds.
+#' When groundhog installs a package, it installs it into  groundhog's library. 
+#' To find the location of this file direction: `get.groundhog.folder()`. Groundhog then immediately 
+#' moves the installed package (and its dependencies) to the default personal library 
+#' (to find its location: `.libPaths()[1]`). Because the personal library can only 
+#' hold one version of a given package, before moving  new packages in, groundhog moves any existing 
+#' other versions of those packages out to another directory (a local archive).
+#' 
+#' `restore.library()` allows instantaneously reversing these changes, removing packages 
+#' installed by groundhog, and restoring  packages removed by it. This allows, for instance, 
+#' testing out groundhog, and reversing any changes to the library 
+#' made while doing so.
+#' 
 #' Groundhog makes a single restore point for every day that `groundhog.library()` 
-#' leads to replacing even a single package into the personal library.
-#' View available dates with `.available.restore.points`. 
+#' leads to changes in the personal library. By default `restore.library` restores the
+#' most recent among them (e.g., earlier that same day),
+#' 
+#' Restore points are saved permanently and can be restored at any point. 
+#' To view saved restore dates run `.available.restore.points`. To choose among them use 
+#' the `days` argument in `restore.library` (see below). 
 #' 
 #' 
 #'@param days an optional numeric argument used to choose among alternative restore points.
 #' When `days` is set, groundhog restores the personal library to the  most recent restore point, that 
-#' is at least `days` days ago. `restore.library()` by default restores
-#' the most current restore point (e.g., if some packages were installed with groundhog today, to 
-#' how the library was before today's installations). `days = -1` will restore back to the first
-#'restore point available.
+#' is at least `days` days ago. For example, if there are two restore points: one from today, and one from 7 days ago,
+#' setting `days=3` would restore to the latter, and setting `days=8` would result in an error. 
+#' `days = -1` will restore back to the oldest restore point available.
 
 
 #' @examples
@@ -41,13 +45,9 @@ restore.library<-function(days)
   {
   
   #1 Current IP
-    ip <- data.frame(utils::installed.packages(.libPaths()[-length(.libPaths())]),row.names=NULL)
-    ip$pkg_vrs <- paste0(ip$Package,"_",ip$Version)
+    ip <- get.ip('all_local')
            
-    #drop already set to be purged by previous actions (e.g., installs) as they are not really 'installed' anymore
-     ip <- ip[regexpr('_PURGE', ip$Package)<0,] 
-
-
+ 
   #2 Chose restore point to use 
     #2.1 Set the path
       restore_dir <- paste0(get.groundhog.folder(),"/restore_points/", get.r.majmin())
