@@ -87,28 +87,10 @@
           
 
           
-        #7.3 if completing a library restore, show msg 
-          if (check.consent(ask=FALSE)==TRUE) 
-          {
-          restore_dir <- paste0(get.groundhog.folder(),"/restore_points/", get.r.majmin())
-          restore_cookie <- file.path(restore_dir , "restore_pending_restart_cookie.rds")  #see restore.library() #9
-          if (file.exists(restore_cookie)) {
-            restore_cookie_time <- readRDS(restore_cookie)
-          
-              #If a restore was requested within 1 hour, show message to confirm completed
-              #more than 1 hour probably means they went away and came back and msg would be confusing
-
-            if (as.numeric(Sys.time())-restore_cookie_time < 1*60*60)
-              {
-              message2('Restore library process completed.')
-              } 
-          #Delete cookie
-             unlink(restore_cookie)
-            } #End cookie
-        } #End consent
+       
           
 
-packageStartupMessage ("##########################################\n This version: 2023 04 14 - 11:08")
+packageStartupMessage ("##########################################\n This version: 2023 04 14 - 15:17")
 
   } #End on attach
     
