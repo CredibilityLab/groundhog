@@ -40,13 +40,7 @@
     #2 Hidden variables in local environment
         .available.restore.points <<- get.restore.points()
         .view.conflicts <<- view.conflicts.function()
-        
-    #3 Delete to be purged packages, if any (put here with disable.packages())
-        packages_df <- get.packages_df() #utils.R #Function 33
-        purge_df <- subset(packages_df, packages_df$purged==TRUE)
-        if (nrow(purge_df)>0) unlink(purge_df$path , recursive = TRUE)   
-  
-  
+    
         
     #5 Verify a mirror has been set    
       set.default.mirror() #Function 36 -  utils.R
@@ -55,7 +49,6 @@
        check.groundhog.version(min.days=1) #Function 42  -  utils.R
           
   
-                  
     } #End of onLoad
 
 
@@ -73,24 +66,24 @@
 
       #7.2  Default date suggestion
           #suggested default date on the year when R is released and next year, no default otherwise
-          if (check.consent(ask=FALSE)==TRUE)
-          {
-            R.year <- as.numeric(format(get.r.majmin.release(),"%Y"))
-            today.year <- as.numeric(format(Sys.Date()-2,"%Y"))      #subtract 2 days so that it is treated like last year till Jan 3rd
-            today.month <- as.numeric(format(Sys.Date(),"%m"))
-
-          #Assume we will not recommend anything
-              default.date <- NULL
-              
-          #1st year of R version, after June 1st, year/06/01
-              if (today.year==R.year & today.month>=6) default.date <- paste0(today.year,"/06/01")
-          #2st year of R version, year/01/01
-              if (today.year==R.year+1)                default.date <- paste0(today.year,"/01/01")
-              
-          if (!is.null(default.date)) {    
-              packageStartupMessage ("--> Suggested default groundhog day: '",default.date,"'")
-              }
-          } #End if consent given before
+          # if (check.consent(ask=FALSE)==TRUE)
+          # {
+          #   R.year <- as.numeric(format(get.r.majmin.release(),"%Y"))
+          #   today.year <- as.numeric(format(Sys.Date()-2,"%Y"))      #subtract 2 days so that it is treated like last year till Jan 3rd
+          #   today.month <- as.numeric(format(Sys.Date(),"%m"))
+          # 
+          # #Assume we will not recommend anything
+          #     default.date <- NULL
+          #     
+          # #1st year of R version, after June 1st, year/06/01
+          #     if (today.year==R.year & today.month>=6) default.date <- paste0(today.year,"/06/01")
+          # #2st year of R version, year/01/01
+          #     if (today.year==R.year+1)                default.date <- paste0(today.year,"/01/01")
+          #     
+          # if (!is.null(default.date)) {    
+          #     packageStartupMessage ("--> Suggested default groundhog day: '",default.date,"'")
+          #     }
+          # } #End if consent given before
           
 
           
@@ -115,7 +108,7 @@
         } #End consent
           
 
-packageStartupMessage ("##########################################\n This version: 2023 04 13 - 6:02")
+packageStartupMessage ("##########################################\n This version: 2023 04 13 - 20:02")
 
   } #End on attach
     
