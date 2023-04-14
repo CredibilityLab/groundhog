@@ -45,7 +45,7 @@ restore.library<-function(days)
   {
   
   #1 Current IP
-    ip <- get.ip('all_local')
+    ip.local <- get.ip('local')
            
  
   #2 Chose restore point to use 
@@ -82,60 +82,48 @@ restore.library<-function(days)
           datek <- max(ip_dates)
       }
       
-    #2.7 Read pkg_vrs to be restored
+      
+  #3 Read restore IP for datek, all packages in install.package for restore point
       ip.restore <- readRDS(paste0(restore_dir, "/", datek, ".rds"))
     
-  #3 Compare
-      ip.add   <-  ip.restore[!ip.restore$pkg_vrs %in% ip$pkg_vrs,]
-      ip.purge <-  ip        [!ip$pkg_vrs %in% ip.restore$pkg_vrs,] 
-
+  #4 Set of backedup pkgs being brought back
+      ip.add   <-  ip.restore[!ip.restore$md5 %in% ip.local$md5,]  #We used to have these packages, but no longer do, so we add them
       n.add   <- nrow(ip.add)
+      
+  #5 Set of pkgs beind eliminated
+      ip.purge <- ip.local[!ip.local$md5 %in% ip.restore$md5,]    #We have these packages but did not use to, so we purge them
       n.purge <- nrow(ip.purge)
       
-      if (n.add+n.purge==0) {
+      
+
+      if (n.add + n.purge == 0) {
         message1("The library already matches the restore point, no need to install/uninstall any packages.")
         return(invisible(TRUE))
         }
       
 
-  #4 Inform what would be restored
-      #4.0 Restore back to ONLY date
-       if (length(ip_dates)==1) 
+  #6 Inform user what would happend if they go forward
+      
+      #6.0 Restore back to ONLY date
+       if (missing(days)) 
         {
         msg <- paste0(
-                "Will restore the (non-groundhog) library of packages as it was prior\n",
-                "to any changes made on '", datek ,"'")
+                "You have requested restoring the (non-groundhog) library of packages \n",
+                "as it was prior to any groundhog induced changes made since '", datek ,"'")
         }
       
-      #4.1 Restore back to 1st date
-      if (missing(days) & length(ip_dates)>1) 
-        {
-        msg <- paste0(
-                "Will restore the (non-groundhog) library of packages as it was prior to any changes\n",
-                "made on '", datek ,"', the first date available as a restore point. To choose a \n",
-                "different restore point use the 'days' argument (indicating # of days to go back).")
-        }
-
-      #4.2 Restore back to # days ago
-      if (!missing(days))
-        {
-            msg <- paste0(
-                "Will restore the (non-groundhog) library of packages as it was prior to any changes\n",
-                "made on '", datek , "' (the most recent restore point available from more than the \n",
-                "requested '",days,"' days ago).")
-      }
       
-      #4.3 Package counts
+      
+      #6.3 Package counts
           msg <- paste0(msg, "\n", 
                "\nThis entails restoring ", n.add, " and uninstalling ", n.purge ," packages.\n",
-               "This process usually takes a few seconds to execute.\n")
+               "This process should be nearly instantaneous regardless of the number of packages.\n")
 
     
           
-      #4.5. Print message out
+      #6.4. Print message out
         msg<-paste0(msg, "\nTo proceed type 'restore', to stop type anything else.")
 
-        message2()
         message1(msg)
         answer <-readline(prompt="  >")
         if (tolower(answer) != 'restore') {
@@ -144,109 +132,62 @@ restore.library<-function(days)
           return(invisible(FALSE))
         }
         
- #5 Execute if typed restore
+        
+        
+ #7 If user says "RESTORE"
    if (tolower(answer) == 'restore') {
       
-       
-  #5.1 Purge  k=1
-      if (n.purge>0)
-      {
-              
-          #Subset of IP that need to be purged
-             sub <-ip$pkg_vrs %in% ip.purge$pkg_vrs 
-             
-          #Their old name
-             old <- file.path(ip$LibPath[sub],ip$Package[sub])
-             
-          #New name
-             #Random letters for file names
-               random <-c()
-               for (k in 1:length(old)) { 
-                 random[k] = paste0(sample(letters,size=6),collapse = '')
-               }
-               
-             #New
-              new <- paste0(old , "_",random,"_PURGE")  #add 6 random letters and _PURGE
-              purged   <- file.rename(old , new)
-              
-              message1('Will now prepare ',n.purge,' packages for uninstallation:\n',
-                       paste0(1:n.purge, ") ", sort(ip$pkg_vrs[sub]),"\n"))
-       
-      } #ENd if somethign to purge.
-      
-
-  #6 Restore deleted packages #k=1
+    
+  #7.1 Purge packages (back to groundhog or put to backup) 
+      loans <- get.loans()
+      purge.local (ip.purge , loans)  #function 1 in interlibrary.functions.R
+     
+      #This sends back to groundhog pkgs that came from there (based on MD5)
+      #and sends to backup those that do no match md5
+     
+ 
+  #------------------------------------------------
+  #7.2 Restore deleted packages #k=1
         
           if (n.add > 0)
           {
-          outcome <- c()
-          message1("\nWill now restore ", n.add , " packages.")
-
-          for (k in 1:n.add)
-          {
-          #8.1 Setup paths 
-            #pkg info
-              pkg_vrs <- ip.add$pkg_vrs[k]
-              pkg <-get.pkg(pkg_vrs)
-              vrs <-get.vrs(pkg_vrs)
-              
-            #8.2 location in the backup folder
-              backup.dir <- paste0(get.groundhog.folder(),"/restore_library/" , get.r.majmin() , "/")
-               from       <- paste0(backup.dir, pkg_vrs,"/",pkg)
-               to         <- ip.add$LibPath[k]  #this is the folder where it was deleted from 
-              
-               
-             #8.3 If package not found in backup, skip
-               ip.k <- data.frame(utils::installed.packages(dirname(from)),row.names=NULL, stringsAsFactors = FALSE)
-               if (nrow(ip.k)==0)
-               {
-                 message("Did not find backup for ",pkg_vrs," will skip and not restore it.")
-                 next 
-                 
-               }
-              
-            #8.4 if the destination local folder has been deleted or no longer available, go to default
-              if (!file.exists(to)) {
-                message("Note: package ",pkg_vrs," used to be installed in '",to[k], "' but that folder\n",
-                        "no longer exists. Will re-install in '",.libPaths()[1] ,"' instead.")
-                to <- .libPaths()[1]
-              }
-              pkg.local_path  <- paste0(to,"/",pkg)
-              
-          #8.5 Purge destination package if it exists 
-              if (file.exists(pkg.local_path)) {
-                random <- paste0(sample(letters,size=6),collapse = '')
-                new <- paste0(pkg.local_path , "_",random,"_PURGE")  #add 6 random letters and _PURGE
-                purged   <- file.rename(pkg.local_path , new)
-              } #ENd purge
-                
-          #8.6 Copy from groundhog to local
-              #Message
-                message1("Restoring " , k , " of " , n.add, ":  '",basename(from),"'")
-               
-              #Copy
-                outcome[k] <- file.copy(from , to, recursive = TRUE)    
-                
-          } #ENd for loop over re-installing pkgs
-          
-          } #End if anything to reinstall
-         
-          #9 Save restore cookie so when groundhog restarts it says restore complete
-            restore_cookie <- file.path(restore_dir , "restore_pending_restart_cookie.rds")
-            saveRDS(as.numeric(Sys.time()) , restore_cookie)
+           
+          #From/To based on ip.add (recall: ip.add is a subset of ip.restore)
+            from <-paste0(backup.dir, ip.add$pkg_vrs)
+            to   <- ip.add$LibPath
             
-          #10 Message
-            msg = paste0("done.\n\n\n",
-                         "===============================================================\n",
-                         "                  ***  VERY IMPORTANT  ***  \n\n",
-                         "   To finalize the library restore you need to:\n",
-                         "       1) Restart the R session (in R Studio CMD/SHFT-CTRL-F10)\n",
-                         "       2) Run `library('groundhog')` again.\n\n",
-                         "  Only when you do (2) will temporary files that can create conflicts\n",
-                         "  be deleted. If you do not do (2), packages may behave erratically.\n\n",
-                         "                 ***  RESTART THE R SESSION   ***\n",
-                         "===============================================================")
-                         infinite.prompt(msg,valid_answers='uncle',must.restart = TRUE)
+          #Skip if from does not exist skip
+            skip.no_backup <- !file.exists(from)
+            skip.other_pkg <- file.exists(to)
+            skip <- skip.no_backup | skip.other_pkg
+          
+          #Move 
+            outcome <- file.rename(from[!skip] , to[!skip]) 
+            
+          #Message
+            #All success
+              if (sum(outcome)==n.add) message1("Restored ",n.add, " packages.")
+          
+            #Skipped based on FROM
+              if (sum(skip.no_backup)>0) {
+                message("An additional ",sum(skip.no_backup), " other packages packages could not be restored due to missing backup:")
+                message(pasteQC(from[skip.no_backup]))
+              } 
+          
+          #Skipped based on TO
+              if (sum(skip.other_pkg)>0) {
+                message("An additional ",sum(skip.other_pkg), " other packages packages could not be restored because they \n",
+                        "were already available in the destination library (and were not installed with groundhog):")
+                message(pasteQC(from[skip.other_pkg]))
+              } 
+          } 
+  
+    #------------------------------------------------
+            
+  #10 Message
+        msg = paste0("Library restoration completed.\n",
+                     "Restart the R session to proceed.")
+        infinite.prompt(msg,valid_answers='uncle',must.restart = TRUE)
             
       } #IF they answered 'restore
       

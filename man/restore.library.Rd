@@ -14,24 +14,27 @@ setting \code{days=3} would restore to the latter, and setting \code{days=8} wou
 \code{days = -1} will restore back to the oldest restore point available.}
 }
 \description{
-When groundhog installs a package, it installs it into  groundhog's library (folder/directory).
-Tto find its location: \code{get.groundhog.folder()}. Groundhog then immediately
+When groundhog installs a package, it installs it into  groundhog's library.
+To find the location of this file direction: \code{get.groundhog.folder()}. Groundhog then immediately
 moves the installed package (and its dependencies) to the default personal library
 (to find its location: \code{.libPaths()[1]}). Because the personal library can only
-hold one version of a given package, before moving the new package in, groundhog moves any existing
-version of those new packages out of the personal library. More generally. Even after packages are installed,
-groundhog moves packages in and out of the personal library whenever \code{groundhog.library()} requests a package
-version which is not currently there (e.g., when switching back and forth between groundhog days).
-\code{restore.library()} allows instantaneously reversing these changes.
-It restores the default personal library, removing packages installed by groundhog,
-and restoring packages removed by groundhog. This allows, for instance testing out groundhog, and
-reversing any changed after doing so.
-Groundhog makes a single restore point for every day that \code{groundhog.library()}
-leads to changes in the personal library. By default \code{restore.library} reverses to the most recent restore date.
-The \code{days} optional argument allows switching to earlier dates (if any).
-View other available restore dates with \code{.available.restore.points}.
+hold one version of a given package, before moving  new packages in, groundhog moves any existing
+other versions of those packages out to another directory (a local archive).
 }
 \details{
+\code{restore.library()} allows instantaneously reversing these changes, removing packages
+installed by groundhog, and restoring  packages removed by it. This allows, for instance,
+testing out groundhog, and reversing any changes to the library
+made while doing so.
+
+Groundhog makes a single restore point for every day that \code{groundhog.library()}
+leads to changes in the personal library. By default \code{restore.library} restores the
+most recent among them (e.g., earlier that same day),
+
+Restore points are saved permanently and can be restored at any point.
+To view saved restore dates run \code{.available.restore.points}. To choose among them use
+the \code{days} argument in \code{restore.library} (see below).
+
 For more information about groundhog check out \href{http://groundhogr.com}{groundhogr.com}
 }
 \examples{
