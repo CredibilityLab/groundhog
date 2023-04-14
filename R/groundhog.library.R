@@ -117,57 +117,49 @@
               msg=paste0("You must include both a package name and a date in 'groundhog.library()' ")
               gstop(msg)
              }
-####ALBA STARTS HERE ALBA      
+
            date.catch <- try(typeof(date),silent=TRUE)
             if (as.character(class(date.catch))=="try-error") {
               msg=paste0("The object you entered as date, '" , as.character(substitute(date)) ,"', does not exist.")
               gstop(msg) #util #51)
             }
       
-      #1.5 put package name in quotes if it is not an object and was not put in quotes
+    #1.5 put package name in quotes if it is not an object and was not put in quotes
         pkg.catch <- try(typeof(pkg),silent=TRUE)
         if (as.character(class(pkg.catch))=="try-error") {
           pkg <- as.character(substitute(pkg))
           } 
     
-     #1.6 Validate arguments entered (Utils.R #46)
+          
+    #1.6 Sandwich possible library() commands  
+        pkg <- sandwich.library(pkg)  #utils.R function 34
+   
+
+    #1.7 Validate arguments entered (Utils.R #46)
         validate.groundhog.library(pkg, date,  quiet.install,  include.suggests ,ignore.deps, 
                                    force.source , force.install,  force.source.main , force.install.main, 
                                    tolerate.R.version  ,cores)  
    
     
-    #1.7 If there is a remote, it needs to be alone 
+          
+   #1.8 Non-remote packages, early return if everything is already attached 
           remote <- basename(pkg)!=pkg      
           n.remote <- sum(remote)
-          
-          
-          if (n.remote>0 & length(pkg)>1 ) {
-           msg =paste0("The list of packages you are trying to load includes a remote (e.g., GitHub) package.",
-                       "But, remote packages need to be loaded on their own in separate groundhog.library() calls")
-		      gstop(msg)
-          }
-          
-          
-     #1.13 Sandwich possible library() commands  
-        pkg <- sandwich.library(pkg)  #utils.R function 34
-   
-
-          
-    #1.7.5 Non-remote packages, early return if everything is already attached 
+         
         if (n.remote==0 & all.already.attached(pkg , date) ) return(invisible(TRUE))
           #all.already.attached.R produced: message1("All requested packages are already attached")
 
           
       
     #Note: 1,8 & 1.9 could be done on loading, but, better here : (i) in case the user makes a change, and (ii) avoid writing files without authorization
-    #1.8  Verify a mirror has been set (utils.R #36)    
+    #1.9  Verify a mirror has been set (utils.R #36)    
         set.default.mirror() 
     
-    #1.9 Verify a personal library to save non-groundhog packages has been assigned (Utils.R #37)
+    #1.10 Verify a personal library to save non-groundhog packages has been assigned (Utils.R #37)
         verify.personal.library.exists() 
     
        
-    #1.10 Reload databases if needed
+    #1.11 Reload databases if needed
         if (is.null(.pkgenv[["cran.toc"]])) load.cran.toc(update.toc = FALSE)
         
         update_cran.toc_if.needed(date) #This will load.cran.toc() if needed as well
@@ -175,7 +167,7 @@
         #note: it is redundant to run load.cran.toc first since it is part of update_cran.toc
         #but the latter depends on the date, we have not yet checked that date is correct
         
-    #1.11 On Exit refresh libpath and cran.toc (cran toc can be modified temporarily by a remote)
+    #1.12 On Exit refresh libpath and cran.toc (cran toc can be modified temporarily by a remote)
           
             on.exit({
                     #Read cran toc again to undo any changes with remote
@@ -189,12 +181,12 @@
                     })
             
     
-    #1.14 how many cores? (total -2 unless specified away from default of -1)
+    #1.13 how many cores? (total -2 unless specified away from default of -1)
         if (cores == -1) {
           cores <- max(parallel::detectCores()-2,1)
         }   
         
-    #1.15 Common messages
+    #1.14 Common messages
       f10 <- ifelse(interactive(), "\n(in R Studio run CMD/CTRL-SHFT-F10 to restart R session). ","")
 
       
