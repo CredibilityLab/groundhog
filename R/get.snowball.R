@@ -75,8 +75,8 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
                     {
                     snowball$installed <- ifelse(snowball$md5 %in% loans.lost$md5, FALSE, snowball$installed)
                     
-                    #If a pkg is lost, we force installed=FALSE, otherwise we keed what it is (which should be TRUE)
-                    #since we only save a snowball upon installing succesfully all of it
+                    #If a pkg is lost, we force installed=FALSE, otherwise we keep what it is (which should be TRUE)
+                    #since we only save a snowball upon installing successfully all of it
                     
                       
                     }
