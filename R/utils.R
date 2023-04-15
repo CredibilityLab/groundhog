@@ -1137,10 +1137,10 @@ get.parallel.time<-function(times,cores)
     
     #Start empty
     loans <- data.frame(pkg_vrs=character() , 
-                        groundhog_location=character(),    #to move it back here
-                        sha=c(),                           #sha to match a pkg in snowball with what's already loaded
-                        md5=c())                           #MD5 of DESCRIPTION file to ensure right pkg is selected
-    
+                        groundhog_location=character(),    
+                        sha=character(),                           
+                        md5=character(),                           
+                        stringsAsFactors=FALSE)
     #Read it if it exists
       loans_path<-paste0(get.groundhog.folder(),"/loans/",get.r.majmin(),".rds")  
       dir.create(dirname(loans_path), showWarnings = FALSE,recursive = TRUE)
@@ -1165,4 +1165,5 @@ get.parallel.time<-function(times,cores)
      loans_path<-paste0(get.groundhog.folder(),"/loans/",get.r.majmin(),".rds")  
      dir.create(dirname(loans_path), showWarnings = FALSE,recursive = TRUE)
      saveRDS(loans,loans_path,version=2,compress=FALSE)
-      }
+   }
+   

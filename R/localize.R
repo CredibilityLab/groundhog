@@ -138,7 +138,8 @@
           loans<-rbind(loans, data.frame(pkg_vrs            = snowball.lend$pkg_vrs, 
                                          groundhog_location = snowball.lend$installation.path,
                                          md5                = groundhog.md5, 
-                                         sha                 = snowball.lend$sha)  )
+                                         sha                 = snowball.lend$sha,
+                                         stringsAsFactors = FALSE))
         
         #Drop the row name, which is a long location path
           loans<-data.frame(loans,row.names = NULL)  
