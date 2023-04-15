@@ -67,7 +67,7 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
                 #Check for lost packages
                     loans.all   <- get.loans(verfiy.package.exists=FALSE)
                     loans.still <- get.loans(verfiy.package.exists=TRUE)  
-                    loans.lost  <- loans.all[loans.all$md5 %in% loans.still$md5,]
+                    loans.lost  <- loans.all[!loans.all$md5 %in% loans.still$md5,]
                     
                     
                 #Update snowball setting lost packages (if any) as not installed
