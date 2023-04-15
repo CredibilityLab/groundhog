@@ -48,6 +48,8 @@
     #6 Check if new version of groundhog exists, if we have not checked today yet
        check.groundhog.version(min.days=1) #Function 42  -  utils.R
           
+    #7 Load cran toc if available
+       if (check.consent(FALSE)==TRUE) load.cran.toc()
   
     } #End of onLoad
 
@@ -65,32 +67,32 @@
 
 
       #7.2  Default date suggestion
-          #suggested default date on the year when R is released and next year, no default otherwise
-          # if (check.consent(ask=FALSE)==TRUE)
-          # {
-          #   R.year <- as.numeric(format(get.r.majmin.release(),"%Y"))
-          #   today.year <- as.numeric(format(Sys.Date()-2,"%Y"))      #subtract 2 days so that it is treated like last year till Jan 3rd
-          #   today.month <- as.numeric(format(Sys.Date(),"%m"))
-          # 
-          # #Assume we will not recommend anything
-          #     default.date <- NULL
-          #     
-          # #1st year of R version, after June 1st, year/06/01
-          #     if (today.year==R.year & today.month>=6) default.date <- paste0(today.year,"/06/01")
-          # #2st year of R version, year/01/01
-          #     if (today.year==R.year+1)                default.date <- paste0(today.year,"/01/01")
-          #     
-          # if (!is.null(default.date)) {    
-          #     packageStartupMessage ("--> Suggested default groundhog day: '",default.date,"'")
-          #     }
-          # } #End if consent given before
+         # suggested default date on the year when R is released and next year, no default otherwise
+          if (check.consent(ask=FALSE)==TRUE)
+          {
+            R.year <- as.numeric(format(get.r.majmin.release(),"%Y"))
+            today.year <- as.numeric(format(Sys.Date()-2,"%Y"))      #subtract 2 days so that it is treated like last year till Jan 3rd
+            today.month <- as.numeric(format(Sys.Date(),"%m"))
+
+          #Assume we will not recommend anything
+              default.date <- NULL
+
+          #1st year of R version, after June 1st, year/06/01
+              if (today.year==R.year & today.month>=6) default.date <- paste0(today.year,"/06/01")
+          #2st year of R version, year/01/01
+              if (today.year==R.year+1)                default.date <- paste0(today.year,"/01/01")
+
+          if (!is.null(default.date)) {
+              packageStartupMessage ("--> Suggested default groundhog day: '",default.date,"'")
+              }
+          } #End if consent given before
           
 
           
        
           
 
-packageStartupMessage ("##########################################\n This version: 2023 04 14 - 15:17")
+packageStartupMessage ("##########################################\n This version: 2023 04 15 - 7:08")
 
   } #End on attach
     
