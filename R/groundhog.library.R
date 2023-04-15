@@ -1,13 +1,13 @@
  #' Install & load CRAN, GitHub, and GitLab packages as current on given date 
 #' 
-#' `groundhog.library()` loads requested package(s)  
-#' as current on the requested date. If the needed version 
+#' Load requested package(s)  as current on a requested date. If the needed version 
 #' of a package, or its dependencies, is not already installed, groundhog automatically 
 #' installs it. `groundhog.library()` thus substitutes both `library()` 
 #' and `install.packages()`. There is no change in setup or configuration parameters 
 #' needed to start using groundhog; simply edit your script going between 
-#' relying on `library()` to relying on `groundhog.library()`. Groundhog often replaces packages in the
-#' default personal library. These changes can be instantaneously reversed, even months later, with [`restore.library()`]
+#' `library()` and `groundhog.library()` as needed. Groundhog often installs/uninstalls packages in the
+#' default personal library. These changes can be instantaneously reversed, 
+#' with [`restore.library()`]
 #'  
 #'@param pkg character string or vector with name of package(s) to load/install.
 #'@param date character string  (yyyy-mm-dd), or date value, with the date which 

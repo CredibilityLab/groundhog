@@ -64,14 +64,14 @@ a character vector containing all active packages for the session,
 with their version number, under the format \code{pkg_vrs}.
 }
 \description{
-\code{groundhog.library()} loads requested package(s)
-as current on the requested date. If the needed version
+Load requested package(s)  as current on a requested date. If the needed version
 of a package, or its dependencies, is not already installed, groundhog automatically
 installs it. \code{groundhog.library()} thus substitutes both \code{library()}
 and \code{install.packages()}. There is no change in setup or configuration parameters
 needed to start using groundhog; simply edit your script going between
-relying on \code{library()} to relying on \code{groundhog.library()}. Groundhog often replaces packages in the
-default personal library. These changes can be instantaneously reversed, even months later, with \code{\link[=restore.library]{restore.library()}}
+\code{library()} and \code{groundhog.library()} as needed. Groundhog often installs/uninstalls packages in the
+default personal library. These changes can be instantaneously reversed,
+with \code{\link[=restore.library]{restore.library()}}
 }
 \details{
 For more information about groundhog check out \href{http://groundhogr.com}{groundhogr.com}

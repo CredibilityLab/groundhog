@@ -9,18 +9,18 @@ restore.library(days)
 \arguments{
 \item{days}{an optional numeric argument used to choose among alternative restore points.
 When \code{days} is set, groundhog restores the personal library to the  most recent restore point, that
-is at least \code{days} days ago. For example, if there are two restore points: one from today, and one from 7 days ago,
-setting \code{days=3} would restore to the latter, and setting \code{days=8} would result in an error.
-\code{days = -1} will restore back to the oldest restore point available.}
+is at least \code{days} days ago. If it is not set it restores to the most recent restore point.
+For example, if there are two restore points: one from today, and one from 7 days ago,
+running \code{restore.library()} would restore to the former, setting \code{days=3} would restore to the latter,
+and setting \code{days=8} would result in an error. \code{days = -1} restores to the oldest restore point available.}
 }
 \description{
-Instantaneously reverse installations and removals of packages in the
-default personal library (\code{libPaths()[1]}) made by groundhog, when installing different versions
-of those packages.
+Instantaneously reverse changes made by groundhog to the default personal
+library (\code{.libPaths()[1]}).
 }
 \details{
 When groundhog installs a package, it installs it into groundhog's library.
-To find the location of this folder: \code{get.groundhog.folder()}.
+To find the location of this folder: \code{\link[=get.groundhog.folder]{get.groundhog.folder()}}.
 Groundhog then immediately moves the installed package (and its dependencies)
 to the default personal library (to find its location: \code{.libPaths()[1]}).
 Altering the packages in this folder is important for two main reasons. First,
@@ -33,17 +33,18 @@ one version of a given package, before moving new packages in, groundhog moves
 any existing other versions of those packages out, to another directory (a local archive).
 Those files are not deleted, just moved, making it easy and fast to recover.
 When the first change in the personal folder is made on a given calendar date,
-Groundhog makes a list of all packages available in the personal folder before such change,
-creating a 'restore point'. With \code{restore.library()} groundhog looks up that set of packages
-removes any packages in the personal library which were not in that restore points, and
-moves back any packages that were available but are not available now. This process will
+groundhog makes a list of all packages available in the personal folder before such change (saving
+a copy of the results from \code{installed.packages(.libPaths()[1])}), this saved file is referred to as a
+a 'restore point'. With \code{restore.library()} groundhog looks up a restore point, obtain the set of packages
+that used to be installed, and removes any packages in the personal library which were not in that restore point,
+and moves back any packages that no longer are This process will
 typically take substantially less than 10 seconds. Note that there is only one restore point
-per calendar date, so after using \code{groundhog.library} on a given day, so one effectively restores
+per calendar date, so one effectively restores
 the personal library to how it was before \emph{any} changes were made to it that day with groundhog.
 Restore points are saved permanently and can be restored at any point.
-To view saved restore dates view the hidden dataframe \code{.available.restore.points}.
+The set of restore points available is stored in the hidden dataframe \code{.available.restore.points}.
 To choose among them use the \code{days} argument in \code{restore.library}. The default is to restore
-based on the most recent restore points, so if a user installs groundhog, tests it, and wants to
+based on the most recent restore point, so if a user installs groundhog, tests it, and wants to
 undo all changes made by groundhog, the default behavior will achieve this goal.
 }
 \examples{
