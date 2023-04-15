@@ -1,14 +1,13 @@
  #' Install & load CRAN, GitHub, and GitLab packages as current on given date 
 #' 
-#' Achieve reproducible code which does not break when packages it relies on are changed, by
-#' always loading the same version of a package in a given script. Specifically, use
-#' `groundhog.library()` to load the requested package(s) and all of their dependencies, 
-#' as current on CRAN (or GitHub/GitLab) on the requested date. If the needed version 
-#' of a package is not already installed, groundhog automatically 
+#' `groundhog.library()` loads requested package(s)  
+#' as current on the requested date. If the needed version 
+#' of a package, or its dependencies, is not already installed, groundhog automatically 
 #' installs it. `groundhog.library()` thus substitutes both `library()` 
 #' and `install.packages()`. There is no change in setup or configuration parameters 
-#' needed to start or stop using groundhog; simply edit your script going between 
-#' `library()`<->`groundhog.library()` to do so.
+#' needed to start using groundhog; simply edit your script going between 
+#' relying on `library()` to relying on `groundhog.library()`. Groundhog often replaces packages in the
+#' default personal library. These changes can be instantaneously reversed, even months later, with [`restore.library()`]
 #'  
 #'@param pkg character string or vector with name of package(s) to load/install.
 #'@param date character string  (yyyy-mm-dd), or date value, with the date which 
@@ -308,33 +307,7 @@
            # new_paths<-snowball.all$installation.path
           .libPaths(c(unique(new_paths), .pkgenv[["orig_lib_paths"]]))
           
-    #4.3 Return loan needed for  snowball
-          #Get loans, data.frame with groundhog packages that have been sent to local library
-        #    loans<-get.loans()
-        #    
-        #  #Find ones we need for this package based on where they are saved in the groundhog path
-        #    loans.returning<-loans[loans$groundhog_location %in% snowball.all$installation.path,]
-        #  
-        # if (nrow(loans.returning)>0) {
-        #     
-        #   #Process them
-        #       #FROM: where this files are at now
-        #           local.folder   <-.pkgenv[["orig_lib_paths"]][1]
-        #           pkgs.to.return <-get.pkg(loans.returning$pkg_vrs)
-        #           from.local_to_groundhog <- paste0(local.folder,"/",pkgs.to.return)
-        #           
-        #       #To: where they are going
-        #           to.local_to_groundhog <- paste0(loans.returning$groundhog_location,"/",pkgs.to.return)
-        #     
-        #       #Ranem from->to
-        #           file.rename(from.local_to_groundhog, to.local_to_groundhog)
-        #           
-        #       #Drop from loans.rds 
-        #           loans<-loans[!loans$groundhog_location %in% loans.returning$groundhog_location,]
-        #           save.loans(loans.returning)
-        #   
-        # } #End if returning loans
-        #     
+  
             
             
 #5 Check conflict with previously groundhog-loaded packages
@@ -399,8 +372,6 @@
 #------------------------------------------------------------------------ 
 
 
-      
-      
 #10 Library all pkgs
       #10.1 - Return to libpath and load pkgs
       .libPaths(.pkgenv[["orig_lib_paths"]])
@@ -458,7 +429,7 @@
          #10.6 Save snowball
             #Update  column `installed` in  snowball based on what's availalbe
                 ip.path <- get.ip('groundhog')$LibPath 
-                loans.path<- get.loans()$groundhog_location
+                loans.path<- as.character(get.loans()$groundhog_location)
                 snowball$installed <- (snowball$installation.path %in% c(ip.path , loans.path) |  #if the path we want exists or is in borrwoed set
                                        snowball$pkg %in% .pkgenv[['base_pkg']])          #if in packages or in base.packages
                 

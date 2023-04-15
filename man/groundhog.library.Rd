@@ -64,15 +64,14 @@ a character vector containing all active packages for the session,
 with their version number, under the format \code{pkg_vrs}.
 }
 \description{
-Achieve reproducible code which does not break when packages it relies on are changed, by
-always loading the same version of a package in a given script. Specifically, use
-\code{groundhog.library()} to load the requested package(s) and all of their dependencies,
-as current on CRAN (or GitHub/GitLab) on the requested date. If the needed version
-of a package is not already installed, groundhog automatically
+\code{groundhog.library()} loads requested package(s)
+as current on the requested date. If the needed version
+of a package, or its dependencies, is not already installed, groundhog automatically
 installs it. \code{groundhog.library()} thus substitutes both \code{library()}
 and \code{install.packages()}. There is no change in setup or configuration parameters
-needed to start or stop using groundhog; simply edit your script going between
-\code{library()}<->\code{groundhog.library()} to do so.
+needed to start using groundhog; simply edit your script going between
+relying on \code{library()} to relying on \code{groundhog.library()}. Groundhog often replaces packages in the
+default personal library. These changes can be instantaneously reversed, even months later, with \code{\link[=restore.library]{restore.library()}}
 }
 \details{
 For more information about groundhog check out \href{http://groundhogr.com}{groundhogr.com}
