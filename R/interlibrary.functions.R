@@ -15,8 +15,7 @@
   #2 Carry out returns, if any
       if (nrow(ip.return)>0)
       {
-      message1("Returning ",nrow(ip.return)," packages from local library to groundhog library.")
-        
+       
       #2.1 Merge IP with loans() to get  groundhog location for pkgs in IP
         ip.return <-merge(ip.return, loans, by='md5')
         
@@ -44,8 +43,7 @@
   #3 Carry out backups, if any
       if (nrow(ip.backup)>0)
       {
-      message1("Removing ",nrow(ip.backup)," packages (sending from local library to backup library).")
-        
+       
       #3.1 Directory for backups  
         backup.dir <- paste0(get.groundhog.folder(),"/restore_library/",get.r.majmin(),"/")
         dir.create(backup.dir, showWarnings = FALSE, recursive = TRUE)
