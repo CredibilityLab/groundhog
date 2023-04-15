@@ -191,7 +191,7 @@ restore.library<-function(days)
   
   #10 Message
         msg = paste0("Library restoration completed.\n",
-                     n.restored, " out of ", n.total," packages restored.\n",
+                     n.restored, " out of ", n.total," packages in restore point back in local library \n",
                      "Restart the R session to proceed.")
       
       #Verify
