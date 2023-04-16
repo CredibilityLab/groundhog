@@ -12,7 +12,8 @@
       
     #2 Install all binaries
       snowball.binaries <- install.binaries(snowball,cores)
-  
+
+      
     #3 If any binary failed, change `from` in snowball to 'source'
       if (sum(snowball.binaries$success==FALSE) > 1) {
         pkg.failed <- snowball.binaries[snowball.binaries$success==FALSE, ]$pkg
