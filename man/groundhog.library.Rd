@@ -23,7 +23,7 @@ groundhog.library(
 
 \item{date}{character string  (yyyy-mm-dd), or date value, with the date which
 determines the version of the package, and all dependencies, to be loaded
-(and installed if needed). #'The most recent #'date accepted is 2 days prior
+(and installed if needed). The most recent #'date accepted is 2 days prior
 to when the code is executed.}
 
 \item{quiet.install}{logical, defaults to \code{TRUE}. When set to \code{FALSE}, displays
@@ -58,10 +58,6 @@ date entered corresponds to a more recent major R release.}
 of source packages. The default, -1, uses the total number of cores available minus 2.
 Setting \code{core}=1 leads to installing source packages, and also to downloading binaries,
 sequentially.}
-}
-\value{
-a character vector containing all active packages for the session,
-with their version number, under the format \code{pkg_vrs}.
 }
 \description{
 Load requested package(s)  as current on a requested date. If the needed version

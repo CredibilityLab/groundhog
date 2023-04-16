@@ -2,7 +2,7 @@
 % Please edit documentation in R/restore.library.R
 \name{restore.library}
 \alias{restore.library}
-\title{Restore version of packages in personal library replaced by groundhog.}
+\title{Restore default library of packages, undoing all changes made by groundhog}
 \usage{
 restore.library(days)
 }
@@ -16,17 +16,23 @@ and setting \code{days=8} would result in an error. \code{days = -1} restores to
 }
 \description{
 Instantaneously reverse changes made by groundhog to the default personal
-library (\code{.libPaths()[1]}).
+library where R packages are usually installed into.
+If you are just trying groundhog out for the first time,
+or you generally rely on base R's \code{library()} and want to use \code{groundhog.library()} for a specific
+one time purpose then you may want to run \code{restore.library()}
+when you are done with your one-time use of groundhog; you will undo any and all
+changes made by \code{groundhog}. Restoring a library takes less than a second even if the library
+has 100s of packages.
 }
 \details{
-When groundhog installs a package, it installs it into groundhog's library.
-To find the location of this folder: \code{\link[=get.groundhog.folder]{get.groundhog.folder()}}.
-Groundhog then immediately moves the installed package (and its dependencies)
-to the default personal library (to find its location: \code{.libPaths()[1]}).
-Altering the packages in this folder is important for two main reasons. First,
-R Studio often loads packages from that library before users run any code, creating
+When groundhog installs a package, it installs it into groundhog's library
+(location of that library is obtainable with \code{\link[=get.groundhog.folder]{get.groundhog.folder()}}).
+Groundhog then immediately moves the installed package(s) (and their dependencies)
+to the default personal library (location of that library obtainable with: \code{.libPaths()[1]}).
+Altering the packages in the local folder is necessary for groundhog to work properly for two main reasons. First,
+R Studio often loads packages from that library before users run the code in a script, creating
 version conflicts that cannot be avoided when attempting to load other versions of those
-packages with \code{groundhog}. Second, code often runs processes in other instances, for
+packages with \code{groundhog}. Second, R scripts often run processes in independent R sessions, for
 example when doing parallel processing. Those background processes will also look for
 packages in the default personal folder. Because the personal library can only hold
 one version of a given package, before moving new packages in, groundhog moves
@@ -36,10 +42,10 @@ When the first change in the personal folder is made on a given calendar date,
 groundhog makes a list of all packages available in the personal folder before such change (saving
 a copy of the results from \code{installed.packages(.libPaths()[1])}), this saved file is referred to as a
 a 'restore point'. With \code{restore.library()} groundhog looks up a restore point, obtain the set of packages
-that used to be installed, and removes any packages in the personal library which were not in that restore point,
-and moves back any packages that no longer are This process will
-typically take substantially less than 10 seconds. Note that there is only one restore point
-per calendar date, so one effectively restores
+that used to be installed, and removes any packages \emph{installed by groundhog} which are in the personal library
+but were not in that restore point; similarly, it moves back to the local library any packages \emph{removed by groundhog}
+that were in the restore point but are not currently there. This process is essentially instantaneous even for 100+ packages.
+Note that there is only one restore point per calendar date, so one effectively restores
 the personal library to how it was before \emph{any} changes were made to it that day with groundhog.
 Restore points are saved permanently and can be restored at any point.
 The set of restore points available is stored in the hidden dataframe \code{.available.restore.points}.
