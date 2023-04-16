@@ -1,4 +1,10 @@
-#Takes a snowball and it lends all packages from the groundhog library to the default one
+#Takes a snowball, lends packages to local library, and takes packages from local library
+#either back to groundhog library or to a backup library (for pkgs not installed with groundhog originally)
+#-------------------------------------------------------------------------------------------------------------
+#1 Early return
+#2 Save restore point
+#3
+
 
   localize.snowball <- function(snowball)
   {
@@ -8,7 +14,6 @@
     #1 Early return if empty snowball
       if (nrow(snowball)==0) return(TRUE)
     
-
     #2 Restore point: save dataframe with installed packages with today's date if not yet saved, for possible restore later
 
       restore_path <- paste0(get.groundhog.folder(),"/restore_points/", get.r.majmin(), "/",Sys.Date(),".rds")
@@ -41,74 +46,63 @@
       
   #4. Installed.packages: ip (local), ip.groundhog, and ip.backup
       
-          #4.1 Local
+          #4.1 installed.packages #utils #59
+            ip.local     <- get.ip('local')     # .libPaths[1]
+            ip.groundhog <- get.ip('groundhog') # in all of groundog
+            ip.backup    <- get.ip('backup')    # pks removed from local and not belonging to groundhog
+            loans        <- get.loans()         #package lent already from groundhog to personal library[1] (#utils #60)
+
               
-            #Get installed.packages in the local library (the first of them if many)
-            #for restore we use  ALL local libraries ip.all
-            #usually there will be just one local and ip.all[] and ip[] will be the same
-      
-                ip <- get.ip('local')  #utils #59 
-              
-                
-            #We will do early return if all pkgs in the snowball have been borrowed already
-                  loans <- get.loans()      #package lent already from groundhog to personal library[1] (#utils #60)
-                  
-                
             #NOTE on MD5 vs 'pvs' to identify packages:
                 #Nutshell
-                #IP <-> snowballs, with pvs (pkg_vrs_sha)
-                #IP <-> loans, with MD5
+                #ip <-> snowballs, with pvs (pkg_vrs_sha)  | ip: installed.packages()
+                #ip <-> loans, with MD5
                 
                   #same pkg_vrs but different commits, and remotes pkgs from CRAN pkgs with the same pkg_vrs (rio from CRAN vs rio from github)
                   #(sha is "" for pkgs originally on CRAN) 
                 
-                    
-                #more details
-                #We not have MD5 for pkgs in snowballs where we have not yet obtained downloaded the package, 
-                #so to compare snowballs with IP (installed packages) we use pvs
-                #Conversely, we have sha for snowball and for loans, but we do not have it for installed.packages because that is not 
-                #obtainable from the IP
-                
-                  
-                  #if sha is NA, make it "", plays more nicely with paste() functions
+            #4.2 if sha is NA, make it "", plays more nicely with paste() functions
                     snowball$sha[is.na(snowball$sha)] <-''
                     
-                  #pvs for snowball and loans()
+            #4.3 pvs for snowball and loans()
                     snowball.pvs <- ifelse(snowball$sha=="",  snowball$pkg_vrs,  paste0(snowball$pkg_vrs , "@" , snowball$sha))
                     loans.pvs    <- ifelse(loans$sha=="",     loans$pkg_vrs,     paste0(loans$pkg_vrs    , "@" , loans$sha)) 
                     
-                  #Subset of the snowball that we have borrowed
+            #4.4 Subset of the snowball that we have borrowed
                     borrowed <- snowball.pvs %in% loans.pvs
                   
-                #If all of them are, nothing left to do, done localizing
+            #4.5 If all of them are, nothing left to do, done localizing
                 if (all(borrowed)) return(invisible(TRUE))
     
-            #Message on how many
+            #4.6 How many will be lent 
               n.lend <- sum(!borrowed)
 
-          #4.2 installed.packages() in groundhog  and backup
-              ip.groundhog <- get.ip('groundhog') 
-              ip.backup    <- get.ip('backup')
+    #-------------------------------------------------------------- 
               
               
-    #5 Purge
+    #5 Purge: pkgs to remove from local
     
-      #5.1 Get ip.purge:  pkgs that need to be purged  from the local library 
-      #    They are a pkg we have in the snowball, but the version of it in the local library  did not originate in a groundhog installation
+      #5.1 Pkgs in snowball, but the version of it in the local library  did not originate in a groundhog installation
+      # we know thei pvs does not match (see #4.4 above, becuase they are !borrowed)
                 
-          ip.purge <- ip[(ip$Package %in% snowball$pkg[!borrowed]),]
+          ip.purge <- ip.local[(ip.local$Package %in% snowball$pkg[!borrowed]),]
           
           
       #5.2 Process purge, deleting or returning to groundhog depending on origin of pkg in local library now
           
            purge.local(ip.purge , loans) #see Function 1 in interlibrary.functions.R
+           
+           #This is a separate function because it is used also with restore.libary()
+           #so we remove pkgs from local when installling new ones and when restoring library.
+           
+    #-------------------------------------------------------------- 
   
              
     #6 Borrow
-      
+    #6.1 Read loans again (it was probably update in #5 in function `purge.local`, see #2.5 in that script, save.loans() after making returns)
+           
     #Find pkgs that need to come to local library: new loans
       snowball.lend <- snowball[!borrowed,]
-      
       if (nrow(snowball.lend)>0)
       {
       #From groundhog to local
@@ -122,11 +116,13 @@
           {
           if (file.exists(fk)) unlink(fk,recursive=TRUE)
           }
-    
-        
-      #Move to local
-        outcome.loans <- file.rename(from.groundhog_to_local , to.groundhog_to_local)
-        
+        #Sys.sleep(30)
+        outcome.loans=c()
+        for (k in 1:length(from.groundhog_to_local))
+        {
+        outcome.loans[k] <- file.rename.robust(from.groundhog_to_local[k] , to.groundhog_to_local[k])
+        }
+
       #add to loans
         #vector with path to all DESCRIPTION files to store md5 in loans[]
           description.path <- paste0(to.groundhog_to_local , "/DESCRIPTION")  

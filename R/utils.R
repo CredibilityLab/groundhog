@@ -58,6 +58,8 @@
 #58 Get ip.groundhog():        : installed.packages data.frame for all packages in groundhog library and loans
 #59 get ip.backup()            : same for all packages that have been saved to the backup folder
 #60 get.loans() & /save.loans(): load and save database with all lent packages
+#61 file.rename.robust:        :  rename a file ony once it can be renamed to itself
+
 ####################################################################################
     
 
@@ -692,7 +694,7 @@
         cookie_path <- file.path(cookies_dir, paste0(cookie_name,".csv"))
         
       #Exists? Return 999999 if it does not, contents if it does
-        if (!file.exists(cookie_path)) return (999999)
+        if (!file.exists(cookie_path)) return (99999999)
         if (file.exists(cookie_path)) {
           time0 <- utils::read.csv(cookie_path)$x  
           seconds <- as.numeric(Sys.time()-time0)
@@ -1077,7 +1079,8 @@ get.parallel.time<-function(times,cores)
     return(.pkgenv[['conflicts']])
     }
 
-#58 Get ip.groundhog()
+  
+#58 get.ip
   get.ip <- function(location)
   {
     #1 Get all subfolders for backup and groundhog
@@ -1100,12 +1103,12 @@ get.parallel.time<-function(times,cores)
                   all.paths<- list.files(master_path,full.names=TRUE)
             }
 
+
         #1.2 Local  
           if (location=='local')     all.paths <- .pkgenv[["orig_lib_paths"]][1]
           if (location=='all_local') all.paths <- .pkgenv[["orig_lib_paths"]][[-length(.pkgenv[["orig_lib_paths"]])]]
 
-          
-        
+
      #2 Get the installed.packages
         ip <- data.frame(utils::installed.packages(all.paths), row.names = NULL, stringsAsFactors = FALSE)
          
@@ -1166,4 +1169,67 @@ get.parallel.time<-function(times,cores)
      dir.create(dirname(loans_path), showWarnings = FALSE,recursive = TRUE)
      saveRDS(loans,loans_path,version=2,compress=FALSE)
    }
+   
+
+   
+  #61 file.rename or copy otherwise
+   file.rename.robust<-function(from,to)
+   {
+     #1 Assume method is renaming
+      method.to.transfer <- 'renaming'
+     
+     
+     #2. Cookie path to indicate we copy instead of rename, decision lasts 1 year 
+        cookie.name <- paste0("copy_instead_of_rename.for.R-",get.r.majmin())
+        days.since.cookie <- get.minutes.since.cookie(cookie.name)/(24*60*60)
+        if (days.since.cookie<365) method.to.transfer <- 'copying' 
+        
+    #3 Rename
+        if (method.to.transfer=='renaming') {
+          outcome.rename <- file.rename(from,to)
+          }
+
+        
+    #4 Copy and delete
+        if (method.to.transfer=='copying')
+            {
+            outcome.copy<-file.copy(from,to)
+            
+     
+     
+     
+   }
+   
+   }
+   
+  #------------------
+  #61 Robust file rename
+   
+   #Note: when using older R versions on a dropbox folder,
+   #file renaming would often get an error, the files were being
+   #remaed before they were ready. this is a workaround
+   #A loop attempts to rename the file to the same name
+   #Only when it succeeds, does it try to rename it to teh actual name of interest
+   #There is a 2 second delay between attempts
+   
+   
+   file.rename.robust <- function(from,to) {
+      #Loop  attempting to rename to its existing name
+        for (j in 1:60) 
+        {
+        outcome.j <- file.rename(from,from)  
+        #When it succeeds, rename to the 'to' name (which actually moves the file)
+        if (outcome.j==TRUE) {
+            outcome.n = file.rename(from, to)
+            break
+        } #End if pilot worked renaming to its existing name
+      #Wait 2 seconds before trying again
+        Sys.sleep(2)
+    
+        } #End loop
+    
+    #If after 2*60 seconds minuts no luck, just copy paste it (PENDING)
+     
+    }
+  
    
