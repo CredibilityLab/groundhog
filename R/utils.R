@@ -1195,8 +1195,8 @@ get.parallel.time<-function(times,cores)
           pkg <- get.pkg(basename(zipfile))
         
         #File listed inside the zip file
-          if (ext=='zip') files.in.zip    = unzip(zipfile , list=T) #(does not really unzip, just lists contents)
-          if (ext=='tar') files.in.zip    = untar(zipfile , list=T) 
+          if (ext=='zip') files.in.zip    = utils::unzip(zipfile , list=T) #(does not really unzip, just lists contents)
+          if (ext=='tar') files.in.zip    = utils::untar(zipfile , list=T) 
         
         #Files already outzipped
           files.out.zip   = list.files(outdir ,recursive = TRUE  ,all.files = TRUE,include.dirs = TRUE)
@@ -1210,4 +1210,23 @@ get.parallel.time<-function(times,cores)
       
      }  
      
+   #62 get drive from path whether they use forward or backwards slashes
+   get.drive=function(path)
+    {
+    parts  <- strsplit(path,"/")[[1]]            
+    drive1 <- ifelse(parts[1]=='',parts[2],parts[1])  #if path='/home/' then it starts with "/" and we want instead what comes next
+    drive2 <- strsplit(drive1,"\\\\")[[1]][1]         #need to double escape to get \\
+    drive2 <- tolower(drive2)
+    return(drive2)
+  }
+
+
+
+
+  #63 Slower with dropbox
+   groundhog.in.dropbox<-function()
+   {
+    return(regexpr('dropbox', tolower(get.groundhog.folder()))>0)
+        
+   }
    
