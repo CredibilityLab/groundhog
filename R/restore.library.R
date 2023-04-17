@@ -7,8 +7,8 @@
 #' one time purpose then you may want to run `restore.library()` 
 #' when you are done with your one-time use of groundhog; you will undo any and all 
 #' changes made by `groundhog`. Restoring a library takes less than a second even if the library 
-#' has 100s of packages.
-#'  
+#' has 100s of packages 
+#'   
 #'@param days an optional numeric argument used to choose among alternative restore points.
 #' When `days` is set, groundhog restores the personal library to the  most recent restore point, that 
 #' is at least `days` days ago. If it is not set it restores to the most recent restore point. 
@@ -53,6 +53,8 @@
 #'To choose among them use the `days` argument in `restore.library`. The default is to restore 
 #'based on the most recent restore point, so if a user installs groundhog, tests it, and wants to 
 #'undo all changes made by groundhog, the default behavior will achieve this goal.
+#'Note: restoring can take a few minutes if the groundhog folder is on a different
+#'drive from the default personal R library (e.g., two different hard drives) or if it is in Dropbox.
 
 #' @export
 #'

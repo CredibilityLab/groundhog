@@ -22,7 +22,7 @@ or you generally rely on base R's \code{library()} and want to use \code{groundh
 one time purpose then you may want to run \code{restore.library()}
 when you are done with your one-time use of groundhog; you will undo any and all
 changes made by \code{groundhog}. Restoring a library takes less than a second even if the library
-has 100s of packages.
+has 100s of packages
 }
 \details{
 When groundhog installs a package, it installs it into groundhog's library
@@ -52,6 +52,8 @@ The set of restore points available is stored in the hidden dataframe \code{.ava
 To choose among them use the \code{days} argument in \code{restore.library}. The default is to restore
 based on the most recent restore point, so if a user installs groundhog, tests it, and wants to
 undo all changes made by groundhog, the default behavior will achieve this goal.
+Note: restoring can take a few minutes if the groundhog folder is on a different
+drive from the default personal R library (e.g., two different hard drives) or if it is in Dropbox.
 }
 \examples{
 \dontrun{
