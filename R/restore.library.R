@@ -59,7 +59,7 @@
 #' @export
 #'
 
-restore.library<-function(days)
+restore.library<-function(days=0)
   {
   
   #1 Current IP
@@ -87,21 +87,16 @@ restore.library<-function(days)
     #2.4 Turn filenames to dates
       ip_dates <- as.Date(substr(ip_files, 0,10))  
       
-    #2.5 If missing `days` argument, get the latest
-      if (missing(days)) {
-        datek <- max(ip_dates)
-      }
-      
-    #2.6 else, get the new date prior to `days`
-      if (!missing(days)) {
+   
+     #2.5 Set date for restore based on days
           days.since <- Sys.Date() - ip_dates
-          ip_dates <- ip_dates[days.since > days]
+          ip_dates <- ip_dates[days.since >= days]
           if (length(ip_dates)==0) {
             message("The oldest restore point is from ",max(days.since)," days ago.")
             exit()
           }
           datek <- max(ip_dates)
-      }
+      
       
       
 
@@ -220,12 +215,12 @@ restore.library<-function(days)
             skip.other_pkg <- file.exists(paste0(to,"/", ip.add$pkg))
             skip <- skip.no_backup | skip.other_pkg
           
-          #Move 
-            outcome <- file.rename(from[!skip] , to[!skip])
             
+			
 			for (k in 1:length(from[!skip]))
 			  {
-			  outcome[k] <- file.rename.robust(from[!skip][k] , to[!skip][k])
+			  
+			  file.rename.robust(from[!skip][k] , to[!skip][k])
 			  #See file.rename.robust.R() it tries renaming only when file is ready, and switches to copying upon failure
 			  
 			  }
