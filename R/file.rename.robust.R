@@ -83,7 +83,7 @@
               
               gstop(format.msg(msg_copy_instead_of_renaming))
                    
-              }#End j=jtot
+              }#End j=jtot & outcome=FALSE
           
           
         #2.7 If renaming is attempted (outcome.j) 
@@ -134,6 +134,6 @@
             msg<-paste0("Failed copying '" , from , "' to '" , to , "'")
             gstop(msg)
           return(outcome)
-          }
-        }
-   }
+          } #End if outcome!=TRUE
+        } #End if copy_an_delete
+   }#End function
