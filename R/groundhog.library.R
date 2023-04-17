@@ -315,6 +315,16 @@
       check.conflict.before(snowball=snowball.all, pkg.requested=pkg, ignore.deps, date)  #check.snowball.conflict.R
         
 #6 Install snowball 
+      
+    #6.0 Reminder of dropbox warning if it's in copy-mode and dropbox folder
+      if (groundhog.in.dropbox()==TRUE & cookie.exists("copy_instead_of_renaming")) {
+            message("Reminder: having groundhog folder in Dropbox makes things slower.\n",
+                    "You can use `set.groundhog.folder(<path>)` to change its location.\n",
+                    "You can also run `try.renaming.method.again()` to continue using the\n",
+                    "dropbox folder but give another try to the faster package-copying \n",
+                    "method which *ocassionally* does not work with Dropbox folders.\n")
+          }
+      
   
     #6.1 Do we need to install on background?
     #   Any source package that needs install is loaded and thus needs background install?
