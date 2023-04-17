@@ -1117,7 +1117,7 @@ get.parallel.time<-function(times,cores)
 
         #1.2 Local  
           if (location=='local')     all.paths <- .pkgenv[["orig_lib_paths"]][1]
-          if (location=='all_local') all.paths <- .pkgenv[["orig_lib_paths"]][[-length(.pkgenv[["orig_lib_paths"]])]]
+          if (location=='all_local') all.paths <- .pkgenv[["orig_lib_paths"]][-length(.pkgenv[["orig_lib_paths"]])]
 
 
      #2 Get the installed.packages
