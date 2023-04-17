@@ -4,7 +4,7 @@
 \alias{restore.library}
 \title{Restore default library of packages, undoing all changes made by groundhog}
 \usage{
-restore.library(days)
+restore.library(days = 0)
 }
 \arguments{
 \item{days}{an optional numeric argument used to choose among alternative restore points.
