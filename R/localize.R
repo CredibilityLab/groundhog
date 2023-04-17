@@ -23,16 +23,16 @@
           dir.create(dirname(restore_path),showWarnings = FALSE,recursive = TRUE)
         
         #Get IP
-          ip.all <- get.ip('all_local')  #utils $59
+          ip.local <- get.ip('local')  #utils #59
           
         #Drop base pkgs
-          ip.all <- ip.all[!ip.all$Package %in% base_pkg(), ]
+          ip.local <- ip.local[!ip.local$Package %in% base_pkg(), ]
       
         #Drop possible duplicates (if multiple paths exists with the same package, we will work with the first one, and replace that one)
-          ip.all<-ip.all[! duplicated(ip.all$Package),]
+           ip.local<- ip.local[! duplicated( ip.local$Package),]
 
         #Save it
-          saveRDS(ip.all , restore_path)
+          saveRDS(ip.local , restore_path)
           
         #Add to restore points in environment
           .available.restore.points <<- get.restore.points() #utils #55, loaded in zzz.R, now we add the new date
@@ -102,16 +102,18 @@
     #6.1 Read loans again (it was probably update in #5 in function `purge.local`, see #2.5 in that script, save.loans() after making returns)
            
     #Find pkgs that need to come to local library: new loans
-      snowball.lend <- snowball[!borrowed,]
-      if (nrow(snowball.lend)>0)
+      
+      if (n.lend>0)
       {
+        snowball.lend <- snowball[!borrowed,]
+        
       #From groundhog to local
         local.library <- .pkgenv[["orig_lib_paths"]][1]
         from.groundhog_to_local <- paste0(snowball.lend$installation.path, "/", snowball.lend$pkg)
         to.groundhog_to_local   <- paste0(local.library,"/",snowball.lend$pkg)
       
         
-       #As precaution, delete any destination folder
+       #As precaution, delete any destination folder k=1
         for (fk in to.groundhog_to_local)
           {
           if (file.exists(fk)) unlink(fk,recursive=TRUE)
@@ -120,7 +122,7 @@
         outcome.loans <- c()
         for (k in 1:length(from.groundhog_to_local))
         {
-        outcome.loans[k] <- file.rename.robust(from.groundhog_to_local[k] , to.groundhog_to_local[k])
+        outcome.loans[k] <- file.rename.robust(from=from.groundhog_to_local[k] , to=to.groundhog_to_local[k])
         }
         
 
