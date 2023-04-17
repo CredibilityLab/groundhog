@@ -79,21 +79,43 @@ set.groundhog.folder <- function(path) {
   
   if (missing(path)) gstop("You forgot to enter the <path> you wanted to set.")
   
+  #DROPBOX
   #Warning if path includes dropbox (users can over-rule it by rerunning it within 10 minutes)
     if (get.minutes.since.cookie('dropbox_path')>10)
       {
       if  (regexpr('dropbox', tolower(path))>0) {
         save.cookie('dropbox_path')
         msg=paste0("The path '",path,"' seems to be a Dropbox folder. Groundhog will be slower and ",
-            "more likely to produce ocassional errors if the library is on Dropbox; ",
+            "more likely to produce occasional errors if the library is on Dropbox; ",
             "consider using a different path. If you want to set it to '",path,"' anyway, ",
-            "please run `set.groundhog.folder('",path,"')` within 10 minutes.")
+            "bypass this check by running  `set.groundhog.folder('",path,"')` again (within 10 minutes).")
         message(format.msg(msg))
-        exit()
+        return(invisible(FALSE))
         
       }
     }
 
+ #TWO DRIVES
+ #Warning if path includes two home drives
+    if (get.minutes.since.cookie('two_drives')>10)
+      {
+      if (get.drive(get.groundhog.folder())!=get.drive(.libPaths()[1])) 
+      {
+        save.cookie('two_drives')
+        msg<- paste0("The path '",path,"' you chose for the groundhog folder, ",
+                     " seems to be a on a different drive (AKA volume) than ",
+                     "the default R library '",.libPaths(),"'. Groundhog will be slower and ",
+                      "more likely to produce occasional  errors if this is indeed the case. It is ",
+                     "strongly recommended to ensure the same physical drive contains the groundhog and the ",
+                     "default R personal library. If you want to anyway set the path to '",path,"' ",
+                     "bypass this check by running  `set.groundhog.folder('",path,"')` again (within 10 minutes).")
+        
+        message(format.msg(msg))
+        return(invisible(FALSE))
+      } #End if two-drives check
+        
+      } #End if two drives cookie
+    
   
   #Set main folder with 'cookie files' and default for library
     main_folder <-  paste0(path.expand("~"), "/R_groundhog/")
@@ -138,42 +160,7 @@ set.groundhog.folder <- function(path) {
     if (paste0(fw(dirname(path)),"/")==fw(main_folder)) message1("\nYou can change the location at any time running  `set.groundhog.folder(<path>)`")
     #fw() utils.R #50
     
-  #Verify we can rename files between here and .libPaths()
-        #Find path where groundhog is installed
-          ip.local     <- get.ip('local')
-          ip.groundhog <- ip.local[ip.local$Package=="groundhog",]
-          
-        #Make a text file there to test with
-          path2        <- paste0(ip.groundhog$LibPath,"/groundhog/testing ability to rename.txt")
-          write('testing ability to rename',path2)
-    
-        #Set path in groundhog folder to rename that file to
-          path3        <- paste0(path, "/testing ability to rename.txt")
-   
-
-        #Rename it, delete file,  and evaluate success
-           outcome      <- file.rename(path2,path3)
            
-        if (outcome==FALSE) {
-              msg=paste0("Groundhog is unable to quickly move files between the directory ",
-                      "where packages are installed by R '",.libPaths()[1], "' and the selected ",
-                      "groundhog folder '", path, "'. This usually occur when these ",
-                      "two directories are on different volumes (e.g., USB drive vs hard ",
-                      "drive or external drive). Groundhog will still work, but it will be ",
-                      "slower than it would otherwise be, as it will have to move packages (copy & delete)",
-                      "instead of renaming them.")
-              
-              message(format.msg(msg))
-              save.cookie("copy_instead_of_renaming")
-              
-            #Delete file in old location
-              unlink(path2)
-    
-              } #End if it failed
-           
-          #If success, only delete the file in new location
-          if (outcome==TRUE) {
-           # unlink(path3)
-          }
+  
            
         } #End of set.groundhog.folder
