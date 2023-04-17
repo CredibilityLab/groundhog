@@ -42,9 +42,9 @@ purge.local <- function (ip.purge , loans)
           }
          
           #Any failures?
-          if (mean(outcome.return)<1) {
-            message("groundhog says:\nwarning. The following folders failed to be created:\n",pasteQC(to.local_to_groundhog[!outcome.return]))
-          }
+          #if (mean(outcome.return)<1) {
+           # message("groundhog says:\nwarning. The following folders failed to be created:\n",pasteQC(to.local_to_groundhog[!outcome.return]))
+          #}
           
            
       #2.5 remove returned packages from loans
@@ -77,15 +77,15 @@ purge.local <- function (ip.purge , loans)
 		outcome.backup <- c()
          for (k in 1:length(from.local_to_backup))
           {
-          outcome.backup[k] <- file.rename.robust(from.local_to_backup[new][k] , to.local_to_backup[new][k])
+          outcome.backup[k] <- file.rename.robust(from=from.local_to_backup[new][k] , to= to.local_to_backup[new][k])
           #See file.rename.robust.R() it tries renaming only when file is ready, and switches to copying upon failure
           
           }
         
           #Any failures?
-          if (mean(outcome.backup)<1) {
-            message("groundhog says:\nwarning. The following folders failed to be created:\n",pasteQC(to.local_to_backup[!outcome.backup]))
-          }
+          #if (mean(outcome.backup)<1) {
+           # message("groundhog says:\nwarning. The following folders failed to be created:\n",pasteQC(to.local_to_backup[!outcome.backup]))
+          #}
         
       #3.5 Delete backup files that somehow already are backed up
         unlink(from.local_to_backup[!new],recursive = TRUE)
