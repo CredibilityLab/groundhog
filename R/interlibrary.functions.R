@@ -5,7 +5,8 @@
 
 purge.local <- function (ip.purge , loans)
   {
-    
+   
+
   #1 Allocate to be purged packages to return to groundhog vs to back up 
   #   If MD5 matches loan, return it, else goes to backup
       ip.return <- ip.purge[ip.purge$md5 %in% loans$md5,] 
@@ -31,11 +32,11 @@ purge.local <- function (ip.purge , loans)
           dir.create(dirname(fk),recursive = TRUE,showWarnings = FALSE)
           }
         
-      #2.4 Execute
-		  outcome.return <-c ()
+      #2.4 Execute #for debugging:  k=1
+		  outcome.return <-c () 
           for (k in 1:length(from.local_to_groundhog))
           {
-          outcome.return[k] <- file.rename.robust(from.local_to_groundhog[k] , to.local_to_groundhog[k])
+          outcome.return[k] <- file.rename.robust(from=from.local_to_groundhog[k] , to= to.local_to_groundhog[k])
           
           #See file.rename.robust.R() it tries renaming only when file is ready, and switches to copying upon failure
           
@@ -77,6 +78,8 @@ purge.local <- function (ip.purge , loans)
 		outcome.backup <- c()
          for (k in 1:length(from.local_to_backup))
           {
+           
+
           outcome.backup[k] <- file.rename.robust(from=from.local_to_backup[new][k] , to= to.local_to_backup[new][k])
           #See file.rename.robust.R() it tries renaming only when file is ready, and switches to copying upon failure
           
