@@ -83,7 +83,7 @@
     #5 Purge: pkgs to remove from local
     
       #5.1 Pkgs in snowball, but the version of it in the local library  did not originate in a groundhog installation
-      # we know thei pvs does not match (see #4.4 above, becuase they are !borrowed)
+      # we know their pvs does not match (see #4.4 above, because they are !borrowed)
                 
           ip.purge <- ip.local[(ip.local$Package %in% snowball$pkg[!borrowed]),]
           
@@ -92,8 +92,8 @@
           
            purge.local(ip.purge , loans) #see Function 1 in interlibrary.functions.R
            
-           #This is a separate function because it is used also with restore.libary()
-           #so we remove pkgs from local when installling new ones and when restoring library.
+           #This is a separate function because it is used also with restore.library()
+           #so we remove pkgs from local when installing new ones and when restoring library.
            
     #-------------------------------------------------------------- 
   
@@ -116,12 +116,13 @@
           {
           if (file.exists(fk)) unlink(fk,recursive=TRUE)
           }
-        #Sys.sleep(30)
-        outcome.loans=c()
+
+        outcome.loans <- c()
         for (k in 1:length(from.groundhog_to_local))
         {
         outcome.loans[k] <- file.rename.robust(from.groundhog_to_local[k] , to.groundhog_to_local[k])
         }
+        
 
       #add to loans
         #vector with path to all DESCRIPTION files to store md5 in loans[]

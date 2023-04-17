@@ -146,6 +146,20 @@
                   if (ext=="zip") utils::unzip(zk, exdir=outfile)
                   if (ext!="zip") utils::untar(zk, exdir=outfile)  
 					
+                #Verify installation has finished (in Dropbox there can be a substantial delay, 
+                #this will prevent attempting to copy before it's done)
+                  # for (kv in 1:60) {
+                  #   verify.outcome <- verify.unzip(zk, outfile) #utilS #61 (compares # of files in zip vs outzipped)
+                  #   
+                  #   #If verified, break and
+                  #     if (verify.outcome==TRUE) break
+                  #   
+                  #   #If not verified, give it 5 seconds, and check again
+                  #     if (verify.outcome==FALSE) {
+                  #       Sys.sleep(5)
+                  #     }
+                  # } #ENd loop
+                  
 				#Delete it
 					unlink(zk)
              

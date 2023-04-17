@@ -374,7 +374,26 @@
       #10.1 - Return to libpath and load pkgs
       .libPaths(.pkgenv[["orig_lib_paths"]])
  
-     #10.2 do library
+      
+      
+     #10.2 #verify pkg is indeed available in local
+        ip.local<-get.ip('local')
+        if (!pkgk %in% ip.local$Package) {
+          msg <- paste0("Failed in attempt to load ",pkgk,". \n",
+                "Please simply run groundhog.library() again before troubleshooting deeper.")
+          
+        #Add driobix nsg
+          if  (regexpr('dropbox', tolower(get.groundhog.folder()))>0) {
+                            msg <-paste0(msg,"\nThis issue is likely caused because the groundhog folder is in Dropbox\n",
+                                    "You can change its location with `set.groundhog.folder()`")
+            } #End if dropbox
+          
+          gstop(msg)
+          
+        }
+          
+      
+      #10.3 library()
         for (pkgk in pkg) {
           base.library(pkgk, character.only=TRUE)
         }

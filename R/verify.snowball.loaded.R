@@ -66,17 +66,22 @@
       #3.5 Warning if something is not available  is available
          
          if (n.mismatch>0) {
-          message("WARNING\n",
-                  "The package '",pkg_vrs,"' depends on ", n, " other packages.\n",
-                  "Groundhog should have obtained the versions of those packages as\n",
-                  "available on the entered date. However, the final check identified that ", n.mismatch, "\n",
-                  "of them were obtained for a version which does not match.\n",
-                  "Please check out 'https://groundhogr.com/troubleshooting' to see if the\n",
+          msg=paste0("The package '",pkg_vrs,"' depends on ", n, " other packages.",
+                  "Groundhog should have obtained the versions of those packages as ",
+                  "available on the entered date. However, the final check identified that ", n.mismatch, 
+                  " of them were obtained for a version which does not match.",
+                  "Please check out 'https://groundhogr.com/troubleshooting' to see if the",
                   "source of this problem is known.")
+                  # Among the mismatching packages, the requested ones are ",
+                  # pasteQC(snowball$pkg_vrs[!snowball.match])," the obtained packages are ",
+                  # pasteQC(ip$pkg_vrs[ip$pkg %in% snowball$pkg[!snowball.match]])
+                  #)
            
           #Use utils.R function to get formatted and sorted list of needed vs found
-           #mismatched_versions_report <- get.mismatched_versions_report(found.pkg_vrs = available.pkg_vrs, need.pkg_vrs = snowball$pkg_vrs)
-           #message1(mismatched_versions_report) 
+           
+           mismatched_versions_report <- get.mismatched_versions_report(found.pkg_vrs = ip$pkg_vrs[ip$pkg %in% snowball$pkg[!snowball.match]],
+                                                                        need.pkg_vrs  = snowball$pkg_vrs[!snowball.match])
+           message1(mismatched_versions_report) 
            return(FALSE)
            }
 

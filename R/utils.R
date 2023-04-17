@@ -546,7 +546,7 @@
 #35 Format msg: format output to have fixed width and starting symbol (e.g., "|    ")
     
     
- format.msg <- function(msg,width=70, header='IMPORTANT.', pre="|")
+ format.msg <- function(msg,width=70, header='IMPORTANT.', pre="|   ")
 {
   #Line counter
     j<-0
@@ -686,22 +686,33 @@
           utils::write.csv(as.numeric(Sys.time()),cookie_path,row.names = FALSE)
         }
         
-   #39.2 READ
+     #39.2 Does cookie exist
+        cookie.exists<-function(cookie_name)
+        {
+          cookies_dir <- paste0(get.groundhog.folder(),"/cookies")
+          cookie_path <- file.path(cookies_dir, paste0(cookie_name,".csv"))
+          return (file.exists(cookie_path)) 
+       }
+          
+        
+   #39.3 Minutes since creation
       get.minutes.since.cookie <- function(cookie_name)
       {
-      #Cookie path
-        cookies_dir <- paste0(get.groundhog.folder(),"/cookies")
-        cookie_path <- file.path(cookies_dir, paste0(cookie_name,".csv"))
-        
+      #paths
+          cookies_dir <- paste0(get.groundhog.folder(),"/cookies")
+          cookie_path <- file.path(cookies_dir, paste0(cookie_name,".csv"))
+
       #Exists? Return 999999 if it does not, contents if it does
         if (!file.exists(cookie_path)) return (99999999)
-        if (file.exists(cookie_path)) {
+        if (file.exists(cookie_path))  {
           time0 <- utils::read.csv(cookie_path)$x  
           seconds <- as.numeric(Sys.time()-time0)
           minutes <- seconds/60
           return(minutes)
         }
      }#End of read cookie
+      
+  
    
    
 #40 get.repos_from.snowball()
@@ -1169,67 +1180,34 @@ get.parallel.time<-function(times,cores)
      dir.create(dirname(loans_path), showWarnings = FALSE,recursive = TRUE)
      saveRDS(loans,loans_path,version=2,compress=FALSE)
    }
-   
 
    
-  #61 file.rename or copy otherwise
-   file.rename.robust<-function(from,to)
-   {
-     #1 Assume method is renaming
-      method.to.transfer <- 'renaming'
-     
-     
-     #2. Cookie path to indicate we copy instead of rename, decision lasts 1 year 
-        cookie.name <- paste0("copy_instead_of_rename.for.R-",get.r.majmin())
-        days.since.cookie <- get.minutes.since.cookie(cookie.name)/(24*60*60)
-        if (days.since.cookie<365) method.to.transfer <- 'copying' 
-        
-    #3 Rename
-        if (method.to.transfer=='renaming') {
-          outcome.rename <- file.rename(from,to)
-          }
+ #61 Verify unzipping has finished
+   
+    
+     verify.unzip<-function(zipfile,outdir)
+   
+      {
+        #Extension
+          ext <- tools::file_ext(zipfile)
 
+        #pkg name
+          pkg <- get.pkg(basename(zipfile))
         
-    #4 Copy and delete
-        if (method.to.transfer=='copying')
-            {
-            outcome.copy<-file.copy(from,to)
-            
+        #File listed inside the zip file
+          if (ext=='zip') files.in.zip    = unzip(zipfile , list=T) #(does not really unzip, just lists contents)
+          if (ext=='tar') files.in.zip    = untar(zipfile , list=T) 
+        
+        #Files already outzipped
+          files.out.zip   = list.files(outdir ,recursive = TRUE  ,all.files = TRUE,include.dirs = TRUE)
+
+        #If same number, verify is TRUE
+          verify <- FALSE
+          if (length(files.out.zip)==length(files.in.zip$Name)) verify <- TRUE
+
+           
+        return(verify)
+      
+     }  
      
-     
-     
-   }
-   
-   }
-   
-  #------------------
-  #61 Robust file rename
-   
-   #Note: when using older R versions on a dropbox folder,
-   #file renaming would often get an error, the files were being
-   #remaed before they were ready. this is a workaround
-   #A loop attempts to rename the file to the same name
-   #Only when it succeeds, does it try to rename it to teh actual name of interest
-   #There is a 2 second delay between attempts
-   
-   
-   file.rename.robust <- function(from,to) {
-      #Loop  attempting to rename to its existing name
-        for (j in 1:60) 
-        {
-        outcome.j <- file.rename(from,from)  
-        #When it succeeds, rename to the 'to' name (which actually moves the file)
-        if (outcome.j==TRUE) {
-            outcome.n = file.rename(from, to)
-            break
-        } #End if pilot worked renaming to its existing name
-      #Wait 2 seconds before trying again
-        Sys.sleep(2)
-    
-        } #End loop
-    
-    #If after 2*60 seconds minuts no luck, just copy paste it (PENDING)
-     
-    }
-  
    

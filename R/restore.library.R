@@ -220,7 +220,14 @@ restore.library<-function(days)
           
           #Move 
             outcome <- file.rename(from[!skip] , to[!skip])
-          
+            
+			for (k in 1:length(from[!skip]))
+			  {
+			  outcome[k] <- file.rename.robust(from[!skip][k] , to[!skip][k])
+			  #See file.rename.robust.R() it tries renaming only when file is ready, and switches to copying upon failure
+			  
+			  }
+            
           #Delete parent directory 
           #(so, from = 'pkg_vrs'/'pkg'
           #   With 'rename' we take 'pkg' out  of the backup, 

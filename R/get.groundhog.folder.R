@@ -79,6 +79,22 @@ set.groundhog.folder <- function(path) {
   
   if (missing(path)) gstop("You forgot to enter the <path> you wanted to set.")
   
+  #Warning if path includes dropbox (users can over-rule it by rerunning it within 10 minutes)
+    if (get.minutes.since.cookie('dropbox_path')>10)
+      {
+      if  (regexpr('dropbox', tolower(path))>0) {
+        save.cookie('dropbox_path')
+        msg=paste0("The path '",path,"' seems to be a Dropbox folder. Groundhog will be slower and ",
+            "more likely to produce ocassional errors if the library is on Dropbox; ",
+            "consider using a different path. If you want to set it to '",path,"' anyway, ",
+            "please run `set.groundhog.folder('",path,"')` within 10 minutes.")
+        message(format.msg(msg))
+        exit()
+        
+      }
+    }
+
+  
   #Set main folder with 'cookie files' and default for library
     main_folder <-  paste0(path.expand("~"), "/R_groundhog/")
     
@@ -106,8 +122,8 @@ set.groundhog.folder <- function(path) {
     
     if (!saved.succesfully) {
       gstop(paste0("groundhog says: Unable to save to '",path,"'. Make sure you are allowed to save files to that directory."))
-      } 
-      
+    } 
+    
   #Assign it to the live environment
     Sys.setenv(GROUNDHOG_FOLDER = path)
  
@@ -121,5 +137,43 @@ set.groundhog.folder <- function(path) {
   #Reminder they can change it if it is the default path
     if (paste0(fw(dirname(path)),"/")==fw(main_folder)) message1("\nYou can change the location at any time running  `set.groundhog.folder(<path>)`")
     #fw() utils.R #50
-      
-    }
+    
+  #Verify we can rename files between here and .libPaths()
+        #Find path where groundhog is installed
+          ip.local     <- get.ip('local')
+          ip.groundhog <- ip.local[ip.local$Package=="groundhog",]
+          
+        #Make a text file there to test with
+          path2        <- paste0(ip.groundhog$LibPath,"/groundhog/testing ability to rename.txt")
+          write('testing ability to rename',path2)
+    
+        #Set path in groundhog folder to rename that file to
+          path3        <- paste0(path, "/testing ability to rename.txt")
+   
+
+        #Rename it, delete file,  and evaluate success
+           outcome      <- file.rename(path2,path3)
+           
+        if (outcome==FALSE) {
+              msg=paste0("Groundhog is unable to quickly move files between the directory ",
+                      "where packages are installed by R '",.libPaths()[1], "' and the selected ",
+                      "groundhog folder '", path, "'. This usually occur when these ",
+                      "two directories are on different volumes (e.g., USB drive vs hard ",
+                      "drive or external drive). Groundhog will still work, but it will be ",
+                      "slower than it would otherwise be, as it will have to move packages (copy & delete)",
+                      "instead of renaming them.")
+              
+              message(format.msg(msg))
+              save.cookie("copy_instead_of_renaming")
+              
+            #Delete file in old location
+              unlink(path2)
+    
+              } #End if it failed
+           
+          #If success, only delete the file in new location
+          if (outcome==TRUE) {
+           # unlink(path3)
+          }
+           
+        } #End of set.groundhog.folder
