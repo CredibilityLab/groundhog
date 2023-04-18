@@ -15,14 +15,14 @@ running \code{restore.library()} would restore to the former, setting \code{days
 and setting \code{days=8} would result in an error. \code{days = -1} restores to the oldest restore point available.}
 }
 \description{
-Instantaneously reverse changes made by groundhog to the default personal
-library where R packages are usually installed into.
+In a few seconds reverse changes made by groundhog to the default personal
+library (where R packages are usually installed into with \code{installed.packages()}).
 If you are just trying groundhog out for the first time,
-or you generally rely on base R's \code{library()} and want to use \code{groundhog.library()} for a specific
-one time purpose then you may want to run \code{restore.library()}
-when you are done with your one-time use of groundhog; you will undo any and all
-changes made by \code{groundhog}. Restoring a library takes less than a second even if the library
-has 100s of packages
+or you generally rely on base R's \code{library()} and want to use \code{groundhog.library()} sporadically
+then you may want to run \code{restore.library()} when you are done with your one-time use of groundhog.
+This will you will undo any and all changes made by \code{groundhog} to that library.
+In most circumstances, restoring a library takes less at most a few seconds, even if the library
+has had 100s of package modifications.
 }
 \details{
 When groundhog installs a package, it installs it into groundhog's library

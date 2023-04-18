@@ -1,13 +1,13 @@
 #' Restore default library of packages, undoing all changes made by groundhog
 #'
-#' Instantaneously reverse changes made by groundhog to the default personal 
-#' library where R packages are usually installed into.  
+#' In a few seconds reverse changes made by groundhog to the default personal 
+#' library (where R packages are usually installed into with `installed.packages()`).  
 #' If you are just trying groundhog out for the first time,
-#' or you generally rely on base R's `library()` and want to use `groundhog.library()` for a specific
-#' one time purpose then you may want to run `restore.library()` 
-#' when you are done with your one-time use of groundhog; you will undo any and all 
-#' changes made by `groundhog`. Restoring a library takes less than a second even if the library 
-#' has 100s of packages 
+#' or you generally rely on base R's `library()` and want to use `groundhog.library()` sporadically
+#' then you may want to run `restore.library()` when you are done with your one-time use of groundhog.
+#' This will you will undo any and all changes made by `groundhog` to that library. 
+#' In most circumstances, restoring a library takes less at most a few seconds, even if the library 
+#' has had 100s of package modifications. 
 #'   
 #'@param days an optional numeric argument used to choose among alternative restore points.
 #' When `days` is set, groundhog restores the personal library to the  most recent restore point, that 
@@ -81,7 +81,7 @@ restore.library<-function(days=0)
         #if none, end
         if (length(ip_files)==0) {  
             message1("No restore points are available.")
-            exit()
+            return(invisible(FALSE))
           }
         
     #2.4 Turn filenames to dates
@@ -93,7 +93,7 @@ restore.library<-function(days=0)
           ip_dates <- ip_dates[days.since >= days]
           if (length(ip_dates)==0) {
             message("The oldest restore point is from ",max(days.since)," days ago.")
-            exit()
+            return(invisible(FALSE))
           }
           datek <- max(ip_dates)
       
