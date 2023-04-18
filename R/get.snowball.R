@@ -141,6 +141,7 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
 
     #If the pkg is found in either the local or groundhog folder, deem this TRUE    
       snowball.installed <- snowball.pkg_vrs %in% c(ip.groundhog$pkg_vrs, loans$pkg_vrs) 
+      
 
   #Over-rule it if requested to install all
     if (force.install==TRUE) snowball.installed < -FALSE
@@ -206,6 +207,8 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
     stringsAsFactors = FALSE
   )
 
+#7 Base packages are always installed
+  snowball$installed <- ifelse(snowball$pkg %in% base_pkg(), TRUE,snowball$installed)
 
   return(snowball)
 }
