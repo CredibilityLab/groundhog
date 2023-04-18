@@ -25,7 +25,7 @@ get.groundhog.folder <- function() {
     if (consent==FALSE) {
       message(' -- not authorized to save to folder necessary for groundhog to work --')
       exit()
-      return(FALSE)
+      
       }
   
   #Set main folder with 'cookie files' and default for library
@@ -79,44 +79,7 @@ set.groundhog.folder <- function(path) {
   
   if (missing(path)) gstop("You forgot to enter the <path> you wanted to set.")
   
-  #DROPBOX
-  #Warning if path includes dropbox (users can over-rule it by rerunning it within 10 minutes)
-    if (get.minutes.since.cookie('dropbox_path')>10)
-      {
-      if  (regexpr('dropbox', tolower(path))>0) {
-        save.cookie('dropbox_path')
-        msg=paste0("The path '",path,"' seems to be a Dropbox folder. Groundhog will be slower and ",
-            "more likely to produce occasional errors if the library is on Dropbox; ",
-            "consider using a different path. If you want to set it to '",path,"' anyway, ",
-            "bypass this check by running  `set.groundhog.folder('",path,"')` again (within 10 minutes).")
-        message(format.msg(msg))
-        return(invisible(FALSE))
-        
-      }
-    }
 
- #TWO DRIVES
- #Warning if path includes two home drives
-    if (get.minutes.since.cookie('two_drives')>10)
-      {
-      if (get.drive(get.groundhog.folder())!=get.drive(.libPaths()[1])) 
-      {
-        save.cookie('two_drives')
-        msg<- paste0("The path '",path,"' you chose for the groundhog folder, ",
-                     " seems to be a on a different drive (AKA volume) than ",
-                     "the default R library '",.libPaths(),"'. Groundhog will be slower and ",
-                      "more likely to produce occasional  errors if this is indeed the case. It is ",
-                     "strongly recommended to ensure the same physical drive contains the groundhog and the ",
-                     "default R personal library. If you want to anyway set the path to '",path,"' ",
-                     "bypass this check by running  `set.groundhog.folder('",path,"')` again (within 10 minutes).")
-        
-        message(format.msg(msg))
-        return(invisible(FALSE))
-      } #End if two-drives check
-        
-      } #End if two drives cookie
-    
-  
   #Set main folder with 'cookie files' and default for library
     main_folder <-  paste0(path.expand("~"), "/R_groundhog/")
     
