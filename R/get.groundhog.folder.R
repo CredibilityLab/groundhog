@@ -79,6 +79,78 @@ set.groundhog.folder <- function(path) {
   
   if (missing(path)) gstop("You forgot to enter the <path> you wanted to set.")
   
+  ###########################################
+  #1 Warnings for path
+  
+    #1.1 DROPBOX
+        #If path contains dropbox and we have not warned them within 10 minutes
+
+        if  (regexpr('dropbox', tolower(path))>0) {
+
+          #Draft message
+            msg=paste0("The path '",path,"' seems to be a Dropbox folder. Groundhog will be slower and ",
+              "more likely to produce occasional errors if the library is on Dropbox; ",
+              "consider using a different path. If you want to set it to  '",path,"' anyway, ",
+              "type 'anyway', else type 'cancel'")
+
+          #Show it
+            answer.dropbox<-infinite.prompt(format.msg(msg),valid_answers=c('anyway','cancel'),must.restart=FALSE)
+
+            if (tolower(answer.dropbox)=='cancel') {
+              message1("OK. Request cancelled.")
+              exit()
+            }
+            } #End if dropbox
+
+    # #1.2 TWO DRIVES
+        if  (get.drive(path) != get.drive(.libPaths()[1])) {
+
+          #Draft message
+              msg<- paste0("The path '",path,
+                      " seems to be a on a different drive (or 'volume') than ",
+                      "the default R library '",.libPaths(),"'. Groundhog will be slower and ",
+                      "more likely to produce occasional errors if paths for libraries are ",
+                      "on different drives. It is strongly recommended to use the ",
+                      "same physical drive for both paths instead. ",
+                      "If you want to set it to  '",path,"' anyway, type 'anyway', else type 'cancel'")
+
+
+           #Show it
+            answer.two_drives<-infinite.prompt(format.msg(msg),valid_answers=c('anyway','cancel'),must.restart=FALSE)
+
+            if (tolower(answer.two_drives)=='cancel') {
+              message1("OK. Request cancelled.")
+              exit()
+            }
+            
+
+        } #End if two drives
+
+
+     #1.3 Drive does not exist
+        if (!file.exists(get.drive(path))) 
+        {
+
+            #Draft message
+              msg<- paste0("It seems that the drive for path '",path,
+                           " ('",get.drive(path),"') ",
+                           "does not exist. Please check the path is valid, beware that setting a path on a ",
+                           "non-existet drive will cause R to crash. ",
+                           "If you are certain that the path is correct and want to set '",path,"' ",
+                            "as the groundhog folder, type 'anyway', else type 'cancel'")
+
+            #Show it
+              answer.no_drive<-infinite.prompt(format.msg(msg),valid_answers=c('anyway','cancel'),must.restart=FALSE)
+
+            if (tolower(answer.no_drive)=='cancel') {
+              message1("OK. Request cancelled.")
+              exit()
+            }
+            
+        } #End if path does not exist
+
+      
+  #############################################################################
 
   #Set main folder with 'cookie files' and default for library
     main_folder <-  paste0(path.expand("~"), "/R_groundhog/")
@@ -94,11 +166,14 @@ set.groundhog.folder <- function(path) {
     
   #Save the cookie
     path <- trimws(path)
-    cat(path, file = path_file_storing_groundhog_library_location)
+    
   
   #Create groundhog_folder
     dir.create(path, showWarnings = FALSE, recursive = TRUE)
 
+  #Save cookie
+    cat(path, file = path_file_storing_groundhog_library_location)
+    
   #Verify we can save there
     path1 <- file.path(path,"testing ability to save.txt")
     write('testing ability to save',path1)
