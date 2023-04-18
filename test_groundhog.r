@@ -20,11 +20,14 @@
   #Set 6 - individual functions
 #Version being tested (only locally available)
 
-#install.packages('https://groundhogr.com/groundhog_3.0.0.tar.gz',repos=NULL)
-install.packages('c://dropbox/groundhogr/groundhog_3.0.0.tar.gz',repos=NULL)
+install.packages('https://groundhogr.com/groundhog_3.0.0.tar.gz',repos=NULL)
+#install.packages('c://dropbox/groundhogr/groundhog_3.0.0.tar.gz',repos=NULL)
 
 library('groundhog')
-set.groundhog.folder('c:/temp/test_2')
+gd=get.groundhog.folder()
+set.groundhog.folder(paste0(gd,"/temp1"))
+
+
 
 test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 45 days
 
@@ -126,7 +129,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
             groundhog.library('rio',test.day,ignore.deps = 'zip')  #this does not download the new zip, uses the old one instead
           
             
-          #2 Five conflicting pkg, mention them only, not liste
+          #2 Five conflicting pkg, mention them only, not listed
             library('groundhog')
             groundhog.library('haven',test.day-10,tolerate.R.version = groundhog:::get.rversion())
             groundhog.library('rio',test.day+150)
@@ -200,11 +203,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     
     
 #4) tolerate
-  library('groundhog')
-
-  groundhog.library('pwr',test.day-400)
-  groundhog.library('pwr',test.day-400,tolerate.R.version=groundhog:::get.rversion())
-
+  #DONE above for other tasks
     
 #5) Source
   library('groundhog')
@@ -219,7 +218,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
 #7) Include suggests
    
     library('groundhog')
-    pks=c('jsonlite','metafor')
+    pks='rio'
     groundhog.library(pks, test.day ,include.suggests = TRUE)
 
     
@@ -231,7 +230,10 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
   library('groundhog') 
   groundhog.library('pwr',test.day)
   
-  #Then run a .bat file taht executes R code doing library('groundhog') and trying to run groundhog.library(). 
+  set.groundhog.folder(paste0(gd,"/temp1"))
+  
+  
+  #Then run a .bat file that executes R code doing library('groundhog') and trying to run groundhog.library(). 
   #It should prompt running set.groundhog.folder()
   #use files 'not_interactive.bat', modifying the location of the R script and R binary used to execute it"
   
@@ -374,9 +376,18 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
   
     library('groundhog')
     test.groundhog(1:10)                   
-    test.groundhog(1:10,day.offset=40)     
+    test.groundhog(1:10,day.offset=40)
+    
+    #back to top 10, should not install anything
+    test.groundhog(1:10)                   
+    
+    
     test.groundhog(120:129)                
     test.groundhog(120:129,day.offset=91)  
+    #back to top 10, should not install anything
+    test.groundhog(120:129)                   
+    
+    
     test.groundhog(560:569)               
     test.groundhog(980:989)                
     test.groundhog(2501:2510)              
@@ -391,7 +402,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     # Key is whether the second package, a dependency of the 1st, is loaded without an error 
 
    library('groundhog') 
-    groundhog.library('crsh/papaja','2021-03-01')
+    groundhog.library('crsh/papaja',test.day)
     groundhog.library('tidymodels/broom',test.day)
     
     
@@ -463,7 +474,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     
 #--------------------------------------------------
   #function that get dataframe with installed packages, and pkg_vrs included
-         get.ip.local <-function(){
+       get.ip.local <-function(){
       path <- .libPaths()[1]
       ip <- data.frame(utils::installed.packages(path), row.names = NULL, stringsAsFactors = FALSE)
         if (nrow(ip)>0)  ip$pkg_vrs <- paste0(ip$Package,"_",ip$Version)
@@ -491,8 +502,10 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
 
   #3 start new groundhog folder to ensure restore day
     library('groundhog')
-    set.groundhog.folder('c:/temp/test_restore')
-    
+    gd1=get.groundhog.folder()
+
+    set.groundhog.folder(paste0(gd1,"test_restore1"))
+    get.groundhog.folder()
   #4 Do first change, which should create a restore point before it 
       groundhog.library(c('lme4', 'rio','this.path'),'2022-12-15')
       #two different versios of those target packages and a brand new one
