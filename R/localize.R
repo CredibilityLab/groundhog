@@ -44,7 +44,7 @@
         if (!'sha' %in% names(snowball)) snowball$sha <- ''
 
       
-  #4. Installed.packages: ip (local), ip.groundhog, and ip.backup
+  #4. Installed.packages: local, backup and groundhog
       
           #4.1 installed.packages #utils #59
             ip.local     <- get.ip('local')     # .libPaths[1]
@@ -54,8 +54,7 @@
 
               
             #NOTE on MD5 vs 'pvs' to identify packages:
-                #Nutshell
-                #ip <-> snowballs, with pvs (pkg_vrs_sha)  | ip: installed.packages()
+                #ip <-> snowballs, with pvs (pkg_vrs_sha)  
                 #ip <-> loans, with MD5
                 
                   #same pkg_vrs but different commits, and remotes pkgs from CRAN pkgs with the same pkg_vrs (rio from CRAN vs rio from github)
@@ -149,7 +148,6 @@
           unlink(dirname(fk),recursive=TRUE)
           
         }
-        
         
       #Update loans.rds
         save.loans(loans)   #utils #60
