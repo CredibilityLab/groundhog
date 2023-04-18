@@ -86,7 +86,7 @@
           
           
           if (n.remote>0 & length(pkg)>1 ) {
-           msg =paste0("The list of packages you are trying to load includes a remote (e.g., GitHub) package.",
+           msg =paste0("The list of packages you are trying to load includes a remote (e.g., GitHub) package.\n",
                        "But, remote packages need to be loaded on their own in separate groundhog.library() calls")
 		      gstop(msg)
           }
