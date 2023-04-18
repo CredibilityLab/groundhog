@@ -257,7 +257,7 @@
           #This same pkg_date loaded & attached early return
               if (git_usr_pkg_date %in% .pkgenv[['remotes.attached']]) {
                     message1("The package '", pkg_list$usr_pkg, "', for '",date,"', is already attached.")
-					exit()
+				          	exit()
               }
             
           #Same remote did not trigger a match before, something must not match, exit
@@ -336,19 +336,35 @@
         if (n.source.conflict > 0) 
          {
           
-          #Save the snowball as an rds file
-              arguments_path <- file.path(get.groundhog.folder(), paste0("temp/background_install_arguments.rds"))
-              dir.create(dirname(arguments_path),showWarnings = FALSE,recursive=TRUE)
-              arguments <- list(snowball=snowball.all, date=date, cores=cores)
-              saveRDS(arguments , arguments_path,version=2 , compress=FALSE)
-              
-          #Execute snowball.install in background with system
-              script_path <- system.file("background_scripts/background_install.snowball.R", package = "groundhog")
-              system(paste0("Rscript ",script_path , " " , arguments_path) )
-              
-            #Delete temp path
-              unlink(arguments_path)
-              
+          # #Save the snowball as an rds file
+          #     arguments_path <- file.path(get.groundhog.folder(), paste0("temp/background_install_arguments.rds"))
+          #     dir.create(dirname(arguments_path),showWarnings = FALSE,recursive=TRUE)
+          #     arguments <- list(snowball=snowball.all, date=date, cores=cores)
+          #     saveRDS(arguments , arguments_path,version=2 , compress=FALSE)
+          #     
+          # #Execute snowball.install in background with system
+          #     script_path <- system.file("background_scripts/background_install.snowball.R", package = "groundhog")
+          #     system(paste0("Rscript ",script_path , " " , arguments_path) )
+          #     
+          #   #Delete temp path
+          #     unlink(arguments_path)
+          #     
+          
+          pkg_conflict <-  snowball.all$pkg[
+                                            snowball.all$pkg      %in% .pkgenv[['active']]$pkg & 
+                                            !snowball.all$pkg_vrs %in% .pkgenv[['active']]$pkg_vrs
+                                            ]
+          msg <- paste0("Some of package you need to install from source have other versions already loaded in this ",
+                        "R session. You will need to restart the R session to unload them and try again. If the problem ",
+                        "persists it is likely that they are being automatically loaded before your `groundhog.library()` call. ",
+                        "To avoid this, you can create a blank script just with the groundhog library call. You may also ",
+                        "rely on the `ignore.deps` optional argument in `groundhog.library`. The packages creating the conflict are:-> ",
+                        pasteQC(pkg_conflict)
+                        )
+                        
+          gstop(format.msg(msg))
+          
+          
         } #End n conflict>0
 
     #6.3  FOREGROUND INSTALL
@@ -388,19 +404,31 @@
       
      #10.2 #verify pkg is indeed available in local
         ip.local<-get.ip('local')
-        if (!pkgk %in% ip.local$Package) {
-          msg <- paste0("Failed in attempt to load ",pkgk,". \n",
-                "Please simply run groundhog.library() again before troubleshooting deeper.")
-          
-        #Add driobix nsg
+		for (pkgk in pkg)
+		{
+		  if (!pkgk %in% c(ip.local$Package, base_pkg())) {
+		  
+		    #Ask to run again if we have not asked in the last 5 minutes
+		      cookie  <-'pkgk_not_in_iplocal'
+		      minutes <- get.minutes.since.cookie(cookie)
+          if (minutes>5)
+          {
+		      msg <- paste0("Failed in attempt to load ",pkgk,". \n",
+                "You may want to try again running `groundhog.library()` and only if it fails again troubleshoot deeper.")
+          save.cookie(cookie)
+          }
+		      
+        #Add drobox msg
           if  (regexpr('dropbox', tolower(get.groundhog.folder()))>0) {
                             msg <-paste0(msg,"\nThis issue is likely caused because the groundhog folder is in Dropbox\n",
                                     "You can change its location with `set.groundhog.folder()`")
             } #End if dropbox
           
+		    #Show message that we failed
           gstop(msg)
           
-        }
+		  } #End if pkgk not found
+		} #End loop
           
       
       #10.3 library()
