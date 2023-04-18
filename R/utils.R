@@ -179,8 +179,8 @@
             .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
           }     
           
-    #Return libpath
-       .libPaths(.pkgenv[["orig_lib_paths"]])
+    #Return .libpath if it has been changed
+       if (!is.null(.pkgenv[["orig_lib_paths"]])) .libPaths(.pkgenv[["orig_lib_paths"]])
         invokeRestart("abort")
   }
 
@@ -249,10 +249,13 @@
 #17 validate date  
   validate.date <- function(entered_date)
       {
-       msg=paste0("The date you entered '", entered_date,"', is not valid.\n",
+       msg <- paste0("The date you entered '", entered_date,"', is not valid.\n",
                 "Please use the 'yyyy-mm-dd' format"
           )
     
+       #more than one
+       if (length(entered_date)>1) gstop("The 'date' argument in groundhog.library() must have only one value.")
+       
        
        # correct format
         d <- try(as.Date(entered_date, format="%Y-%m-%d"),silent = TRUE)
@@ -713,7 +716,25 @@
      }#End of read cookie
       
   
-   
+    #39.4 Save Session cookie
+      save.session.cookie<-function(cookie_name)
+      {
+        .pkgenv[[cookie_name]] <- Sys.time()
+        
+      }
+      
+    #39.5
+      get.minutes.since.session.cookie<-function(cookie_name)
+      {
+        #Not set, return 99999
+          if (is.null(.pkgenv[[cookie_name]])) return(99999999)
+      
+        #If set, 
+          mins <- difftime(Sys.time(), .pkgenv[[cookie_name]] , units = 'mins')
+          return(mins)
+      }
+        
+        
    
 #40 get.repos_from.snowball()
       
@@ -839,6 +860,7 @@
     #but if this ends up affecting more users groundhog will be changed to have a more robust os detection.
     
   # use contrib.url() to rely on R's processing of sys.info() alternatives
+     set.default.mirror()
     repos <- as.character(getOption("repos"))
     bin.url <- utils::contrib.url(repos,type='binary')
     if (regexpr('windows', bin.url)[[1]]>0) os<-'windows'
@@ -856,7 +878,7 @@
       check.consent <- function(ask=TRUE) {
         
       #Folder with cookie with location of groundhog folder, its existence means consent
-         main_folder <-  fw(paste0(path.expand("~"), "/R_groundhog")) #fw: function #50
+         main_folder <-  fw(paste0(path.expand("~"), "/R_groundhog/")) #fw: function #50
         
       #See if consent has been given by seeing if the folder exists
         consent <- (file.exists(main_folder))
