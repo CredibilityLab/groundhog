@@ -8,9 +8,12 @@ set.groundhog.folder(path)
 }
 \arguments{
 \item{path}{Character. The path to the groundhog folder containing the library
-where packages are downloaded and installed. It is recommended that the groundhog
-folder be in the same volume/drive as the folder used as the default R library, and
-that it not be in a Dropbox (or similar) folders, for performance and reliability suffer.}
+where packages are downloaded and installed. For best performance and reliability,
+it is recommended that the groundhog folder be in the same volume/drive as the
+folder used as the default R library, and
+that it not be in a Dropbox (or similar) folders. Groundhog will be slower
+and occasionally produce errors when the groundhog folder is in Dropbox or
+a different drive.}
 }
 \value{
 (invisibly) \code{TRUE} upon success.
