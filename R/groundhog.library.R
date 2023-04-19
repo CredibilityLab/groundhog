@@ -5,8 +5,8 @@
 #' installs it. `groundhog.library()` thus substitutes both `library()` 
 #' and `install.packages()`. There is no change in setup or configuration parameters 
 #' needed to start using groundhog; simply edit your script going between 
-#' `library()` and `groundhog.library()` as needed. Groundhog often installs/uninstalls packages in the
-#' default personal library. These changes can be instantaneously reversed, 
+#' `library()` and `groundhog.library()` as needed. Groundhog often installs/uninstalls 
+#' packages in the default personal library. These changes can be reversed in a few seconds, 
 #' with [`restore.library()`]
 #'  
 #'@param pkg character string or vector with name of package(s) to load/install.

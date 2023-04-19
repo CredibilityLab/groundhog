@@ -65,8 +65,8 @@ of a package, or its dependencies, is not already installed, groundhog automatic
 installs it. \code{groundhog.library()} thus substitutes both \code{library()}
 and \code{install.packages()}. There is no change in setup or configuration parameters
 needed to start using groundhog; simply edit your script going between
-\code{library()} and \code{groundhog.library()} as needed. Groundhog often installs/uninstalls packages in the
-default personal library. These changes can be instantaneously reversed,
+\code{library()} and \code{groundhog.library()} as needed. Groundhog often installs/uninstalls
+packages in the default personal library. These changes can be reversed in a few seconds,
 with \code{\link[=restore.library]{restore.library()}}
 }
 \details{

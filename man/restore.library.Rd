@@ -8,8 +8,8 @@ restore.library(days = 0)
 }
 \arguments{
 \item{days}{an optional numeric argument used to choose among alternative restore points.
-When \code{days} is set, groundhog restores the personal library to the  most recent restore point, that
-is at least \code{days} days ago. If it is not set it restores to the most recent restore point.
+When \code{days} is set, groundhog restores the personal library to the  most recent restore point that
+is at least \code{days} days old. If \code{dais} is not set, groundhog restores to the most recent restore point overall.
 For example, if there are two restore points: one from today, and one from 7 days ago,
 running \code{restore.library()} would restore to the former, setting \code{days=3} would restore to the latter,
 and setting \code{days=8} would result in an error. \code{days = -1} restores to the oldest restore point available.}
@@ -20,8 +20,8 @@ library (where R packages are usually installed into with \code{installed.packag
 If you are just trying groundhog out for the first time,
 or you generally rely on base R's \code{library()} and want to use \code{groundhog.library()} sporadically
 then you may want to run \code{restore.library()} when you are done with your one-time use of groundhog.
-This will you will undo any and all changes made by \code{groundhog} to that library.
-In most circumstances, restoring a library takes less at most a few seconds, even if the library
+This will undo any and all changes made by \code{groundhog} to that library.
+In most circumstances, restoring a library takes a few seconds, even if the library
 has had 100s of package modifications.
 }
 \details{

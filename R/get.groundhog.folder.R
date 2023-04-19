@@ -60,7 +60,9 @@ get.groundhog.folder <- function() {
 #' Set groundhog folder location
 #'
 #' @param path Character. The path to the groundhog folder containing the library
-#'   where packages are downloaded and installed.
+#'   where packages are downloaded and installed. It is recommended that the groundhog 
+#'   folder be in the same volume/drive as the folder used as the default R library, and
+#'   that it not be in a Dropbox (or similar) folders, for performance and reliability suffer.
 #'
 
 #'

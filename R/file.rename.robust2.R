@@ -1,5 +1,16 @@
 
 
+#This function tries to rename all paths in the `from` field to `to`
+#It first tries to do file.rename() for all,and then chekcs that all
+#pkgs are installed succesfully in the to, if they are not, it flags an erro
+#and switches to copy-pasting
+#
+#file.rename.robust() (without the '2') did the first step in a loop, but felt slower
+#in case we need to switch back, staying here as a backup script till at least next revision
+
+
+
+
 file.rename.robust2<-function(from,to)
   {
     

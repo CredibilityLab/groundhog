@@ -5,13 +5,13 @@
 #' If you are just trying groundhog out for the first time,
 #' or you generally rely on base R's `library()` and want to use `groundhog.library()` sporadically
 #' then you may want to run `restore.library()` when you are done with your one-time use of groundhog.
-#' This will you will undo any and all changes made by `groundhog` to that library. 
-#' In most circumstances, restoring a library takes less at most a few seconds, even if the library 
+#' This will undo any and all changes made by `groundhog` to that library. 
+#' In most circumstances, restoring a library takes a few seconds, even if the library 
 #' has had 100s of package modifications. 
 #'   
 #'@param days an optional numeric argument used to choose among alternative restore points.
-#' When `days` is set, groundhog restores the personal library to the  most recent restore point, that 
-#' is at least `days` days ago. If it is not set it restores to the most recent restore point. 
+#' When `days` is set, groundhog restores the personal library to the  most recent restore point that 
+#' is at least `days` days old. If `dais` is not set, groundhog restores to the most recent restore point overall. 
 #' For example, if there are two restore points: one from today, and one from 7 days ago,
 #' running `restore.library()` would restore to the former, setting `days=3` would restore to the latter, 
 #' and setting `days=8` would result in an error. `days = -1` restores to the oldest restore point available.
