@@ -213,8 +213,8 @@
                   "The packages you just installed need a new R session to be loaded.\n",
                   "Restart the R session and re-run groundhog.library() to load them.",f10)
       
-		    message(msg)
-		    infinite.prompt("", "uncle",must.restart=TRUE)
+		    #message(msg)
+		    infinite.prompt(msg, "uncle",must.restart=TRUE)
         
         
       
