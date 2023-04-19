@@ -23,7 +23,7 @@ Set groundhog folder location
 }
 \examples{
 \dontrun{
-set.groundhog.folder("~/.R_groundhog")
+set.groundhog.folder("c:/groundhog_folder")
 }
 
 }

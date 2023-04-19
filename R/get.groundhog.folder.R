@@ -71,7 +71,7 @@ get.groundhog.folder <- function() {
 #'
 #' @examples
 #' \dontrun{
-#' set.groundhog.folder("~/.R_groundhog")
+#' set.groundhog.folder("c:/groundhog_folder")
 #' }
 #'
 #' @return (invisibly) `TRUE` upon success.
