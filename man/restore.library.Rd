@@ -44,7 +44,7 @@ a copy of the results from \code{installed.packages(.libPaths()[1])}), this save
 a 'restore point'. With \code{restore.library()} groundhog looks up a restore point, obtain the set of packages
 that used to be installed, and removes any packages \emph{installed by groundhog} which are in the personal library
 but were not in that restore point; similarly, it moves back to the local library any packages \emph{removed by groundhog}
-that were in the restore point but are not currently there. This process is essentially instantaneous even for 100+ packages.
+that were in the restore point but are not currently there. This process take a few seconds even for 100+ packages.
 Note that there is only one restore point per calendar date, so one effectively restores
 the personal library to how it was before \emph{any} changes were made to it that day with groundhog.
 Restore points are saved permanently and can be restored at any point.

@@ -45,7 +45,7 @@
 #'a 'restore point'. With `restore.library()` groundhog looks up a restore point, obtain the set of packages
 #'that used to be installed, and removes any packages *installed by groundhog* which are in the personal library
 #'but were not in that restore point; similarly, it moves back to the local library any packages *removed by groundhog*
-#'that were in the restore point but are not currently there. This process is essentially instantaneous even for 100+ packages.
+#'that were in the restore point but are not currently there. This process take a few seconds even for 100+ packages.
 #'Note that there is only one restore point per calendar date, so one effectively restores
 #'the personal library to how it was before *any* changes were made to it that day with groundhog. 
 #'Restore points are saved permanently and can be restored at any point. 
@@ -149,7 +149,7 @@ restore.library<-function(days=0)
       
       #7.1 Package counts
           message1("Proceeding entails restoring ", n.add, " packages and uninstalling ", n.purge ," packages.\n",
-                    "This process should be nearly instantaneous regardless of the number\nof packages involved.\n")
+                    "This process should take a few seconds.\n")
 
       #7.2 Warnings for non-groundhog changes
           n1=length(non.groundhog_installed)
@@ -216,15 +216,16 @@ restore.library<-function(days=0)
             skip <- skip.no_backup | skip.other_pkg
           
             
-			
+			cat('\n')
 			for (k in 1:length(from[!skip]))
 			  {
 			  
 			  file.rename.robust(from[!skip][k] , to[!skip][k])
+			  cat('...',k)
 			  #See file.rename.robust.R() it tries renaming only when file is ready, and switches to copying upon failure
 			  
 			  }
-            
+        cat('\n')    
           #Delete parent directory 
           #(so, from = 'pkg_vrs'/'pkg'
           #   With 'rename' we take 'pkg' out  of the backup, 
