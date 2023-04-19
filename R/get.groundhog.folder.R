@@ -127,28 +127,6 @@ set.groundhog.folder <- function(path) {
         } #End if two drives
 
 
-     #1.3 Drive does not exist
-        if (!file.exists(get.drive(path))) 
-        {
-
-            #Draft message
-              msg<- paste0("It seems that the drive for path '",path,
-                           " ('",get.drive(path),"') ",
-                           "does not exist. Please check the path is valid, beware that setting a path on a ",
-                           "non-existet drive will cause R to crash. ",
-                           "If you are certain that the path is correct and want to set '",path,"' ",
-                            "as the groundhog folder, type 'anyway', else type 'cancel'")
-
-            #Show it
-              answer.no_drive<-infinite.prompt(format.msg(msg),valid_answers=c('anyway','cancel'),must.restart=FALSE)
-
-            if (tolower(answer.no_drive)=='cancel') {
-              message1("OK. Request cancelled.")
-              exit()
-            }
-            
-        } #End if path does not exist
-
       
   #############################################################################
 
