@@ -65,8 +65,8 @@
           packageStartupMessage ("Attached: 'Groundhog' (Version: ",packageVersion('groundhog'),  ")") 
           packageStartupMessage ("Tips and troubleshooting: https://groundhogR.com")
 
-
-packageStartupMessage ("##########################################\n This version: 2023 04 19 - 9:42")
+    #While developing:
+      #packageStartupMessage ("##########################################\n This version: 2023 04 19 - 12.09")
 
   } #End on attach
     
