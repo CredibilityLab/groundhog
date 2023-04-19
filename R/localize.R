@@ -118,12 +118,9 @@
           if (file.exists(fk)) unlink(fk,recursive=TRUE)
           }
 
-        outcome.loans <- c()
-        for (k in 1:length(from.groundhog_to_local))
-        {
-        outcome.loans[k] <- file.rename.robust(from=from.groundhog_to_local[k] , to=to.groundhog_to_local[k])
-        }
-        
+
+          	file.rename.robust2(from=from.groundhog_to_local, to=to.groundhog_to_local)
+
 
       #add to loans
         #vector with path to all DESCRIPTION files to store md5 in loans[]

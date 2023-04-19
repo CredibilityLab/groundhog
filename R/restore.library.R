@@ -215,25 +215,12 @@ restore.library<-function(days=0)
             skip.other_pkg <- file.exists(paste0(to,"/", ip.add$pkg))
             skip <- skip.no_backup | skip.other_pkg
           
-            
-			cat('\n')
-			for (k in 1:length(from[!skip]))
-			  {
-			  
-			  file.rename.robust(from[!skip][k] , to[!skip][k])
-			  cat('...',k)
-			  #See file.rename.robust.R() it tries renaming only when file is ready, and switches to copying upon failure
-			  
-			  }
-        cat('\n')    
+          file.rename.robust2(from,to)  #see file.rename.robust2.R
+			       
           #Delete parent directory 
           #(so, from = 'pkg_vrs'/'pkg'
-          #   With 'rename' we take 'pkg' out  of the backup, 
-          #   With unlink  we take 'pkg_vrs' out of the backup
-            unlink(dirname(from),recursive=TRUE)
-            
-          
-            } 
+             unlink(dirname(from),recursive=TRUE)
+        } 
   
     #------------------------------------------------
       

@@ -32,21 +32,10 @@ purge.local <- function (ip.purge , loans)
           dir.create(dirname(fk),recursive = TRUE,showWarnings = FALSE)
           }
         
-      #2.4 Execute #for debugging:  k=1
-		  outcome.return <-c () 
-          for (k in 1:length(from.local_to_groundhog))
-          {
-          outcome.return[k] <- file.rename.robust(from=from.local_to_groundhog[k] , to= to.local_to_groundhog[k])
-          
-          #See file.rename.robust.R() it tries renaming only when file is ready, and switches to copying upon failure
-          
-          }
-         
-          #Any failures?
-          #if (mean(outcome.return)<1) {
-           # message("groundhog says:\nwarning. The following folders failed to be created:\n",pasteQC(to.local_to_groundhog[!outcome.return]))
-          #}
-          
+      #2.4 Execute 
+		      
+          file.rename.robust2(from.local_to_groundhog, to.local_to_groundhog)  #file.rename.robust2.R
+
            
       #2.5 remove returned packages from loans
         loans<-loans[!loans$md5 %in% ip.return$md5,]  
@@ -75,24 +64,9 @@ purge.local <- function (ip.purge , loans)
         new <- !file.exists(to.local_to_backup)    #are they new to the backup? (do not replace existing files)
         
       #3.4 Move new backup files
-		     outcome.backup <- c()
-		     cat('\n')
+		    file.rename.robust2(from=from.local_to_backup[new], to= to.local_to_backup[new])
 
-         for (k in 1:length(from.local_to_backup))
-          {
-           
-
-          outcome.backup[k] <- file.rename.robust(from=from.local_to_backup[new][k] , to= to.local_to_backup[new][k])
-          #See file.rename.robust.R() it tries renaming only when file is ready, and switches to copying upon failure
-          cat('...',k)
-
-          }
-          cat("\n")
-          #Any failures?
-          #if (mean(outcome.backup)<1) {
-           # message("groundhog says:\nwarning. The following folders failed to be created:\n",pasteQC(to.local_to_backup[!outcome.backup]))
-          #}
-        
+          
       #3.5 Delete backup files that somehow already are backed up
         unlink(from.local_to_backup[!new],recursive = TRUE)
       } #End 3
