@@ -4,7 +4,7 @@
 
 
 # installed base packages
-        .pkgenv[['base_pkg']] <- data.frame(utils::installed.packages(priority = 'base'),row.names=NULL)$Package
+        .pkgenv[['base_pkg']] <- data.frame(utils::installed.packages(priority = 'base'),row.names=NULL,stringsAsFactors = FALSE)$Package
       
         
 
@@ -46,7 +46,7 @@
       set.default.mirror() #Function 36 -  utils.R
   
     #6 Check if new version of groundhog exists, if we have not checked today yet
-       check.groundhog.version(min.days=1) #Function 42  -  utils.R
+       if (check.consent(ask=FALSE)==TRUE) check.groundhog.version(min.days=1) #Function 42  -  utils.R
           
     #7 Load cran toc if available
        if (check.consent(ask=FALSE)==TRUE) load.cran.toc()
@@ -66,7 +66,7 @@
           packageStartupMessage ("Tips and troubleshooting: https://groundhogR.com")
 
 
-packageStartupMessage ("##########################################\n This version: 2023 04 18 - 15:10")
+packageStartupMessage ("##########################################\n This version: 2023 04 19 - 9:42")
 
   } #End on attach
     
