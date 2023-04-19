@@ -77,10 +77,11 @@
             t1 <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
             write(paste0(t1, " - Attempting to install ",pkg," as available from ",remote_id," on ",date),log_path,append = TRUE)
             
-          #Install it 
+          #Install it
+  
             try_install_git(path=clone_path,  dependencies = FALSE , lib=installation_path, ref=sha, INSTALL_opts = '--no-lock')
                      #Function #8 in remote_functions.R (tries with and without file)
-    
+  
             
           #Log success 
               ip <- utils::installed.packages(installation_path)

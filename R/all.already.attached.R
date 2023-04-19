@@ -2,7 +2,7 @@
 
 #pkg: vector
 
-#Checks if all pacakges in the vector are already attached, used by groundhog.library() to early return
+#Checks if all packages in the vector are already attached, used by groundhog.library() to early return
 
 
 

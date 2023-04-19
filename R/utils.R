@@ -1,5 +1,4 @@
 #This script has functions used throughout the package
-
 #1  get.pkg(), get.vsr()     : Extract package and version information from pkg_vrs
 #2  is.pkg_vrs.installed()   : Is pkg_vrs installed (within same R-minor version)? 
 #3  as.DateYMD               : Format Y-M-D as date
@@ -46,7 +45,7 @@
 #44 Check consent              :  Does .../R_groundhog exists?
 #45 Turn path from '\' to '/'  :  c:\users --> c:/users
 #46 MOVED
-#47 base.library.snowball.list
+#47 DROPPED
 #48 message.batch.installation.feedback() : feedback while installing a batch in parallel
 #49 - get.parallel.time()  :  estimate parallel time of installation
 #50 get pkg_list from path
@@ -55,8 +54,13 @@
 #53 Download in batches        : breaks a list of pkgs into batches downloaded sequentially
 #54 filesize_format            : turn bytes file size to human readable
 #55 get.restore.points         : vector with dates available 
-#56 View conflicts             : view conflicting pkgs in recent call
-########################################################################
+#57 View conflicts             : view conflicting pkgs in recent call
+#58 Get ip.groundhog():        : installed.packages data.frame for all packages in groundhog library and loans
+#59 get ip.backup()            : same for all packages that have been saved to the backup folder
+#60 get.loans() & /save.loans(): load and save database with all lent packages
+#61 file.rename.robust:        :  rename a file ony once it can be renamed to itself
+
+####################################################################################
     
 
 
@@ -175,8 +179,8 @@
             .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
           }     
           
-    #Return libpath
-       .libPaths(.pkgenv[["orig_lib_paths"]])
+    #Return .libpath if it has been changed
+       if (!is.null(.pkgenv[["orig_lib_paths"]])) .libPaths(.pkgenv[["orig_lib_paths"]])
         invokeRestart("abort")
   }
 
@@ -245,10 +249,13 @@
 #17 validate date  
   validate.date <- function(entered_date)
       {
-       msg=paste0("The date you entered '", entered_date,"', is not valid.\n",
+       msg <- paste0("The date you entered '", entered_date,"', is not valid.\n",
                 "Please use the 'yyyy-mm-dd' format"
           )
     
+       #more than one
+       if (length(entered_date)>1) gstop("The 'date' argument in groundhog.library() must have only one value.")
+       
        
        # correct format
         d <- try(as.Date(entered_date, format="%Y-%m-%d"),silent = TRUE)
@@ -542,7 +549,7 @@
 #35 Format msg: format output to have fixed width and starting symbol (e.g., "|    ")
     
     
- format.msg <- function(msg,width=70, header='IMPORTANT.', pre="|")
+ format.msg <- function(msg,width=70, header='IMPORTANT.', pre="|   ")
 {
   #Line counter
     j<-0
@@ -682,23 +689,52 @@
           utils::write.csv(as.numeric(Sys.time()),cookie_path,row.names = FALSE)
         }
         
-   #39.2 READ
+     #39.2 Does cookie exist
+        cookie.exists<-function(cookie_name)
+        {
+          cookies_dir <- paste0(get.groundhog.folder(),"/cookies")
+          cookie_path <- file.path(cookies_dir, paste0(cookie_name,".csv"))
+          return (file.exists(cookie_path)) 
+       }
+          
+        
+   #39.3 Minutes since creation
       get.minutes.since.cookie <- function(cookie_name)
       {
-      #Cookie path
-        cookies_dir <- paste0(get.groundhog.folder(),"/cookies")
-        cookie_path <- file.path(cookies_dir, paste0(cookie_name,".csv"))
-        
+      #paths
+          cookies_dir <- paste0(get.groundhog.folder(),"/cookies")
+          cookie_path <- file.path(cookies_dir, paste0(cookie_name,".csv"))
+
       #Exists? Return 999999 if it does not, contents if it does
-        if (!file.exists(cookie_path)) return (999999)
-        if (file.exists(cookie_path)) {
+        if (!file.exists(cookie_path)) return (99999999)
+        if (file.exists(cookie_path))  {
           time0 <- utils::read.csv(cookie_path)$x  
           seconds <- as.numeric(Sys.time()-time0)
           minutes <- seconds/60
           return(minutes)
         }
      }#End of read cookie
-   
+      
+  
+    #39.4 Save Session cookie
+      save.session.cookie<-function(cookie_name)
+      {
+        .pkgenv[[cookie_name]] <- Sys.time()
+        
+      }
+      
+    #39.5
+      get.minutes.since.session.cookie<-function(cookie_name)
+      {
+        #Not set, return 99999
+          if (is.null(.pkgenv[[cookie_name]])) return(99999999)
+      
+        #If set, 
+          mins <- difftime(Sys.time(), .pkgenv[[cookie_name]] , units = 'mins')
+          return(mins)
+      }
+        
+        
    
 #40 get.repos_from.snowball()
       
@@ -824,6 +860,7 @@
     #but if this ends up affecting more users groundhog will be changed to have a more robust os detection.
     
   # use contrib.url() to rely on R's processing of sys.info() alternatives
+     set.default.mirror()
     repos <- as.character(getOption("repos"))
     bin.url <- utils::contrib.url(repos,type='binary')
     if (regexpr('windows', bin.url)[[1]]>0) os<-'windows'
@@ -841,10 +878,10 @@
       check.consent <- function(ask=TRUE) {
         
       #Folder with cookie with location of groundhog folder, its existence means consent
-         main_folder <-  fw(paste0(path.expand("~"), "/R_groundhog")) #fw: function #50
+         main_folder <-  fw(paste0(path.expand("~"), "/R_groundhog/")) #fw: function #50
         
       #See if consent has been given by seeing if the folder exists
-        consent <- (file.exists(main_folder))
+        consent <- (dir.exists(main_folder))
         if (consent==TRUE) return(TRUE)
         if (consent==FALSE & ask==FALSE) return(FALSE)
 
@@ -863,11 +900,11 @@
                          "(This only needs to be done once on a given computer)\n",
                          "**********************************************************************************\n\n")
           #For batch files
-            if (interactive()==FALSE)
+            if (interactive()==FALSE )
             {
               message(batch_msg)
-              return(FALSE)
-              
+              #return(FALSE)
+              exit()
             }
             
             
@@ -881,7 +918,7 @@
               }
             if (tolower(answer)=="no") {
               message("You did not provide permission to save files locally, groundhog will not work until you do.")
-              return(FALSE)
+              exit()
               }
          } #End  if no consent and we are asking for it
         
@@ -1074,4 +1111,144 @@ get.parallel.time<-function(times,cores)
   view.conflicts.function <- function() {
     return(.pkgenv[['conflicts']])
     }
+
   
+#58 get.ip
+  get.ip <- function(location)
+  {
+    #1 Get all subfolders for backup and groundhog
+    
+        #1.1 For groundhog. backup, all_local there is a folder with subfolders for each pkg, get all pkgs
+            if (location %in% c('backup','groundhog'))
+                {
+                 #Path containing all subfolders with pkg_vrs   
+                  if (location=='groundhog') {
+                        cran_path   <- paste0(get.groundhog.folder() , "/R-" , get.r.majmin())
+                        github_path <- paste0(cran_path,"/_github")
+                        gitlab_path <- paste0(cran_path,"/_gitlab")
+                        master_path=c(cran_path, github_path, gitlab_path)
+                      }
+                    
+                    
+                  if (location=='backup')    master_path <- paste0(get.groundhog.folder(),"/restore_library/" , get.r.majmin() , "/")
+
+                #All pkgs in that path    
+                  all.paths<- list.files(master_path,full.names=TRUE)
+            }
+
+
+        #1.2 Local  
+          if (location=='local')     all.paths <- .pkgenv[["orig_lib_paths"]][1]
+          if (location=='all_local') all.paths <- .pkgenv[["orig_lib_paths"]][-length(.pkgenv[["orig_lib_paths"]])]
+
+
+     #2 Get the installed.packages
+        ip <- data.frame(utils::installed.packages(all.paths), row.names = NULL, stringsAsFactors = FALSE)
+         
+     #3 Create pkg_vrs
+        if (nrow(ip)>0)  ip$pkg_vrs <- paste0(ip$Package,"_",ip$Version)
+        if (nrow(ip)==0) ip$pkg_vrs <- character()
+        
+      
+     #4 Select columns
+        ip <- ip[,c(names(ip) %in% c("LibPath", "Package","Version","pkg_vrs"))]
+        
+     #5 Add MD5 for DESCRIPTION file to merge & compare with `loans`
+        if (nrow(ip)>0)  {
+            description.path <- paste0(ip$LibPath, "/" , ip$Package , "/DESCRIPTION")
+            ip$md5 <- tools::md5sum(description.path)
+            }
+          
+        if (nrow(ip)==0) ip$md5 <- character()
+        
+    #6 End
+        return(ip)
+    }
+        
+
+#60 Loans
+  #60.1 get 
+  #pkg_vrs, location, 
+  get.loans<-function(verfiy.package.exists=TRUE) {
+    
+    #Start empty
+    loans <- data.frame(pkg_vrs=character() , 
+                        groundhog_location=character(),    
+                        sha=character(),                           
+                        md5=character(),                           
+                        stringsAsFactors=FALSE)
+    #Read it if it exists
+      loans_path<-paste0(get.groundhog.folder(),"/loans/",get.r.majmin(),".rds")  
+      dir.create(dirname(loans_path), showWarnings = FALSE,recursive = TRUE)
+      if (file.exists(loans_path)) loans<-readRDS(loans_path)
+      
+    #Sort it
+      loans<-loans[order(loans$pkg_vrs),]
+      
+    #Verify package exists in local folder
+      if (verfiy.package.exists==TRUE)
+      {
+        ip.local <- get.ip('local') #utils #58
+        loans   <- loans[loans$md5 %in% ip.local$md5,]
+      }
+       
+    #output
+      return(loans)
+  }
+  
+  #60.2 Save loans
+   save.loans<-function(loans) {
+     loans_path<-paste0(get.groundhog.folder(),"/loans/",get.r.majmin(),".rds")  
+     dir.create(dirname(loans_path), showWarnings = FALSE,recursive = TRUE)
+     saveRDS(loans,loans_path,version=2,compress=FALSE)
+   }
+
+   
+ #61 Verify unzipping has finished
+   
+    
+     verify.unzip<-function(zipfile,outdir)
+   
+      {
+        #Extension
+          ext <- tools::file_ext(zipfile)
+
+        #pkg name
+          pkg <- get.pkg(basename(zipfile))
+        
+        #File listed inside the zip file
+          if (ext=='zip') files.in.zip    = utils::unzip(zipfile , list=T) #(does not really unzip, just lists contents)
+          if (ext=='tar') files.in.zip    = utils::untar(zipfile , list=T) 
+        
+        #Files already outzipped
+          files.out.zip   = list.files(outdir ,recursive = TRUE  ,all.files = TRUE,include.dirs = TRUE)
+
+        #If same number, verify is TRUE
+          verify <- FALSE
+          if (length(files.out.zip)==length(files.in.zip$Name)) verify <- TRUE
+
+           
+        return(verify)
+      
+     }  
+     
+   #62 get drive from path whether they use forward or backwards slashes
+   get.drive=function(path)
+    {
+    parts  <- strsplit(path,"/")[[1]]            
+    drive1 <- ifelse(parts[1]=='',parts[2],parts[1])  #if path='/home/' then it starts with "/" and we want instead what comes next
+    drive2 <- strsplit(drive1,"\\\\")[[1]][1]         #need to double escape to get \\
+    drive2 <- tolower(drive2)
+    return(drive2)
+  }
+
+
+
+
+  #63 Slower with dropbox
+   groundhog.in.dropbox<-function()
+   {
+    return(regexpr('dropbox', tolower(get.groundhog.folder()))>0)
+        
+   }
+   

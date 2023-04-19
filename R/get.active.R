@@ -7,8 +7,12 @@
 
 
 get.active <- function() {
-   si <- utils::sessionInfo()
+   
+  
+    si <-utils::sessionInfo()
+    
 
+   
     loaded.list   <- si$loadedOnly # pkgs in name space
     attached.list <- si$otherPkgs  # pkgs in attached
     base.pkg <- si$basePkgs

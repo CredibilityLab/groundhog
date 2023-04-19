@@ -2,36 +2,58 @@
 % Please edit documentation in R/restore.library.R
 \name{restore.library}
 \alias{restore.library}
-\title{Restore version of packages in personal library replaced by groundhog.}
+\title{Restore default library of packages, undoing all changes made by groundhog}
 \usage{
-restore.library(days)
+restore.library(days = 0)
 }
 \arguments{
 \item{days}{an optional numeric argument used to choose among alternative restore points.
-When \code{days} is set, groundhog restores the personal library to the  most recent restore point, that
-is at least \code{days} days ago. \code{restore.library()} by default restores
-the most current restore point (e.g., if some packages were installed with groundhog today, to
-how the library was before today's installations). \code{days = -1} will restore back to the first
-restore point available.}
+When \code{days} is set, groundhog restores the personal library to the  most recent restore point that
+is at least \code{days} days old. If \code{dais} is not set, groundhog restores to the most recent restore point overall.
+For example, if there are two restore points: one from today, and one from 7 days ago,
+running \code{restore.library()} would restore to the former, setting \code{days=3} would restore to the latter,
+and setting \code{days=8} would result in an error. \code{days = -1} restores to the oldest restore point available.}
 }
 \description{
-When groundhog installs a package, it saves two copies of it.
-One goes on the stable groundhog library (to find its location: \code{get.groundhog.folder()})
-the other goes to the default personal library (to find its location: \code{.libPaths()[1]}).
-Because the personal library can only hold one version of a package, groundhog replaces
-existing versions of packages that already exist in the personal library (if any), just like
-\code{install.packages()} does. But, it makes a backup copy of those replaced packages.
-You can restore your personal non-groundhog library to how it was prior to groundhog modifying it
-(e.g., you can test groundhog for the first time, and then undo any modifications to your
-personal library). Run \code{restore.library()} and the backup
-copy of the original package version will be restored to the personal library.
-Thanks to keeping the backup copies, restoring an entire library takes but a few seconds.
-Groundhog makes a single restore point for every day that \code{groundhog.library()}
-leads to replacing even a single package into the personal library.
-View available dates with \code{.available.restore.points}.
+In a few seconds reverse changes made by groundhog to the default personal
+library (where R packages are usually installed into with \code{installed.packages()}).
+If you are just trying groundhog out for the first time,
+or you generally rely on base R's \code{library()} and want to use \code{groundhog.library()} sporadically
+then you may want to run \code{restore.library()} when you are done with your one-time use of groundhog.
+This will undo any and all changes made by \code{groundhog} to that library.
+In most circumstances, restoring a library takes a few seconds, even if the library
+has had 100s of package modifications.
 }
 \details{
-For more information about groundhog check out \href{http://groundhogr.com}{groundhogr.com}
+When groundhog installs a package, it installs it into groundhog's library
+(location of that library is obtainable with \code{\link[=get.groundhog.folder]{get.groundhog.folder()}}).
+Groundhog then immediately moves the installed package(s) (and their dependencies)
+to the default personal library (location of that library obtainable with: \code{.libPaths()[1]}).
+Altering the packages in the local folder is necessary for groundhog to work properly for two main reasons. First,
+R Studio often loads packages from that library before users run the code in a script, creating
+version conflicts that cannot be avoided when attempting to load other versions of those
+packages with \code{groundhog}. Second, R scripts often run processes in independent R sessions, for
+example when doing parallel processing. Those background processes will also look for
+packages in the default personal folder. Because the personal library can only hold
+one version of a given package, before moving new packages in, groundhog moves
+any existing other versions of those packages out, to another directory (a local archive).
+Those files are not deleted, just moved, making it easy and fast to recover.
+When the first change in the personal folder is made on a given calendar date,
+groundhog makes a list of all packages available in the personal folder before such change (saving
+a copy of the results from \code{installed.packages(.libPaths()[1])}), this saved file is referred to as a
+a 'restore point'. With \code{restore.library()} groundhog looks up a restore point, obtain the set of packages
+that used to be installed, and removes any packages \emph{installed by groundhog} which are in the personal library
+but were not in that restore point; similarly, it moves back to the local library any packages \emph{removed by groundhog}
+that were in the restore point but are not currently there. This process take a few seconds even for 100+ packages.
+Note that there is only one restore point per calendar date, so one effectively restores
+the personal library to how it was before \emph{any} changes were made to it that day with groundhog.
+Restore points are saved permanently and can be restored at any point.
+The set of restore points available is stored in the hidden dataframe \code{.available.restore.points}.
+To choose among them use the \code{days} argument in \code{restore.library}. The default is to restore
+based on the most recent restore point, so if a user installs groundhog, tests it, and wants to
+undo all changes made by groundhog, the default behavior will achieve this goal.
+Note: restoring can take a few minutes if the groundhog folder is on a different
+drive from the default personal R library (e.g., two different hard drives) or if it is in Dropbox.
 }
 \examples{
 \dontrun{

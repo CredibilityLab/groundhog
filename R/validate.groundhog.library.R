@@ -80,6 +80,34 @@
 
         }
         
+      #8 If there is a remote, it needs to be alone 
+          remote <- basename(pkg)!=pkg      
+          n.remote <- sum(remote)
+          
+          
+          if (n.remote>0 & length(pkg)>1 ) {
+           msg =paste0("The list of packages you are trying to load includes a remote (e.g., GitHub) package.\n",
+                       "But, remote packages need to be loaded on their own in separate groundhog.library() calls")
+		      gstop(msg)
+          }
+          
+          
+      #9 Options force.source.main and sorce.install.main must be along
+          if (force.source.main==TRUE & length(pkg)>1 ) {
+              msg =paste0("When setting `force.source.main=TRUE`, you may include\n",
+                           "only one package in the groundhog.library() call")
+		          gstop(msg)
+            
+          }
+        
+          
+             if (force.install.main==TRUE & length(pkg)>1 ) {
+              msg =paste0("When setting `force.install.main=TRUE`, you may include\n",
+                           "only one package in the groundhog.library() call")
+		          gstop(msg)
+            
+          }
+        
         
         
   }

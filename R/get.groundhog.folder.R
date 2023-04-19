@@ -25,7 +25,7 @@ get.groundhog.folder <- function() {
     if (consent==FALSE) {
       message(' -- not authorized to save to folder necessary for groundhog to work --')
       exit()
-      return(FALSE)
+      
       }
   
   #Set main folder with 'cookie files' and default for library
@@ -60,13 +60,18 @@ get.groundhog.folder <- function() {
 #' Set groundhog folder location
 #'
 #' @param path Character. The path to the groundhog folder containing the library
-#'   where packages are downloaded and installed.
+#'   where packages are downloaded and installed. For best performance and reliability, 
+#'   it is recommended that the groundhog folder be in the same volume/drive as the
+#'   folder used as the default R library, and
+#'   that it not be in a Dropbox (or similar) folders. Groundhog will be slower 
+#'   and occasionally produce errors when the groundhog folder is in Dropbox or 
+#'   a different drive.
 #'
 
 #'
 #' @examples
 #' \dontrun{
-#' set.groundhog.folder("~/.R_groundhog")
+#' set.groundhog.folder("c:/groundhog_folder")
 #' }
 #'
 #' @return (invisibly) `TRUE` upon success.
@@ -79,6 +84,57 @@ set.groundhog.folder <- function(path) {
   
   if (missing(path)) gstop("You forgot to enter the <path> you wanted to set.")
   
+  ###########################################
+  #1 Warnings for path
+  
+    #1.1 DROPBOX
+        #If path contains dropbox and we have not warned them within 10 minutes
+
+        if  (regexpr('dropbox', tolower(path))>0) {
+
+          #Draft message
+            msg=paste0("The path '",path,"' seems to be a Dropbox folder. Groundhog will be slower and ",
+              "more likely to produce occasional errors if the library is on Dropbox; ",
+              "consider using a different path. If you want to set it to  '",path,"' anyway, ",
+              "type 'anyway', else type 'cancel'")
+
+          #Show it
+            answer.dropbox<-infinite.prompt(format.msg(msg),valid_answers=c('anyway','cancel'),must.restart=FALSE)
+
+            if (tolower(answer.dropbox)=='cancel') {
+              message1("OK. Request cancelled.")
+              exit()
+            }
+            } #End if dropbox
+
+    # #1.2 TWO DRIVES
+        if  (get.drive(path) != get.drive(.libPaths()[1])) {
+
+          #Draft message
+              msg<- paste0("The path '",path,
+                      " seems to be a on a different drive (or 'volume') than ",
+                      "the default R library '",.libPaths(),"'. Groundhog will be slower and ",
+                      "more likely to produce occasional errors if paths for libraries are ",
+                      "on different drives. It is strongly recommended to use the ",
+                      "same physical drive for both paths instead. ",
+                      "If you want to set it to  '",path,"' anyway, type 'anyway', else type 'cancel'")
+
+
+           #Show it
+            answer.two_drives<-infinite.prompt(format.msg(msg),valid_answers=c('anyway','cancel'),must.restart=FALSE)
+
+            if (tolower(answer.two_drives)=='cancel') {
+              message1("OK. Request cancelled.")
+              exit()
+            }
+            
+
+        } #End if two drives
+
+
+      
+  #############################################################################
+
   #Set main folder with 'cookie files' and default for library
     main_folder <-  paste0(path.expand("~"), "/R_groundhog/")
     
@@ -93,11 +149,14 @@ set.groundhog.folder <- function(path) {
     
   #Save the cookie
     path <- trimws(path)
-    cat(path, file = path_file_storing_groundhog_library_location)
+    
   
   #Create groundhog_folder
     dir.create(path, showWarnings = FALSE, recursive = TRUE)
 
+  #Save cookie
+    cat(path, file = path_file_storing_groundhog_library_location)
+    
   #Verify we can save there
     path1 <- file.path(path,"testing ability to save.txt")
     write('testing ability to save',path1)
@@ -106,8 +165,8 @@ set.groundhog.folder <- function(path) {
     
     if (!saved.succesfully) {
       gstop(paste0("groundhog says: Unable to save to '",path,"'. Make sure you are allowed to save files to that directory."))
-      } 
-      
+    } 
+    
   #Assign it to the live environment
     Sys.setenv(GROUNDHOG_FOLDER = path)
  
@@ -121,5 +180,8 @@ set.groundhog.folder <- function(path) {
   #Reminder they can change it if it is the default path
     if (paste0(fw(dirname(path)),"/")==fw(main_folder)) message1("\nYou can change the location at any time running  `set.groundhog.folder(<path>)`")
     #fw() utils.R #50
-      
-    }
+    
+           
+  
+           
+        } #End of set.groundhog.folder

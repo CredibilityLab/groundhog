@@ -10,7 +10,6 @@
       
       #1  Directory for downloaded zips temp 
           temp_path <- paste0(get.groundhog.folder() ,"/temp/")
-          #unlink(temp_path, recursive = TRUE)                         #delete everything
           dir.create(temp_path,showWarnings = FALSE,recursive = TRUE) #create temp again
        
     
@@ -139,7 +138,7 @@
                   outfile    <- snowball$installation.path[k.snowball]
                 
                 #Show size so big files are understandably slower
-				  size <- filesize_format(file.size(zk))
+				          size <- filesize_format(file.size(zk))
                   message1('     Installing ',k.zip,' of ',n.zip,': ',basename(zk)," (",size,")")
                 
 
@@ -147,6 +146,20 @@
                   if (ext=="zip") utils::unzip(zk, exdir=outfile)
                   if (ext!="zip") utils::untar(zk, exdir=outfile)  
 					
+                #Verify installation has finished (in Dropbox there can be a substantial delay, 
+                #this will prevent attempting to copy before it's done)
+                  # for (kv in 1:60) {
+                  #   verify.outcome <- verify.unzip(zk, outfile) #utilS #61 (compares # of files in zip vs outzipped)
+                  #   
+                  #   #If verified, break and
+                  #     if (verify.outcome==TRUE) break
+                  #   
+                  #   #If not verified, give it 5 seconds, and check again
+                  #     if (verify.outcome==FALSE) {
+                  #       Sys.sleep(5)
+                  #     }
+                  # } #ENd loop
+                  
 				#Delete it
 					unlink(zk)
              
@@ -162,10 +175,7 @@
           snowball$success <- snowball$pkg_vrs %in% ip$pkg_vrs
   
           
-      #6 delete temp folder again (have it here and at beginning so that if process is interrupted deleted in anyway next time
-          #unlink(temp_path, recursive = TRUE)
-          #dir.create(temp_path,showWarnings = FALSE,recursive = TRUE) #create temp again
-          
+
           
       #7 Return timeout
           options(timeout=time.out.before)
