@@ -75,16 +75,19 @@ purge.local <- function (ip.purge , loans)
         new <- !file.exists(to.local_to_backup)    #are they new to the backup? (do not replace existing files)
         
       #3.4 Move new backup files
-		outcome.backup <- c()
+		     outcome.backup <- c()
+		     cat('\n')
+
          for (k in 1:length(from.local_to_backup))
           {
            
 
           outcome.backup[k] <- file.rename.robust(from=from.local_to_backup[new][k] , to= to.local_to_backup[new][k])
           #See file.rename.robust.R() it tries renaming only when file is ready, and switches to copying upon failure
-          
+          cat('...',k)
+
           }
-        
+          cat("\n")
           #Any failures?
           #if (mean(outcome.backup)<1) {
            # message("groundhog says:\nwarning. The following folders failed to be created:\n",pasteQC(to.local_to_backup[!outcome.backup]))
