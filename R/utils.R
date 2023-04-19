@@ -881,7 +881,7 @@
          main_folder <-  fw(paste0(path.expand("~"), "/R_groundhog/")) #fw: function #50
         
       #See if consent has been given by seeing if the folder exists
-        consent <- (file.exists(main_folder))
+        consent <- (dir.exists(main_folder))
         if (consent==TRUE) return(TRUE)
         if (consent==FALSE & ask==FALSE) return(FALSE)
 
@@ -900,11 +900,11 @@
                          "(This only needs to be done once on a given computer)\n",
                          "**********************************************************************************\n\n")
           #For batch files
-            if (interactive()==FALSE)
+            if (interactive()==FALSE )
             {
               message(batch_msg)
-              return(FALSE)
-              
+              #return(FALSE)
+              exit()
             }
             
             
@@ -918,7 +918,7 @@
               }
             if (tolower(answer)=="no") {
               message("You did not provide permission to save files locally, groundhog will not work until you do.")
-              return(FALSE)
+              exit()
               }
          } #End  if no consent and we are asking for it
         
