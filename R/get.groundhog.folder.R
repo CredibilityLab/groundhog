@@ -99,7 +99,7 @@ set.groundhog.folder <- function(path) {
               "type 'anyway', else type 'cancel'")
 
           #Show it
-            answer.dropbox<-infinite.prompt(format.msg(msg),valid_answers=c('anyway','cancel'),must.restart=FALSE)
+            answer.dropbox<-infinite.prompt(format_msg(msg),valid_answers=c('anyway','cancel'),must.restart=FALSE)
 
             if (tolower(answer.dropbox)=='cancel') {
               message1("OK. Request cancelled.")
@@ -121,7 +121,7 @@ set.groundhog.folder <- function(path) {
 
 
            #Show it
-            answer.two_drives<-infinite.prompt(format.msg(msg),valid_answers=c('anyway','cancel'),must.restart=FALSE)
+            answer.two_drives<-infinite.prompt(format_msg(msg),valid_answers=c('anyway','cancel'),must.restart=FALSE)
 
             if (tolower(answer.two_drives)=='cancel') {
               message1("OK. Request cancelled.")

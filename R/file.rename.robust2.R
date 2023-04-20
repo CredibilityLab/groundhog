@@ -49,7 +49,7 @@ file.rename.robust2<-function(from,to)
                   save.cookie("copy_instead_of_renaming")
             
             #failure message
-                gstop(format.msg(msg_copy_instead_of_renaming))  
+                gstop(format_msg(msg_copy_instead_of_renaming))  
                 
               }  
   

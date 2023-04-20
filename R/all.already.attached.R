@@ -6,7 +6,7 @@
 
 
 
-all.already.attached<-function(pkg,date)
+already.all.attached<-function(pkg,date)
 {
   # Count remote
     n.remote=sum(basename(pkg)!=pkg)

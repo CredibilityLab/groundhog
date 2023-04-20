@@ -33,7 +33,7 @@
 #32 infinite.prompt()          :  ask the same question until a valid answer is provided
 #33 get.packages_df()          :  data.frame with installed packages in local library
 #34 sandwich.library()         :  turn a string containing library calls into a vector of pkg names
-#35 format.msg()               :  format output to have fixed width and starting symbol (e.g., "|    ")
+#35 format_msg()               :  format output to have fixed width and starting symbol (e.g., "|    ")
 #36 set.default.mirror()       :  set a CRAN mirror if none is already set
 #37 verify.personal.library.exists(): if no folder for saving personal packages exists, prompted to create it
 #38 restart.text()             :  tells user to either quit() R or use CMD-SHFT-F10 based on whether they use R Studio
@@ -549,7 +549,7 @@
 #35 Format msg: format output to have fixed width and starting symbol (e.g., "|    ")
     
     
- format.msg <- function(msg,width=70, header='IMPORTANT.', pre="|   ")
+ format_msg <- function(msg,width=70, header='IMPORTANT.', pre="|   ")
 {
   #Line counter
     j<-0
@@ -634,7 +634,7 @@
                        "   1) Type 'create' to create that directory \n ",
                        "   2) Otherwise type 'stop'")
                 
-                answer<-infinite.prompt(format.msg(msg),c('create','stop'))
+                answer<-infinite.prompt(format_msg(msg),c('create','stop'))
                 if (answer=='create') {
                       dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)
                       }
@@ -976,7 +976,7 @@ get.parallel.time<-function(times,cores)
 #51 stop
   gstop <- function(msg,format=FALSE) {
     #Format the message with line breaks and border if requested
-    if (format==TRUE) msg=format.msg(msg) #util #35
+    if (format==TRUE) msg=format_msg(msg) #util #35
     message1(msg)
     message("**Groundhog stopped**")
     exit()

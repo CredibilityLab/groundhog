@@ -42,7 +42,7 @@
                           "versions of those packages directly with groundhog, but those earlier ",
                           "versions will not allow loading github and gitlab packages with groundhog. \n \n ")
             
-            if (pkg_utility=='git2r') message1(format.msg(msg,header="NOTE"))
+            if (pkg_utility=='git2r') message1(format_msg(msg,header="NOTE"))
             date2<-'2018-10-15'
             
           }

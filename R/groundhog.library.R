@@ -143,8 +143,8 @@
           remote <- basename(pkg)!=pkg      
           n.remote <- sum(remote)
          
-        if (n.remote==0 & all.already.attached(pkg , date) ) return(invisible(TRUE))
-          #all.already.attached.R produced: message1("All requested packages are already attached")
+        if (n.remote==0 & already.all.attached(pkg , date) ) return(invisible(TRUE))
+          #already.all.attached.R produced: message1("All requested packages are already attached")
 
           
       
@@ -362,7 +362,7 @@
                         pasteQC(pkg_conflict)
                         )
                         
-          gstop(format.msg(msg))
+          gstop(format_msg(msg))
           
           
         } #End n conflict>0
