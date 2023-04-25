@@ -62,14 +62,16 @@ file.rename.robust2<-function(from,to)
     #2 Copy and delete
     if (method=="copying")
       {
-      message1('Will copy ',length(to),' packages')
+      #msg = paste0('Groundhog is relying on a slower method for moving packages after installation. ',
+                   #'To give the faster method another try, run: `try.renaming.method.again()`')
+      #message(format_msg(msg,header='Note:'))
       cat('\n')
       for (k in 1:length(to))
         {
         cat('...',k)
         dir.create(to[k] , recursive = TRUE,showWarnings = FALSE)
-        message1("Copying ",basename(from[k])," from groundhog's to R's default library.")
-        outcome=file.copy(from,dirname(to[k]),recursive = TRUE)
+        #message1("Copying ",basename(from[k])," from groundhog's to R's default library.")
+        outcome=file.copy(from[k],dirname(to[k]),recursive = TRUE)
         if (outcome==TRUE) unlink(from[k])
         if (outcome!=TRUE) {
         msg<-paste0("Failed copying '" , from[k] , "' to '" , to[k] , "'")
@@ -77,7 +79,8 @@ file.rename.robust2<-function(from,to)
         } #End failure
 
       } #end loop
+      cat('\n')          
     } #End of copying
-          
+
   
 } #End function
