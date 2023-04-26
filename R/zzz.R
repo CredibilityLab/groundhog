@@ -66,7 +66,7 @@
           packageStartupMessage ("Tips and troubleshooting: https://groundhogR.com")
 
     #While developing:
-      packageStartupMessage ("##########################################\nThis is a DEV version: 2023 04 25 - 15.10")
+      packageStartupMessage ("##########################################\nThis is a DEV version: 2023 04 26 - 9:20")
 
   } #End on attach
     
