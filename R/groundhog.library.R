@@ -317,13 +317,24 @@
 #6 Install snowball 
       
     #6.0 Reminder of dropbox warning if it's in copy-mode and dropbox folder
+      
       if (groundhog.in.dropbox()==TRUE & cookie.exists("copy_instead_of_renaming")) {
-            message("Reminder: having groundhog folder in Dropbox makes things slower.\n",
-                    "You can use `set.groundhog.folder(<path>)` to change its location.\n",
-                    "You can also run `try.renaming.method.again()` to continue using the\n",
-                    "dropbox folder but give another try to the faster package-copying \n",
-                    "method which *ocassionally* does not work with Dropbox folders.\n")
-          }
+          
+        #If msg shown more than 10 minutes ago
+            if (get.minutes.since.cookie('dropbox_is_slower_reminder') > 30)
+            {
+            #Save cookie
+              save.cookie('dropbox_is_slower_reminder')
+            #Show message
+            msg=paste0("Having groundhog folder in Dropbox makes things slower. ",
+                    "You can use `set.groundhog.folder(<path>)` to change its location. ",
+                    "You can also run `try.renaming.method.again()` to continue using the ",
+                    "dropbox folder but give another try to the faster package-copying ",
+                    "method which *occassionally* does not work with Dropbox folders. ",
+                    "This message will not be shown again in the next 30 minutes.")
+            message(format_msg(msg,header='Reminder: '))
+            }
+      }
       
   
     #6.1 Do we need to install on background?
