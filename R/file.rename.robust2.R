@@ -2,7 +2,7 @@
 
 #This function tries to rename all paths in the `from` field to `to`
 #It first tries to do file.rename() for all,and then chekcs that all
-#pkgs are installed succesfully in the to, if they are not, it flags an erro
+#pkgs are installed successfully in the to, if they are not, it flags an erro
 #and switches to copy-pasting
 #
 #file.rename.robust() (without the '2') did the first step in a loop, but felt slower
@@ -62,15 +62,15 @@ file.rename.robust2<-function(from,to)
     #2 Copy and delete
     if (method=="copying")
       {
-      #msg = paste0('Groundhog is relying on a slower method for moving packages after installation. ',
-                   #'To give the faster method another try, run: `try.renaming.method.again()`')
-      #message(format_msg(msg,header='Note:'))
-      cat('\n')
-      for (k in 1:length(to))
+      
+      #feedback if 
+        n_to <- length(to)
+        if (n_to > 5) cat('\n')  
+        
+        for (k in 1:n_to)
         {
-        cat('...',k)
+        if (length(to)>5) cat('...',k)
         dir.create(to[k] , recursive = TRUE,showWarnings = FALSE)
-        #message1("Copying ",basename(from[k])," from groundhog's to R's default library.")
         outcome=file.copy(from[k],dirname(to[k]),recursive = TRUE)
         if (outcome==TRUE) unlink(from[k])
         if (outcome!=TRUE) {
@@ -79,7 +79,7 @@ file.rename.robust2<-function(from,to)
         } #End failure
 
       } #end loop
-      cat('\n')          
+      if (n_to > 5) cat('\n')          
     } #End of copying
 
   
