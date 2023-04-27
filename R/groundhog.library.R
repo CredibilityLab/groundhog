@@ -414,7 +414,7 @@
       
       
      #10.2 #verify pkg is indeed available in local
-        ip.local<-get.ip('local')
+     ip.local<-get.ip('local')
 		for (pkgk in pkg)
 		{
 		  if (!pkgk %in% c(ip.local$Package, base_pkg())) {

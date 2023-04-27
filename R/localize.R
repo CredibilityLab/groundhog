@@ -1,15 +1,19 @@
 #Takes a snowball, lends packages to local library, and takes packages from local library
 #either back to groundhog library or to a backup library (for pkgs not installed with groundhog originally)
 #-------------------------------------------------------------------------------------------------------------
+
+#0 Drop duplicates
 #1 Early return
 #2 Save restore point
-#3
-
+#3 Ensure $sha exists
+#4 Installed.packages: local, backup and groundhog
+#5 Purge: pkgs to remove from local
+#6 Borrow
 
   localize.snowball <- function(snowball)
   {
     #0 Drop duplicates
-    snowball<-snowball[!duplicated(snowball$pkg_vrs),]
+       snowball<-snowball[!duplicated(snowball$pkg_vrs),]
     
     #1 Early return if empty snowball
       if (nrow(snowball)==0) return(TRUE)
@@ -46,37 +50,37 @@
       
   #4. Installed.packages: local, backup and groundhog
       
-          #4.1 installed.packages #utils #59
-            ip.local     <- get.ip('local')     # .libPaths[1]
-            ip.groundhog <- get.ip('groundhog') # in all of groundog
-            ip.backup    <- get.ip('backup')    # pks removed from local and not belonging to groundhog
-            loans        <- get.loans()         #package lent already from groundhog to personal library[1] (#utils #60)
+    #4.1 installed.packages #utils #59
+      ip.local     <- get.ip('local')     # .libPaths[1]
+      ip.groundhog <- get.ip('groundhog') # in all of groundhog
+      ip.backup    <- get.ip('backup')    # pks removed from local and not belonging to groundhog
+      loans        <- get.loans()         #package lent already from groundhog to personal library[1] (#utils #60)
 
+        
+      #NOTE on MD5 vs 'pvs' to identify packages:
+          #ip <-> snowballs, with pvs (pkg_vrs_sha)  
+          #ip <-> loans, with MD5
+          
+            #same pkg_vrs but different commits, and remotes pkgs from CRAN pkgs with the same pkg_vrs (rio from CRAN vs rio from github)
+            #(sha is "" for pkgs originally on CRAN) 
+          
+      #4.2 if sha is NA, make it "", plays more nicely with paste() functions
+              snowball$sha[is.na(snowball$sha)] <-''
               
-            #NOTE on MD5 vs 'pvs' to identify packages:
-                #ip <-> snowballs, with pvs (pkg_vrs_sha)  
-                #ip <-> loans, with MD5
-                
-                  #same pkg_vrs but different commits, and remotes pkgs from CRAN pkgs with the same pkg_vrs (rio from CRAN vs rio from github)
-                  #(sha is "" for pkgs originally on CRAN) 
-                
-            #4.2 if sha is NA, make it "", plays more nicely with paste() functions
-                    snowball$sha[is.na(snowball$sha)] <-''
-                    
-            #4.3 pvs for snowball and loans()
-                    snowball.pvs <- ifelse(snowball$sha=="",  snowball$pkg_vrs,  paste0(snowball$pkg_vrs , "@" , snowball$sha))
-                    loans.pvs    <- ifelse(loans$sha=="",     loans$pkg_vrs,     paste0(loans$pkg_vrs    , "@" , loans$sha)) 
-                    
-            #4.4 Subset of the snowball that we have borrowed
-                    borrowed <- snowball.pvs %in% loans.pvs
-                  
-            #4.5 If all of them are, nothing left to do, done localizing
-                if (all(borrowed)) return(invisible(TRUE))
-    
-            #4.6 How many will be lent 
-              n.lend <- sum(!borrowed)
+      #4.3 pvs for snowball and loans()
+              snowball.pvs <- ifelse(snowball$sha=="",  snowball$pkg_vrs,  paste0(snowball$pkg_vrs , "@" , snowball$sha))
+              loans.pvs    <- ifelse(loans$sha=="",     loans$pkg_vrs,     paste0(loans$pkg_vrs    , "@" , loans$sha)) 
+              
+      #4.4 Subset of the snowball that we have borrowed
+              borrowed <- snowball.pvs %in% loans.pvs
+            
+      #4.5 If all of them are, nothing left to do, done localizing
+          if (all(borrowed)) return(invisible(TRUE))
 
-    #-------------------------------------------------------------- 
+      #4.6 How many will be lent 
+          n.lend <- sum(!borrowed)
+
+#-------------------------------------------------------------- 
               
               
     #5 Purge: pkgs to remove from local
@@ -115,7 +119,10 @@
        #As precaution, delete any destination folder k=1
         for (fk in to.groundhog_to_local)
           {
-          if (file.exists(fk)) unlink(fk,recursive=TRUE)
+          #if (file.exists(fk)) unlink(fk,recursive=TRUE)
+          
+          #Rename any existing destination package to _PURGE so that it is deleted upon startup
+            if (file.exists(fk)) file.rename(fk,paste0(fk , "_" , paste0(sample(letters,5,replace=TRUE),collapse = ''),"_PURGE"))
           }
 
 
@@ -139,12 +146,18 @@
         #Drop the row name, which is a long location path
           loans<-data.frame(loans,row.names = NULL)  
         
-      #Delete parent folder name in groundhog folder  (e.g., rio_0.5.4/rio  we moved /rio so delete rio_0.5.4)
-        for (fk in from.groundhog_to_local)
+      #If renaming mode: delete parent folder name in groundhog folder  (e.g., rio_0.5.4/rio  we moved /rio so delete rio_0.5.4)
+        if (!cookie.exists("copy_instead_of_renaming"))
         {
-          unlink(dirname(fk),recursive=TRUE)
+        for (fk in from.groundhog_to_local){
+            unlink(dirname(fk),recursive=TRUE)
+          } #End loop
+        }  #End if renaming
           
-        }
+          #Note: do not delete the parent folder in copying mode, because then we don't need to copy it back
+          #which is slow
+          
+          
         
       #Update loans.rds
         save.loans(loans)   #utils #60

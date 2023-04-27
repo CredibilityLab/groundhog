@@ -12,21 +12,24 @@
 
 #OUTLINE
   #Set 0 - Various forms of calling packages to be loaded
-  #Set 1 - Error and warnings with conflicts
-  #Set 2 - Previously documented bugs
-  #Set 3 - Automatized installation of packages in random order, via function
-  #Set 4 - Remotes (github and gitlab)
-  #Set 5 -
-  #Set 6 - individual functions
+  #Set 1 - Enumerated conflicts '
+  #Set 2 - Previous Bugs
+  #Set 3 - Install many packages
+  #Set 4 - Remote packages
+  #Set 5 - others
+  #Set 6 - Restore  Library
+  #Set 7 - method='copying'
+
+
 #Version being tested (only locally available)
 
 install.packages('https://groundhogr.com/groundhog_3.0.0.tar.gz',repos=NULL)
 #install.packages('c://dropbox/groundhogr/groundhog_3.0.0.tar.gz',repos=NULL)
 
 library('groundhog')
-gd=get.groundhog.folder()
-set.groundhog.folder(paste0(gd,"/temp1"))
-
+#gd=get.groundhog.folder()
+#set.groundhog.folder(paste0(gd,"/temp1"))
+set.groundhog.folder('c:/temp/101')
 
 
 test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 45 days
@@ -177,7 +180,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
 
 
 ########################################################################
-#SET OF TESTS 2 -  CHECKING PREVIOUSLY FOUND BUGS
+#Set 2 - Previous Bugs
         test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version + 45 days
 
 #1) Loading but not attaching dependencies (verify one can run lmer() without lme4::)
@@ -246,7 +249,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
   
   
 ########################################################################
-#SET OF TESTS 3 -  INSTALLATION OF PACKAGES IN RANDOM ORDER
+#Set 3 -  Install many packages
   #Function 
     
 #                             TESTING GROUNDHOG 
@@ -377,7 +380,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     library('groundhog')
     test.groundhog(1:10)                   
     test.groundhog(1:10,day.offset=40)
-    
+    try.renaming.method.again()
     #back to top 10, should not install anything
     test.groundhog(1:10)                   
     
@@ -393,7 +396,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     test.groundhog(2501:2510)              
     
 ########################################################################
-#SET OF TESTS 4 -  REMOTES
+#Set 4 -  Remote packages
 
 
 #4.1 - Run in 4.0.3
@@ -453,7 +456,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
 
     
 ########################################################################
-#SET OF TESTS 5 -  OTHER
+#Set 5 -  Others
     
 #5.1 Conflict in source install
     
@@ -463,9 +466,21 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     library(metafor)
     library('groundhog')
     groundhog.library('metafor','2023-03-01',force.install.main=TRUE,force.source.main=TRUE)
+    
+    
+#5.2 Set dropbox path
+      library('groundhog')
+      set.groundhog.folder('c:/dropbox/temp1')
+      groundhog.library('jsonlite','2023-03-01')
+  
+      #PENDING: add to see what happens when dropbox was set by previous version of groundhog
+      
+#5.3 two different volumes
+      
+      
  
 ########################################################################
-#SET OF TESTS 6 - Restore  Library
+#Set 6 - Restore  Library
     
        
 #6.1 Undo all changes in tests above (strong tes)
@@ -538,11 +553,47 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
       
       
 ########################################################################
-#SET OF TESTS 7 - One-off
-    #7.1 Set dropbox path
-      library('groundhog')
-      set.groundhog.folder('c:/dropbox/temp1')
+#Set 8 - method-copying
       
-      groundhog.library('jsonlite','2023-03-01')
+    #Choose two dates far apart for same release of R
+      day1 <- groundhog:::get.r.majmin.release()+20
+      day2 <- groundhog:::get.r.majmin.release()+340
+      
+    #8.1 Switch to copying
+      groundhog:::cookie.exists("copy_instead_of_renaming")
+      groundhog:::save.cookie('copy_instead_of_renaming')
+      
+      
+      
+    #8.2 Install back-and-forth alternative dates, verify packages do not get installed again
+        #DAY 1
+          library('groundhog')
+          groundhog.library('metafor',day1)
+          
+        #DAY 2
+          #RESTART
+          library('groundhog')
+          groundhog.library('metafor',day2)
+          
+        #DAY 3
+          #RESTART
+          library('groundhog')
+          groundhog.library('metafor',day1)
+          
+      
+      
+      
+      restore.library()
+        
+        library('metafor')
+        groundhog.library(c('metafor','tidyverse'),'2023-03-01')
+        
+        groundhog.library(c('metafor','tidyverse'),'2022-05-21')
+        
+        
+        
+        
+      
+      
       
       

@@ -55,8 +55,7 @@
 #54 filesize_format            : turn bytes file size to human readable
 #55 get.restore.points         : vector with dates available 
 #57 View conflicts             : view conflicting pkgs in recent call
-#58 Get ip.groundhog():        : installed.packages data.frame for all packages in groundhog library and loans
-#59 get ip.backup()            : same for all packages that have been saved to the backup folder
+#59 getip()            : same for all packages that have been saved to the backup folder
 #60 get.loans() & /save.loans(): load and save database with all lent packages
 #61 file.rename.robust:        :  rename a file ony once it can be renamed to itself
 
@@ -1113,7 +1112,7 @@ get.parallel.time<-function(times,cores)
     }
 
   
-#58 get.ip
+#59 get.ip
   get.ip <- function(location)
   {
     #1 Get all subfolders for backup and groundhog
@@ -1251,4 +1250,44 @@ get.parallel.time<-function(times,cores)
     return(regexpr('dropbox', tolower(get.groundhog.folder()))>0)
         
    }
+   
+   
+  #64 get md5
+   get.md5<-function(pkg_path)
+   {
+     description.path <- paste0(pkg_path,"/DESCRIPTION")
+     md5 <- tools::md5sum(description.path)
+     return(md5)
+     
+   }
+   
+   
+   #65 Add _PURGE to a pkg path in local
+   purge.pkg_path <- function(pkg_path)
+   {
+     
+     #Generte N random strings of letters
+      #random=c()
+      #for (k in 1:length(pkg_path)){
+      #random[k] =paste0(sample(letters,6,replace=TRUE),collapse = '')
+      #}
+      random <- paste0(sample(letters,6,replace=TRUE),collapse = '')
+      
+    #New name merges path name, random letters and PURGE
+      #new.pkg_path <- paste0(pkg_path,"_",random,"_PURGE")
+      
+    #PUt in subfolder which is not read by installed.packages()  /_purge
+      #Dir _purge
+         purge_dir <- paste0(dirname(pkg_path),"/_purge")
+         
+      #Esnure it exists
+         dir.create(purge_dir,showWarnings = FALSE,recursive = TRUE)
+         
+      #New path
+         new.pkg_path <- paste0(purge_dir,"/" , basename(pkg_path),"_",random)
+   
+    #Rename
+      file.rename(pkg_path, new.pkg_path)
+       }
+   
    
