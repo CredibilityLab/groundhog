@@ -73,7 +73,9 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
                 #Update snowball setting lost packages (if any) as not installed
                     if (nrow(loans.lost)>0)
                     {
-                    snowball$installed <- ifelse(snowball$pkg_vrs %in% loans.lost$pkg_vrs, FALSE, snowball$installed)
+                    snowball$installed <- ifelse(snowball$pkg_vrs %in% loans.lost$pkg_vrs &
+                                                 !snowball$pkg_vrs %in% get.ip("groundhog")$pkg_vrs 
+                                                   , FALSE, snowball$installed)
                     
                     #If a pkg is lost, we force installed=FALSE, otherwise we keep what it is (which should be TRUE)
                     #since we only save a snowball upon installing successfully all of it
