@@ -73,11 +73,16 @@ file.rename.robust2<-function(from,to)
 
       #2.1 Console ...k feedback if more than 5
         n_to <- length(to)
-        if (n_to > 5) cat('\n')  
-        
+        if (n_to > 5) {
+          cat('\n')  
+          message1("Will now copy ",n_to," packages to ",dirname(dirname(to[1])))
+          }
       #2.2 Loop over files to copy
         for (k in 1:n_to)
         {
+           #Show "...k"
+                if (length(to)>5) cat('...',k)  #show how far along we are
+                if (k%%10==0) cat('\n')         #print up to -10 per row
           
           #Assume we will copy
                 skip.copy <- FALSE
@@ -92,6 +97,10 @@ file.rename.robust2<-function(from,to)
                 
               #If match skip
                 if (md5.from==md5.to) skip.copy <- TRUE
+          
+            
+                
+                
             } 
          
          
@@ -102,10 +111,7 @@ file.rename.robust2<-function(from,to)
               #Ensure `to` directory exist
                 dir.create(to[k] , recursive = TRUE,showWarnings = FALSE)
         
-                   
-              #Show "...k"
-                if (length(to)>5) cat('...',k)
-
+            
               #Copy 
                 outcome=file.copy(from[k],dirname(to[k]),recursive = TRUE) #CHECK @@@
               
