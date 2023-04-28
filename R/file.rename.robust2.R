@@ -81,8 +81,9 @@ file.rename.robust2<-function(from,to)
         for (k in 1:n_to)
         {
            #Show "...k"
+                if (k%%10==1) cat('\n')         #print up to -10 per row
                 if (length(to)>5) cat('...',k)  #show how far along we are
-                if (k%%10==0) cat('\n')         #print up to -10 per row
+                
           
           #Assume we will copy
                 skip.copy <- FALSE
