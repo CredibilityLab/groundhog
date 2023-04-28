@@ -59,9 +59,14 @@
           #if (nrow(purge_df)>0) unlink(purge_df$path , recursive = TRUE)   
      
     #8 Delete purge subfolder with to-be-deleted pkgs (put here when using copy-and-delete method)
-      purge_path <- paste0(.libPaths()[1],"/_purge")
-      if (dir.exists(purge_path)) unlink(purge_path,recursive=TRUE)
+      #purge for >=3.0.0
+         purge_path <- paste0(.libPaths()[1],"/_purge")
+          if (dir.exists(purge_path)) unlink(purge_path,recursive=TRUE)
+         
+      #purge <3.0.0
+         try(purge_v2.2()) #Utils #66
 
+   
   
     } #End of onLoad
 
@@ -78,9 +83,11 @@
           packageStartupMessage ("Tips and troubleshooting: https://groundhogR.com")
 
     #While developing:
-      packageStartupMessage ("##########################################################\n",
-                             "This is a DEV version: 2023 04 27 - 11:53 (Barcelona time)")
+      packageStartupMessage ("#######################################################\n",
+                             "This DEV version: 2023 04 28 - 10:01 (Barcelona time)")
 
+      
+      
   } #End on attach
     
     
