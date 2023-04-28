@@ -1291,3 +1291,25 @@ get.parallel.time<-function(times,cores)
        }
    
    
+   
+   
+  #66 PUrge packages from version 2.2
+   purge_v2.2 <- function()
+   {
+     #if (!cookie.exists('purged_2.2'))
+     #{
+     #Save the cookie
+      # save.cookie('purged_2.2')
+       
+     #Delete to be purged packages (for version 2.2, if they were purged in 2.2 and then updated_
+          pkg_list       <- list.files(.libPaths()[1])
+          pkg_list_purge <- pkg_list[regexpr('_PURGE',pkg_list) >=0]
+          if (length(pkg_list_purge)>0)
+          {
+            path_all <- paste0(.libPaths()[1],"/",pkg_list_purge)
+            try(unlink(path_all,recursive=TRUE))
+          }
+          
+     #} #End if no-cookie 
+    }#End purge
+   
