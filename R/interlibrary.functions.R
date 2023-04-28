@@ -25,15 +25,7 @@ purge.local <- function (ip.purge , loans)
         to.local_to_groundhog   <- paste0(ip.return$groundhog_location, "/", ip.return$Package)
         
         
-      #2.3 As precaution, delete any destination folder, and create the parent
-        # for (fk in to.local_to_groundhog)
-        #   {
-        #   if (file.exists(fk)) unlink(fk,recursive=TRUE)
-        #   dir.create(dirname(fk),recursive = TRUE,showWarnings = FALSE)
-        #   }
-        #
-        
-      #2.4 Execute 
+    #2.4 Execute 
 		      file.rename.robust2(from.local_to_groundhog, to.local_to_groundhog)  #file.rename.robust2.R
 
            
