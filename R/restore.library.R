@@ -109,7 +109,7 @@ restore.library<-function(days=0)
   #ADD PACAKGES THAT WERE REMOVED BY GROUNDHOG    
       
           
-  #4 Subset of pacakges in to-be-restored IP, but not in local, so they need to be added
+  #4 Subset of packages in to-be-restored IP, but not in local, so they need to be added
         ip.add0   <-  ip.restore[! ip.restore$md5 %in% ip.local$md5,]  #We used to have these packages, but no longer do, so we add them
       
     #4.1 Keep subset that we know were originally removed by groundhog
@@ -128,8 +128,10 @@ restore.library<-function(days=0)
   #5 Set of pkgs being eliminated
       ip.purge0 <- ip.local[!ip.local$md5 %in% ip.restore$md5,]    #We have these packages but did not use to, so we purge them
       
-    #5.1 Keep subset taht we know were originally added by groundhog
-      ip.purge <- ip.purge0[ip.purge0$md5 %in% loans$md5,]    #We have these packages but did not use to, so we purge them
+    #5.1 Do eliminate thoes we know were originally added by groundhog
+      ip.purge <- ip.purge0[ip.purge0$md5 %in% loans$md5 | ip.purge0$md5 %in% ip.groundhog$md5,]    
+          #We have these packages but did not use to, so we purge them
+          #They are either on loan (if using renaming, or in groundhog, if using copying)
       
     #5.2  i some were added not by groundhog make a note 
         non.groundhog_installed <- ip.purge0$pkg_vrs[!ip.purge0$pkg_vrs %in% ip.purge$pkg_vrs]
@@ -160,12 +162,12 @@ restore.library<-function(days=0)
               if (n1>0) {
                       msg<-paste0(msg, "an additional ", n1 , " packages have been installed but not\n", 
                                   "by groundhog, these packages will *not* be removed:\n",
-                                  pasteQC(non.groundhog_installed),"\n")
+                                  pasteN(non.groundhog_installed),"\n")
                 }
               if (n2>0) {
                         msg<-paste0(msg, "an additional ", n2 , " packages have been removed but not\n",
                                   "by groundhog, these will *not* be restored:\n",
-                                   pasteQC(non.groundhog_removed))
+                                   pasteN(non.groundhog_removed))
 
                 }
               msg<-paste0(msg, ".\nProceeding with restoring only the groundhog produced\n",
@@ -227,14 +229,14 @@ restore.library<-function(days=0)
   #Skipped based on FROM
         if (sum(skip.no_backup)>0) {
         message(sum(skip.no_backup), "  packages originally removed by groundhog could not be restored because the backup was missing:")
-        message(pasteQC(from[skip.no_backup]))
+        message(pasteN(from[skip.no_backup]))
               } 
           
   #Skipped based on TO
         if (sum(skip.other_pkg)>0) {
                 message(sum(skip.other_pkg), " packages originally removed by groundhog could not be restored because another version of the same \n",
                         "package was installed, not with groundhog, after the restore point was created:")
-                message(pasteQC(from[skip.other_pkg]))
+                message(pasteN(from[skip.other_pkg]))
               } 
       
       

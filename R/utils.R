@@ -29,7 +29,7 @@
 #28 DROPPED
 #29 read.desc2()
 #30 DROPPED
-#31 pasteQC()                  :  paste a vector separating elements by quots  c('a','b','c')-->  string: '"a","b","c"'
+#31 pasteQC() & pasteN         :  paste a vector separating elements by quots  c('a','b','c')-->  string: '"a","b","c"' or 
 #32 infinite.prompt()          :  ask the same question until a valid answer is provided
 #33 get.packages_df()          :  data.frame with installed packages in local library
 #34 sandwich.library()         :  turn a string containing library calls into a vector of pkg names
@@ -449,11 +449,17 @@
           
 
 
-#31 pasteQC
+#31 pasteQC & pasteN
     pasteQC<-function(x)
       {
       paste0("'", paste0(x ,collapse="', '"),"'")
     }
+    
+    pasteN<-function(x)     {
+      paste0("'",paste0(x ,collapse="'\n'"),"'")
+    }
+    
+    
     
     
 #32 infinite.prompt

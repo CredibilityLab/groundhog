@@ -32,6 +32,14 @@ file.rename.robust2<-function(from,to)
       #Ensure parent paths exist
         for (dk in dirname(to)) dir.create(dk, showWarnings = FALSE,recursive = TRUE)
 
+      #If files already exist in destination, delete them (this will happen e.g., if switching from copying to renaming method)
+      #a pkg may exist in groundhog's library and it is now localy, renaming will generate a warning
+        for (to.k in to)
+        {
+          if (dir.exists(to.k)) unlink(to.k,recursive = TRUE)
+          
+        }
+      
       #Rename
         file.rename(from , to)
       
