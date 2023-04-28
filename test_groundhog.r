@@ -18,7 +18,6 @@
   #Set 4 - Remote packages
   #Set 5 - others
   #Set 6 - Restore  Library
-  #Set 7 - method='copying'
 
 
 #Version being tested (only locally available)
@@ -150,7 +149,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
 
             
 #3 AFTER (so a conflict with a non-groundhog loaded pkg)
-          library('groundhog')
+        library('groundhog')
         groundhog.library('pwr',test.day-1200,tolerate.R.version = groundhog:::get.rversion()) 
      
         #restart session
@@ -378,13 +377,21 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
    
   
     library('groundhog')
-    test.groundhog(1:10)                   
-    test.groundhog(1:10,day.offset=40)
+    test.groundhog(1:10)                  
+    
+    
+    
+  #Switch to copying
+    groundhog:::save.cookie('copy_instead_of_renaming')
+    groundhog:::cookie.exists("copy_instead_of_renaming")
+    
+  #Same pkgs again with an ofset of time and the copy method
+    test.groundhog(1:10,day.offset=140)
     try.renaming.method.again()
     #back to top 10, should not install anything
     test.groundhog(1:10)                   
     
-    
+    restore.library()
     test.groundhog(120:129)                
     test.groundhog(120:129,day.offset=91)  
     #back to top 10, should not install anything
@@ -405,7 +412,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     # Key is whether the second package, a dependency of the 1st, is loaded without an error 
 
    library('groundhog') 
-    groundhog.library('crsh/papaja',test.day)
+    groundhog.library('crsh/papaja',test.day+10)
     groundhog.library('tidymodels/broom',test.day)
     
     
@@ -454,6 +461,18 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     groundhog.library( "joey711/phyloseq",test.day)    #fails, no bioconductor
     groundhog.library( "kassambara/survminer",test.day)
 
+  #Test now with copying
+    groundhog:::save.cookie('copy_instead_of_renaming')
+    groundhog:::cookie.exists("copy_instead_of_renaming")
+     groundhog.library( "yihui/knitr",test.day  +  90)
+    groundhog.library( "crsh/papaja",test.day)
+    groundhog.library( "weirichs/eatModel",test.day) #hthis would not load in groundhog v2.2.1 but loads with v3.0.0
+    groundhog.library(  "mlr-org/mlr",test.day)
+    
+    groundhog.library( "kassambara/survminer",test.day)
+
+    
+    
     
 ########################################################################
 #Set 5 -  Others
@@ -470,7 +489,8 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     
 #5.2 Set dropbox path
       library('groundhog')
-      set.groundhog.folder('c:/dropbox/temp1')
+    gd=get.groundhog.folder()
+      set.groundhog.folder(gd)
       groundhog.library('jsonlite','2023-03-01')
   
       #PENDING: add to see what happens when dropbox was set by previous version of groundhog
@@ -577,33 +597,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
       sum(!ip0$pkg_vrs %in% ip8$pkg_vrs)
       
       
-########################################################################
-#Set 8 - method-copying
-      
-    #Choose two dates far apart for same release of R
-      day1 <- groundhog:::get.r.majmin.release()+20
-      day2 <- groundhog:::get.r.majmin.release()+340
-      
-    #8.1 Switch to copying
-      groundhog:::cookie.exists("copy_instead_of_renaming")
-      groundhog:::save.cookie('copy_instead_of_renaming')
-      
-      
-      
-    #8.2 Install back-and-forth alternative dates, verify packages do not get installed again
-      C
-      
-      
-      restore.library()
-        
-        library('metafor')
-        groundhog.library(c('metafor','tidyverse'),'2023-03-01')
-        
-        groundhog.library(c('metafor','tidyverse'),'2022-05-21')
-        
-        
-        
-        
+
       
       
       

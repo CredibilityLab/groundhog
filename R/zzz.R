@@ -53,15 +53,11 @@
     #7 Load cran toc if available
        if (check.consent(ask=FALSE)==TRUE) load.cran.toc()
       
-    #8 Delete to be purged packages (put here with file.rename.robust2() whem method='copying')
-          #packages_df <- get.packages_df() #utils.R #Function 33
-          #purge_df <- subset(packages_df, packages_df$purged==TRUE)
-          #if (nrow(purge_df)>0) unlink(purge_df$path , recursive = TRUE)   
-     
+ 
     #8 Delete purge subfolder with to-be-deleted pkgs (put here when using copy-and-delete method)
       #purge for >=3.0.0
          purge_path <- paste0(.libPaths()[1],"/_purge")
-          if (dir.exists(purge_path)) unlink(purge_path,recursive=TRUE)
+          if (dir.exists(purge_path)) try(unlink(purge_path,recursive=TRUE))
          
       #purge <3.0.0
          try(purge_v2.2()) #Utils #66
@@ -83,8 +79,8 @@
           packageStartupMessage ("Tips and troubleshooting: https://groundhogR.com")
 
     #While developing:
-      packageStartupMessage ("#######################################################\n",
-                             "This DEV version: 2023 04 28 - 13:58 (Barcelona time)")
+     # packageStartupMessage ("#######################################################\n",
+     #                         "This DEV version: 2023 04 28 - 15:24 (Barcelona time)")
 
       
       
