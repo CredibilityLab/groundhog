@@ -98,11 +98,11 @@
                   #https://stackoverflow.com/questions/67595111/r-package-design-how-to-export-internal-functions-to-a-cluster
                 
             #3.4 Get snowball subset for this snowflake
-                snowball.k <- snowball[snowball$pkg %in% snowflakes[[k]], ]
+                  snowball.k <- snowball[snowball$pkg %in% snowflakes[[k]], ]
                       
             #3.5 Sort snowball.k by decreasing installation time
                 #Feedback
-                  message.batch.installation.feedback(snowball,snowflakes,k,cores) #message.batch.installation.feedback.R
+                  try(message.batch.installation.feedback(snowball,snowflakes,k,cores)) #message.batch.installation.feedback.R
                   
                   
                   #utils 48 in 'parallel groundhog' and utils #44
