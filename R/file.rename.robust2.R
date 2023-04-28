@@ -138,7 +138,7 @@ file.rename.robust2<-function(from,to)
         } #end loop
         
     #Skip line in console at the end if we showed ...k
-      if (n_to > 5) cat('\n')          
+      if (n_to > 5) cat('\n\n')          
         
     } #End of copying method
 
