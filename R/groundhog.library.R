@@ -83,6 +83,8 @@
   #7 Check conflict now that it is all installed 
   #8 library() all pkgs
   #9 Verify each snowball, saving snowball .rds if successful  
+
+  #11 Reminder of copy-method if something was installed.
 #----------------------------------------------------------------------
 
 
@@ -187,7 +189,6 @@
       f10 <- ifelse(interactive(), "\n(in R Studio run CMD/CTRL-SHFT-F10 to restart R session). ","")
 
       
-
 
 #3 Get snowballs for all requested packages
   #Save snowballs individually as a list and also as a single big snowball.all
@@ -315,28 +316,7 @@
       check.conflict.before(snowball=snowball.all, pkg.requested=pkg, ignore.deps, date)  #check.snowball.conflict.R
         
 #6 Install snowball 
-      
-    #6.0 Reminder of dropbox warning if it's in copy-mode and dropbox folder
-      
-      if (groundhog.in.dropbox()==TRUE & cookie.exists("copy_instead_of_renaming")) {
-          
-        #If msg shown more than 10 minutes ago
-            if (get.minutes.since.cookie('dropbox_is_slower_reminder') > 30)
-            {
-            #Save cookie
-              save.cookie('dropbox_is_slower_reminder')
-            #Show message
-            msg=paste0("Having groundhog folder in Dropbox makes things slower. ",
-                    "You can use `set.groundhog.folder(<path>)` to change its location. ",
-                    "You can also run `try.renaming.method.again()` to continue using the ",
-                    "dropbox folder but give another try to the faster package-copying ",
-                    "method which *occassionally* does not work with Dropbox folders. ",
-                    "This message will not be shown again in the next 30 minutes.")
-            message(format_msg(msg,header='Reminder: '))
-            }
-      }
-      
-  
+   
     #6.1 Do we need to install on background?
     #   Any source package that needs install is loaded and thus needs background install?
             snowball.install.source <- snowball.all[snowball.all$from=='source' & snowball.all$installed==FALSE,]
@@ -540,6 +520,49 @@
       }#End of  #10
                  
 #----------------------------------
+  #11 Reminder of copy-method if something was installed.
+      
+	  if (sum(snowball.all$installed==FALSE)>0)
+	  {
+      #1) DROPBOX
+      if (groundhog.in.dropbox()==TRUE & cookie.exists("copy_instead_of_renaming")) {
+          
+        #If msg shown more than 10 minutes ago
+            if (get.minutes.since.cookie('copy_method_and_dropbox') > 24*60*60)
+            {
+            #Save cookie
+              save.cookie('copy_method_and_dropbox')
+            #Show message
+            msg=paste0("Having groundhog folder in Dropbox makes things slower. ",
+                    "You can use `set.groundhog.folder(<path>)` to change its location. ",
+                    "You can also run `try.renaming.method.again()` to continue using the ",
+                    "dropbox folder but give another try to the faster package-copying ",
+                    "method which *occassionally* does not work with Dropbox folders. ",
+                    "This message will not be shown again today.")
+            message(format_msg(msg,header='Reminder: '))
+            }
+      }
+	  
+	  
+	  #2) NO DROPBOX
+      if (groundhog.in.dropbox()==FALSE & cookie.exists("copy_instead_of_renaming")) {
+          
+        #If msg shown more than 10 minutes ago
+            if (get.minutes.since.cookie('copy_method_WITHOUT_dropbox') > 24*60*60)
+            {
+            #Save cookie
+              save.cookie('copy_method_WITHOUT_dropbox')
+            #Show message
+            msg=paste0("Groundhog could run faster than is currently running. ",
+					   "Check out how with `help('try.renaming.method.again')` ",
+					   "This message will not be shown again today.")
+                    
+            message(format_msg(msg,header='NOTE: '))
+            } #ENd if cookie is old
+       } #End if using copy method without dropbox
+	  
+	  }
+     
 
       
 }  #End new.groundhog.folder()
