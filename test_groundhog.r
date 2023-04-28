@@ -23,7 +23,7 @@
 
 #Version being tested (only locally available)
 
-install.packages('https://groundhogr.com/groundhog_3.0.0.tar.gz',repos=NULL)
+install.packages('https://groundhogr.com/groundhog_3.0.0.9002.tar.gz',repos=NULL)
 #install.packages('c://dropbox/groundhogr/groundhog_3.0.0.tar.gz',repos=NULL)
 
 library('groundhog')
@@ -49,7 +49,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
       #wrong format for date
         groundhog.library(2,2)
         
-      #Nonexistent pkg on cran
+      blu#Nonexistent pkg on cran
         groundhog.library('tio',test.day)
 
       #inexistent pkg on github
@@ -506,50 +506,75 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
         }  
 
     
+      groundhog::set.groundhog.folder('c:/temp/202')
     
 #6.2 Testing three packages with multiple date changes
   #1 Install current versions of some packages
-    install.packages('rio')
-    install.packages('lme4')
+    install.packages('metafor')
     
   #2 Take an inventory of packages
+    library('groundhog')
     ip0=get.ip.local()
 
   #3 start new groundhog folder to ensure restore day
     library('groundhog')
     gd1=get.groundhog.folder()
 
-    set.groundhog.folder(paste0(gd1,"test_restore1"))
+    set.groundhog.folder(paste0(gd1,"/test_restore2"))
     get.groundhog.folder()
   #4 Do first change, which should create a restore point before it 
-      groundhog.library(c('lme4', 'rio','this.path'),'2022-12-15')
-      #two different versios of those target packages and a brand new one
-      
+      #restart
+      library('groundhog')
+      groundhog.library(c('metafor'),'2022-05-15')
       ip1=get.ip.local()
 
   #5 Do another change
       #restart session
       library('groundhog')
-      groundhog.library(c('lme4', 'rio','this.path'),'2022-09-15')
+      groundhog.library(c('metafor'),'2023-01-15')
       ip2=get.ip.local()
+    
       
-  #6 Add a package for different date
-      #restart session
       library('groundhog')
-      groundhog.library('jsonlite','2022-05-15')
+      groundhog.library(c('rio'),'2023-01-15')
       ip3=get.ip.local()
   
+  
+  #6 Use copy method
+      #restart session
+      library('groundhog')
+      groundhog:::save.cookie('copy_instead_of_renaming')
+      groundhog:::cookie.exists("copy_instead_of_renaming")
       
-  #7 Restore
-      restore.library()
-      
+      groundhog.library('jsonlite','2022-05-15')
       ip4=get.ip.local()
+
+  #7 Add another package  copying
+      library('groundhog')
+      groundhog.library(c('jsonlite','rio'),'2023-01-15')
+      ip5=get.ip.local()
+
+  #8 Install without groundhog
+      ip6=get.ip.local()
+  
+  #9 One more as renaming    
+      library('groundhog')
+      groundhog.library('metafor','2023-03-15')
+      ip7=get.ip.local()
+  
+      
+  #8 Restore
+      restore.library()
+      ip8=get.ip.local()
       
       
       sum(!ip0$pkg_vrs %in% ip1$pkg_vrs)
       sum(!ip0$pkg_vrs %in% ip2$pkg_vrs)
       sum(!ip0$pkg_vrs %in% ip3$pkg_vrs)
       sum(!ip0$pkg_vrs %in% ip4$pkg_vrs)
+      sum(!ip0$pkg_vrs %in% ip5$pkg_vrs)
+      sum(!ip0$pkg_vrs %in% ip6$pkg_vrs)
+      sum(!ip0$pkg_vrs %in% ip8$pkg_vrs)
       
       
 ########################################################################
@@ -566,21 +591,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
       
       
     #8.2 Install back-and-forth alternative dates, verify packages do not get installed again
-        #DAY 1
-          library('groundhog')
-          groundhog.library('metafor',day1)
-          
-        #DAY 2
-          #RESTART
-          library('groundhog')
-          groundhog.library('metafor',day2)
-          
-        #DAY 3
-          #RESTART
-          library('groundhog')
-          groundhog.library('metafor',day1)
-          
-      
+      C
       
       
       restore.library()
