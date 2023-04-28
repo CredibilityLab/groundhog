@@ -49,11 +49,7 @@ purge.local <- function (ip.purge , loans)
         from.local_to_backup <- paste0(ip.backup$LibPath,"/",ip.backup$Package)
         to.local_to_backup   <- paste0(backup.dir,ip.backup$pkg_vrs,"/",ip.backup$Package)
       
-        #make directories of type 'pkg_vrs', we then put pkg inside it 
-        #@@@ seems like this is done inside file.rename.robust2()
-          #dirs=dirname(to.local_to_backup)
-          #for (k in 1:length(dirs)) dir.create(dirs[k], recursive=TRUE,showWarnings = FALSE)
-        
+         
       #3.3 Subset that are new
         new <- !file.exists(to.local_to_backup)    #are they new to the backup? (do not replace existing files)
         

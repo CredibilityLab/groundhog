@@ -114,7 +114,7 @@ file.rename.robust2<-function(from,to)
         
             
               #Copy 
-                outcome=file.copy(from[k],dirname(to[k]),recursive = TRUE) #CHECK @@@
+                outcome=file.copy(from[k],dirname(to[k]),recursive = TRUE) 
               
               #Verify copy
                   if (outcome!=TRUE) {

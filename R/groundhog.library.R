@@ -73,17 +73,15 @@
 #----------------------------------------------------------------------
 #OUTLINE 
   #1 Preliminaries
-  #2 Early return if everything is already attached
+  #2 Dropped
   #3 Get snowballs for all requested packages
   #4 Create libpaths
-  #5 Install snowball 
-    #5.2 Background (with R Script if source conflicts with it)
-    #5.3 foreground
-  #6 localize the snowballs
-  #7 Check conflict now that it is all installed 
-  #8 library() all pkgs
-  #9 Verify each snowball, saving snowball .rds if successful  
-
+  #5 Check conflict with previously groundhog-loaded packages
+  #6 Install snowball 
+  #7 localize the snowballs
+  #8 Check conflict now that it is all installed 
+  #9 Library all pkgs
+  #10 Verify each snowball, saving snowball .rds if successful   k=1
   #11 Reminder of copy-method if something was installed.
 #----------------------------------------------------------------------
 
@@ -387,13 +385,13 @@
 #------------------------------------------------------------------------ 
 
 
-#10 Library all pkgs
-      #10.1 - Return to libpath and load pkgs
+#9 Library all pkgs
+      #9.1 - Return to libpath and load pkgs
       .libPaths(.pkgenv[["orig_lib_paths"]])
  
       
       
-     #10.2 #verify pkg is indeed available in local
+     #9.2 #verify pkg is indeed available in local
      ip.local<-get.ip('local')
 		for (pkgk in pkg)
 		{
@@ -422,7 +420,7 @@
 		} #End loop
           
       
-      #10.3 library()
+      #9.3 library()
         for (pkgk in pkg) {
           base.library(pkgk, character.only=TRUE)
         }
