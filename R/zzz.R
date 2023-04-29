@@ -39,25 +39,25 @@
               
           
       
-    #2 Hidden variables in local environment
-        .available.restore.points <<- get.restore.points()
-        .view.conflicts <<- view.conflicts.function()
+    #2 Hidden variables in local environmen (need to equate to functions in zzz to avoid error on check)
+        .available.restore.points <<- get.restore.points()   #Utils.R #55
+        .view.conflicts <<- view.conflicts.function()        #Utils.R #57
     
         
     #5 Verify a mirror has been set    
-      set.default.mirror() #Function 36 -  utils.R
+      set.default.mirror() #utils.R  #36
   
     #6 Check if new version of groundhog exists, if we have not checked today yet
-       if (check.consent(ask=FALSE)==TRUE) check.groundhog.version(min.days=1) #Function 42  -  utils.R
+       if (check.consent(ask=FALSE)==TRUE) check.groundhog.version(min.days=1) #Utils.R #42
           
     #7 Load cran toc if available
-       if (check.consent(ask=FALSE)==TRUE) load.cran.toc()
+       #if (check.consent(ask=FALSE)==TRUE) load.cran.toc()
       
  
     #8 Delete purge subfolder with to-be-deleted pkgs (put here when using copy-and-delete method)
       #purge for >=3.0.0
          purge_path <- paste0(.libPaths()[1],"/_purge")
-          if (dir.exists(purge_path)) try(unlink(purge_path,recursive=TRUE))
+         if (dir.exists(purge_path)) try(unlink(purge_path,recursive=TRUE))
          
       #purge <3.0.0
          try(purge_v2.2()) #Utils #66
@@ -79,8 +79,8 @@
           packageStartupMessage ("Tips and troubleshooting: https://groundhogR.com")
 
     #While developing:
-     # packageStartupMessage ("#######################################################\n",
-     #                         "This DEV version: 2023 04 28 - 15:24 (Barcelona time)")
+      packageStartupMessage ("#######################################################\n",
+                              "This DEV version: 2023 04 29 - 17.51 (Barcelona time)")
 
       
       
