@@ -14,7 +14,7 @@
     #2 Early return if all exist and update=FALSE
         if (!is.null(.pkgenv[['cran.toc']]) &                        #we got CRAN toc
             !is.null(.pkgenv[['cran.times']]) &                      #we got cran times
-            !is.null(.pkgenv[['gran.toc']] | gran.filename=='') &   #we got GRAN or it does not exist    
+            (!is.null(.pkgenv[['gran.toc']]) | gran.filename=='') &   #we got GRAN or it does not exist    
             update.toc==FALSE)                                           #we are not updating
           {
           return(invisible(TRUE)) 
