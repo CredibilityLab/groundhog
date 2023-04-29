@@ -37,6 +37,8 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
             validate.TF(include.suggests)
             validate.date(date)
 
+    #Ensure pkgs are loaded
+        load.cran.toc()
   
     #0  If snowball already exists early return it  
     
@@ -89,6 +91,8 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
               } 
             
   
+            
+            
   # 1 Get dependencies
   dep12 <- get.all.dependencies(pkg, date, include.suggests = include.suggests)
 

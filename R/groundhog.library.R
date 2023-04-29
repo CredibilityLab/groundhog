@@ -97,6 +97,7 @@
 #--------------------------------------------------------------
 
   #1 Preliminaries
+ 
     #1.1 Check if new version of groundhog exists 
       check.groundhog.version(min.days=1) #Function 42  -  utils.R
 

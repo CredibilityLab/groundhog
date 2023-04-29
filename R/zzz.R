@@ -51,7 +51,7 @@
        if (check.consent(ask=FALSE)==TRUE) check.groundhog.version(min.days=1) #Utils.R #42
           
     #7 Load cran toc if available
-       #if (check.consent(ask=FALSE)==TRUE) load.cran.toc()
+       if (check.consent(ask=FALSE)==TRUE) load.cran.toc()
       
  
     #8 Delete purge subfolder with to-be-deleted pkgs (put here when using copy-and-delete method)
@@ -80,7 +80,7 @@
 
     #While developing:
       packageStartupMessage ("#######################################################\n",
-                              "This DEV version: 2023 04 29 - 17.51 (Barcelona time)")
+                              "This DEV version: 2023 04 29 - 18:08 (Barcelona time)")
 
       
       

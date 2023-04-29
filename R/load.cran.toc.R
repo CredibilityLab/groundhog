@@ -1,6 +1,6 @@
 #New function to load packages
 
-  load.toc <-function(update = FALSE) {
+  load.cran.toc <-function(update.toc = FALSE) {
     
     #0 Get filename for gran
       gran.filename <- get.gran.filename()
@@ -15,7 +15,7 @@
         if (!is.null(.pkgenv[['cran.toc']]) &                        #we got CRAN toc
             !is.null(.pkgenv[['cran.times']]) &                      #we got cran times
             !is.null(.pkgenv[['gran.toc']] | gran.filename=='') &   #we got GRAN or it does not exist    
-            update==FALSE)                                           #we are not updating
+            update.toc==FALSE)                                           #we are not updating
           {
           return(invisible(TRUE)) 
           }
@@ -41,21 +41,21 @@
           
     #5 Download if they do not exist or if we are updating
           #CRAN TOC
-            if (!file.exists(cran.toc.path) | update==TRUE) {
+            if (!file.exists(cran.toc.path) | update.toc==TRUE) {
                 download.toc(cran.toc.URL.w , cran.toc.URL.g,  cran.toc.path) 
               
                   #`download.toc(url1, url2, path) -----  Utils.R #68, tries URL1, then URl2 upon failure, and saves to path
             }
             
           #CRAN TIMES
-            if (!file.exists(cran.times.path) | update==TRUE) {
+            if (!file.exists(cran.times.path) | update.toc==TRUE) {
               download.toc(cran.times.URL.w , cran.times.URL.g,  cran.times.path)
             }
             
           #GRAN
             if (gran.filename!='')
               {
-              if (!file.exists(gran.toc.path) | update==TRUE) {
+              if (!file.exists(gran.toc.path) | update.toc==TRUE) {
               download.toc(gran.URL.w , gran.URL.g,  gran.toc.path)
                  }  #End download if it dooes not exist locally
                  } #End check if GRAN exist for this R version
