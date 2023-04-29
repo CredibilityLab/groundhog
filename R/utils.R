@@ -58,6 +58,14 @@
 #59 getip()            : same for all packages that have been saved to the backup folder
 #60 get.loans() & /save.loans(): load and save database with all lent packages
 #61 file.rename.robust:        :  rename a file ony once it can be renamed to itself
+#62 get drive from path whether they use forward or backwards slashes
+#63 Slower with dropbox
+#64 get md5
+#65 Add _PURGE to a pkg path in local
+   
+#68 Download toc               : download a toc file from wasabi or groundhogr.com
+   
+   
 
 ####################################################################################
     
@@ -1257,7 +1265,8 @@ get.parallel.time<-function(times,cores)
         
    }
    
-   
+ #---------------------   
+  
   #64 get md5
    get.md5<-function(pkg_path)
    {
@@ -1267,7 +1276,8 @@ get.parallel.time<-function(times,cores)
      
    }
    
-   
+ #---------------------   
+  
    #65 Add _PURGE to a pkg path in local
    purge.pkg_path <- function(pkg_path)
    {
@@ -1296,10 +1306,9 @@ get.parallel.time<-function(times,cores)
       file.rename(pkg_path, new.pkg_path)
        }
    
-   
-   
-   
-  #66 PUrge packages from version 2.2
+#---------------------   
+  
+#66 PUrge packages from version 2.2
    purge_v2.2 <- function()
    {
      #if (!cookie.exists('purged_2.2'))
@@ -1318,4 +1327,46 @@ get.parallel.time<-function(times,cores)
           
      #} #End if no-cookie 
     }#End purge
-   
+  
+#---------------------   
+#67 Get gran_path
+   get.gran.filename <-function()
+   {
+    #Assume there is no path to gran.toc
+      gran.filename <- ''
+  
+    #Create the name of the file
+       os <- get.os()
+       if (os %in% c('windows','mac', 'mac_arm')) {
+        
+          #User has this R version  
+            r.version    <- get.r.majmin()
+            
+          #Drop the period
+            rv <- sub("\\.","",r.version)
+  
+          #rds with gran toc 
+            gran.filename <- paste0(os, rv,'.rds')
+            
+          #use mac for mac_arm for R<4.14
+            if (os=='mac_arm' & as.numeric(r.version)<4.1) {
+                  gran.filename <- paste0('mac', rv,'.rds')
+                }
+       } #End windows/mac
+       return(gran.filename)
+   }
+      
+         
+#68 Download toc
+    download.toc<-function(url1 , url2 , path)
+  {
+    #Try URL1
+      dl  <- try(utils::download.file(url1 ,path))
+  
+    #If fails, try URL2          
+      if (dl!=0) {
+          dl2 <- try(utils::download.file(url2 ,path))
+          if (dl2!=0) stop('Error.\nGroundhog says: could not download needed file: "', basename(path), "'")
+          }
+  } 
+    

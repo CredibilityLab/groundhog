@@ -1,145 +1,72 @@
+#New function to load packages
 
-#Load all databases, optional parameter update.toc leads to downloading from groundhogr.com as wasabi as backup
-
-load.cran.toc <- function(update.toc = FALSE) {
-  
-  #0 If update is false and already loaded, early return
-    if  (update.toc==FALSE & !is.null(.pkgenv[['cran.toc']])) {
-       return(invisible(TRUE))
-      }
-  
-  #1. URL with rds files
-    groundhogR.url <- "https://groundhogR.com/"
-    wasabi.url     <- "https://s3.wasabisys.com/groundhog/"  
-  
-  
-  #2. Local paths 
-      gf <- get.groundhog.folder()
-
-    #Ensure directory for groundhog exists
-      dir.create(gf, showWarnings = FALSE, recursive = TRUE) 
-  
-    #Names of files
-      files.rds = c('cran.toc.rds' , 'cran.times.rds' )
-
-    #Empty gran file so when linux checks whether it exists it does not check this one.
-      gran.file.rds =''
-      
-    #Add gran.toc if mac or windows after version 3.1
-      os <- get.os()
-      if (os %in% c('windows','mac', 'mac_arm')) {
-        
-          #User has this R version  
-            r.version    <- get.r.majmin()
-            
-          #Drop the period
-            rv <- sub("\\.","",r.version)
-  
-          #rds with gran toc 
-            gran.file.rds <- paste0(os, rv,'.rds')
-            
-          #use mac for mac_arm for R<4.14
-            if (os=='mac_arm' & as.numeric(r.version)<4.1) {
-                  gran.file.rds <- paste0('mac', rv,'.rds')
-                }
-            
-          #Add gran.toc only if R=3.1 or newer
-            if (as.numeric(r.version)>3.1) {
-              files.rds = c(files.rds, gran.file.rds)
-              }
-          
-      }#End os is mac or windows
-      
-  #3 Loop checking file exist, downloading if necessary, and assigning to .pkgenv
-          for (rdsk in files.rds)
-          {
-          #See if file exists
-            in.path <- file.exists(file.path(gf ,rdsk))                      #in groundhog.folder()
-            in.pkg  <- file.exists(system.file(rdsk, package = "groundhog"))  #in inst folder for groundhog
-          
-          #Case 1: in.pkg but not in path, copy it locally (but not being updated, to avoid wasteful copy )
-            if (in.path==FALSE & in.pkg==TRUE & update.toc==FALSE) {
-              file.copy  (system.file(rdsk, package = "groundhog") , file.path(gf, rdsk))
-              }
-            
-          #Case 2: in both but the package's is newer (this happens when updating groundhog version)
-              if (in.path && in.pkg && update.toc==FALSE)
-                {
-                #Time of both files
-                  time.path <- file.info(file.path(gf ,rdsk))$mtime
-                  time.pkg <- file.info(system.file(rdsk, package = "groundhog"))$mtime
-                
-
-                #If pkg is newer, copy it
-                if (time.path<time.pkg)
-                  {
-                  file.copy  (system.file(rdsk, package = "groundhog") , file.path(gf, rdsk), overwrite = TRUE)
-                 } #End if package's version is newer
-              }   #End if both files exist
-              
-          #Case 3:  neither exists or if was asked for update, download
-            in.path <- file.exists(file.path(gf ,rdsk))              #redo the check to catch errors
-
-            
-            if ((in.path==FALSE & in.pkg==FALSE) | update.toc==TRUE) {
-              
-            #Download toc files
-             #GET URL
-                #cran.toc, times
-                  if (rdsk != gran.file.rds) {
-                    url.g <- paste0(groundhogR.url, rdsk)
-                    url.w <- paste0(wasabi.url,     rdsk)
-                  }
-                
-                #gran.toc 
-                  if (rdsk == gran.file.rds) {
-                    url.g <- paste0(groundhogR.url, "gran.toc/", rdsk)
-                    url.w <- paste0("http://gran.groundhogr.com/toc/", rdsk)
-  
-                  }
-                
-              
-              #R Version After 3.4
-               if (getRversion()>"3.4") {
-                dl <- try(utils::download.file(url.w , file.path(gf, rdsk) , mode = "wb", method = "libcurl" ))
-            
-                #If download failed, try  wasabi's backup
-                  if (dl!=0) {
-                      dl2 <- try(utils::download.file(url.g , file.path(gf, rdsk), mode = "wb", method = "libcurl" ))
-                      if (dl2!=0) stop('Error.\nGroundhog says: could not download "', rdsk, "'")
-                    } #End if download failed  from groundhogR.com
-               } #ENd if version 3.4
-              
-               #R Version before 3.4
-               if (getRversion()<"3.4") {
-                dl <- try(utils::download.file(url.w, file.path(gf, rdsk) , mode = "wb" ))
-            
-                #If download failed, try  wasabi's backup
-                  if (dl!=0) {
-                      dl2 <- try(utils::download.file(url.g , file.path(gf, rdsk), mode = "wb" ))
-                      if (dl2!=0) stop('Error.\nGroundhog says: could not download "', rdsk, "'")
-                    } #End if download failed from groundhogR.com
-               } #ENd if version 3.4
-              
-              } #End case 2
-            
-          #Read it locally, dropping the .rds part of the name ('cran.toc.rds' -> 'cran.toc')
-              #CRAN and Times already have the name, simply drop .rds     
-              if (rdsk != gran.file.rds) {
-                 dfk <- gsub(".rds","",rdsk)
-              } 
-
-             #GRAN has an os specific name, let's change it to gran.toc
-              if (rdsk == gran.file.rds) {
-                 dfk <- 'gran.toc'
-               } 
-            
-             .pkgenv[[dfk]] <- readRDS(file.path(gf,rdsk))
-          }
+  load.toc <-function(update = FALSE) {
     
+    #0 Get filename for gran
+      gran.filename <- get.gran.filename()
   
- 
-  #5 Return TRUE
-    invisible(TRUE)
-}
+          #note: this looks something like windows42.rds. For <3.1 and for unix, it is ""  
+    
+    #1 Files to load cran.toc, cran.times and gran.toc if it exists
+        files.rds = c('cran.toc.rds' , 'cran.times.rds' )
+        if (gran.filename!='') files.rds <- c(files.rds, gran.filename)
 
+    #2 Early return if all exist and update=FALSE
+        if (!is.null(.pkgenv[['cran.toc']]) &                        #we got CRAN toc
+            !is.null(.pkgenv[['cran.times']]) &                      #we got cran times
+            !is.null(.pkgenv[['gran.toc']] | gran.filename=='') &   #we got GRAN or it does not exist    
+            update==FALSE)                                           #we are not updating
+          {
+          return(invisible(TRUE)) 
+          }
+            
+    #3 URLs
+        #3.1 cran.toc
+          cran.toc.URL.g   <- "https://groundhogR.com/cran.toc.rds"
+          cran.toc.URL.w   <- "https://s3.wasabisys.com/groundhog/cran.toc.rds"  
+          
+       #3.2 cran.toc
+          cran.times.URL.g <- "https://groundhogR.com/cran.times.rds"
+          cran.times.URL.w <- "https://s3.wasabisys.com/groundhog/cran.times.rds"  
+ 
+       #3.3 GRAN
+          gran.URL.g      <- paste0("https://groundhogR.com/gran.toc/",     gran.filename)
+          gran.URL.w      <- paste0("https://gran.groundhogR.com/gran.toc/",gran.filename)  
+          
+    #4 Local paths
+          gf <- get.groundhog.folder()
+          cran.toc.path   <- file.path(gf , 'cran.toc.rds')    
+          cran.times.path <- file.path(gf , 'cran.times.rds')    
+          gran.toc.path   <- file.path(gf ,  gran.filename)    
+          
+    #5 Download if they do not exist or if we are updating
+          #CRAN TOC
+            if (!file.exists(cran.toc.path) | update==TRUE) {
+                download.toc(cran.toc.URL.w , cran.toc.URL.g,  cran.toc.path) 
+              
+                  #`download.toc(url1, url2, path) -----  Utils.R #68, tries URL1, then URl2 upon failure, and saves to path
+            }
+            
+          #CRAN TIMES
+            if (!file.exists(cran.times.path) | update==TRUE) {
+              download.toc(cran.times.URL.w , cran.times.URL.g,  cran.times.path)
+            }
+            
+          #GRAN
+            if (gran.filename!='')
+              {
+              if (!file.exists(gran.toc.path) | update==TRUE) {
+              download.toc(gran.URL.w , gran.URL.g,  gran.toc.path)
+                 }  #End download if it dooes not exist locally
+                 } #End check if GRAN exist for this R version
+
+    #6 Load them
+        .pkgenv[['cran.toc']]   <- readRDS(cran.toc.path)
+        .pkgenv[['cran.times']] <- readRDS(cran.times.path)
+      
+      #GRAN if it exists  
+      if (gran.filename!='') {
+        .pkgenv[['gran.toc']]   <- readRDS(gran.toc.path)
+      }
+  }
+  
