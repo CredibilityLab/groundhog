@@ -23,7 +23,7 @@ groundhog.library(
 
 \item{date}{character string  (yyyy-mm-dd), or date value, with the date which
 determines the version of the package, and all dependencies, to be loaded
-(and installed if needed). The most recent #'date accepted is 2 days prior
+(and installed if needed). The most recent date accepted is 2 days prior
 to when the code is executed.}
 
 \item{quiet.install}{logical, defaults to \code{TRUE}. When set to \code{FALSE}, displays
@@ -74,10 +74,10 @@ For more information about groundhog check out \href{http://groundhogr.com}{grou
 }
 \examples{
 \dontrun{
-groundhog.library("magrittr", "2022-04-01")
+groundhog.library("magrittr", "2022-04-15")
 
 pkgs <- c('pwr','metafor')
-groundhog.library(pkgs, "2022-04-01")
+groundhog.library(pkgs, "2022-04-15")
 
 # When running an existing  script that relied on `library()` to load packages,
 # you can wrap the library calls in double-quotes, loading the packages with 
