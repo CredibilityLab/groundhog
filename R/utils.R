@@ -1413,3 +1413,35 @@ get.parallel.time<-function(times,cores)
     }
     
     
+#70  Check r_21days
+    check_R_old_enough <- function(min.days=21)
+    {
+      
+      #Dates of R vs today
+        r_release_date <- get.r.majmin.release()
+        today          <- Sys.Date()
+            
+      #Name of the cookie used tot keep track of the warning
+        cookie_name <- paste0('too_soon_R',get.r.majmin())
+            
+      #Do the check
+            if (today-r_release_date<min.days) {
+                if (!cookie.exists(cookie_name))
+                {
+                #Save cookie so we do not show again
+                  save.cookie(cookie_name)
+                  
+                #Draft msg
+                   msg = paste0("The version of R you are using ('R-",get.r.majmin(),"') is less than ",min.days,
+                         " days old (it was released on '",r_release_date,"'). ",
+                         "Because some packages break with new releases, and many are updated shortly after them, ",
+                         "you may want to stick to the older version of R ",
+                         "for a few more days.  This message will not be shown again for R-",get.r.majmin(),". ",
+                         "To ignore this warning simply re-run the command you just ran.")  
+               #Show msg
+                    gstop(format_msg(msg,header="NOTE:"))
+                
+                }
+            }
+    }
+    
