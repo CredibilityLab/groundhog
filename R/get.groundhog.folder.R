@@ -106,31 +106,31 @@ set.groundhog.folder <- function(path) {
               exit()
             }
             } #End if dropbox
-
-    # #1.2 TWO DRIVES
-        if  (get.drive(path) != get.drive(.libPaths()[1])) {
-
-          #Draft message
-              msg<- paste0("The path '",path,
-                      " seems to be a on a different drive (or 'volume') than ",
-                      "the default R library '",.libPaths(),"'. Groundhog will be slower and ",
-                      "more likely to produce occasional errors if paths for libraries are ",
-                      "on different drives. It is strongly recommended to use the ",
-                      "same physical drive for both paths instead. ",
-                      "If you want to set it to  '",path,"' anyway, type 'anyway', else type 'cancel'")
-
-
-           #Show it
-            answer.two_drives<-infinite.prompt(format_msg(msg),valid_answers=c('anyway','cancel'),must.restart=FALSE)
-
-            if (tolower(answer.two_drives)=='cancel') {
-              message1("OK. Request cancelled.")
-              exit()
-            }
-            
-
-        } #End if two drives
-
+# 
+#     # #1.2 TWO DRIVES
+#         if  (get.drive(path) != get.drive(.libPaths()[1])) {
+# 
+#           #Draft message
+#               msg<- paste0("The path '",path,
+#                       " seems to be a on a different drive (or 'volume') than ",
+#                       "the default R library '",.libPaths(),"'. Groundhog will be slower and ",
+#                       "more likely to produce occasional errors if paths for libraries are ",
+#                       "on different drives. It is strongly recommended to use the ",
+#                       "same physical drive for both paths instead. ",
+#                       "If you want to set it to  '",path,"' anyway, type 'anyway', else type 'cancel'")
+# 
+# 
+#            #Show it
+#             answer.two_drives<-infinite.prompt(format_msg(msg),valid_answers=c('anyway','cancel'),must.restart=FALSE)
+# 
+#             if (tolower(answer.two_drives)=='cancel') {
+#               message1("OK. Request cancelled.")
+#               exit()
+#             }
+#             
+# 
+#         } #End if two drives
+# 
 
       
   #############################################################################
@@ -172,7 +172,7 @@ set.groundhog.folder <- function(path) {
  
   #Load cran toc rds
     .pkgenv[['cran.toc']] <- NULL  #set it to null so that load.cran.toc() will not early return
-    load.cran.toc() #this will copy the rds files
+    load.cran.toc()                #this will ensure we have rds files
     
   #Show confirmation message
     message1("The folder where groundhog packages will be saved is:\n",path)
