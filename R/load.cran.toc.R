@@ -23,15 +23,15 @@
     #3 URLs
         #3.1 cran.toc
           cran.toc.URL.g   <- "https://groundhogR.com/cran.toc.rds"
-          cran.toc.URL.w   <- "https://s3.wasabisys.com/groundhog/cran.toc.rds"  
+          cran.toc.URL.w   <- "http://s3.wasabisys.com/groundhog/cran.toc.rds"  
           
        #3.2 cran.toc
           cran.times.URL.g <- "https://groundhogR.com/cran.times.rds"
-          cran.times.URL.w <- "https://s3.wasabisys.com/groundhog/cran.times.rds"  
+          cran.times.URL.w <- "http://s3.wasabisys.com/groundhog/cran.times.rds"  
  
        #3.3 GRAN
           gran.URL.g      <- paste0("https://groundhogR.com/gran.toc/",     gran.filename)
-          gran.URL.w      <- paste0("https://gran.groundhogR.com/gran.toc/",gran.filename)  
+          gran.URL.w      <- paste0("http://gran.groundhogr.com/toc/",gran.filename)  
           
     #4 Local paths
           gf <- get.groundhog.folder()
@@ -42,6 +42,7 @@
     #5 Download if they do not exist or if we are updating
           #CRAN TOC
             if (!file.exists(cran.toc.path) | update.toc==TRUE) {
+              message1("Downloading database with information for all CRAN packages ever published")
                 download.toc(cran.toc.URL.w , cran.toc.URL.g,  cran.toc.path) 
               
                   #`download.toc(url1, url2, path) -----  Utils.R #68, tries URL1, then URl2 upon failure, and saves to path
@@ -49,6 +50,8 @@
             
           #CRAN TIMES
             if (!file.exists(cran.times.path) | update.toc==TRUE) {
+              message1("Downloading database with installation times for all source packages on CRAN")
+
               download.toc(cran.times.URL.w , cran.times.URL.g,  cran.times.path)
             }
             
@@ -56,7 +59,9 @@
             if (gran.filename!='')
               {
               if (!file.exists(gran.toc.path) | update.toc==TRUE) {
-              download.toc(gran.URL.w , gran.URL.g,  gran.toc.path)
+                  message1("Downloading database will URLs for all binaries on GRAN")
+
+                download.toc(gran.URL.w , gran.URL.g,  gran.toc.path)
                  }  #End download if it dooes not exist locally
                  } #End check if GRAN exist for this R version
 

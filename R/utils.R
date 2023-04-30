@@ -64,7 +64,8 @@
 #65 Add _PURGE to a pkg path in local
    
 #68 Download toc               : download a toc file from wasabi or groundhogr.com
-   
+#69 Test renaming method()     : checks whether we can rename into a chose path (for check with set.groundhog.folder()
+
    
 
 ####################################################################################
@@ -1369,4 +1370,46 @@ get.parallel.time<-function(times,cores)
           if (dl2!=0) stop('Error.\nGroundhog says: could not download needed file: "', basename(path), "'")
           }
   } 
+    
+    
+#-------------------------------
+    
+#69 Test renaming method
+    test.renaming.method <- function(from_path)
+    {
+    #Path to new folder we are creating
+      old_dir  <- paste0(from_path , "/_test_renaming_method") 
+  
+      
+    #It will contain two folders
+      dir_f1 <-paste0(old_dir,"/folder1")
+      dir_f2 <-paste0(old_dir,"/folder2")
+    
+    #Create them  
+      dir.create(dir_f1,recursive = TRUE,showWarnings = FALSE)
+      dir.create(dir_f2,recursive = TRUE,showWarnings = FALSE)
+      
+    #Save files in them
+      write.csv("file1", file.path(dir_f1,"test1.csv"))
+      write.csv("file2", file.path(dir_f2,"test2.csv"))
+      
+    #Error if they were not saved
+      if (!file.exists(file.path(dir_f1,"test1.csv")))
+        {
+        gstop(paste0("groundhog says: Unable to save to '",from_path,"'. Make sure you are allowed to save files to that directory."))
+        return(FALSE) #Should not get here, just as a precaution, gstop() should exit
+        } 
+  
+    
+    #Attempt renaming
+      new_dir <- paste0(get.groundhog.folder() , "/_test_renaming_method")
+      outcome <- file.rename(old_dir, new_dir)
+
+    #Delete
+      if (dir.exists(old_dir)) unlink(old_dir,recursive = TRUE)
+      if (dir.exists(new_dir)) unlink(new_dir,recursive = TRUE)
+    
+    return(outcome)
+    }
+    
     

@@ -82,7 +82,18 @@ get.groundhog.folder <- function() {
 #'
 set.groundhog.folder <- function(path) {
   
+#Ensure path was set
   if (missing(path)) gstop("You forgot to enter the <path> you wanted to set.")
+  
+#Early return if already set to path
+  if (dir.exists(path) && normalizePath(path) == normalizePath(get.groundhog.folder())) {
+      
+    #Note: do dir.exists() first becuase we cannot normalizePath() if it does not exist
+    #and if it does not exist, obviously it is not the current path
+    
+    message1("The groundhog folder already was '", path , "'")
+    return(invisible(TRUE))
+  }
   
   ###########################################
   #1 Warnings for path
@@ -106,33 +117,40 @@ set.groundhog.folder <- function(path) {
               exit()
             }
             } #End if dropbox
-# 
-#     # #1.2 TWO DRIVES
-#         if  (get.drive(path) != get.drive(.libPaths()[1])) {
-# 
-#           #Draft message
-#               msg<- paste0("The path '",path,
-#                       " seems to be a on a different drive (or 'volume') than ",
-#                       "the default R library '",.libPaths(),"'. Groundhog will be slower and ",
-#                       "more likely to produce occasional errors if paths for libraries are ",
-#                       "on different drives. It is strongly recommended to use the ",
-#                       "same physical drive for both paths instead. ",
-#                       "If you want to set it to  '",path,"' anyway, type 'anyway', else type 'cancel'")
-# 
-# 
-#            #Show it
-#             answer.two_drives<-infinite.prompt(format_msg(msg),valid_answers=c('anyway','cancel'),must.restart=FALSE)
-# 
-#             if (tolower(answer.two_drives)=='cancel') {
-#               message1("OK. Request cancelled.")
-#               exit()
-#             }
-#             
-# 
-#         } #End if two drives
-# 
 
-      
+    # #1.2 Cannot rename from it
+        
+        #Verify we can copy by renaming
+          test_result <- suppressWarnings(test.renaming.method(path))  #Utils #69
+    
+        #If it fails the test, propose alternative
+        if  (test_result==FALSE) {
+
+          #Draft message
+              path_suggestion <- paste0(dirname(.libPaths()[1]),"/groundhog_folder")
+              msg<- paste0("The path '",path,
+                      " seems to be a on a different drive (or 'volume') than ",
+                      "the default R library '",.libPaths(),"'. Groundhog will be slower and ",
+                      "more likely to produce occasional errors if paths for libraries are ",
+                      "on different drives. It is recommended to use the ",
+                      "same physical drive for both paths instead. One alternative suggestion is to set it to: ",
+                      "'" , path_suggestion, "'. " ,
+                      "If you want to set it to  '",path,"' anyway, type 'anyway', else type 'cancel'")
+
+
+           #Show it
+            answer.two_drives<-infinite.prompt(format_msg(msg),valid_answers=c('anyway','cancel'),must.restart=FALSE)
+
+            if (tolower(answer.two_drives)=='cancel') {
+              message1("OK. Request cancelled.")
+              exit()
+            }
+
+
+        } #End if two drives
+
+  
+
   #############################################################################
 
   #Set main folder with 'cookie files' and default for library
@@ -141,12 +159,12 @@ set.groundhog.folder <- function(path) {
   #Create main folder 
     dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
     
+    #this si redundant with the test that we can rename from it done above
+    
   #Path to file saving groundhog folder
     path_file_storing_groundhog_library_location <- paste0(main_folder ,"current_groundhog_folder.txt")
     
-   #See if cookie existed
-      cookie_existed <- file.exists(path_file_storing_groundhog_library_location)
-    
+  
   #Save the cookie
     path <- trimws(path)
     
@@ -157,31 +175,17 @@ set.groundhog.folder <- function(path) {
   #Save cookie
     cat(path, file = path_file_storing_groundhog_library_location)
     
-  #Verify we can save there
-    path1 <- file.path(path,"testing ability to save.txt")
-    write('testing ability to save',path1)
-    saved.succesfully <- file.exists(path1) 
-    unlink(path1)
-    
-    if (!saved.succesfully) {
-      gstop(paste0("groundhog says: Unable to save to '",path,"'. Make sure you are allowed to save files to that directory."))
-    } 
-    
   #Assign it to the live environment
     Sys.setenv(GROUNDHOG_FOLDER = path)
  
+   #Show confirmation message
+    message1("The folder where groundhog will save files and packages is:\n",path)
+
   #Load cran toc rds
-    .pkgenv[['cran.toc']] <- NULL  #set it to null so that load.cran.toc() will not early return
-    load.cran.toc()                #this will ensure we have rds files
+    load.cran.toc(TRUE)       
     
-  #Show confirmation message
-    message1("The folder where groundhog packages will be saved is:\n",path)
-    
+
   #Reminder they can change it if it is the default path
-    if (paste0(fw(dirname(path)),"/")==fw(main_folder)) message1("\nYou can change the location at any time running  `set.groundhog.folder(<path>)`")
     #fw() utils.R #50
     
-           
-  
-           
-        } #End of set.groundhog.folder
+  } #End of set.groundhog.folder
