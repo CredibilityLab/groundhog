@@ -10,38 +10,7 @@
 
   .onLoad <- function(libname, pkgname) {
   
-      #0 Preliminary
-       #0.0 Check R is not too new
-          #Dates of R vs today
-            r_release_date <- get.r.majmin.release()
-            today          <- Sys.Date()
-            
-          #Name of the cookie used tot keep track of the warning
-            cookie_name <- paste0('too_soon_R',get.r.majmin())
-            
-          #How many deays to check for
-            min.days <- 21    
-            
-          #Do the check
-            if (today-r_release_date<min.days) {
-                if (!cookie.exists(cookie_name))
-                {
-                #Save cookie so we do not show again
-                  save.cookie(cookie_name)
-                  
-                #Draft msggg
-                   msg = paste0("The version of R you are using ('R-",get.r.majmin(),"') is less than ",min.days,
-                         " days old (it was released on '",r_release_date,"'). ",
-                         "Because some packages break with new releases, and many are updated shortly after them, ",
-                         "you may want to stick to the older version of R ",
-                         "for a few more days.  This message will not be shown again for R-",get.r.majmin(),". ",
-                         "To ignore this warning simply re-run the command you just ran.")  
-               #Show msg
-                    gstop(format_msg(msg,header="NOTE:"))
-                
-                }
-            }
-      
+     
     
     #1 pkgenv values
             
@@ -81,14 +50,20 @@
     #5 Verify a mirror has been set    
       set.default.mirror() #utils.R  #36
   
-    #6 Check if new version of groundhog exists, if we have not checked today yet
-       if (check.consent(ask=FALSE)==TRUE) check.groundhog.version(min.days=1) #Utils.R #42
-          
-    #7 Load cran toc if available
-       if (check.consent(ask=FALSE)==TRUE) load.cran.toc()
-      
+    #6 Some checks after consent given
+         if (check.consent(ask=FALSE)==TRUE) 
+         {
+          #6.1 New groundhog?
+            check.groundhog.version(min.days=1) #Utils.R #42
+
+          #6.2 R too new?
+            check_R_old_enough()
+           
+          #6.3 cran toc availble?
+             load.cran.toc()
+         }
  
-    #8 Delete purge subfolder with to-be-deleted pkgs (put here when using copy-and-delete method)
+    #7 Delete purge subfolder with to-be-deleted pkgs (put here when using copy-and-delete method)
       #purge for >=3.0.0
          purge_path <- paste0(.libPaths()[1],"/_purge")
          if (dir.exists(purge_path)) try(unlink(purge_path,recursive=TRUE))
@@ -101,7 +76,7 @@
     } #End of onLoad
 
 
-#7. Attaching 
+#8. Attaching 
     #' @importFrom utils packageVersion compareVersion
      
     .onAttach <- function(libname, pkgname) {
@@ -113,8 +88,8 @@
           packageStartupMessage ("Tips and troubleshooting: https://groundhogR.com")
 
     #While developing:
-      packageStartupMessage ("#######################################################\n",
-                              "This DEV version: 2023 04 30 - 19:05 (Barcelona time)")
+          packageStartupMessage ("#######################################################\n",
+                              "This DEV version: 2023 04 30 - 20:02 (Barcelona time)")
 
       
       
