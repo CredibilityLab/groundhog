@@ -179,7 +179,7 @@ set.groundhog.folder <- function(path) {
     Sys.setenv(GROUNDHOG_FOLDER = path)
  
    #Show confirmation message
-    message1("The folder where groundhog will save files and packages is:\n",path)
+    message2("The folder where groundhog will save files and packages is:\n'",path,"'")
 
   #Load cran toc rds
     load.cran.toc(TRUE)       

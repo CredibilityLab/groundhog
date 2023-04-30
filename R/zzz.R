@@ -10,7 +10,41 @@
 
   .onLoad <- function(libname, pkgname) {
   
+      #0 Preliminary
+       #0.0 Check R is not too new
+          #Dates of R vs today
+            r_release_date <- get.r.majmin.release()
+            today          <- Sys.Date()
+            
+          #Name of the cookie used tot keep track of the warning
+            cookie_name <- paste0('too_soon_R',get.r.majmin())
+            
+          #How many deays to check for
+            min.days <- 21    
+            
+          #Do the check
+            if (today-r_release_date<min.days) {
+                if (!cookie.exists(cookie_name))
+                {
+                #Save cookie so we do not show again
+                  save.cookie(cookie_name)
+                  
+                #Draft msggg
+                   msg = paste0("The version of R you are using ('R-",get.r.majmin(),"') is less than ",min.days,
+                         " days old (it was released on '",r_release_date,"'). ",
+                         "Because some packages break with new releases, and many are updated shortly after them, ",
+                         "you may want to stick to the older version of R ",
+                         "for a few more days.  This message will not be shown again for R-",get.r.majmin(),". ",
+                         "To ignore this warning simply re-run the command you just ran.")  
+               #Show msg
+                    gstop(format_msg(msg,header="NOTE:"))
+                
+                }
+            }
+      
+    
     #1 pkgenv values
+            
     
           #1.1 Empty paths for groundhog loaded packages
             .pkgenv[['groundhog.paths']] <- c(character())
@@ -80,7 +114,7 @@
 
     #While developing:
       packageStartupMessage ("#######################################################\n",
-                              "This DEV version: 2023 04 29 - 18:08 (Barcelona time)")
+                              "This DEV version: 2023 04 30 - 19:05 (Barcelona time)")
 
       
       
