@@ -1390,8 +1390,8 @@ get.parallel.time<-function(times,cores)
       dir.create(dir_f2,recursive = TRUE,showWarnings = FALSE)
       
     #Save files in them
-      write.csv("file1", file.path(dir_f1,"test1.csv"))
-      write.csv("file2", file.path(dir_f2,"test2.csv"))
+      utils::write.csv("file1", file.path(dir_f1,"test1.csv"))
+      utils::write.csv("file2", file.path(dir_f2,"test2.csv"))
       
     #Error if they were not saved
       if (!file.exists(file.path(dir_f1,"test1.csv")))
