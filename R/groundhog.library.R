@@ -326,19 +326,7 @@
         if (n.source.conflict > 0) 
          {
           
-          # #Save the snowball as an rds file
-          #     arguments_path <- file.path(get.groundhog.folder(), paste0("temp/background_install_arguments.rds"))
-          #     dir.create(dirname(arguments_path),showWarnings = FALSE,recursive=TRUE)
-          #     arguments <- list(snowball=snowball.all, date=date, cores=cores)
-          #     saveRDS(arguments , arguments_path,version=2 , compress=FALSE)
-          #     
-          # #Execute snowball.install in background with system
-          #     script_path <- system.file("background_scripts/background_install.snowball.R", package = "groundhog")
-          #     system(paste0("Rscript ",script_path , " " , arguments_path) )
-          #     
-          #   #Delete temp path
-          #     unlink(arguments_path)
-          #     
+          
           
           pkg_conflict <-  snowball.all$pkg[
                                             snowball.all$pkg      %in% .pkgenv[['active']]$pkg & 
@@ -347,8 +335,9 @@
           msg <- paste0("Some of package you need to install from source have other versions already loaded in this ",
                         "R session. You will need to restart the R session to unload them and try again. If the problem ",
                         "persists it is likely that they are being automatically loaded before your `groundhog.library()` call. ",
-                        "To avoid this, you can create a blank script just with the groundhog library call. You may also ",
-                        "rely on the `ignore.deps` optional argument in `groundhog.library`. The packages creating the conflict are:-> ",
+                        "To avoid this, you can create a blank script just with the groundhog library call. An alternative that ",
+                        "sacrifices reproducibility partially, is to rely on the `ignore.deps` optional argument in `groundhog.library`.",
+                        "The packages creating the conflict are:-> ",
                         pasteQC(pkg_conflict)
                         )
                         
