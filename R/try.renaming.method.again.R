@@ -9,17 +9,19 @@
 #' run `try.renaming.method.again()` and the next groundhog.library() call will again attempt it. If it fails again
 #' the cookie file will be created anew, returning to copying-and-deleting.
 #' 
+#'@param quiet logical, defaults to `FALSE`. When set to `TRUE` it does not display confirmation message.
+#'
 #' @export
 
-try.renaming.method.again<-function()
+try.renaming.method.again<-function(quiet=FALSE)
   {
   cookies_dir <- paste0(get.groundhog.folder(),"/cookies")
   cookie_path <- file.path(cookies_dir, paste0("copy_instead_of_renaming.csv"))
   if (file.exists(cookie_path)) {
     unlink(cookie_path)
-    message1("OK. Will attempt the renaming method again")
+    if (quiet==FALSE) message1("OK. Will attempt the renaming method again")
   } else {
-    message1("Groundhog was already relying on the renaming method.")
+    if (quiet==FALSE) message1("Groundhog was already relying on the renaming method.")
     }
   
   

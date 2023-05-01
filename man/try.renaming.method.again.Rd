@@ -4,7 +4,10 @@
 \alias{try.renaming.method.again}
 \title{Attempt faster method of copying packages across libraries in the future}
 \usage{
-try.renaming.method.again()
+try.renaming.method.again(quiet = FALSE)
+}
+\arguments{
+\item{quiet}{logical, defaults to \code{FALSE}. When set to \code{TRUE} it does not display confirmation message.}
 }
 \description{
 groundhog often moves packages between the groundhog library and the default personal library.
