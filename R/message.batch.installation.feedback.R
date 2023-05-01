@@ -1,7 +1,7 @@
  message.batch.installation.feedback <- function(snowball, snowflakes,  k , cores)
   {
   #0 Log file path
-        log_path <- paste0(get.groundhog.folder(),"/batch_installation_log.txt")
+        log_path <- file.path(get.groundhog.folder(),"batch_installation_log.txt")
     
     
   #1. Get installation time for this batch 
