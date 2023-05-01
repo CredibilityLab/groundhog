@@ -57,7 +57,7 @@
             check.groundhog.version(min.days=1) #Utils.R #42
 
           #6.2 R too new?
-            check_R_old_enough()
+            #check_R_old_enough()
            
           #6.3 cran toc availble?
              load.cran.toc()
@@ -89,7 +89,7 @@
 
     #While developing:
           packageStartupMessage ("#######################################################\n",
-                              "This DEV version: 2023 04 30 - 20:02 (Barcelona time)")
+                              "This DEV version: 2023 05 01 - 8:06 (Barcelona time)")
 
       
       
