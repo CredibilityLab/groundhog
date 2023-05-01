@@ -54,14 +54,15 @@ purge.local <- function (ip.purge , loans)
         new <- !file.exists(to.local_to_backup)    #are they new to the backup? (do not replace existing files)
         
       #3.4 Move new backup files
-		    file.rename.robust2(from=from.local_to_backup[new], to= to.local_to_backup[new])
+          if (sum(new)>0) file.rename.robust2(from=from.local_to_backup[new], to= to.local_to_backup[new])
 
           
-      #3.5 Delete local files that somehow already are backed up
-         if (sum(new)>0) {
-           for (k in 1:sum(new))
+      #3.5 Delete local files that already are backed up
+         if (sum(!new)>0) {
+           from_to_purge <- from.local_to_backup[!new]
+           for (fk in from_to_purge)
            {
-             purge.pkg_path(from.local_to_backup[!new][k]) #utils #65
+             purge.pkg_path(fk) #utils #65
            }
            }
          #Not clear a scenario exists that creates this, but just in case.
