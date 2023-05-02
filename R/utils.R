@@ -690,7 +690,7 @@
 #39 save.cookie() and read.cookie()
     
     #39.1 SAVE
-        save.cookie <- function(cookie_name)
+        save.cookie <- function(cookie_name, cookie_contents=as.numeric(Sys.time()))
         {
         #Create cookies directory
           cookies_dir <- paste0(get.groundhog.folder(),"/cookies")
@@ -700,7 +700,7 @@
           cookie_path <- file.path(cookies_dir, paste0(cookie_name,".csv"))
           
         #Save time
-          utils::write.csv(as.numeric(Sys.time()),cookie_path,row.names = FALSE)
+          utils::write.csv(cookie_contents,cookie_path,row.names = FALSE)
         }
         
      #39.2 Does cookie exist
@@ -729,15 +729,38 @@
         }
      }#End of read cookie
       
+    #39.4 Read cookie
+        read.cookie <- function(cookie_name)
+        {
+          cookie=''
+          cookies_dir <- paste0(get.groundhog.folder(),"/cookies")
+          cookie_path <- file.path(cookies_dir, paste0(cookie_name,".csv"))
+          if (file.exists(cookie_path)) {
+            cookie.full <- utils::read.csv(cookie_path)
+            cookie <- try(cookie.full[1,1]) #cookie is a dataframe, we use the sedon value
+          }
+          if (is.null(cookie)) cookie <- ''
+          return (cookie) 
+       }
+          
+    #39.5 Delete cookie
+      delete.cookie <- function(cookie_name)
+        {
+          cookies_dir <- paste0(get.groundhog.folder(),"/cookies")
+          cookie_path <- file.path(cookies_dir, paste0(cookie_name,".csv"))
+          unlink(cookie_path)
+        }
   
-    #39.4 Save Session cookie
+        
+  
+    #39.6 Save Session cookie
       save.session.cookie<-function(cookie_name)
       {
         .pkgenv[[cookie_name]] <- Sys.time()
         
       }
       
-    #39.5
+    #39.7
       get.minutes.since.session.cookie<-function(cookie_name)
       {
         #Not set, return 99999
