@@ -1,15 +1,14 @@
 #' Attempt faster method of copying packages across libraries in the future
 #' 
 #' groundhog often moves packages between the groundhog library and the default personal library.
-#' This is done by renaming the package folder, which is a nearly instantaneous process even for 
+#' This is done by renaming the package folder, a nearly instantaneous process even for 
 #' 100+ packages. This renaming method, however, is sometimes unavailable for some configurations 
-#' (e.g., when the groundhog and personal folders are on different drives/volumes, say external vs internal hard drives). When
-#' groundhog determines this is the case, a warning is issued and groundhog switches to a slower process where packages are  
-#' copied and deleted. If you do not believe you are relying on to different drives/volumes with your present configuration, 
-#' you can try again the fast method going forward by running `try.renaming.method.again()`. Future groundhog.library() calls 
+#' (e.g., when the groundhog and personal folders are on different drives/volumes, say external vs internal hard drives).  When
+#' groundhog fails to move a package by renaming it, it will produce an error, and will switch to the slower method of 
+#' copying and deleting (actually moving) the package. If you believe the error was circumstantial and want to give 
+#' renaming files another change, you may run `try.renaming.method.again()`. Future groundhog.library() calls 
 #' will again attempt it. If it fails again you will just get a new error message and groundhog will again switch methods. 
-#' It is safe to err on the side of trying again, so
-#' unless you know you are using multiple physical drives, you probably should try again.
+#' It is safe to err on the side of trying again, so unless you know you are using multiple physical drives, you probably should try again.
 #' 
 #'@param quiet logical, defaults to `FALSE`. When set to `TRUE` it does not display confirmation message.
 #'
