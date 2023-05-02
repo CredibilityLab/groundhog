@@ -35,7 +35,7 @@
 #'   which `groundhog.library()` will not throw an error for using, even if the 
 #'   date entered corresponds to a more recent major R release.  
 #'@param cores Integer. The maximum number of cores to use during parallel installation
-#' of source packages. The default, -1, uses the total number of cores available minus 2. 
+#' of source packages. The default, -1, uses the total number of cores available minus 1. 
 #' Setting `core`=1 leads to installing source packages, and also to downloading binaries,
 #' sequentially.
 
@@ -179,9 +179,9 @@
                     })
             
     
-    #1.13 how many cores? (total -2 unless specified away from default of -1)
+    #1.13 how many cores? (total -1 unless specified away from default of -1)
         if (cores == -1) {
-          cores <- max(parallel::detectCores()-2,1)
+          cores <- max(parallel::detectCores()-1,1)
         }   
         
     #1.14 Common messages
