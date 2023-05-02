@@ -165,42 +165,4 @@ set.groundhog.folder <- function(path) {
     load.cran.toc(TRUE)       
     
     
-  #Can we rename from it
-        
-        #Verify we can copy by renaming
-          test_result <- suppressWarnings(test.renaming.method(path))  #Utils #69
-          
-        #If succeeds, make sure we rely on renaming method going forward (in case they are switching after failure)
-          if (test_result==TRUE) try.renaming.method.again(quiet=TRUE)
-          
-        #If it fails the test, propose alternative
-        if  (test_result==FALSE) {
-
-          #Draft message
-              path_suggestion <- paste0(dirname(.libPaths()[1]),"/groundhog_folder")
-              msg<- paste0("The path '",path,
-                      " seems to be a on a different drive (or 'volume') than ",
-                      "the default R library '",.libPaths(),"'. Groundhog will be slower and ",
-                      "more likely to produce occasional errors if paths for libraries are ",
-                      "on different drives. If feasible, it is recommended to use the ",
-                      "same physical drive for both paths instead. One alternative suggestion is to set it to: ",
-                      "'" , path_suggestion, "'. " ,
-                      "If you want to set it to  '",path,"' anyway, type 'anyway', else type 'cancel'")
-
-
-           #Show it
-            answer.two_drives<-infinite.prompt(format_msg(msg),valid_answers=c('anyway','cancel'),must.restart=FALSE)
-
-            if (tolower(answer.two_drives)=='cancel') {
-              message1("OK. Request cancelled.")
-              exit()
-            }
-
-
-        } #End if two drives
-    
-
-  #Reminder they can change it if it is the default path
-    #fw() utils.R #50
-    
   } #End of set.groundhog.folder
