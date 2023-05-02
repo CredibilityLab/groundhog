@@ -52,12 +52,14 @@ file.rename.robust2<-function(from,to)
               
         #Draft message
             msg_copy_instead_of_renaming <-
-             paste0("Groundhog was not able to move packages to/from groundog folder ",
-                    "with the faster 'rename' method, will switch to (slightly) slower ",
-                    "(copying-and-deleting). To over-rule this decision, ",
-                    "and have groundhog try the faster method again in future calls, ",
-                    "run `try.renaming.method.again()`. Note that if it fails again, it will simply again change the ",
-                    "default to copying-and-deleting.")
+             paste0("Groundhog was unable to move packages to/from groundog's folder ('", get.groundhog.folder(), "') ", 
+                    "and the default R library folder ('",.pkgenv[['default_libpath']][1],"') relying on the fast 'renaming' method. ", 
+					"One of a few possible causes is both folders being in different physical drives ",
+					"(e.g, internal vs external hard drives). Groundhog can still work but a bit more slowly. ",
+					"Going forward, packages will be copy-pasted between folders instead of renamed. ",
+					"If you believe this was a fluke and want to give the faster method another try ",
+                    "run `try.renaming.method.again()`. If it fails again, groundhog will simply change the ",
+                    "default to copying-and-deleting again. In any case, you need to run the groundhog.library() call again.")
                
           
         #If not copied, similar message, stop trying the renaming method
