@@ -290,21 +290,21 @@
   #always add 'file://' first, but then it will update the moment trying with file:// fails but without it succeeds
   
   
-  try_install_git<-function(path,  dependencies, lib, ref, INSTALL_opts)      {
+  try_install_git <- function(path,  dependencies, lib, ref, INSTALL_opts)      {
 
       
-      #1 Should we start without adding 'file://
+      #1 Should we start with/without adding 'file://
     
-        #Assume we don't add it
-          add_file_first <- FALSE
-        #Cookie path
-          cookies_dir <- paste0(get.groundhog.folder(),"/cookies")
-          dir.create(cookies_dir,recursive = TRUE, showWarnings = FALSE)
-          cookie_path <- file.path(cookies_dir, "add_file_first.csv")
-        
-        #if it exists, we do add it
-          if (file.exists(cookie_path)) add_file_first==TRUE
-        
+        #Use OS to make an informed guess
+          os<-get.os()
+          add_file_first <- TRUE
+          if (os=='windows') add_file_first <-FALSE
+
+        #Change default based on cookie if it exists
+          cookie1 <- try(read.cookie("add_file_first"))
+          if (cookie1!='') add_file_first <- try(cookie1)
+
+           
         
       #2 File 1 & file 2
         #Add 'file://' to a path
@@ -317,7 +317,7 @@
             path2<-path
           } else {
         
-        #But if itshould be the 2nd, do that
+        #But if it should be the 2nd, do that
           path1<-path
           path2<-file_path
         } #End if we should try 'file://' first
@@ -342,17 +342,7 @@
       #6 If try 2 works, adjust cookie
               if (!methods::is(try2, 'try-error'))
               {
-              #if the cookie exists, delete it, so we try without file first
-                if (file.exists(cookie_path)) {
-                  unlink(cookie_path)
-                }
-              time <- as.numeric(Sys.time())
-              
-              #If the cookie doesn't exist, create it, so we try it first
-                if (!file.exists(cookie_path)) {
-                  utils::write.csv (time , file=cookie_path)
-                }
-              
+              save.cookie('add_file_first', cookie_contents = !add_file_first)  #save the opposite of what we did as the cookie, since the 2nd method worked
               return(invisible(TRUE))  
             
             } #End if second try was a problem
