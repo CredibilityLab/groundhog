@@ -87,13 +87,13 @@
               
               for (k in 1:length(snowflakes))
               {  
-                cluster_id <- parallel::makeCluster(getOption("cl.cores", min(cores,length(snowflakes[[k]]))),outfile=log_cores_path)
-            
-            #3.3 Inner parallel loop with pkgs from source
-                parallel::clusterExport(cluster_id, 
-                           unclass(utils::lsf.str(envir = asNamespace("groundhog"), all = TRUE)),
-                           envir = as.environment(asNamespace("groundhog")))
-                           
+            #     cluster_id <- parallel::makeCluster(getOption("cl.cores", min(cores,length(snowflakes[[k]]))),outfile=log_cores_path)
+            # 
+            # #3.3 Inner parallel loop with pkgs from source
+            #     parallel::clusterExport(cluster_id, 
+            #                unclass(utils::lsf.str(envir = asNamespace("groundhog"), all = TRUE)),
+            #                envir = as.environment(asNamespace("groundhog")))
+            #                
                   #exporting all function to cluster, solution from 
                   #https://stackoverflow.com/questions/67595111/r-package-design-how-to-export-internal-functions-to-a-cluster
                 
@@ -108,11 +108,13 @@
                   #utils 48 in 'parallel groundhog' and utils #44
       
             #3.6 Install the snowflake
-                  parallel::parLapply(cluster_id , snowball.k$source_url , install.one)  #install.one.R has this function 'install.source 
+                  #parallel::parLapply(cluster_id , snowball.k$source_url , install.one)  #install.one.R has this function 'install.source 
               
             #3.7  Kill the cluster
-                  parallel::stopCluster(cluster_id)   
+                  #parallel::stopCluster(cluster_id)   
                   
+                  install.packages(snowball.k$source_url,repos=NULL, type='source', Ncpus=cores,lib=snowball.k$installation.path)
+            
             #3.8 Check that everything was installed.
                   ip <- data.frame(utils::installed.packages(),stringsAsFactors = FALSE,row.names = NULL)
                   ip$pkg_vrs = paste0(ip$Package,"_",ip$Version)
