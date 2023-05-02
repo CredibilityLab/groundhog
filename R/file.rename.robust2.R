@@ -39,9 +39,13 @@ file.rename.robust2<-function(from,to)
           if (dir.exists(to.k)) unlink(to.k,recursive = TRUE)
           
         }
-      
+        
+      #Ensure from exists  
+          if (!dir.exists(from)) {
+            gstop("Did not find directory to copy ('",from,"')")
+          }
       #Rename
-        file.rename(from , to)
+          file.rename(from , to)
       
     #1.2) Verify 
       outcome.rename <- basename(to) %in% data.frame(utils::installed.packages(dirname(to)),
@@ -51,22 +55,15 @@ file.rename.robust2<-function(from,to)
       if (!all(outcome.rename)) {
               
         #Draft message
-            msg_copy_instead_of_renaming <-
-             paste0("Groundhog was unable to move packages to/from groundog's folder ('", get.groundhog.folder(), "') ", 
-                    "and the default R library folder ('",.pkgenv[['default_libpath']][1],"') relying on the fast 'renaming' method. ", 
-					"One of a few possible causes is both folders being in different physical drives ",
-					"(e.g, internal vs external hard drives). Groundhog can still work but a bit more slowly. ",
-					"Going forward, packages will be copy-pasted between folders instead of renamed. ",
-					"If you believe this was a fluke and want to give the faster method another try ",
-                    "run `try.renaming.method.again()`. If it fails again, groundhog will simply change the ",
-                    "default to copying-and-deleting again. In any case, you need to run the groundhog.library() call again.")
+            msg <-paste0("Will switch to slower 'copying-and-deleting' method going forward.\n"
+                         "`help(`try.renaming.method.again()` gives additional information.")
                
           
         #If not copied, similar message, stop trying the renaming method
               save.cookie("copy_instead_of_renaming")
         
         #failure message
-            gstop(format_msg(msg_copy_instead_of_renaming))  
+            gstop(format_msg(msg))  
             
           }  
   
@@ -108,11 +105,7 @@ file.rename.robust2<-function(from,to)
                 
               #If match skip
                 if (md5.from==md5.to) skip.copy <- TRUE
-          
-            
-                
-                
-            } 
+                } 
          
          
           
@@ -122,7 +115,6 @@ file.rename.robust2<-function(from,to)
               #Ensure `to` directory exist
                 dir.create(to[k] , recursive = TRUE,showWarnings = FALSE)
         
-            
               #Copy 
                 outcome=file.copy(from[k],dirname(to[k]),recursive = TRUE) 
               
