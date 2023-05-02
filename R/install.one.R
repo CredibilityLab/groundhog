@@ -88,7 +88,11 @@
               t2 <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
 
               if (nrow(ip)>0)   write(paste0(t2," - Succeeded installing ",pkg),log_path,append=TRUE)
-              if (nrow(ip)==0)  write(paste0(t2," - FAILED! installing ",pkg), log_path,append=TRUE)
-   
+              if (nrow(ip)==0)  {
+                write(paste0(t2," - FAILED! installing ",pkg), log_path,append=TRUE)
+                gstop(paste0("Installation of '",pkg,"' failed. \n",
+                             "Sometimes simply running groundhog.library() again will work.\n",
+                             "But check out any output in the console with possible indications of what went wrongn."))
+              }
     }
   
