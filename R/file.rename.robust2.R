@@ -41,8 +41,9 @@ file.rename.robust2<-function(from,to)
         }
         
       #Ensure from exists  
-          if (!dir.exists(from)) {
-            gstop("Did not find directory to copy ('",from,"')")
+		  missing.dir <-from[!dir.exists(from)]
+          if (length(missing.dir)>0) {
+            gstop(paste0("These packages were expected but not found:\n",pasteN(missing.dir)))
           }
       #Rename
           file.rename(from , to)
@@ -55,7 +56,7 @@ file.rename.robust2<-function(from,to)
       if (!all(outcome.rename)) {
               
         #Draft message
-            msg <-paste0("Will switch to slower 'copying-and-deleting' method going forward.\n"
+            msg <-paste0("Will switch to slower 'copying-and-deleting' method going forward.\n",
                          "`help(`try.renaming.method.again()` gives additional information.")
                
           

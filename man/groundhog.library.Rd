@@ -55,9 +55,9 @@ which \code{groundhog.library()} will not throw an error for using, even if the
 date entered corresponds to a more recent major R release.}
 
 \item{cores}{Integer. The maximum number of cores to use during parallel installation
-of source packages. The default, -1, uses the total number of cores available minus 2.
+of source packages. The default, -1, uses the total number of cores available minus 1.
 Setting \code{core}=1 leads to installing source packages, and also to downloading binaries,
-sequentially.}
+sequentially. When installation fails, it is recommended trying cores=1}
 }
 \description{
 Load requested package(s)  as current on a requested date. If the needed version

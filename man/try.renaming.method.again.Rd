@@ -10,14 +10,16 @@ try.renaming.method.again(quiet = FALSE)
 \item{quiet}{logical, defaults to \code{FALSE}. When set to \code{TRUE} it does not display confirmation message.}
 }
 \description{
-groundhog often moves packages between the groundhog library and the default personal library.
-This is done by renaming the package folder, which is a nearly instantaneous process even for
-100+ packages. This renaming method, however, is sometimes unavailable for some configurations
-(e.g., when the groundhog and personal folders are on different drives/volumes, say external vs internal hard drives). When
-groundhog determines this is the case, a warning is issued and groundhog switches to a slower process where packages are
-copied and deleted. If you do not believe you are relying on to different drives/volumes with your present configuration,
-you can try again the fast method going forward by running \code{try.renaming.method.again()}. Future groundhog.library() calls
+Groundhog often moves packages between the groundhog library and the default personal library.
+This is done by renaming the package folders ('renaming' the parent directory of a folder, effectively moves it).
+This process is nearly instantaneous  even for 100+ packages. The renaming method, however, is sometimes unavailable for some configurations
+(e.g., when the groundhog and personal folders are on different drives/volumes, say external vs internal hard drives).  When
+groundhog fails to move a package by renaming it, it will produce an error, and will also make a note to permanently switch to
+the slower method of moving packages by first coping them, and then deleting the original, which takes up to a few second per package, and
+is thus much slower than renaming. If you believe the error was circumstantial and want to give
+renaming files another chance, you may run \code{try.renaming.method.again()}. Future groundhog.library() calls
 will again attempt it. If it fails again you will just get a new error message and groundhog will again switch methods.
-It is safe to err on the side of trying again, so
-unless you know you are using multiple physical drives, you probably should try again.
+It is safe to err on the side of trying again, so unless you know you are using multiple physical drives, you probably should try again, and
+investigate a possible alternative source of the problem. To debug, you may choose \code{cores=1} to force sequential installation,
+\code{force.install=TRUE} to reinstall possibly poorly installed dependencies, and as always, inspecting the console log as packages get installed.
 }

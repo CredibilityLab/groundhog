@@ -37,7 +37,7 @@
 #'@param cores Integer. The maximum number of cores to use during parallel installation
 #' of source packages. The default, -1, uses the total number of cores available minus 1. 
 #' Setting `core`=1 leads to installing source packages, and also to downloading binaries,
-#' sequentially.
+#' sequentially. When installation fails, it is recommended trying cores=1
 
 #'@examples
 #'\dontrun{
