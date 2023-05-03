@@ -23,13 +23,16 @@
 #'dependency for the package being loaded (mismatch of version), but which should be ignored
 #'and groundhog.library() should proceed tolerating the conflict. 
 #'@param force.source logical (defaults to `FALSE`). When set to `TRUE`, if the requested package, 
-#'or its dependencies, needs to be installed, they will be installed from source (much slower than from binaries).
+#'or its dependencies, needs to be installed, they will be installed from source 
+#'(much slower than from binaries).
 #'@param force.source.main logical (defaults to `FALSE`). When set to `TRUE`, if the  
 #'requested package needs to be installed it will be installed from source 
 #'(but dependencies are installed from binaries if needed and available).
-#'@param force.install logical (defaults to `FALSE`). When set to `TRUE`, will re-install the requested packages and 
+#'@param force.install logical (defaults to `FALSE`). When set to `TRUE`, 
+#'will re-install the requested packages and 
 #'their dependencies even if they are already installed.
-#'@param force.install.main logical (defaults to `FALSE`). When set to `TRUE`, will re-install the requested packages even 
+#'@param force.install.main logical (defaults to `FALSE`). When set to `TRUE`, 
+#'will re-install the requested packages even 
 #'if they are already installed (but dependencies will not be re-installed).
 #'@param tolerate.R.version optional character string containing an R version 
 #'   which `groundhog.library()` will not throw an error for using, even if the 
@@ -37,8 +40,11 @@
 #'@param cores Integer. The maximum number of cores to use during parallel installation
 #' of source packages. The default, -1, uses the total number of cores available minus 1. 
 #' Setting `core`=1 leads to installing source packages, and also to downloading binaries,
-#' sequentially. When installation fails, it is recommended trying cores=1
-
+#' sequentially. When installation fails, you may want to try cores=1
+#'@param view.feedback logical (defaults to `TRUE`). When set to `FALSE` 
+#'information on time left for finishing installation from 
+#'source is not displayed on the Viewer as a dataframe, and only shown in the console.
+#'
 #'@examples
 #'\dontrun{
 #' groundhog.library("magrittr", "2022-04-15")
@@ -326,13 +332,9 @@
         if (n.source.conflict > 0) 
          {
           
+          pkg_conflict <- snowball.install.source$pkg[snowball.install.source$pkg %in% .pkgenv[['active']]$pkg]
           
-          
-          pkg_conflict <-  snowball.all$pkg[
-                                            snowball.all$pkg      %in% .pkgenv[['active']]$pkg & 
-                                            !snowball.all$pkg_vrs %in% .pkgenv[['active']]$pkg_vrs
-                                            ]
-          msg <- paste0("Some of package you need to install from source have other versions already loaded in this ",
+          msg <- paste0("Some of the package you need to install from source have other versions already loaded in this ",
                         "R session. You will need to restart the R session to unload them and try again. If the problem ",
                         "persists it is likely that they are being automatically loaded before your `groundhog.library()` call. ",
                         "To avoid this, you can create a blank script just with the groundhog library call. An alternative that ",
