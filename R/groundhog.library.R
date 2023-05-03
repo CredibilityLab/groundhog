@@ -97,13 +97,18 @@
                             include.suggests = FALSE, ignore.deps=c(), 
                             force.source = FALSE,      force.install = FALSE, 
                             force.source.main = FALSE, force.install.main=FALSE,
-                            tolerate.R.version = "" , cores = -1)
+                            tolerate.R.version = "" , cores = -1,
+                            view.feedback = TRUE)
   {
     
 #--------------------------------------------------------------
 
   #1 Preliminaries
- 
+    #1.0 view.feedback option
+      .pkgenv[['view.feedback']] <- view.feedback 
+      
+      #show as View() the source files installation 
+    
     #1.1 Check if new version of groundhog exists 
       check.groundhog.version(min.days=1) #Function 42  -  utils.R
 

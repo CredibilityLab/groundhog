@@ -15,7 +15,8 @@ groundhog.library(
   force.source.main = FALSE,
   force.install.main = FALSE,
   tolerate.R.version = "",
-  cores = -1
+  cores = -1,
+  view.feedback = TRUE
 )
 }
 \arguments{

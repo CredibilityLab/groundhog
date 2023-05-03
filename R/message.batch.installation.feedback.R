@@ -66,25 +66,42 @@
             
     
     #5 View(installation feedback)
-              if (k==1) reminderk <-"- All estimated completion times are noisy."
+              
+        #This value is set in groundhog.library()
+          if (.pkgenv[['view.feedback']]  == TRUE)
+          {
+            
+              if (k==1) reminderk <-"- Times estimates can be quite off"
               if (k==2) reminderk <-"- Opt-out of this window with `view.feedback=FALSE`"
-              if (k==3) reminderk <-"- Install sequentially with `cores=1`"
-              if (k==4) reminderk <-"- Minimize installs with same groundhog.day across scripts"
-              if (k==5) reminderk <-"- See when versions were published with toc(<pkg>)"
-              if (k==6) reminderk <-"- For tip/troubleshooting: https://groundhogr.com"
-              if (k==7) reminderk <-"- On GitHub: https://github.com/CredibilityLab/groundhog/"
-              if (k>7 ) reminderk <-""
+              if (k==3) reminderk <-"- Install pkgs sequentially with `cores=1`"
+              if (k==4) reminderk <-"- Minimize installs using same groundhog.day across scripts"
+              if (k==5) reminderk <-"- See when pkg versions were published with toc(<pkg>)"
+              if (k==6) reminderk <-"- Web:   https://groundhogR.com"
+              if (k==7) reminderk <-"- GitHub https://github.com/CredibilityLab/groundhog/"
+              if (k==8) reminderk <-"                </tips>"
+              if (k>8 ) reminderk <-""
               installation_feedback.k <- data.frame(
                           as_of          = now,
                           batch          = paste0(k," of ",length(snowflakes)),
-                          estimated_ending_batch = estimate.batch,
-                          estimated_ending_all   = estimate.tot,
+                          time_batch_installs = estimate.batch,
+                          time_all_installs   = estimate.tot,
                           package_count_in_batch  = length(snowflakes[[k]]),
                           tips       = reminderk
                         )
+              
            #Update .pkgenv[[]]   
               if (!is.null(.pkgenv[['df.feedback']])) .pkgenv[['df.feedback']]<-rbind(.pkgenv[['df.feedback']] , installation_feedback.k)
               if (is.null(.pkgenv[['df.feedback']]))  .pkgenv[['df.feedback']]<-installation_feedback.k 
-              groundhog_viewer <- .pkgenv[['df.feedback']]
-              try(View(groundhog_viewer),silent=TRUE)
+              groundhog_installer <- .pkgenv[['df.feedback']]
+              groundhog_installer=data.frame(a=1,b=1,c=1,e=1,f=1,g=1)
+              names(groundhog_installer)=c("As of this time:",
+                                           "Processing Batch #",
+                                           "Estimated completion this batch", 
+                                           "Estimated completion all batches",
+                                           "# pkgs this batch",
+                                           "Tips while you wait")
+              View(groundhog_installer)
+              try(View(groundhog_installer),silent=TRUE)
+          }  
+            
     }

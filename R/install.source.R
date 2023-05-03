@@ -114,14 +114,14 @@
                                 "  1) First, simply try again, the error may be a fluke (possibly set \n",
                                 "     `cores=1` in groundhog.library() call).\n",
                                 "  2) Inspect console log, you could be missing non-CRAN dependencies\n",
-                                "     (e.g., RTools for Windows, XQuartz for Mac, OpenSSL for Ubuntu), ",
-                                "     have a connection problem or a compatibility problem\n",
+                                "     (e.g., RTools for Windows, XQuartz for Mac, OpenSSL for Ubuntu),\n",
+                                "     or have a connection problem, or another compatibility problem\n",
                                 "  3) If the package that failed is a dependency for a package you want,\n",
                                 "     you may install another version of that failed dependency directly\n",
-                                "     with a groundhog.library() call for it alone with a different date.\n",
-                                "     The, rely on `ignore.deps` argument in `groundhog.library()` to tolerate\n",
-                                "     the mismatch between this version and the dependency expected for the\n",
-                                "     target package (use `toc(<pkg>)` to find out version release dates).\n",
+                                "     with a groundhog.library() call, just for that failing pkg, for a \n",
+                                "     different date. Then, after installing that other version, re-run call\n",
+								"     adding the `ignore.deps` argument to allow the version mismatch\n",
+								"     Use `toc(<pkg>)` to find out version release dates of 'pkg'.\n",
                                 "  4) Check out http://groundhogr.com/troubleshooting")
                      
                       message1(msg)
