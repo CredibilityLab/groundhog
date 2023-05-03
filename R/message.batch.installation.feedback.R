@@ -70,23 +70,32 @@
         #This value is set in groundhog.library()
           if (.pkgenv[['view.feedback']]  == TRUE)
           {
+              tips<-c("- Opt-out of this window with `view.feedback=FALSE`" , 
+                      "- Install pkgs sequentially with `cores=1`" , 
+                      "- Minimize installs using same groundhog.day across scripts" , 
+                      "- See when pkg versions were published with toc(<pkg>)" ,
+                      "- Do single groundhog.library() for all pkgs to save time",
+                      "- See when pkg versions were published with toc(<pkg>)" , 
+                      "- Homepage: https://groundhogR.com",
+                      "- GitHub: https://github.com/CredibilityLab/groundhog/",
+                      "- Read a blogpost while you wait: https://datacolada.org")
+
+            #Shuffle them
+              tips<-sample(tips)
             
-              if (k==1) reminderk <-"- Times estimates can be quite off"
-              if (k==2) reminderk <-"- Opt-out of this window with `view.feedback=FALSE`"
-              if (k==3) reminderk <-"- Install pkgs sequentially with `cores=1`"
-              if (k==4) reminderk <-"- Minimize installs using same groundhog.day across scripts"
-              if (k==5) reminderk <-"- See when pkg versions were published with toc(<pkg>)"
-              if (k==6) reminderk <-"- Web:   https://groundhogR.com"
-              if (k==7) reminderk <-"- GitHub https://github.com/CredibilityLab/groundhog/"
-              if (k==8) reminderk <-"                </tips>"
-              if (k>8 ) reminderk <-""
+            #Add 1st time, and trail 1000 empty tips
+              tips<-c("- Time estimates are noisy (merely orientative)",
+                      tips,
+                      rep('',1000))
+              
+            #Generate the 'dataframe'
               installation_feedback.k <- data.frame(
                           as_of          = now,
                           batch          = paste0(k," of ",length(snowflakes)),
                           time_batch_installs = estimate.batch,
                           time_all_installs   = estimate.tot,
                           package_count_in_batch  = length(snowflakes[[k]]),
-                          tips       = reminderk
+                          tips       = tips[k]
                         )
               
            #Update .pkgenv[[]]   
