@@ -3,13 +3,13 @@
   install.source <- function(snowball,date,cores)
   {
      
+    
      
-    # #0 Add all paths so that it is found when attempted
-    #   .libPaths(unique(snowball$installation.path))
-    # 
-    #0.5 Parallel installation if more than 1 core and more than 1 package
-      batches.failed <- 0 #flag turns to 1 if batches attempted and fail                      
-
+    #Restart the feedback data.frame  so that if they install something new it starts from scratch
+      on.exit(.pkgenv[['df.feedback']]<-NULL)
+    
+    
+    
 
     #1 Keep only source  packages that are not yet installed
         snowball <- snowball[snowball$from  %in% c('source', 'github','gitlab') & snowball$installed==FALSE, ]
@@ -87,31 +87,12 @@
               
               for (k in 1:length(snowflakes))
               {  
-            #     cluster_id <- parallel::makeCluster(getOption("cl.cores", min(cores,length(snowflakes[[k]]))),outfile=log_cores_path)
-            # 
-            # #3.3 Inner parallel loop with pkgs from source
-            #     parallel::clusterExport(cluster_id, 
-            #                unclass(utils::lsf.str(envir = asNamespace("groundhog"), all = TRUE)),
-            #                envir = as.environment(asNamespace("groundhog")))
-            #                
-                  #exporting all function to cluster, solution from 
-                  #https://stackoverflow.com/questions/67595111/r-package-design-how-to-export-internal-functions-to-a-cluster
                 
             #3.4 Get snowball subset for this snowflake
                   snowball.k <- snowball[snowball$pkg %in% snowflakes[[k]], ]
                       
-            #3.5 Sort snowball.k by decreasing installation time
-                #Feedback
+            #3.5 Feedback
                   try(message.batch.installation.feedback(snowball,snowflakes,k,cores)) #message.batch.installation.feedback.R
-                  
-                  
-                  #utils 48 in 'parallel groundhog' and utils #44
-      
-            #3.6 Install the snowflake
-                  #parallel::parLapply(cluster_id , snowball.k$source_url , install.one)  #install.one.R has this function 'install.source 
-              
-            #3.7  Kill the cluster
-                  #parallel::stopCluster(cluster_id)   
                   
                   install.packages(snowball.k$source_url,repos=NULL, type='source', Ncpus=cores,lib=snowball.k$installation.path)
             
@@ -121,11 +102,6 @@
                   snowflake.pkg_vrs <- snowball$pkg_vrs[snowball$pkg %in% snowflakes[[k]] ]
                   missing.pkg_vrs <-  snowflake.pkg_vrs[!snowflake.pkg_vrs %in% ip$pkg_vrs]
                   
-                    
-                  #Localize pkgs in snowball that succeeded to be installed 
-                   #localize.snowball(snowball [(snowball$pkg %in% snowflakes[[k]]) & 
-                                               #(snowball$pkg_vrs %in% ip$pkg_vrs), ])
-                  
                    
                 
             #3.9 If it was not, try sequentially
@@ -134,14 +110,24 @@
             
                     
                     #Message end batch installation
-                      msg=paste("Installation of ",pasteQC(missing.pkg_vrs)," failed.\n",
-                              "Will attempt installing sequentially")
-                    
-                      message(msg)
-                    
-                    #Flag that batch installation failed
-                      batches.failed <- 1
-                    
+                      msg=paste("Installation of ",pasteQC(missing.pkg_vrs)," failed. Possible solutions:\n",
+                                "  1) First, simply try again, the error may be a fluke (possibly set \n",
+                                "     `cores=1` in groundhog.library() call).\n",
+                                "  2) Inspect console log, you could be missing non-CRAN dependencies\n",
+                                "     (e.g., RTools for Windows, XQuartz for Mac, OpenSSL for Ubuntu), ",
+                                "     have a connection problem or a compatibility problem\n",
+                                "  3) If the package that failed is a dependency for a package you want,\n",
+                                "     you may install another version of that failed dependency directly\n",
+                                "     with a groundhog.library() call for it alone with a different date.\n",
+                                "     The, rely on `ignore.deps` argument in `groundhog.library()` to tolerate\n",
+                                "     the mismatch between this version and the dependency expected for the\n",
+                                "     target package (use `toc(<pkg>)` to find out version release dates).\n",
+                                "  4) Check out http://groundhogr.com/troubleshooting")
+                     
+                      message1(msg)
+                      exit('\n\n    --   Installation Failed   --  ')
+                 
+
                     #recheck if packages are installed or not
                       snowball$installed <- snowball$pkg_vrs %in% ip$pkg_vrs
                     
@@ -157,7 +143,7 @@
           
           
     #4 Sequential installation
-      if (cores==1 | nrow(snowball)==1 | batches.failed==1)
+      if (cores==1 | nrow(snowball)==1 )
       {
           
           #4.2 Start clock for install feedback k=1
@@ -172,8 +158,6 @@
               #Install
                 install.one (url=snowball$source_url[k])       
               
-                
-                
               #Verify installation
                   ip <- data.frame(utils::installed.packages(),stringsAsFactors = FALSE,row.names = NULL)
                   ip$pkg_vrs = paste0(ip$Package,"_",ip$Version)
