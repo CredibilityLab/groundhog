@@ -93,8 +93,7 @@
               if (!is.null(.pkgenv[['df.feedback']])) .pkgenv[['df.feedback']]<-rbind(.pkgenv[['df.feedback']] , installation_feedback.k)
               if (is.null(.pkgenv[['df.feedback']]))  .pkgenv[['df.feedback']]<-installation_feedback.k 
               groundhog_installer <- .pkgenv[['df.feedback']]
-              groundhog_installer=data.frame(a=1,b=1,c=1,e=1,f=1,g=1)
-              names(groundhog_installer)=c("As of this time:",
+                            names(groundhog_installer)=c("As of this time:",
                                            "Processing Batch #",
                                            "Estimated completion this batch", 
                                            "Estimated completion all batches",

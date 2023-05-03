@@ -120,9 +120,11 @@
                                 "     you may install another version of that failed dependency directly\n",
                                 "     with a groundhog.library() call, just for that failing pkg, for a \n",
                                 "     different date. Then, after installing that other version, re-run call\n",
-								"     adding the `ignore.deps` argument to allow the version mismatch\n",
-								"     Use `toc(<pkg>)` to find out version release dates of 'pkg'.\n",
-                                "  4) Check out http://groundhogr.com/troubleshooting")
+								                "     adding the `ignore.deps` argument to allow the version mismatch\n",
+								                "     Use `toc(<pkg>)` to find out version release dates of 'pkg'.\n",
+								                "  4) Similar to (3), use toc(<pkg>) to find the date for the next version\n",
+								                "     of the failing pkg and use a date after it for this entire groundhog.call().\n",
+								                "  5) Visit http://groundhogr.com/troubleshooting")
                      
                       message1(msg)
                       exit('\n\n    --   Installation Failed   --  ')
