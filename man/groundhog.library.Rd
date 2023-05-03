@@ -38,16 +38,19 @@ dependency for the package being loaded (mismatch of version), but which should 
 and groundhog.library() should proceed tolerating the conflict.}
 
 \item{force.source}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, if the requested package,
-or its dependencies, needs to be installed, they will be installed from source (much slower than from binaries).}
+or its dependencies, needs to be installed, they will be installed from source
+(much slower than from binaries).}
 
-\item{force.install}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will re-install the requested packages and
+\item{force.install}{logical (defaults to \code{FALSE}). When set to \code{TRUE},
+will re-install the requested packages and
 their dependencies even if they are already installed.}
 
 \item{force.source.main}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, if the
 requested package needs to be installed it will be installed from source
 (but dependencies are installed from binaries if needed and available).}
 
-\item{force.install.main}{logical (defaults to \code{FALSE}). When set to \code{TRUE}, will re-install the requested packages even
+\item{force.install.main}{logical (defaults to \code{FALSE}). When set to \code{TRUE},
+will re-install the requested packages even
 if they are already installed (but dependencies will not be re-installed).}
 
 \item{tolerate.R.version}{optional character string containing an R version
@@ -57,7 +60,11 @@ date entered corresponds to a more recent major R release.}
 \item{cores}{Integer. The maximum number of cores to use during parallel installation
 of source packages. The default, -1, uses the total number of cores available minus 1.
 Setting \code{core}=1 leads to installing source packages, and also to downloading binaries,
-sequentially. When installation fails, it is recommended trying cores=1}
+sequentially. When installation fails, you may want to try cores=1}
+
+\item{view.feedback}{logical (defaults to \code{TRUE}). When set to \code{FALSE}
+information on time left for finishing installation from
+source is not displayed on the Viewer as a dataframe, and only shown in the console.}
 }
 \description{
 Load requested package(s)  as current on a requested date. If the needed version
