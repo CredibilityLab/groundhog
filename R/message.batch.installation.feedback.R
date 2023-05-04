@@ -71,14 +71,13 @@
           if (.pkgenv[['view.feedback']]  == TRUE)
           {
               tips<-c("- Opt-out of this window with `view.feedback=FALSE`" , 
-                      "- Install pkgs sequentially setting `cores=1`" , 
                       "- Use same groundhog.day across scripts to minimize installs" , 
                       "- See when pkg versions were published with toc(<pkg>)" ,
                       "- Use single groundhog.library() call for many pkgs to save time",
                       "- See when pkg versions were published with toc(<pkg>)" , 
                       "- Read a blogpost while you wait: https://datacolada.org",
                       "- Bugs & suggestions -> https://github.com/CredibilityLab/groundhog/",
-                      "- Homepage -> https://groundhogr.com"
+                      "- Visit groundhog's webapge -> https://groundhogr.com"
                       )
 
             # "Shuffle" them 
@@ -93,7 +92,7 @@
               
             
             #Add 1st time, and trail 1000 empty tips
-              tips<-c("- Time estimates are noisy (merely orientative)",
+              tips<-c("- Time estimates are noisy (merely orientative)                           |",
                       tips,
                       rep('',1000))
               
@@ -118,8 +117,7 @@
                                            "Estimated completion all batches",
                                            "# pkgs this batch",
                                            "Tips while you wait")
-              View(groundhog_installer)
-              try(View(groundhog_installer),silent=TRUE)
+              try(utils::View(groundhog_installer),silent=TRUE)
           }  
             
     }
