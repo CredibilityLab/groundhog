@@ -217,8 +217,15 @@
           snowball.k  <- get.snowball(pkgk , date , include.suggests)
     
         #options
-          #force source
-           if (force.source==TRUE)        snowball.k$from      = 'source'
+          #force source 
+          # Do not force remote packages)
+           if (force.source==TRUE) {
+             snowball.k$from      = ifelse(snowball.k$from %in% c('github','gitlab'), 
+                                           snowball.k$from , 
+                                           'source')
+           }
+          
+         #For source main  
            if (force.source.main==TRUE)   snowball.k[snowball.k$pkg==pkg,]$from = 'source'
         
           #force install
@@ -341,9 +348,11 @@
           
           msg <- paste0("Some of the package you need to install from source have other versions already loaded in this ",
                         "R session. You will need to restart the R session to unload them and try again. If the problem ",
-                        "persists it is likely that they are being automatically loaded before your `groundhog.library()` call. ",
-                        "To avoid this, you can create a blank script just with the groundhog library call. An alternative that ",
-                        "sacrifices reproducibility partially, is to rely on the `ignore.deps` optional argument in `groundhog.library`.",
+                        "persists it is likely that they are being automatically loaded before your `groundhog.library()` call ",
+                        "(e.g., R Studio automatically loads pkgs referenced in a script when simply opening the script even if you don't execute anything). ",
+						"You can bypass this automatic loading by (i) cleaning the environment, and (ii) creating an empty ",
+						"script just with the groundhog library call. Restart the session, execute that code, then switch back ",
+						"to the script you are working on. You can also look into the `ignore.deps` optional argument in `groundhog.library`.",
                         "The packages creating the conflict are:-> ",
                         pasteQC(pkg_conflict)
                         )
