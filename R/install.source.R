@@ -17,12 +17,12 @@
                                 "  3) If the package that failed is a dependency for a package you want,\n",
                                 "     you may install another version of that failed dependency directly\n",
                                 "     with a groundhog.library() call, just for that failing pkg, for a \n",
-                                "     different date. Then, after installing that other version, re-run call\n",
-								                "     adding the `ignore.deps` argument to allow the version mismatch\n",
+                                "     different date. Then re-run this groundhog.library() call adding the\n",
+								                "     `ignore.deps` argument, to allowing the version mismatch for that pkg.\n",
 								                "     Use `toc(<pkg>)` to find out version release dates of 'pkg'.\n",
 								                "  4) Similar to (3), use toc(<pkg>) to find the date for the next version\n",
 								                "     of the failing pkg and use a date after it for this entire\n",
-								                "     groundhog.library().\n",
+								                "     groundhog.library() call.\n",
 								                "  5) Visit http://groundhogr.com/troubleshooting")
                  
     
@@ -111,7 +111,7 @@
                   
             #3.7 Install source in snowflake
                   if (n.source>0) {
-                  install.packages(snowball.k_source$source_url,repos=NULL, type='source', Ncpus=min(cores,n.source),
+                  utils::install.packages(snowball.k_source$source_url,repos=NULL, type='source', Ncpus=min(cores,n.source),
                                    lib=snowball.k_source$installation.path)
                   }
                   
@@ -168,7 +168,7 @@
                     
                       message1("\nThe package '",snowball$pkg_vrs[k],"' failed to install.")
 					            message1("\n" , message_with_solutions)
-                      messsage('\n\n                  --   Installation Failed   --  ')
+                      message('\n\n                  --   Installation Failed   --  ')
                       exit()
                   }
          
