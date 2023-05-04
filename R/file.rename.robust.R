@@ -12,7 +12,7 @@
 
    file.rename.robust <- function(from,to) {
      
-     #1. Decide wheter to try renaming
+     #1. Decide whether to try renaming
      
         #Assume renaming  
             method <- 'renaming'

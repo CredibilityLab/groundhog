@@ -88,7 +88,7 @@ set.groundhog.folder <- function(path) {
 #Early return if already set to path
   if (dir.exists(path) && normalizePath(path) == normalizePath(get.groundhog.folder())) {
       
-    #Note: do dir.exists() first becuase we cannot normalizePath() if it does not exist
+    #Note: do dir.exists() first because we cannot normalizePath() if it does not exist
     #and if it does not exist, obviously it is not the current path
     
     message1("The groundhog folder already was '", path , "'")

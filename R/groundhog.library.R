@@ -413,7 +413,7 @@
           save.cookie(cookie)
           }
 		      
-        #Add drobox msg
+        #Add dropbox msg
           if  (regexpr('dropbox', tolower(get.groundhog.folder()))>0) {
                             msg <-paste0(msg,"\nThis issue is likely caused because the groundhog folder is in Dropbox\n",
                                     "You can change its location with `set.groundhog.folder()`")
@@ -477,10 +477,10 @@
             }#End 10.5
           
          #10.6 Save snowball
-            #Update  column `installed` in  snowball based on what's availalbe
+            #Update  column `installed` in  snowball based on what's available
                 ip.path <- get.ip('groundhog')$LibPath 
                 loans.path<- as.character(get.loans()$groundhog_location)
-                snowball$installed <- (snowball$installation.path %in% c(ip.path , loans.path) |  #if the path we want exists or is in borrwoed set
+                snowball$installed <- (snowball$installation.path %in% c(ip.path , loans.path) |  #if the path we want exists or is in borrowed set
                                        snowball$pkg %in% .pkgenv[['base_pkg']])          #if in packages or in base.packages
                 
 	      #10.7  Save snowball RDS (unless they did ignore.deps for that drops dependencies)

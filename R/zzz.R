@@ -42,7 +42,7 @@
               
           
       
-    #2 Hidden variables in local environmen (need to equate to functions in zzz to avoid error on check)
+    #2 Hidden variables in local environment (need to equate to functions in zzz to avoid error on check)
         .available.restore.points <<- get.restore.points()   #Utils.R #55
         .view.conflicts <<- view.conflicts.function()        #Utils.R #57
     
@@ -59,7 +59,7 @@
           #6.2 R too new?
             #check_R_old_enough()
            
-          #6.3 cran toc availble?
+          #6.3 cran toc available?
              load.cran.toc()
          }
  
@@ -88,8 +88,8 @@
           packageStartupMessage ("Tips and troubleshooting: https://groundhogR.com")
 
     #While developing:
-          packageStartupMessage ("#######################################################\n",
-                              "This DEV version: 2023 05 04 - 12:03 PM (Barcelona time)")
+          #packageStartupMessage ("#######################################################\n",
+          #                   "This DEV version: 2023 05 04 - 12:03 PM (Barcelona time)")
 
       
       

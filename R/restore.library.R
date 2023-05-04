@@ -128,7 +128,7 @@ restore.library<-function(days=0)
   #5 Set of pkgs being eliminated
       ip.purge0 <- ip.local[!ip.local$md5 %in% ip.restore$md5,]    #We have these packages but did not use to, so we purge them
       
-    #5.1 Do eliminate thoes we know were originally added by groundhog
+    #5.1 Do eliminate those we know were originally added by groundhog
       ip.purge <- ip.purge0[ip.purge0$md5 %in% loans$md5 | ip.purge0$md5 %in% ip.groundhog$md5,]    
           #We have these packages but did not use to, so we purge them
           #They are either on loan (if using renaming, or in groundhog, if using copying)

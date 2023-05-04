@@ -1306,7 +1306,7 @@ get.parallel.time<-function(times,cores)
    purge.pkg_path <- function(pkg_path)
    {
      
-     #Generte N random strings of letters
+     #Generate N random strings of letters
       #random=c()
       #for (k in 1:length(pkg_path)){
       #random[k] =paste0(sample(letters,6,replace=TRUE),collapse = '')
