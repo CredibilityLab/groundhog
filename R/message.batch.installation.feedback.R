@@ -71,14 +71,14 @@
           if (.pkgenv[['view.feedback']]  == TRUE)
           {
               tips<-c("- Opt-out of this window with `view.feedback=FALSE`" , 
-                      "- Install pkgs sequentially with `cores=1`" , 
-                      "- Minimize installs using same groundhog.day across scripts" , 
+                      "- Install pkgs sequentially setting `cores=1`" , 
+                      "- Use same groundhog.day across scripts to minimize installs" , 
                       "- See when pkg versions were published with toc(<pkg>)" ,
-                      "- Do single groundhog.library() for all pkgs to save time",
+                      "- Use single groundhog.library() call for many pkgs to save time",
                       "- See when pkg versions were published with toc(<pkg>)" , 
-                      "- Homepage: https://groundhogR.com",
-                      "- GitHub: https://github.com/CredibilityLab/groundhog/",
-                      "- Read a blogpost while you wait: https://datacolada.org")
+                      "- Read a blogpost while you wait: https://datacolada.org",
+                      "- Bugs & suggestions -> https://github.com/CredibilityLab/groundhog/"
+                      )
 
             #Shuffle them
               tips<-sample(tips)
@@ -95,7 +95,8 @@
                           time_batch_installs = estimate.batch,
                           time_all_installs   = estimate.tot,
                           package_count_in_batch  = length(snowflakes[[k]]),
-                          tips       = tips[k]
+                          tips       = tips[k],
+                          stringsAsFactors = FALSE
                         )
               
            #Update .pkgenv[[]]   
