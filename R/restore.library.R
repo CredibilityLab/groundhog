@@ -154,29 +154,32 @@ restore.library<-function(days=0)
                     "This process should take a few seconds.\n")
 
       #7.2 Warnings for non-groundhog changes
-          n1=length(non.groundhog_installed)
-          n2=length(non.groundhog_removed)
-          if (n1+n2>0) {
-              msg <- paste0("-------------------------------------------------------------\n",
-                            "Warning: Since the creation of the restore point,\n")
-              if (n1>0) {
-                      msg<-paste0(msg, "an additional ", n1 , " packages have been installed but not\n", 
-                                  "by groundhog, these packages will *not* be removed:\n",
-                                  pasteN(non.groundhog_installed),"\n")
-                }
-              if (n2>0) {
-                        msg<-paste0(msg, "an additional ", n2 , " packages have been removed but not\n",
-                                  "by groundhog, these will *not* be restored:\n",
-                                   pasteN(non.groundhog_removed))
-
-                }
-              msg<-paste0(msg, ".\nProceeding with restoring only the groundhog produced\n",
-                                  "changes to the local library may lead packages to not\n",
-                                  "work properly.\n",
-                                   "See 'https://groundhogR.com/restore' for more information.\n",
-                                   "-------------------------------------------------------------")
-              message(msg)
-          }
+          #Commenting out for V3.1.0 - seems difficult for users to use this information really
+          #and not clear this poses additional risk to just switching groundhog<->library
+          
+          # n1=length(non.groundhog_installed)
+          # n2=length(non.groundhog_removed)
+          # if (n1+n2>0) {
+          #     msg <- paste0("-------------------------------------------------------------\n",
+          #                   "Warning: Since the creation of the restore point,\n")
+          #     if (n1>0) {
+          #             msg<-paste0(msg, "an additional ", n1 , " packages have been installed but not\n", 
+          #                         "by groundhog, these packages will *not* be removed:\n",
+          #                         pasteN(non.groundhog_installed),"\n")
+          #       }
+          #     if (n2>0) {
+          #               msg<-paste0(msg, "an additional ", n2 , " packages have been removed but not\n",
+          #                         "by groundhog, these will *not* be restored:\n",
+          #                          pasteN(non.groundhog_removed))
+          # 
+          #       }
+          #     msg<-paste0(msg, ".\nProceeding with restoring only the groundhog produced\n",
+          #                         "changes to the local library may lead packages to not\n",
+          #                         "work properly.\n",
+          #                          "See 'https://groundhogR.com/restore' for more information.\n",
+          #                          "-------------------------------------------------------------")
+          #     message(msg)
+          # }
           
       #7.3. Prompt for 'restore'
         message1("To proceed type 'restore', to stop type anything else.")
