@@ -77,11 +77,20 @@
                       "- Use single groundhog.library() call for many pkgs to save time",
                       "- See when pkg versions were published with toc(<pkg>)" , 
                       "- Read a blogpost while you wait: https://datacolada.org",
-                      "- Bugs & suggestions -> https://github.com/CredibilityLab/groundhog/"
+                      "- Bugs & suggestions -> https://github.com/CredibilityLab/groundhog/",
+                      "- Homepage -> https://groundhogr.com"
                       )
 
-            #Shuffle them
-              tips<-sample(tips)
+            # "Shuffle" them 
+              tips<-tips[order(snowball$pkg[1:length(tips)])]
+              
+              #Cannot just do 'sample()' to shuffle because this is called multiple times across loops so 
+              #it repeats the tips. Could solve with seed, but Do not want to set.seed() 
+              #because that's global and seems undesirable to change seed globally
+              #So, sort by the alphabetical order of 'pkg' in the snowball, which is arbitrary enough
+              #Tips appear in the order() of the alphabetical order of the K first pkgs, where K is the # of tips
+              
+              
             
             #Add 1st time, and trail 1000 empty tips
               tips<-c("- Time estimates are noisy (merely orientative)",
