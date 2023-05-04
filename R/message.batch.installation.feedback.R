@@ -111,13 +111,27 @@
               if (!is.null(.pkgenv[['df.feedback']])) .pkgenv[['df.feedback']]<-rbind(.pkgenv[['df.feedback']] , installation_feedback.k)
               if (is.null(.pkgenv[['df.feedback']]))  .pkgenv[['df.feedback']]<-installation_feedback.k 
               groundhog_installer <- .pkgenv[['df.feedback']]
-                            names(groundhog_installer)=c("As of this time:",
+                            names(groundhog_installer)=c(
+                                           "As of this time:",
                                            "Processing Batch #",
                                            "Estimated completion this batch", 
                                            "Estimated completion all batches",
-                                           "# pkgs this batch",
                                            "Tips while you wait")
-              try(utils::View(groundhog_installer),silent=TRUE)
-          }  
+                            
+            #Choose View() function to use
+                gView<-"try(View(groundhog_installer),silent=TRUE)" 
+                try(eval2(gView))  #Utils.R  #71
+                
+                #OLD: try(View(groundhog_installer),silent=TRUE)
+                #But this would lead CRAN to ask for Utils:: and that's not the funciton
+                #we want, and it is now known where the actual Util:: we want comes from
+                
+                #This is a work-around not to call on utils::View() which is a different
+                #function that has a popup window that is easy to miss, while View() 
+                #puts the popup on R Studio itself.
+              
+                        
+              
+          } #If view==TRUE 
             
-    }
+    } #End function

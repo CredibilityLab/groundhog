@@ -1472,3 +1472,7 @@ get.parallel.time<-function(times,cores)
             }
     }
     
+    
+#71 eval2()
+    eval2 <- function(s)  eval(parse(text=s),  parent.frame())  
+           
