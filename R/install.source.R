@@ -126,7 +126,8 @@
 								                "     of the failing pkg and use a date after it for this entire groundhog.call().\n",
 								                "  5) Visit http://groundhogr.com/troubleshooting")
                      
-                      message1(msg)
+                      message2()
+					  message1(msg)
                       exit('\n\n    --   Installation Failed   --  ')
                  
 
