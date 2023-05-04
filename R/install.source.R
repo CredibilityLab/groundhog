@@ -21,7 +21,8 @@
 								                "     adding the `ignore.deps` argument to allow the version mismatch\n",
 								                "     Use `toc(<pkg>)` to find out version release dates of 'pkg'.\n",
 								                "  4) Similar to (3), use toc(<pkg>) to find the date for the next version\n",
-								                "     of the failing pkg and use a date after it for this entire groundhog.call().\n",
+								                "     of the failing pkg and use a date after it for this entire\n",
+								                "     groundhog.library().\n",
 								                "  5) Visit http://groundhogr.com/troubleshooting")
                  
     
@@ -134,7 +135,7 @@
                   if (length(missing.pkg_vrs)>0) {
                       message1("\nThe following package(s) from this batch failed to install:\n",pasteQC(missing.pkg_vrs))
 					            message1("\n" , message_with_solutions)
-                      messsage('\n\n                  --   Installation Failed   --  ')
+                      message('\n\n                  --   Installation Failed   --  ')
                       exit()
                   }
                 
