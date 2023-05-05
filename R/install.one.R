@@ -72,10 +72,6 @@
             clone_path <-        get.clone_path(pkg, usr , remote_id)                      #see remote_functions.R
             installation_path <- get.installation_path_remote(pkg , date, remote_id, usr)  #see remote_functions.R
           
-        #Log attempt to install
-            log_path         <- paste0(get.groundhog.folder(),"/batch_installation_log.txt")
-            t1 <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
-            write(paste0(t1, " - Attempting to install ",pkg," as available from ",remote_id," on ",date),log_path,append = TRUE)
             
           #Install it
   
