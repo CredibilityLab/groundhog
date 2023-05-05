@@ -100,11 +100,7 @@
 #--------------------------------------------------------------
 
   #1 Preliminaries
-    #1.0 view.feedback option
-      .pkgenv[['view.feedback']] <- view.feedback 
-      
-      #show as View() the source files installation 
-    
+
     #1.1 Check if new version of groundhog exists 
       check.groundhog.version(min.days=1) #Function 42  -  utils.R
 
