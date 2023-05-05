@@ -42,7 +42,7 @@
             #Message 
                 #list with multiple files
                   if (n.batch> 1 ) {
-                      message1("  They are: ", pasteQC(snowball$pkg_vrs[snowball$pkg %in% snowflakes[[k]] ]))
+                      message1("  They are: ", pasteQC(sort(snowball$pkg_vrs[snowball$pkg %in% snowflakes[[k]] ])))
                                }
                 
                 #Single file
@@ -77,9 +77,17 @@
                 log_line <- paste0(log_line, 
                       "    and it is expected that all batches will finish around ",estimate.tot,".\n")
             }
+            
             #Imprecise estimates
               log_line<-paste0(log_line, "    But these are imprecise estimates.\n")
+            
+            #Package list
+              log_line<-paste0(log_line,"\n\nThe ",n.batch," packages in this batch are:\n", 
+                               pasteQC(sort(snowball$pkg_vrs[snowball$pkg %in% snowflakes[[k]] ])),
+                                         "\n\n--------------------------------------------------------------------------------")
               
+              
+                
             #Save         
               path_installation_log <- file.path(get.groundhog.folder(),"install_progress.txt")
               

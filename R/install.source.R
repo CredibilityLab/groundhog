@@ -11,7 +11,7 @@
                           paste("Possible solutions:\n",
                                 "  1) First, simply try again, the error may be a fluke.\n",
                                 "  2) Inspect console log, you could be missing non-CRAN dependencies\n",
-                                "     (e.g., RTools for Windows, XQuartz for Mac, OpenSSL for Ubuntu),\n",
+                                "     (e.g., RTools for Windows, XQuartz for Mac, libssl for Ubuntu),\n",
                                 "     or have a connection problem, or another compatibility problem.\n",
                                 "  3) If the error indicates that a dependency is missing, re-run the\n",
                                 "     groundhog.library() call with option `force.install=TRUE`\n",

@@ -15,8 +15,7 @@ groundhog.library(
   force.source.main = FALSE,
   force.install.main = FALSE,
   tolerate.R.version = "",
-  cores = -1,
-  view.feedback = TRUE
+  cores = -1
 )
 }
 \arguments{
@@ -62,10 +61,6 @@ date entered corresponds to a more recent major R release.}
 of source packages. The default, -1, uses the total number of cores available minus 1.
 Setting \code{core}=1 leads to installing source packages, and also to downloading binaries,
 sequentially. When installation fails, you may want to try cores=1}
-
-\item{view.feedback}{logical (defaults to \code{TRUE}). When set to \code{FALSE}
-information on time left for finishing installation from
-source is not displayed on the Viewer as a dataframe, and only shown in the console.}
 }
 \description{
 Load requested package(s)  as current on a requested date. If the needed version
