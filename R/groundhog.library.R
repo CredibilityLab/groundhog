@@ -41,9 +41,6 @@
 #' of source packages. The default, -1, uses the total number of cores available minus 1. 
 #' Setting `core`=1 leads to installing source packages, and also to downloading binaries,
 #' sequentially. When installation fails, you may want to try cores=1
-#'@param view.feedback logical (defaults to `TRUE`). When set to `FALSE` 
-#'information on time left for finishing installation from 
-#'source is not displayed on the Viewer as a dataframe, and only shown in the console.
 #'
 #'@examples
 #'\dontrun{
@@ -97,8 +94,7 @@
                             include.suggests = FALSE, ignore.deps=c(), 
                             force.source = FALSE,      force.install = FALSE, 
                             force.source.main = FALSE, force.install.main=FALSE,
-                            tolerate.R.version = "" , cores = -1,
-                            view.feedback = TRUE)
+                            tolerate.R.version = "" , cores = -1)
   {
     
 #--------------------------------------------------------------
