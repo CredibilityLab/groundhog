@@ -91,8 +91,8 @@
           packageStartupMessage ("Tips and troubleshooting: https://groundhogR.com")
 
     #While developing:
-          packageStartupMessage ("#######################################################\n",
-                               "This DEV version: 2023 05 05 - 15:29 (Barcelona time)")
+          #packageStartupMessage ("#######################################################\n",
+           #                    "This DEV version: 2023 05 05 - 15:29 (Barcelona time)")
 
       
       

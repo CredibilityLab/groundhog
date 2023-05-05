@@ -21,7 +21,7 @@
                                 "     different date. Then re-run this groundhog.library() call adding the\n",
 								                "     `ignore.deps` argument, to allowing the version mismatch for that pkg.\n",
 								                "     Use `toc(<pkg>)` to find out version release dates of 'pkg'.\n",
-								                "  5) Similar to (3), use toc(<pkg>) to find the date for the next version\n",
+								                "  5) Similar to (4), use toc(<pkg>) to find the date for the next version\n",
 								                "     of the failing pkg and use a date after it for this entire\n",
 								                "     groundhog.library() call.\n",
 								                "  6) Visit http://groundhogr.com/troubleshooting")
