@@ -63,75 +63,56 @@
             #Now show it
               message1(msg)
               message1("  (but these are noisy estimates).")
+        
+    #5 Installation feedback saved to txt file
+          #line of text
+            #About this batch
+            log_line<-paste0(
+                      "Processing batch #" , k , " of ",length(snowflakes),"\n",
+                      "    Batch contains " , n.batch , " packages.\n",
+                      "    As of ",now, " it is expected to finish installing around ",estimate.batch,"\n")
             
-    
-    #5 View(installation feedback)
+            #About the last batch
+            if (k<length(snowflakes)) {
+                log_line <- paste0(log_line, 
+                      "    and it is expected that all batches will finish around ",estimate.tot,".\n")
+            }
+            #Imprecise estimates
+              log_line<-paste0(log_line, "    But these are imprecise estimates.\n")
               
-        #This value is set in groundhog.library()
-          if (.pkgenv[['view.feedback']]  == TRUE)
-          {
-              tips<-c("- Opt-out of this window with `view.feedback=FALSE`" , 
-                      "- Use same groundhog.day across scripts to minimize installs" , 
-                      "- See when pkg versions were published with toc(<pkg>)" ,
-                      "- Use single groundhog.library() call for many pkgs to save time",
-                      "- See when pkg versions were published with toc(<pkg>)" , 
-                      "- Read a blogpost while you wait: https://datacolada.org",
-                      "- Bugs & suggestions -> https://github.com/CredibilityLab/groundhog/",
-                      "- Visit groundhog's webapge -> https://groundhogr.com"
-                      )
-
-            # "Shuffle" them 
-              tips<-tips[order(snowball$pkg[1:length(tips)])]
+            #Save         
+              path_installation_log <- file.path(get.groundhog.folder(),"install_progress.txt")
               
-              #Cannot just do 'sample()' to shuffle because this is called multiple times across loops so 
-              #it repeats the tips. Could solve with seed, but Do not want to set.seed() 
-              #because that's global and seems undesirable to change seed globally
-              #So, sort by the alphabetical order of 'pkg' in the snowball, which is arbitrary enough
-              #Tips appear in the order() of the alphabetical order of the K first pkgs, where K is the # of tips
+              #initiate file
               
+              if (k==1) {
+                #Opening line of file
+                    start_line <- paste0("Groundhog Installation Progress File\n",
+                                         "(Created: ",Sys.Date(),")\n\n")
+                #Save it
+                    write(start_line , path_installation_log,append=FALSE)
+                  }
+              #Save this new line
+                write(log_line,path_installation_log,append=TRUE)
               
-            
-            #Add 1st time, and trail 1000 empty tips
-              tips<-c("- Time estimates are noisy (merely orientative)                           |",
-                      tips,
-                      rep('',1000))
-              
-            #Generate the 'dataframe'
-              installation_feedback.k <- data.frame(
-                          as_of          = now,
-                          batch          = paste0(k," of ",length(snowflakes)),
-                          time_batch_installs = estimate.batch,
-                          time_all_installs   = estimate.tot,
-                          package_count_in_batch  = length(snowflakes[[k]]),
-                          tips       = tips[k],
-                          stringsAsFactors = FALSE
-                        )
-              
-           #Update .pkgenv[[]]   
-              if (!is.null(.pkgenv[['df.feedback']])) .pkgenv[['df.feedback']]<-rbind(.pkgenv[['df.feedback']] , installation_feedback.k)
-              if (is.null(.pkgenv[['df.feedback']]))  .pkgenv[['df.feedback']]<-installation_feedback.k 
-              groundhog_installer <- .pkgenv[['df.feedback']]
-                            names(groundhog_installer)=c(
-                                           "As of this time:",
-                                           "Processing Batch #",
-                                           "Estimated completion this batch", 
-                                           "Estimated completion all batches",
-                                           "Tips while you wait")
-                            
-            #Choose View() function to use
-                gView<-"try(View(groundhog_installer),silent=TRUE)" 
-                try(eval2(gView))  #Utils.R  #71
+            #Tell them about the file
+                message1("\n\nYou can keep trak of installation progress and expected \n",
+                         "completion time opening this real-time updated text file:")
                 
-                #OLD: try(View(groundhog_installer),silent=TRUE)
-                #But this would lead CRAN to ask for Utils:: and that's not the funciton
-                #we want, and it is now known where the actual Util:: we want comes from
-                
-                #This is a work-around not to call on utils::View() which is a different
-                #function that has a popup window that is easy to miss, while View() 
-                #puts the popup on R Studio itself.
+            #Make backwards slashes for windows
+                edited_path <- path_installation_log
+                if (get.os()=='windows') {
+                  edited_path <- gsub( "/", "\\\\", edited_path)
+                }
+            #Show the path in bold
+                message2(edited_path)
               
-                        
+            #Close box
+              message1("\n----------------------------------------------------------")
               
-          } #If view==TRUE 
+              
+         #Wait 3 seconds if k==1
+              if (k==1) Sys.sleep(5)
+   
             
     } #End function
