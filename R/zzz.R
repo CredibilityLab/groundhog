@@ -8,6 +8,8 @@
       
         
 
+    
+        
   .onLoad <- function(libname, pkgname) {
   
      
@@ -72,6 +74,7 @@
          try(purge_v2.2()) #Utils #66
 
    
+         
   
     } #End of onLoad
 
@@ -88,8 +91,8 @@
           packageStartupMessage ("Tips and troubleshooting: https://groundhogR.com")
 
     #While developing:
-          #packageStartupMessage ("#######################################################\n",
-          #                   "This DEV version: 2023 05 04 - 12:03 PM (Barcelona time)")
+          packageStartupMessage ("#######################################################\n",
+                               "This DEV version: 2023 05 05 - 11:06 AM (Barcelona time)")
 
       
       
