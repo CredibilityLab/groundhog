@@ -9,21 +9,22 @@
     #0 Message if error
         message_with_solutions <- 
                           paste("Possible solutions:\n",
-                                "  1) First, simply try again, the error may be a fluke (possibly set \n",
-                                "     `cores=1` in groundhog.library() call).\n",
+                                "  1) First, simply try again, the error may be a fluke.\n",
                                 "  2) Inspect console log, you could be missing non-CRAN dependencies\n",
                                 "     (e.g., RTools for Windows, XQuartz for Mac, OpenSSL for Ubuntu),\n",
-                                "     or have a connection problem, or another compatibility problem\n",
-                                "  3) If the package that failed is a dependency for a package you want,\n",
+                                "     or have a connection problem, or another compatibility problem.\n",
+                                "  3) If the error indicates that a dependency is missing, re-run the\n",
+                                "     groundhog.library() call with option `force.install=TRUE`\n",
+                                "  4) If the package that failed is a dependency for a package you want,\n",
                                 "     you may install another version of that failed dependency directly\n",
                                 "     with a groundhog.library() call, just for that failing pkg, for a \n",
                                 "     different date. Then re-run this groundhog.library() call adding the\n",
 								                "     `ignore.deps` argument, to allowing the version mismatch for that pkg.\n",
 								                "     Use `toc(<pkg>)` to find out version release dates of 'pkg'.\n",
-								                "  4) Similar to (3), use toc(<pkg>) to find the date for the next version\n",
+								                "  5) Similar to (3), use toc(<pkg>) to find the date for the next version\n",
 								                "     of the failing pkg and use a date after it for this entire\n",
 								                "     groundhog.library() call.\n",
-								                "  5) Visit http://groundhogr.com/troubleshooting")
+								                "  6) Visit http://groundhogr.com/troubleshooting")
                  
     
     #1 Keep only source  packages that are not yet installed
