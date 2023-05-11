@@ -6,6 +6,7 @@
       gran.filename <- get.gran.filename()
   
           #note: this looks something like windows42.rds. For <3.1 and for unix, it is ""  
+          #Utils #67
     
     #1 Files to load cran.toc, cran.times and gran.toc if it exists
         files.rds = c('cran.toc.rds' , 'cran.times.rds' )
@@ -66,12 +67,42 @@
                  } #End check if GRAN exist for this R version
 
     #6 Load them
-        .pkgenv[['cran.toc']]   <- readRDS(cran.toc.path)
-        .pkgenv[['cran.times']] <- readRDS(cran.times.path)
+        .pkgenv[['cran.toc']]   <- try(readRDS(cran.toc.path))
+        .pkgenv[['cran.times']] <- try(readRDS(cran.times.path))
       
       #GRAN if it exists  
       if (gran.filename!='') {
-        .pkgenv[['gran.toc']]   <- readRDS(gran.toc.path)
+        .pkgenv[['gran.toc']]   <- try(readRDS(gran.toc.path))
       }
+        
+    #7 Verify RDS files can be read
+        #7.1 cran toc
+          if (as.character(class(.pkgenv[['cran.toc']] ))=='try-error') {
+              message1("groundhog says: the file cran.toc.rds seems to be corrupted, will update it.")
+              download.toc(cran.toc.URL.w , cran.toc.URL.g,  cran.toc.path) 
+              .pkgenv[['cran.toc']]   <- try(readRDS(cran.toc.path))
+              } 
+          
+        #7.2 cran times
+          if (as.character(class(.pkgenv[['cran.times']] ))=='try-error') {
+              message1("groundhog says: the file cran.times.rds seems to be corrupted, will update it.")
+              download.toc(cran.times.URL.w , cran.times.URL.g,  cran.times.path)
+             .pkgenv[['cran.times']]   <- try(readRDS(cran.times.path))
+            } 
+        
+        #7.3 GRAN toc
+        
+        if (gran.filename!='' && as.character(class(.pkgenv[['gran.toc']] ))=='try-error') {
+            message1("groundhog says: the file gran.times.rds seems to be corrupted, will update it.")
+            download.toc(gran.URL.w , gran.URL.g,  gran.toc.path)
+           .pkgenv[['gran.toc']]   <- try(readRDS(gran.toc.path))
+           }  
+        
+       
+        #7.4 Check again 
+          if (as.character(class(.pkgenv[['cran.toc']] ))=='try-error') gstop("Could not read 'cran.toc.rds")
+          if (as.character(class(.pkgenv[['cran.times']] ))=='try-error') gstop("Could not read 'cran.times.rds")
+          if (as.character(class(.pkgenv[['gran.toc']] ))=='try-error') gstop("Could not read 'gran.toc.rds")
+          
   }
   
