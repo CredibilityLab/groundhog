@@ -92,7 +92,7 @@
 
     #While developing:
           packageStartupMessage ("#######################################################\n",
-                                "This DEV version: 2023 05 11 - 06:05 (Barcelona time)")
+                                "This DEV version: 2023 05 11 - 06:29 (Barcelona time)")
 
       
       

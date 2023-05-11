@@ -67,12 +67,12 @@
                  } #End check if GRAN exist for this R version
 
     #6 Load them
-        .pkgenv[['cran.toc']]   <- try(readRDS(cran.toc.path))
-        .pkgenv[['cran.times']] <- try(readRDS(cran.times.path))
+        .pkgenv[['cran.toc']]   <- try(readRDS(cran.toc.path),silent=TRUE)
+        .pkgenv[['cran.times']] <- try(readRDS(cran.times.path),silent=TRUE)
       
       #GRAN if it exists  
       if (gran.filename!='') {
-        .pkgenv[['gran.toc']]   <- try(readRDS(gran.toc.path))
+        .pkgenv[['gran.toc']]   <- try(readRDS(gran.toc.path),silent=TRUE)
       }
         
     #7 Verify RDS files can be read
