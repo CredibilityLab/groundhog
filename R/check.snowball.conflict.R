@@ -192,9 +192,9 @@
         active <- .pkgenv[['active']]  #this was captured right before installing packages in groundhog.library()
       #Any pkg in snowball was already loaded, different version, not with groundhog (with groundhog checked before installing)
     
-      conflict.TF  <- snowball$pkg %in% active$pkg &           #pkg we want is active 
+      conflict.TF  <- snowball$pkg %in% active$pkg &            #pkg we want is active 
                        !snowball$pkg_vrs %in% active$pkg_vrs &  #but a different version
-                       !snowball$pkg %in% ignore.deps          #and did not ask to ignore it
+                       !snowball$pkg %in% ignore.deps           #and did not ask to ignore it
 
       
 	

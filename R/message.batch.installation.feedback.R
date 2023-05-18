@@ -1,7 +1,5 @@
  message.batch.installation.feedback <- function(snowball, snowflakes,  k , cores)
   {
-  #0 Log file path
-        log_path <- file.path(get.groundhog.folder(),"batch_installation_log.txt")
     
   #1. Get installation time for this batch 
     sec.k <- get.parallel.time(snowball$installation.time[snowball$pkg %in% snowflakes[[k]] ] , cores) #utils.R #44
