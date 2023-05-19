@@ -80,7 +80,7 @@
 
         }
         
-      #8 If there is a remote, it needs to be alone 
+      #8 If there is a remote, it needs to be alone and have only 1 slash
           remote <- basename(pkg)!=pkg      
           n.remote <- sum(remote)
           
@@ -90,6 +90,24 @@
                        "But, remote packages need to be loaded on their own in separate groundhog.library() calls")
 		      gstop(msg)
           }
+          
+          
+      #8.1 Don't allow two slashes in pkg name
+          if (n.remote==1) {
+            n.slash <- length(strpos1("/", pkg))
+            if (n.slash>1){
+              msg =paste0("'",pkg,"', contains more than one '/'.\n",
+                          "Currently groundhog only installs packages available from github/gitlab \n",
+                          "in the main directory,  not in a subdirectory. This *may* change in a \n",
+                          "future release.") 
+	  	      gstop(msg)
+            }
+            
+          }
+            
+              
+              
+            
           
           
       #9 Options force.source.main and sorce.install.main must be along
