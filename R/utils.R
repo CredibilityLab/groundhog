@@ -1385,14 +1385,14 @@ get.parallel.time<-function(times,cores)
   download.toc<-function(url1 , url2 , path)
   {
     #Try URL1
-       if (getRversion()<"3.4") dl  <- try(utils::download.file(url1 ,path,mode='wb'))
-       if (getRversion()>"3.4") dl  <- try(utils::download.file(url1 ,path))
+       if (getRversion() <= "3.5") dl  <- try(utils::download.file(url1 ,path,mode='wb'))
+       if (getRversion() >  "3.5") dl  <- try(utils::download.file(url1 ,path))
   
     #If fails, try URL2          
       if (dl!=0) {
           dl2 <- try(utils::download.file(url2 ,path))
-          if (getRversion()<"3.4") dl2  <- try(utils::download.file(url2 ,path,mode='wb'))
-          if (getRversion()>"3.4") dl2  <- try(utils::download.file(url2 ,path))
+          if (getRversion() <= "3.5") dl2  <- try(utils::download.file(url2 ,path,mode='wb'))
+          if (getRversion() >  "3.5") dl2  <- try(utils::download.file(url2 ,path))
   
           if (dl2!=0) stop('Error.\nGroundhog says: could not download needed file: "', basename(path), "'")
           }
