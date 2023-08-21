@@ -1,6 +1,6 @@
 Package: groundhog
 Title: Version-Control for CRAN, GitHub, and GitLab Packages
-Version: 3.1.0.9001
+Version: 3.1.1
 Authors@R: c(
     person(given = "Uri",
            family = "Simonsohn",
@@ -20,7 +20,7 @@ Description: Make R scripts reproducible, by ensuring that
     groundhog.library() instead of the base command library(), and including a
     date in the call. The date is used to call on the same version of the
     package every time (the most recent version available at that date).
-    Load packages  from CRAN, GitHub, or Gitlab.	
+    Load packages  from CRAN, GitHub, or Gitlab.
 URL: https://groundhogr.com/, https://github.com/CredibilityLab/groundhog
 BugReports: https://github.com/CredibilityLab/groundhog/issues
 Depends: utils
