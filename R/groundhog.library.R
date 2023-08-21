@@ -125,9 +125,10 @@
               gstop(msg) #util #51)
             }
       
-    #1.5 put package name in quotes if it is not an object and was not put in quotes
+
+    #1.5 put package name in quotes if it is not an character object and was not put in quotes
         pkg.catch <- try(typeof(pkg),silent=TRUE)
-        if (as.character(class(pkg.catch))=="try-error") {
+        if (as.character(class(pkg.catch))=="try-error" || pkg.catch!='character') {
           pkg <- as.character(substitute(pkg))
           } 
     
