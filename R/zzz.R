@@ -84,15 +84,14 @@
      
     .onAttach <- function(libname, pkgname) {
       
-
      #Startup msgs
-      #7.1 Version and URL for website
+      #Version and URL for website
           packageStartupMessage ("Attached: 'Groundhog' (Version: ",packageVersion('groundhog'),  ")") 
           packageStartupMessage ("Tips and troubleshooting: https://groundhogR.com")
 
-    #While developing:
-        #  packageStartupMessage ("#######################################################\n",
-        #                        "This DEV version: 2023 08 21 - 12.39 (Barcelona time)")
+      #While developing:
+         # packageStartupMessage ("#######################################################\n",
+          #                      "This DEV version: 2023 10 13 - 6.21 (Barcelona time)")
 
       
       

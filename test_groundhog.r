@@ -20,18 +20,19 @@
   #Set 6 - Restore  Library
 
 
+
 #Version being tested (only locally available)
 
-install.packages('https://groundhogr.com/groundhog_3.0.0.9002.tar.gz',repos=NULL)
-#install.packages('c://dropbox/groundhogr/groundhog_3.0.0.tar.gz',repos=NULL)
+#install.packages('https://groundhogr.com/groundhog_3.1.0.9001.tar.gz',repos=NULL)
+install.packages('c://dropbox/groundhogr/groundhog_3.1.0.9001.tar.gz',repos=NULL)
 
 library('groundhog')
-#gd=get.groundhog.folder()
-#set.groundhog.folder(paste0(gd,"/temp1"))
+
 set.groundhog.folder('c:/temp/101')
+groundhog.library('metafor','2023-04-01',force.source=TRUE)
 
 
-test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 45 days
+test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version +K days
 
 #Set 0 - various forms of calling packages to be loaded
   
@@ -48,7 +49,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
       #wrong format for date
         groundhog.library(2,2)
         
-      blu#Nonexistent pkg on cran
+      #Nonexistent pkg on cran
         groundhog.library('tio',test.day)
 
       #inexistent pkg on github
@@ -66,7 +67,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
         groundhog.library(pkgs,test.day , force.install.main = TRUE)
         
         
-        
+#These should work        
   #Single package, with and without quotes
     library('groundhog')
     groundhog.library('pwr',test.day)  #quotes
@@ -80,7 +81,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     pkg=c('pwr','metafor')
     groundhog.library(pkg,test.day)    #single package, no quotes, show warning to use ""
 
-  #Direct cal to many packages
+  #Direct call to many packages
     groundhog.library(c('pwr','metafor'),test.day)
     
     
@@ -93,7 +94,6 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
           library(jsonlite)", 
       test.day)
 
-    
     #Outdate R
       library('groundhog')
       groundhog.library('haven','2022-04-01')  
@@ -131,7 +131,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
             groundhog.library('rio',test.day,ignore.deps = 'zip')  #this does not download the new zip, uses the old one instead
           
             
-          #2 Five conflicting pkg, mention them only, not listed
+          #2 More than 5 conflicting pkg, mention them only, not listed
             library('groundhog')
             groundhog.library('haven',test.day-10,tolerate.R.version = groundhog:::get.rversion())
             groundhog.library('rio',test.day+150)
@@ -229,23 +229,26 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     
 
 #8 #DO THIS BY HAND:::delete R_groundhog ('main folder') verifying what happens if consent is given denied
-  library('groundhog') 
-  groundhog.library('pwr',test.day)
+ 
+  #Save folder being used for that will be deleted next
+     gf=get.groundhog.folder()
   
-  set.groundhog.folder(paste0(gd,"/temp1"))
-  
-  
-  #Then run a .bat file that executes R code doing library('groundhog') and trying to run groundhog.library(). 
+    #Should prompt  
+      library('groundhog') 
+      groundhog.library('pwr',test.day)
+      
+
+  #Then run a .bat file ('not interactive.bat') that executes R code doing library('groundhog') and trying to run groundhog.library(). 
   #It should prompt running set.groundhog.folder()
   #use files 'not_interactive.bat', modifying the location of the R script and R binary used to execute it"
   
+  set.groundhog.folder('c:/temp/105')
 
   
 #9 ) Base packages 
   groundhog.library('stats',test.day)     #already attached always
   groundhog.library('parallel',test.day)  #gets attached, same version always
-  groundhog.library('mgcv',test.day)      #gets installed from local
-  
+  groundhog.library('mgcv',test.day)      #gets installed to local (recommended pkg come included but can be updated)
   
 ########################################################################
 #Set 3 -  Install many packages
@@ -263,7 +266,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
 #############################################################################################
 
 #Function that Tests sets of packages loaded/installed from groundhog
-  test.groundhog <- function(set.of.packages=c(1:100),seed=111,groundhog.day=NULL,day.offset=0)
+  test.groundhog <- function(set.of.packages=c(1:100),seed=111,groundhog.day=NULL,day.offset=0, force.source=FALSE)
     {
     #Arguments
           #set.of.packages: the number indicates their ranking of 'most downloaded' in a relatively recent day 
@@ -342,7 +345,7 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
                 )
           
           #Execute groundhog.library()
-            exec_line=paste0("groundhog.library('", pkgk, "'," , "'", groundhog.day , "')") #line to execute 
+            exec_line=paste0("groundhog.library('", pkgk, "'," , "'", groundhog.day , "',force.source=",force.source,")") #line to execute 
             eval(parse(text=exec_line))                                              
 
           #Verify every package in snowball is availablerunning
@@ -387,20 +390,18 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     
   #Same pkgs again with an ofset of time and the copy method
     test.groundhog(1:10,day.offset=140)
-    try.renaming.method.again()
+    help(try.renaming.method.again)
+    library('groundhog')
     #back to top 10, should not install anything
     test.groundhog(1:10)                   
-    
-    restore.library()
+
+        
+    try.renaming.method.again()
     test.groundhog(120:129)                
-    test.groundhog(120:129,day.offset=91)  
-    #back to top 10, should not install anything
-    test.groundhog(120:129)                   
-    
-    
     test.groundhog(560:569)               
-    test.groundhog(980:989)                
-    test.groundhog(2501:2510)              
+    
+             
+    
     
 ########################################################################
 #Set 4 -  Remote packages
@@ -449,14 +450,16 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
 #4.2 - Test some popular github packages
   
     
-    
+    test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version +K days
+
     
    library('groundhog')
    
     
     groundhog.library( "yihui/knitr",test.day)
     groundhog.library( "crsh/papaja",test.day)
-    groundhog.library( "weirichs/eatModel",test.day) #hthis would not load in groundhog v2.2.1 but loads with v3.0.0
+    groundhog.library( "weirichs/eatModel",test.day) #this would not load in groundhog v2.2.1 but loads with v3.0.0
+                                                     #it also used to have the wrong pkg name eatTools, and won't install with the wrong name
     groundhog.library(  "mlr-org/mlr",test.day)
     groundhog.library( "joey711/phyloseq",test.day)    #fails, no bioconductor
     groundhog.library( "kassambara/survminer",test.day)
@@ -465,9 +468,10 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     groundhog:::save.cookie('copy_instead_of_renaming')
     groundhog:::cookie.exists("copy_instead_of_renaming")
      groundhog.library( "yihui/knitr",test.day  +  90)
-    groundhog.library( "crsh/papaja",test.day)
-    groundhog.library( "weirichs/eatModel",test.day) #hthis would not load in groundhog v2.2.1 but loads with v3.0.0
-    groundhog.library(  "mlr-org/mlr",test.day)
+    groundhog.library( "crsh/papaja",test.day+100)
+
+     
+        groundhog.library(  "mlr-org/mlr",test.day)
     
     groundhog.library( "kassambara/survminer",test.day)
 
@@ -489,13 +493,11 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     
 #5.2 Set dropbox path
       library('groundhog')
-    gd=get.groundhog.folder()
-      set.groundhog.folder(gd)
+      gd=get.groundhog.folder()
+      set.groundhog.folder('c:/dropbox/temp/1001')
       groundhog.library('jsonlite','2023-03-01')
-  
-      #PENDING: add to see what happens when dropbox was set by previous version of groundhog
-      
-#5.3 two different volumes
+      set.groundhog.folder(gd)
+
       
       
  
@@ -504,7 +506,8 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
     
        
 #6.1 Undo all changes in tests above (strong tes)
-    restore.library()
+    library('groundhog')
+      restore.library()
     
     
 #--------------------------------------------------
@@ -526,23 +529,15 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
         }  
 
     
-      groundhog::set.groundhog.folder('c:/temp/202')
+      groundhog::set.groundhog.folder('c:/temp/100')
     
 #6.2 Testing three packages with multiple date changes
-  #1 Install current versions of some packages
-    install.packages('metafor')
-    
-  #2 Take an inventory of packages
+  
+  #1 Take an inventory of packages
     library('groundhog')
     ip0=get.ip.local()
 
-  #3 start new groundhog folder to ensure restore day
-    library('groundhog')
-    gd1=get.groundhog.folder()
-
-    set.groundhog.folder(paste0(gd1,"/test_restore2"))
-    get.groundhog.folder()
-  #4 Do first change, which should create a restore point before it 
+  #1 Do first change, which should create a restore point before it 
       #restart
       library('groundhog')
       groundhog.library(c('metafor'),'2022-05-15')
@@ -554,7 +549,9 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
       groundhog.library(c('metafor'),'2023-01-15')
       ip2=get.ip.local()
     
-      
+  #6 another
+      #restart session
+
       library('groundhog')
       groundhog.library(c('rio'),'2023-01-15')
       ip3=get.ip.local()
@@ -575,10 +572,12 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
       ip5=get.ip.local()
 
   #8 Install without groundhog
+      install.packages('this.path')
       ip6=get.ip.local()
   
-  #9 One more as renaming    
+  #9 One more as renaming   
       library('groundhog')
+      try.renaming.method.again()
       groundhog.library('metafor','2023-03-15')
       ip7=get.ip.local()
   
@@ -598,7 +597,15 @@ test.day <- groundhog:::get.r.majmin.release()+105 #release of this R version + 
       
       
 
-      
-      
-      
-      
+    
+########################################################################
+#Set 7 - Install from source
+       library(groundhog)
+      test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version +K days
+set.groundhog.folder('c:/temp/1010')
+        groundhog.library('metafor',test.day,force.source=TRUE)
+        
+        
+        df=data.frame(x=1,z=3)
+        gView(df)
+        

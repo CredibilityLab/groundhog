@@ -1385,8 +1385,8 @@ get.parallel.time<-function(times,cores)
   download.toc<-function(url1 , url2 , path)
   {
     #Try URL1
-       if (getRversion() <= "3.5") dl  <- try(utils::download.file(url1 ,path,mode='wb'))
-       if (getRversion() >  "3.5") dl  <- try(utils::download.file(url1 ,path))
+       if (getRversion() < "3.6") dl  <- try(utils::download.file(url1 ,path,mode='wb'))
+       if (getRversion() >=  "3.6.0") dl  <- try(utils::download.file(url1 ,path))
   
     #If fails, try URL2          
       if (dl!=0) {
