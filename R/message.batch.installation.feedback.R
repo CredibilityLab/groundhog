@@ -102,8 +102,8 @@
                 write(log_line,path_installation_log,append=TRUE)
               
             #Tell them about the file
-                message1("\n\nYou can keep trak of installation progress and expected \n",
-                         "completion time opening this real-time updated text file:")
+                message1("\n\nYou can keep track of installation progress and expected \n",
+                         "completion time by opening this real-time updated text file:")
                 
             #Make backwards slashes for windows
                 edited_path <- path_installation_log
