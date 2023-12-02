@@ -76,7 +76,7 @@
 #----------------------------------------------------------------------
 #OUTLINE 
   #1 Preliminaries
-  #2 Dropped
+  #2 Directly attach cached pkgs
   #3 Get snowballs for all requested packages
   #4 Create libpaths
   #5 Check conflict with previously groundhog-loaded packages
@@ -144,16 +144,17 @@
    
     
           
-   #1.8 Non-remote packages, early return if everything is already attached 
+   #1.8 Early return for pkgs that are ready (non-remotes)
           remote <- basename(pkg)!=pkg      
           n.remote <- sum(remote)
-         
-        if (n.remote==0 & already.all.attached(pkg , date) ) return(invisible(TRUE))
+        
+          if (n.remote==0 & already.all.attached(pkg , date) ) return(invisible(TRUE))
           #already.all.attached.R produced: message1("All requested packages are already attached")
-
+     
+          
           
       
-    #Note: 1,8 & 1.9 could be done on loading, but, better here : (i) in case the user makes a change, and (ii) avoid writing files without authorization
+    #Note: 1.9 & 1.10 could be done on loading, but, better here : (i) in case the user makes a change, and (ii) avoid writing files without authorization
     #1.9  Verify a mirror has been set (utils.R #36)    
         set.default.mirror() 
     
@@ -193,7 +194,58 @@
 
       
 
+      
+  #2 Directly attach packages in Cache and drop from consideration packages already attached
+      
+      #pkgs that are active
+        .pkgenv[['active']]   = active = get.active()
+        .pkgenv[['attached']] = attached = get.attached() 
+        
+      #Read cache
+        cache = read.cache()
+        
+      #Loop looking for already attached or already cached pkgs
+        for (pkgk in pkg)
+        {
+          #Is it already attached?
+              pkgk_vrs=paste0(pkgk,"_",get.version(pkgk,date))  
+              if (pkgk_vrs %in% attached$pkg_vrs)
+              {
+                #Announce it
+                  message1(pkgk_vrs," is already attached.")
+                #Drop this pkgk
+                  pkg=pkg[pkg != pkgk]
+              } else {
+              #If date matches, go through cache pkgs, else delete cache
+              if (cache$date==date)
+              {
+                if (pkgk %in% cache$pkg)
+                {
+                #Announce it
+                  message1("\nAttaching ",pkgk_vrs)
+             
+                #Attach it
+                  base.library(pkgk, character.only=TRUE)
+
+                
+                #Drop this pkgk
+                  pkg=pkg[pkg != pkgk]
+
+                } #End if pkg foudn in cache
+                
+              } #End if cache date matches requested date
+              } #End else not found already attached  
+          }  #End loop over pkgk
+      
+      
+      #Early return if there are no pkgs left
+        if (length(pkg)==0) return(invisible(TRUE))
+      
 #3 Get snowballs for all requested packages
+      
+
+      
+      
   #Save snowballs individually as a list and also as a single big snowball.all
         
       #3.1 Non-remote snowball
@@ -321,8 +373,6 @@
             
 #5 Check conflict with previously groundhog-loaded packages
     #Get currently active packages
-      .pkgenv[['active']] = active = get.active()
-      .pkgenv[['attached']] = get.attached() 
       check.conflict.before(snowball=snowball.all, pkg.requested=pkg, ignore.deps, date)  #check.snowball.conflict.R
         
 #6 Install snowball 
@@ -441,7 +491,9 @@
        
         if (verified==TRUE) { 
           
-        
+        #10.3.5 Add entire snowball to cache
+          add.cache(snowball$pkg , date)
+          
         #10.4 Path for CRAN snowball 
             if (!'sha' %in% names(snowball))
             {
