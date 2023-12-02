@@ -22,12 +22,26 @@
       #2) Make a snowball, which is really just groundhog
           snowball <- get.snowball(pkg, date)
 
-      #3) Install it
-          install.snowball(snowball, date=date)
           
-      #4) Unload groundhog 
+          
+      #3) Unload the pkg
           unloadNamespace('groundhog')
         
+    
+      #4) Install it (always from source)
+          if (snowball[1,]$installed==FALSE) {
+             ap_source <- get.current.packages("source")
+             repos <- as.character(getOption("repos"))
+             snowball$source_url <- ifelse(snowball$pkg_vrs %in% ap_source$pkg_vrs, 
+                      paste0(repos , "/src/contrib/" ,snowball$pkg_vrs , ".tar.gz"),
+                      paste0(repos , "/src/contrib/Archive/" ,snowball$pkg , "/" ,  snowball$pkg_vrs , ".tar.gz"))
+             
+             
+            dir.create(snowball$installation.path,recursive = TRUE,showWarnings = TRUE)
+            utils::install.packages(snowball$source_url,repos=NULL, type='source', lib=snowball$installation.path)
+          }
+          
+          
       #5) attach the requested version
          suppressPackageStartupMessages ( loadNamespace('groundhog', lib.loc = snowball$installation.path[1]))
          suppressPackageStartupMessages ( attachNamespace('groundhog'))
