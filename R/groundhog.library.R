@@ -197,50 +197,83 @@
       
   #2 Directly attach packages in Cache and drop from consideration packages already attached
       
+      #Directly attach
+        pkg_vrs.already_attached    = c()
+        pkg_vrs.attached_from_cache = c()
+
+      
       #pkgs that are active
         .pkgenv[['active']]   = active = get.active()
-        .pkgenv[['attached']] = attached = get.attached() 
+        .pkgenv[['attached']] = attached = attached_before = get.attached() 
         
       #Read cache
         cache = read.cache()
         
+      #Make copy of all pkgs requested for final verification to to include those attached
+        pkg_full_request = pkg
+        
       #Loop looking for already attached or already cached pkgs
+
         for (pkgk in pkg)
         {
           #Is it already attached?
+            #Get pkg_vrs
               pkgk_vrs=paste0(pkgk,"_",get.version(pkgk,date))  
-              if (pkgk_vrs %in% attached$pkg_vrs)
-              {
-                #Announce it
-                  message1(pkgk_vrs," is already attached.")
-                #Drop this pkgk
-                  pkg=pkg[pkg != pkgk]
-              } else {
-              #If date matches, go through cache pkgs, else delete cache
-              if (cache$date==date)
-              {
-                if (pkgk %in% cache$pkg)
+              
+            #ALREADY ATACHED?
+              
+              #Found it?
+                if (pkgk_vrs %in% attached$pkg_vrs)
                 {
-                #Announce it
-                  message1("\nAttaching ",pkgk_vrs)
-             
-                #Attach it
-                  base.library(pkgk, character.only=TRUE)
-
-                
+                  
                 #Drop this pkgk
                   pkg=pkg[pkg != pkgk]
-
-                } #End if pkg foudn in cache
+                  
+                #Add pkg__vrs to those that will be shown as 'aready attached'
+                  pkg.already_attached = c(pkg_vrs.already_attached, pkgk_vrs)
+                  
+                } else {
                 
-              } #End if cache date matches requested date
-              } #End else not found already attached  
-          }  #End loop over pkgk
-      
+              #CACHE
+                #If cache's date matches the requested on, process it
+                if (cache$date==date)
+                {
+                  if (pkgk %in% cache$pkg)
+                  {
+                  #Announce it
+                   # message1("\nAttaching cached package: ",pkgk_vrs)
+               
+                  #Attach it
+                    base.library(pkgk, character.only=TRUE)
+  
+                  #Drop this pkgk
+                    pkg = pkg[pkg != pkgk]
+                    
+                  #Add to vector with attached.cache
+                    pkg_vrs.attached_from_cache = c(pkg_vrs.attached_from_cache , pkgk_vrs) 
+  
+                  } #End if pkg foudn in cache
+                  
+                } #End if cache date matches requested date
+                } #End else not found already attached  
+            }  #End loop over pkgk
+        
       
       #Early return if there are no pkgs left
-        if (length(pkg)==0) return(invisible(TRUE))
-      
+        if (length(pkg)==0) {
+          attached = get.attached()
+          for (pkgk in pkg_full_request)
+          {
+            pkgk_vrs=paste0(pkgk , "_" , get.version(pkgk,date))
+          #Message wtih feedback
+            if (pkgk_vrs %in% attached$pkg_vrs & !pkgk_vrs %in% attached_before$pkg_vrs)  message1("Succesfully attached '",pkgk_vrs,"'")
+            if (pkgk_vrs %in% attached$pkg_vrs & pkgk_vrs %in% attached_before$pkg_vrs)  message1("Had already attached '",pkgk_vrs,"'")
+            if (!pkgk_vrs %in% attached$pkg_vrs) message("Failed to attached '",pkgk_vrs,"'")
+
+          }
+          
+          return(invisible(TRUE))
+        }
 #3 Get snowballs for all requested packages
       
 
@@ -486,6 +519,8 @@
     #10.2 Verified: TRUE or FALSE?
         verified <- verify.snowball.loaded(snowball, ignore.deps)  
       
+    #10.2.5 Add msg to those that were attached via cache or were already attached
+
       
 	  #10.3 IF VERIFIED
        
@@ -568,6 +603,26 @@
 
       }#End of  #10
                  
+     
+  #10.12 Add feedback on pkgs that were previously directly attached
+      attached = get.attached()
+      
+    #What packages were attached directly?
+      pkg_direct = pkg_full_request[!pkg_full_request %in% pkg]
+    
+    #Loop over them
+      for (pkgk in pkg_direct)
+          {
+            pkgk_vrs = paste0(pkgk,"_",get.version(pkgk,date))
+            
+          #Message wtih feedback
+            if (pkgk_vrs %in% attached$pkg_vrs & !pkgk_vrs %in% attached_before$pkg_vrs)  message1("Succesfully attached '",pkgk_vrs,"'")
+            if (pkgk_vrs %in% attached$pkg_vrs & pkgk_vrs %in% attached_before$pkg_vrs)  message1("Had already attached '",pkgk_vrs,"'")
+            if (!pkgk_vrs %in% attached$pkg_vrs) message("10.12 Failed to attached '",pkgk_vrs,"'")
+
+          }
+     
+     
 #----------------------------------
   #11 Reminder of copy-method if something was installed.
       

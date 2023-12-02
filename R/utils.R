@@ -1507,6 +1507,9 @@ get.parallel.time<-function(times,cores)
       
       #Add all the packages
         cache$pkg=c(cache$pkg, pkgs)
+      
+      #Delete duplicates
+        cache$pkg = unique(cache$pkg)
         
       #Save it
          cache_path <- paste0(get.groundhog.folder(),"/cache.rds")
