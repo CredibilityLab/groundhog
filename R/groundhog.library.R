@@ -197,6 +197,8 @@
       
   #2 Directly attach packages in Cache and drop from consideration packages already attached
       
+      direct.install.attempt = try({
+      
       #Directly attach
         pkg_vrs.already_attached    = c()
         pkg_vrs.attached_from_cache = c()
@@ -206,8 +208,11 @@
         .pkgenv[['active']]   = active = get.active()
         .pkgenv[['attached']] = attached = attached_before = get.attached() 
         
+  
       #Read cache
-        cache = read.cache()
+        #see cache_functions.R
+          cache.current = is.cache.current()  #TRUE/FALSE is the cache more recent than any installed pkg
+          cache = read.cache()
         
       #Make copy of all pkgs requested for final verification to to include those attached
         pkg_full_request = pkg
@@ -235,14 +240,12 @@
                 } else {
                 
               #CACHE
-                #If cache's date matches the requested on, process it
-                if (cache$date==date)
+                #If cache's date matches the requested date, and it is current 
+                if (cache$date==date & cache.current==TRUE)
                 {
                   if (pkgk %in% cache$pkg)
                   {
-                  #Announce it
-                   # message1("\nAttaching cached package: ",pkgk_vrs)
-               
+                
                   #Attach it
                     base.library(pkgk, character.only=TRUE)
   
@@ -267,17 +270,19 @@
             pkgk_vrs=paste0(pkgk , "_" , get.version(pkgk,date))
           #Message wtih feedback
             if (pkgk_vrs %in% attached$pkg_vrs & !pkgk_vrs %in% attached_before$pkg_vrs)  message1("Succesfully attached '",pkgk_vrs,"'")
-            if (pkgk_vrs %in% attached$pkg_vrs & pkgk_vrs %in% attached_before$pkg_vrs)  message1("Had already attached '",pkgk_vrs,"'")
+            if (pkgk_vrs %in% attached$pkg_vrs & pkgk_vrs %in% attached_before$pkg_vrs)   message1("Had already attached '",pkgk_vrs,"'")
             if (!pkgk_vrs %in% attached$pkg_vrs) message("Failed to attached '",pkgk_vrs,"'")
 
           }
           
           return(invisible(TRUE))
         }
-#3 Get snowballs for all requested packages
-      
+        
+        
+      })  #Close try() of direct install, so that if anything leading to a faster install fails, we ignore it and move on with slightly slower default.
 
-      
+
+#3 Get snowballs for all requested packages
       
   #Save snowballs individually as a list and also as a single big snowball.all
         
