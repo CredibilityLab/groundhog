@@ -197,6 +197,7 @@
       
   #2 Directly attach packages in Cache and drop from consideration packages already attached
       
+      #Bracket everything in a try() since failure merely means we will run slightly slower)
       direct.install.attempt = try({
       
       #Directly attach
@@ -269,8 +270,8 @@
           {
             pkgk_vrs=paste0(pkgk , "_" , get.version(pkgk,date))
           #Message wtih feedback
-            if (pkgk_vrs %in% attached$pkg_vrs & !pkgk_vrs %in% attached_before$pkg_vrs)  message1("Succesfully attached '",pkgk_vrs,"'")
-            if (pkgk_vrs %in% attached$pkg_vrs & pkgk_vrs %in% attached_before$pkg_vrs)   message1("Had already attached '",pkgk_vrs,"'")
+            if (pkgk_vrs %in% attached$pkg_vrs & !pkgk_vrs %in% attached_before$pkg_vrs)  message1("Successfully attached '",pkgk_vrs,"'")
+            if (pkgk_vrs %in% attached$pkg_vrs & pkgk_vrs %in% attached_before$pkg_vrs)   message1("Had already  attached '",pkgk_vrs,"'")
             if (!pkgk_vrs %in% attached$pkg_vrs) message("Failed to attached '",pkgk_vrs,"'")
 
           }
@@ -622,7 +623,7 @@
             
           #Message with installation feedback
             if (pkgk_vrs %in% attached$pkg_vrs & !pkgk_vrs %in% attached_before$pkg_vrs)  message1("Successfully attached '",pkgk_vrs,"'")
-            if (pkgk_vrs %in% attached$pkg_vrs & pkgk_vrs %in% attached_before$pkg_vrs)  message1( "Had  already attached '",pkgk_vrs,"'")
+            if (pkgk_vrs %in% attached$pkg_vrs & pkgk_vrs %in% attached_before$pkg_vrs)  message1( "Had already  attached '",pkgk_vrs,"'")
             if (!pkgk_vrs %in% attached$pkg_vrs) message("10.12 Failed to attached '",pkgk_vrs,"'")
 
           }

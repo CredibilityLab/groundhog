@@ -24,13 +24,11 @@
 #Version being tested (only locally available)
 
 #install.packages('https://groundhogr.com/groundhog_3.1.0.9001.tar.gz',repos=NULL)
-install.packages('c://dropbox/groundhogr/groundhog_3.1.0.9001.tar.gz',repos=NULL)
+install.packages('C:/Dropbox (Penn)/groundhogR/groundhog_3.1.2.9001.tar.gz',repos=NULL)
 
 library('groundhog')
 
-set.groundhog.folder('c:/temp/101')
-groundhog.library('metafor','2023-04-01',force.source=TRUE)
-
+set.groundhog.folder('c:/temp/103')
 
 test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version +K days
 
@@ -108,7 +106,7 @@ test.day <- groundhog:::get.r.majmin.release()+45 #release of this R version +K 
         #Groundhog CRAN date 1 & CRAN date 2
           library('groundhog')
           groundhog.library('pwr',test.day)
-          groundhog.library('pwr',test.day-900,tolerate.R.version = groundhog:::get.rversion())
+          groundhog.library('pwr',test.day-1400,tolerate.R.version = groundhog:::get.rversion())
 
         #Groundhog CRAN date 1 & GIT 2
           library('groundhog')
