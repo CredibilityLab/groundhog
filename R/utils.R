@@ -68,9 +68,7 @@
 #69 Test renaming method()     : checks whether we can rename into a chose path (for check with set.groundhog.folder()
 #70 check_R_old_enough()       : Check R is at least 21 days old
 #71 eval2()                    : evaluate a string as a function
-#72 Read cache                 : .rds list with most recently used date and pkgs to speed up attaching of pkgs that are ready
- 
-
+#72 already.all.attached
 
 
 ####################################################################################
@@ -1480,44 +1478,9 @@ get.parallel.time<-function(times,cores)
     
 #71 eval2()
     eval2 <- function(s)  eval(parse(text=s),  parent.frame())  
-           
-    
-#72 Reach cache (rds list with most recently used date and pkgs to speed up loading)
-    
-  #1 READ  
-    read.cache=function()
-       {
-        cache_path <- paste0(get.groundhog.folder(),"/cache.rds")
-       if (file.exists(cache_path)) {
-          cache=readRDS(cache_path)
-       } else {
-            
-         cache=list(date='1970-01-01',pkg='')
-       }
-       return(cache)
-    }
-  #2 SAVE
-    add.cache=function(pkgs,date)
-    {
-      #Read it
-        cache=read.cache()
-    
-      #If date is different, clear it
-        if (cache$date!=date) cache=list(date=date, pkg='')
       
-      #Add all the packages
-        cache$pkg=c(cache$pkg, pkgs)
-      
-      #Delete duplicates
-        cache$pkg = unique(cache$pkg)
-        
-      #Save it
-         cache_path <- paste0(get.groundhog.folder(),"/cache.rds")
-         saveRDS(cache, cache_path)
-    }
-     
     
-#73 already.all.attached
+#72 already.all.attached
     already.all.attached<-function(pkg,date)
 {
   # Count remote
