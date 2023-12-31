@@ -196,7 +196,9 @@
 
       
   #2 Directly attach packages in Cache and drop from consideration packages already attached
-      
+  #only for non-remote pkgs
+      if (n.remote==0)
+      {
       #Bracket everything in a try() since failure merely means we will run slightly slower)
       direct.install.attempt = try({
       
@@ -215,7 +217,7 @@
           cache.current = is.cache.current()  #TRUE/FALSE is the cache more recent than any installed pkg
           cache = read.cache()
         
-      #Make copy of all pkgs requested for final verification to to include those attached
+      #Make copy of all pkgs requested for final verification to include those attached
         pkg_full_request = pkg
         
       #Loop looking for already attached or already cached pkgs
@@ -282,7 +284,9 @@
         
       })  #Close try() of direct install, so that if anything leading to a faster install fails, we ignore it and move on with slightly slower default.
 
-
+      } #End if n.remote==0; do not do cache with remote pkgs
+      
+      
 #3 Get snowballs for all requested packages
       
   #Save snowballs individually as a list and also as a single big snowball.all
@@ -613,8 +617,10 @@
   #10.12 Add feedback on pkgs that were previously directly attached
       attached = get.attached()
       
-    #What packages were attached directly?
-      pkg_direct = pkg_full_request[!pkg_full_request %in% pkg]
+    #What packages were attached directly? (only for non-remotes we use cache so skip for others)
+      if (n.remote==0) 
+        {
+        pkg_direct = pkg_full_request[!pkg_full_request %in% pkg]
     
     #Loop over them
       for (pkgk in pkg_direct)
@@ -628,7 +634,7 @@
 
           }
      
-     
+      }
 #----------------------------------
   #11 Reminder of copy-method if something was installed.
       
