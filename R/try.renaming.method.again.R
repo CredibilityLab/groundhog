@@ -5,7 +5,7 @@
 #' This process is nearly instantaneous  even for 100+ packages. The renaming method, however, is sometimes unavailable for some configurations 
 #' (e.g., when the groundhog and personal folders are on different drives/volumes, say external vs internal hard drives).  When
 #' groundhog fails to move a package by renaming it, it will produce an error, and will also make a note to permanently switch to 
-#' the slower method of moving packages by first coping them, and then deleting the original, which takes up to a few second per package, and
+#' the slower method of moving packages by first coping them, and then deleting the original, which takes up to a few seconds per package, and
 #' is thus much slower than renaming. If you believe the error was circumstantial and want to give 
 #' renaming files another chance, you may run `try.renaming.method.again()`. Future groundhog.library() calls 
 #' will again attempt it. If it fails again you will just get a new error message and groundhog will again switch methods. 
