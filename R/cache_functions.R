@@ -45,7 +45,7 @@
         
       #Save it
          cache_path <- paste0(get.groundhog.folder(),"/cache.rds")
-         saveRDS(cache, cache_path)
+         saveRDS(cache, cache_path,version=2)
     }
      
     
