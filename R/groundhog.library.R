@@ -197,7 +197,7 @@
       
   #2 Directly attach packages in Cache and drop from consideration packages already attached
   #only for non-remote pkgs
-      if (n.remote==0)
+      if (n.remote==0 & force.install==FALSE)
       {
       #Bracket everything in a try() since failure merely means we will run slightly slower)
       direct.install.attempt = try({
