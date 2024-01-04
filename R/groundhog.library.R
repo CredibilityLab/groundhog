@@ -197,6 +197,10 @@
       
   #2 Directly attach packages in Cache and drop from consideration packages already attached
   #only for non-remote pkgs
+      
+      #Make copy of all pkgs requested for final verification to include those attached
+          pkg_full_request = pkg
+
       if (n.remote==0 & force.install==FALSE)
       {
       #Bracket everything in a try() since failure merely means we will run slightly slower)
@@ -217,9 +221,7 @@
           cache.current = is.cache.current()  #TRUE/FALSE is the cache more recent than any installed pkg
           cache = read.cache()
         
-      #Make copy of all pkgs requested for final verification to include those attached
-        pkg_full_request = pkg
-        
+
       #Loop looking for already attached or already cached pkgs
 
         for (pkgk in pkg)
@@ -618,7 +620,7 @@
       attached = get.attached()
       
     #What packages were attached directly? (only for non-remotes we use cache so skip for others)
-      if (n.remote==0) 
+      if (n.remote==0 & force.install==FALSE) 
         {
         pkg_direct = pkg_full_request[!pkg_full_request %in% pkg]
     
