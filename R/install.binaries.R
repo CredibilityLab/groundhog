@@ -114,8 +114,8 @@
               
             #4.05 if some files were downloaded
               
-              if (n.zip>0)
-              {
+              if (n.zip==0) return(snowball)
+              
               if (n.zip>1) message2("Will now install ",n.zip, " packages:")
             
               
@@ -153,7 +153,7 @@
              
               } #End of loop
               
-              } #End of 4.05 (if n.zip>0)
+         
 
           
       #5 Verify installation
