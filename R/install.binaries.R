@@ -49,6 +49,7 @@
             
             
         #3 DOWNLOAD
+            
           #3.1 Message
             n.cran <- sum(snowball$from=="CRAN")
             n.gran <- sum(snowball$from=="GRAN")
@@ -61,13 +62,9 @@
             if (n.cran==0 & n.gran>0) messagek("Will now download ",n.gran, " packages from GRAN")
 
             
-            
-            
           #3.2 Set higher limit for download time (return to default in #7 below)
             time.out.before <- getOption("timeout")
             options(timeout = max(400, time.out.before))
-            
-            
             
           #3.3 Simultaneous libcurl download (if available)
             
@@ -111,10 +108,14 @@
             #4.0 Subset that did download
               downloaded.TF <- file.exists(zip.files)              
               zip.files     <- zip.files[downloaded.TF]
-              
-              
+
             #4.1 Read downloaded zip files
               n.zip <- length(zip.files)
+              
+            #4.05 if some files were downloaded
+              
+              if (n.zip>0)
+              {
               if (n.zip>1) message2("Will now install ",n.zip, " packages:")
             
               
@@ -146,24 +147,13 @@
                   if (ext=="zip") utils::unzip(zk, exdir=outfile)
                   if (ext!="zip") utils::untar(zk, exdir=outfile)  
 					
-                #Verify installation has finished (in Dropbox there can be a substantial delay, 
-                #this will prevent attempting to copy before it's done)
-                  # for (kv in 1:60) {
-                  #   verify.outcome <- verify.unzip(zk, outfile) #utilS #61 (compares # of files in zip vs outzipped)
-                  #   
-                  #   #If verified, break and
-                  #     if (verify.outcome==TRUE) break
-                  #   
-                  #   #If not verified, give it 5 seconds, and check again
-                  #     if (verify.outcome==FALSE) {
-                  #       Sys.sleep(5)
-                  #     }
-                  # } #ENd loop
-                  
+          
 				#Delete it
 					unlink(zk)
              
-              }
+              } #End of loop
+              
+              } #End of 4.05 (if n.zip>0)
 
           
       #5 Verify installation
@@ -171,16 +161,13 @@
           ip <- data.frame(utils::installed.packages(snowball$installation.path),row.names=NULL,stringsAsFactors = FALSE)      
           ip$pkg_vrs <- paste0(ip$Package,"_",ip$Version)
           
-        #Add success column to snowball
+      #6 Add success column to snowball
           snowball$success <- snowball$pkg_vrs %in% ip$pkg_vrs
   
-          
-
-          
       #7 Return timeout
           options(timeout=time.out.before)
           
-      #7 Output
+      #8 Output
           return(snowball)
           #note: if a non-binary was included in snowball, it will not appear here
 
