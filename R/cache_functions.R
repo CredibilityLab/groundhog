@@ -5,16 +5,28 @@
 #
 #---------------------------------------------------------------------------------
 
+#0 Get cache path
+
 #1 Read the cache
 #2 Add pkg to cache
 #3 Initial check that it is up to date (more recent that most recent installed pkg)
+
+#0 Get cache path
+
+get.cache_path=function()
+{
+  rv <- as.character(getRversion())
+  rv <- gsub("\\.\\d+(-w)?$", "", rv)
+  cache_path=paste0(get.groundhog.folder(),"/cache_",rv,".rds")
+  return(cache_path)
+}
 
 
   #1 Read existing cache  
 
     read.cache=function()
        {
-        cache_path <- paste0(get.groundhog.folder(),"/cache.rds")
+        cache_path <- get.cache_path()
        if (file.exists(cache_path)) {
           cache=readRDS(cache_path)
        } else {
@@ -31,6 +43,8 @@
     
     add.cache=function(pkgs,date)
     {
+      
+      
       #Read it
         cache=read.cache()
     
@@ -42,9 +56,8 @@
       
       #Delete duplicates
         cache$pkg = unique(cache$pkg)
-        
       #Save it
-         cache_path <- paste0(get.groundhog.folder(),"/cache.rds")
+         cache_path = get.cache_path()
          saveRDS(cache, cache_path,version=2)
     }
      
@@ -64,7 +77,7 @@
         it <- sapply(dir_list, function(x) file.info(x)$mtime)
     
       # File Path  
-        cache_path <- paste0(groundhog::get.groundhog.folder(),"/cache.rds") 
+        cache_path <- get.cache_path()
         
       #If file does not exist, return FALSE
         if (!file.exists(cache_path)) return(FALSE)
