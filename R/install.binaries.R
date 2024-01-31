@@ -109,15 +109,16 @@
               downloaded.TF <- file.exists(zip.files)              
               zip.files     <- zip.files[downloaded.TF]
 
-            #4.1 Read downloaded zip files
+            #4.1 How many zip files? For early return or msg of # to be installed
               n.zip <- length(zip.files)
               
-            #4.05 if some files were downloaded
+              #Early return if n=0
+                if (n.zip==0) return(snowball)
               
-              if (n.zip==0) return(snowball)
-              
-              if (n.zip>1) message2("Will now install ",n.zip, " packages:")
+              #Messge # to install 
+                if (n.zip > 1) message2("Will now install ",n.zip, " packages:")
             
+                  #Use n>1 rather than n>0,because with just 1 pkg msg is redundant
               
             #4.2 Sort alphabetically by package name
                j <- order(basename(zip.files))
@@ -153,8 +154,6 @@
              
               } #End of loop
               
-         
-
           
       #5 Verify installation
           #message1("      ...verifying installation...")
