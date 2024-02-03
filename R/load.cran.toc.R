@@ -32,7 +32,7 @@
  
        #3.3 GRAN
           gran.URL.g      <- paste0("https://groundhogR.com/gran.toc/",     gran.filename)
-          gran.URL.w      <- paste0("http://gran.groundhogr.com/toc/",gran.filename)  
+          gran.URL.w      <- paste0("https://gran.groundhogr.com/toc/",gran.filename)  
           
     #4 Local paths
           gf <- get.groundhog.folder()
@@ -44,7 +44,7 @@
           #CRAN TOC
             if (!file.exists(cran.toc.path) | update.toc==TRUE) {
               message1("Downloading database with information for all CRAN packages ever published")
-                download.toc(cran.toc.URL.w , cran.toc.URL.g,  cran.toc.path) 
+                download.toc(cran.toc.URL.g , cran.toc.URL.w,  cran.toc.path) 
               
                   #`download.toc(url1, url2, path) -----  Utils.R #68, tries URL1, then URl2 upon failure, and saves to path
             }
@@ -53,7 +53,7 @@
             if (!file.exists(cran.times.path) | update.toc==TRUE) {
               message1("Downloading database with installation times for all source packages on CRAN")
 
-              download.toc(cran.times.URL.w , cran.times.URL.g,  cran.times.path)
+              download.toc(cran.times.URL.g , cran.times.URL.w,  cran.times.path)
             }
             
           #GRAN
@@ -62,7 +62,7 @@
               if (!file.exists(gran.toc.path) | update.toc==TRUE) {
                   message1("Downloading database will URLs for relevant binaries on GRAN")
 
-                download.toc(gran.URL.w , gran.URL.g,  gran.toc.path)
+                download.toc(gran.URL.g , gran.URL.w,  gran.toc.path)
                  }  #End download if it dooes not exist locally
                  } #End check if GRAN exist for this R version
 
@@ -79,14 +79,14 @@
         #7.1 cran toc
           if (as.character(class(.pkgenv[['cran.toc']] ))=='try-error') {
               message1("groundhog says: the file cran.toc.rds seems to be corrupted, will update it.")
-              download.toc(cran.toc.URL.w , cran.toc.URL.g,  cran.toc.path) 
+              download.toc(cran.toc.URL.g , cran.toc.URL.w,  cran.toc.path) 
               .pkgenv[['cran.toc']]   <- try(readRDS(cran.toc.path))
               } 
           
         #7.2 cran times
           if (as.character(class(.pkgenv[['cran.times']] ))=='try-error') {
               message1("groundhog says: the file cran.times.rds seems to be corrupted, will update it.")
-              download.toc(cran.times.URL.w , cran.times.URL.g,  cran.times.path)
+              download.toc(cran.times.URL.g , cran.times.URL.w,  cran.times.path)
              .pkgenv[['cran.times']]   <- try(readRDS(cran.times.path))
             } 
         
@@ -94,15 +94,23 @@
         
         if (gran.filename!='' && as.character(class(.pkgenv[['gran.toc']] ))=='try-error') {
             message1("groundhog says: the file gran.times.rds seems to be corrupted, will update it.")
-            download.toc(gran.URL.w , gran.URL.g,  gran.toc.path)
+            download.toc(gran.URL.g , gran.URL.w,  gran.toc.path)
            .pkgenv[['gran.toc']]   <- try(readRDS(gran.toc.path))
            }  
         
        
         #7.4 Check again 
-          if (as.character(class(.pkgenv[['cran.toc']] ))=='try-error') gstop("Could not read 'cran.toc.rds")
+          if (as.character(class(.pkgenv[['cran.toc']] ))=='try-error')   gstop("Could not read 'cran.toc.rds")
           if (as.character(class(.pkgenv[['cran.times']] ))=='try-error') gstop("Could not read 'cran.times.rds")
-          if (as.character(class(.pkgenv[['gran.toc']] ))=='try-error') gstop("Could not read 'gran.toc.rds")
+          if (as.character(class(.pkgenv[['gran.toc']] ))=='try-error')   gstop("Could not read 'gran.toc.rds")
           
+       #7.5 delete cache if update=true
+          if (update.toc==TRUE) {
+            
+            cache_path=get.cache_path()
+            if (file.exists(cache_path)) unlink(cache_path)
+            
+          }
+         
   }
   

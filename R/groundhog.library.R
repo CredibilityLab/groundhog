@@ -70,7 +70,7 @@
 #'
 #' @importFrom utils capture.output
 #'
-#' @details For more information about groundhog check out [groundhogr.com](http://groundhogr.com)
+#' @details For more information about groundhog check out [groundhogr.com](https://groundhogr.com)
 #' @export
 #'
 #----------------------------------------------------------------------

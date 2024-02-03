@@ -12,7 +12,7 @@ msg.R.switch <- function(date) {
 
   message1(
   "#####################################################################\n",
-    "\n\nInstructions for running other versions of R on demand, in both Mac and Windows, available from http://groundhogR.com/many\n\n\n",
+    "\n\nInstructions for running other versions of R on demand, in both Mac and Windows, available from https://groundhogR.com/many\n\n\n",
   "###################################################################"
   )
 

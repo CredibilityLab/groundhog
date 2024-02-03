@@ -73,7 +73,7 @@ packages in the default personal library. These changes can be reversed in a few
 with \code{\link[=restore.library]{restore.library()}}
 }
 \details{
-For more information about groundhog check out \href{http://groundhogr.com}{groundhogr.com}
+For more information about groundhog check out \href{https://groundhogr.com}{groundhogr.com}
 }
 \examples{
 \dontrun{

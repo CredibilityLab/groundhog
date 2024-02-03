@@ -24,7 +24,7 @@
 								                "  5) Similar to (4), use toc(<pkg>) to find the date for the next version\n",
 								                "     of the failing pkg and use a date after it for this entire\n",
 								                "     groundhog.library() call.\n",
-								                "  6) Visit http://groundhogr.com/troubleshooting")
+								                "  6) Visit https://groundhogr.com/troubleshooting")
                  
     
     #1 Keep only source  packages that are not yet installed
