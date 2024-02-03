@@ -33,7 +33,7 @@
           #GRAN
             os  <- get.os()
             r.version <- get.r.majmin()
-            url.wasabi <- paste0("http://gran.groundhogr.com/", os , "/", r.version, "/")
+            url.wasabi <- paste0("https://gran.groundhogr.com/", os , "/", r.version, "/")
     
         #2.1 File extension
             if (os=='windows') ext <- 'zip'
