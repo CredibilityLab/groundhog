@@ -201,7 +201,7 @@
       #Make copy of all pkgs requested for final verification to include those attached
           pkg_full_request = pkg
 
-      if (n.remote==0 & force.install==FALSE)
+      if (n.remote==0 & force.install==FALSE & force.install.main==FALSE)
       {
       #Bracket everything in a try() since failure merely means we will run slightly slower)
       direct.install.attempt = try({
@@ -620,7 +620,7 @@
       attached = get.attached()
       
     #What packages were attached directly? (only for non-remotes we use cache so skip for others)
-      if (n.remote==0 & force.install==FALSE) 
+      if (n.remote==0 & force.install==FALSE & force.install.main==FALSE) 
         {
         pkg_direct = pkg_full_request[!pkg_full_request %in% pkg]
     
