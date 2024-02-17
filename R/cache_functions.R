@@ -64,7 +64,6 @@ get.cache_path=function()
     
     
   #3 Check if cache is current (more recent than most recent installed.package)
-        
     is.cache.current = function()
       {
       # Get the first library path
@@ -90,7 +89,7 @@ get.cache_path=function()
      
       #Return
         current=FALSE
-        if (dif > - 60) current=TRUE 
+        if (dif > 0) current=TRUE 
         return (current)
     }
      
