@@ -206,7 +206,7 @@
       #If installation just happened
       msg <- ''
       if (sum(snowball$installed==FALSE)>0) {
-        message2( "Installation successfull.")
+        message2( "Installation successful.")
         }
         
         msg <- paste0(msg, 
