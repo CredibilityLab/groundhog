@@ -46,7 +46,7 @@ get.version <- function(pkg, date, patch = c("current")) {
 
   
   # 3 Get version
-    version.k <- max(which(dfk$Published < date)) # Position of last package available before the date
+    version.k <- max(which(dfk$Published <= date)) # Position of last package available before the date
     current.version <- dfk$Version[version.k]
   
    
