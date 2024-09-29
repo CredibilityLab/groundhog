@@ -46,7 +46,14 @@ get.version <- function(pkg, date, patch = c("current")) {
 
   
   # 3 Get version
-    version.k <- max(which(dfk$Published <= date)) # Position of last package available before the date
+    version.k <- max(c(1,which(dfk$Published < date)))
+          # Position of last package available before the date
+         
+          # on 2024 09 29 added max(c(1,)) so that if one choose the date when pkg was released
+          # it is based on the 1st day availalble as there is a hard <
+          # Could use <= but it could have break existing groundhog code which loaded oother version of
+          # pkgs, so this was more conservative.
+    
     current.version <- dfk$Version[version.k]
   
    
