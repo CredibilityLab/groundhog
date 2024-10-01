@@ -604,11 +604,11 @@
       msg.formatted <- paste0(msg.lines,collapse="\n")
       
     #Add header
-      msg.formatted <- paste0(pre,header,"\n",msg.formatted)
+      if (header!='') msg.formatted <- paste0(pre,header,"\n",msg.formatted)
       
     #Add ------------- on top
       sep.line <- c(paste0(rep('-',width+5)) , "\n" )
-      msg.formatted<-c(sep.line, msg.formatted)
+      if (header!='') msg.formatted<-c(sep.line, msg.formatted)
     
     return(msg.formatted)
 }

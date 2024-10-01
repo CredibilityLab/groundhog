@@ -17,11 +17,26 @@
 #' @export
 toc <- function(pkg, dependencies = FALSE) {
 
+  #If pkg is base end
+    if (pkg %in%  base_pkg())
+    {
+      msg=paste0("The package '", pkg, "' is a 'base' package; it comes bundled with R. ",
+                 "For base packages, Groundhog uses the version of the package that ",
+                 "matches the version of R being used. Base packages are not included ",
+                 "in Groundhog's CRAN packages database. For more Information on ",
+                 "that database: https://groundhogr.com/back-end/")
+      message1(format_msg(msg,pre='',header=''))
+      exit()
+      
+    }
+  
+  #Load cran toc if needed
   if (is.null(.pkgenv[["cran.toc"]])) {
     load.cran.toc(update.toc = FALSE)
   }
   cran.toc <- .pkgenv[["cran.toc"]]
 
+  #Lookup dependencies
   if (dependencies) {
     output <- cran.toc[cran.toc$Package == pkg, c("Version", "Published", "Imports", "Depends", "Suggests", "LinkingTo")]
   } else {
