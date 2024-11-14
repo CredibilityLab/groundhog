@@ -69,12 +69,10 @@
             
           save.cookie('60_days_remote')
           msg <- paste0(
-              "For packages from GitHub and Gitlab, it is better to use dates at least 60 days in the past ",
-              "(so, before '", today-60 ,"'). The reason is that Git packages can be changed retroactively (with a *past* ",
-              "timestamp, so the package you get with '",date,"' today may be different from the one you get with '",date,"' in the future). ",
-              "This problem is less likely, but not impossible, using a date before '",today-60,"'. You can re-run the groundhog.library() ",
-              "call as is, or modify the date as suggested. This message will not be shown again during the next 30 minutes.")
-          gstop(msg,format=TRUE)
+              "Groundhog Warning:\nFor Git packages, whenever possible, use a date from at least\n",
+			  "60 days ago as git packages can be modified retroactively.")
+          message(msg) 
+		  #gstop(msg,format=TRUE)
           }
           
 
