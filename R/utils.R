@@ -615,19 +615,17 @@
 
     
    
-#36 Set default mirror
- set.default.mirror<-function()
- {
+#36 If default repo not set, use cran.r-project.org
+set.default.mirror <- function() {
   r <- getOption("repos")
-      if (regexpr('http', r)[[1]] == -1)
-      {
-      r["CRAN"] <- "http://cran.r-project.org/" 
-      options(repos=r)
-      }
-  
-    #If an instance of R does not have a CRAN mirror, use the cran.r-project.org/ URL by default
-  
- }
+  if (is.null(r) || length(r) == 0 || regexpr('http', r)[[1]] == -1) {
+    default.cran <- "http://cran.r-project.org/" 
+    r <- c(CRAN = default.cran)  # Set 'r' as a named vector if it's NULL or empty
+    message1("groundhog says: No default repository found, setting to '", default.cran, "'")
+    options(repos = r)
+    }
+  }
+ 
  
 #37 Does personal folder to install R packages (not groundhog, but R's default) exist
     verify.personal.library.exists<-function()
