@@ -6,17 +6,12 @@
 # installed base packages
         .pkgenv[['base_pkg']] <- data.frame(utils::installed.packages(priority = 'base'),row.names=NULL,stringsAsFactors = FALSE)$Package
       
-        
-
-    
-        
+#Action when pkg is loaded
   .onLoad <- function(libname, pkgname) {
   
      
-    
     #1 pkgenv values
-            
-    
+     
           #1.1 Empty paths for groundhog loaded packages
             .pkgenv[['groundhog.paths']] <- c(character())
               
@@ -79,7 +74,7 @@
     } #End of onLoad
 
 
-#8. Attaching 
+#8. Actions when package is attached 
     #' @importFrom utils packageVersion compareVersion
      
     .onAttach <- function(libname, pkgname) {
