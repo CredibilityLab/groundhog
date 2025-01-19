@@ -121,7 +121,7 @@
     }
     msg <- simpleMessage(msg)
     msg <- structure(msg, class = c("groundhog-msg", class(msg)))
-     (msg)
+    message(msg)
   }
 
 #7 Message2()
@@ -621,7 +621,7 @@ set.default.mirror <- function() {
   if (is.null(r) || length(r) == 0 || regexpr('http', r)[[1]] == -1) {
     default.cran <- "http://cran.r-project.org/" 
     r <- c(CRAN = default.cran)  # Set 'r' as a named vector if it's NULL or empty
-    packageStartupMessage("groundhog says: No default repository found, setting to '", default.cran, "'")
+    message1("groundhog says: No default repository found, setting to '", default.cran, "'")
     options(repos = r)
     }
   }
