@@ -365,7 +365,7 @@
           #This same pkg_date loaded & attached early return
               if (git_usr_pkg_date %in% .pkgenv[['remotes.attached']]) {
                     message1("The package '", pkg_list$usr_pkg, "', for '",date,"', is already attached.")
-				          	invisible(TRUE)
+				          	return(invisible(TRUE))
               }
             
           #Same remote did not trigger a match before, something must not match, exit
