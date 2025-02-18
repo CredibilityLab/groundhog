@@ -1,6 +1,6 @@
 Package: groundhog
 Title: Version-Control for CRAN, GitHub, and GitLab Packages
-Version: 3.2.2
+Version: 3.2.2.9001
 Authors@R: c(
     person(given = "Uri",
            family = "Simonsohn",
