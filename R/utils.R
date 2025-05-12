@@ -1541,16 +1541,34 @@ get.parallel.time<-function(times,cores)
     
     
 #73 unzip2, untar2             : warnings instead of breaking errors when unzipping
-    unzip2 <- function(zipfile, exdir) {
-      tryCatch(
-        utils::unzip(zipfile, exdir = exdir),
-        error = function(e) {
-          message1("Could not unzip: '", zipfile,"'\nWill install from source after all binaries install.")
-          invisible(NULL)
-        }
-      )
+  unzip2 <- function(zipfile, exdir) {
+    # Capture existing files (in case exdir isn't empty)
+     before <- list.files(exdir, all.files = TRUE, full.names = TRUE, recursive = TRUE)
+  
+    success <- tryCatch(
+      {
+      suppressWarnings(utils::unzip(zipfile, exdir = exdir))
+
+        TRUE
+      },
+      error = function(e) {
+        message("Could not unzip: '", zipfile, "'\nWill install from source after all binaries install.")
+        FALSE
+      }
+    )
+  
+    # Check if new files appeared
+    after <- list.files(exdir, all.files = TRUE, full.names = TRUE, recursive = TRUE)
+  
+    if (!success || length(setdiff(after, before)) == 0) {
+      message("Could not unzip: '", zipfile, "'\nWill install from source after all binaries install.")
+      return(FALSE)
     }
-    
+  
+    return(TRUE)
+  }
+
+
 
   untar2 <- function(tarfile, exdir) {
     # Capture existing files (in case exdir isn't empty)
@@ -1558,7 +1576,7 @@ get.parallel.time<-function(times,cores)
   
     success <- tryCatch(
       {
-        utils::untar(tarfile, exdir = exdir)
+        suppressWarnings(utils::untar(tarfile, exdir = exdir))
         TRUE
       },
       error = function(e) {
