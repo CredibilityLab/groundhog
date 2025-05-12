@@ -145,8 +145,8 @@
                 
 
                 #Unzip  
-                  if (ext=="zip") utils::unzip(zk, exdir=outfile)
-                  if (ext!="zip") utils::untar(zk, exdir=outfile)  
+                  if (ext=="zip") unzip2(zk, exdir=outfile) #See utils.r #72 - included try() error
+                  if (ext!="zip") untar2(zk, exdir=outfile)  
 					
           
 				#Delete it
@@ -156,17 +156,25 @@
               
           
       #5 Verify installation
-          #message1("      ...verifying installation...")
           ip <- data.frame(utils::installed.packages(snowball$installation.path),row.names=NULL,stringsAsFactors = FALSE)      
-          ip$pkg_vrs <- paste0(ip$Package,"_",ip$Version)
           
-      #6 Add success column to snowball
-          snowball$success <- snowball$pkg_vrs %in% ip$pkg_vrs
-  
+          #Create pkg_vrs entry
+            #If nothing installed that was supposed to, you get an error when adding pkg_vrs... so we check first if anything did install
+              if (nrow(ip)>0)
+              {
+              ip$pkg_vrs <- paste0(ip$Package,"_",ip$Version)
+              snowball$success <- snowball$pkg_vrs %in% ip$pkg_vrs
+              
+              } else {
+                
+              snowball$success=0  
+              }
+                
+
       #7 Return timeout
           options(timeout=time.out.before)
-          
-      #8 Output
+        
+      #9 Output
           return(snowball)
           #note: if a non-binary was included in snowball, it will not appear here
 

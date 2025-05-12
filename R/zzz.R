@@ -91,12 +91,9 @@
 
       #While developing:
          packageStartupMessage ("#######################################################\n",
-                              "This DEV version: 2025 02 18 - 17:39 (Barcelona time)")
+                              "This Version 2025 05 12 - 07.17AM\n" )
+
 
       
       
   } #End on attach
-    
-    
-      
- 

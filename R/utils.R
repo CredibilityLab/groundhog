@@ -69,7 +69,7 @@
 #70 check_R_old_enough()       : Check R is at least 21 days old
 #71 eval2()                    : evaluate a string as a function
 #72 already.all.attached
-
+#73 unzip2, untar2             : warnings instead of breakign errors when unzipping
 
 ####################################################################################
     
@@ -1537,4 +1537,47 @@ get.parallel.time<-function(times,cores)
     #4 If we are here, return FALSE
             return(FALSE)
     
-}
+    }
+    
+    
+#73 unzip2, untar2             : warnings instead of breaking errors when unzipping
+    unzip2 <- function(zipfile, exdir) {
+      tryCatch(
+        utils::unzip(zipfile, exdir = exdir),
+        error = function(e) {
+          message1("Could not unzip: '", zipfile,"'\nWill install from source after all binaries install.")
+          invisible(NULL)
+        }
+      )
+    }
+    
+
+  untar2 <- function(tarfile, exdir) {
+    # Capture existing files (in case exdir isn't empty)
+     before <- list.files(exdir, all.files = TRUE, full.names = TRUE, recursive = TRUE)
+  
+    success <- tryCatch(
+      {
+        utils::untar(tarfile, exdir = exdir)
+        TRUE
+      },
+      error = function(e) {
+        message("Could not unzip: '", tarfile, "'\nWill install from source after all binaries install.")
+        FALSE
+      }
+    )
+  
+    # Check if new files appeared
+    after <- list.files(exdir, all.files = TRUE, full.names = TRUE, recursive = TRUE)
+  
+    if (!success || length(setdiff(after, before)) == 0) {
+      message("Could not unzip: '", tarfile, "'\nWill install from source after all binaries install.")
+      return(FALSE)
+    }
+  
+    return(TRUE)
+  }
+
+
+    
+    
