@@ -14,6 +14,17 @@ update_cran.toc_if.needed <- function(date) {
   
   # 1 Format entered date by user
     date <- as.DateYMD(date)
+  
+  # Guard: Check if we've already processed a date >= this date in this session
+  # This prevents redundant calls when get.version() is called multiple times
+  # If we've checked a newer date, we don't need to check older dates again
+  if (!is.null(.pkgenv[["last_update_check_date"]])) {
+    last_checked_date <- .pkgenv[["last_update_check_date"]]
+    if (date <= last_checked_date) {
+      return(FALSE)
+    }
+    # If new date is greater, we'll proceed and update the stored date at the end
+  }
 
   # Stop if date is in the future
       if (date > Sys.Date() - 2) {
@@ -45,7 +56,12 @@ update_cran.toc_if.needed <- function(date) {
       "with the list of all CRAN package-versions (cran.toc.rds)"
       )
     # Update the database
-      return(load.cran.toc(TRUE))
+      result <- load.cran.toc(TRUE)
+      # Save that we've checked this date (only if it's greater than previously stored)
+      if (is.null(.pkgenv[["last_update_check_date"]]) || date > .pkgenv[["last_update_check_date"]]) {
+        .pkgenv[["last_update_check_date"]] <- date
+      }
+      return(result)
   }
 
   # 4 Update if the  version of R being used is newer than that in cran.toc.rds AND cran toc is older than 2 days
@@ -60,8 +76,17 @@ update_cran.toc_if.needed <- function(date) {
 		      "is older than the version of R you are using. That file is being updated now."
         )
 
-        return(load.cran.toc(TRUE))
+        result <- load.cran.toc(TRUE)
+        # Save that we've checked this date (only if it's greater than previously stored)
+        if (is.null(.pkgenv[["last_update_check_date"]]) || date > .pkgenv[["last_update_check_date"]]) {
+          .pkgenv[["last_update_check_date"]] <- date
+        }
+        return(result)
   } else {
+    # Save that we've checked this date (only if it's greater than previously stored, even if no update was needed)
+    if (is.null(.pkgenv[["last_update_check_date"]]) || date > .pkgenv[["last_update_check_date"]]) {
+      .pkgenv[["last_update_check_date"]] <- date
+    }
     return(FALSE)
   }
 }

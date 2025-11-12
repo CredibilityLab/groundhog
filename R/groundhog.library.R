@@ -96,17 +96,13 @@
                             force.source.main = FALSE, force.install.main=FALSE,
                             tolerate.R.version = "" , cores = -1)
   {
-    #DEBUG: Start of function
-    message("[DEBUG] groundhog.library() started at ", Sys.time())
     
 #--------------------------------------------------------------
 
   #1 Preliminaries
 
     #1.1 Check if new version of groundhog exists 
-      message("[DEBUG] About to check.groundhog.version() at ", Sys.time())
       check.groundhog.version(min.days=1) #Function 42  -  utils.R
-      message("[DEBUG] Finished check.groundhog.version() at ", Sys.time())
 
     
     #1.2 Erase conflicts pkg var
@@ -201,7 +197,6 @@
       
   #2 Directly attach packages in Cache and drop from consideration packages already attached
   #only for non-remote pkgs
-      message("[DEBUG] Starting section #2 (cache attach) at ", Sys.time())
       
       #Make copy of all pkgs requested for final verification to include those attached
           pkg_full_request = pkg
@@ -295,7 +290,6 @@
       
       
 #3 Get snowballs for all requested packages
-      message("[DEBUG] Starting section #3 (get snowballs) at ", Sys.time())
       
   #Save snowballs individually as a list and also as a single big snowball.all
         
