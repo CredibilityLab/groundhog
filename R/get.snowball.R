@@ -89,13 +89,23 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
                 
                 return(snowball)
               } 
+         
             
+  # Note about saving (shown after all dependency messages, only once per groundhog.library call)
+    if (is.null(.pkgenv[['snowball.note.shown']]) || .pkgenv[['snowball.note.shown']] == FALSE) {
+        message2("We will save the information below for next time you load those same package versions")
+        .pkgenv[['snowball.note.shown']] <- TRUE
+    }
   
-            
+               
+  # Message when creating new snowball (shown before dependency resolution)
+        message1("Finding the version of all packages that '", pkg, "' needs for requested date: '", date, "'")
             
   # 1 Get dependencies
   dep12 <- get.all.dependencies(pkg, date, include.suggests = include.suggests)
+  
 
+ 
 
   # 2 Produce  dep12  (topographical sort) to get order of installation
   

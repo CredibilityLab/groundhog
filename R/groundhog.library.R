@@ -97,6 +97,9 @@
                             tolerate.R.version = "" , cores = -1)
   {
     
+    # Initialize flag to track if snowball note has been shown (reset for each call)
+      .pkgenv[['snowball.note.shown']] <- FALSE
+    
 #--------------------------------------------------------------
 
   #1 Preliminaries
