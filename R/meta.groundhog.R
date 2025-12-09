@@ -20,7 +20,7 @@
          validate.date(date) #Function defined in utils.R
 
       #2) Make a snowball, which is really just groundhog
-          snowball <- get.snowball(pkg, date)
+          snowball <- get.snowball.set(pkg, date)
 
           
           

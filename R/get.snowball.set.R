@@ -106,15 +106,10 @@ get.snowball.set <- function(pkgs, date, include.suggests=FALSE, force.install=F
   # Ensure pkgs are loaded
     load.cran.toc()
   
-  # Note about saving (shown after all dependency messages, only once per groundhog.library call)
-    if (is.null(.pkgenv[['snowball.note.shown']]) || .pkgenv[['snowball.note.shown']] == FALSE) {
-      message2("We will save the information below for next time you load those same package versions")
-      .pkgenv[['snowball.note.shown']] <- TRUE
-    }
-    
   # Message when creating new snowball (shown before dependency resolution)
     pkgs_str <- paste(pkgs, collapse = "', '")
-    message1("Finding the version for '",date,"' for all requested packages and their dependencies")
+    message1("You had not previously loaded these packages for '",date,"'.\n",
+             "Will find which versions are needed for that day.")
     
   # 1 Get dependencies for all packages
    dep12 <- get.all.dependencies.set(pkgs, date, include.suggests = include.suggests)

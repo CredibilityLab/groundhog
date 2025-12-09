@@ -70,7 +70,7 @@
       
       
   #5 Get snowball from modified cran.toc
-      snowball <- get.snowball(pkg,date,include.suggests=include.suggests, force.install=force.install)
+      snowball <- get.snowball.set(pkg,date,include.suggests=include.suggests, force.install=force.install)
       
 
   #6 Modify snowball's row with remote packages

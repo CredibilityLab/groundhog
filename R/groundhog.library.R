@@ -300,30 +300,23 @@
         if (n.remote==0)
         {
         
-        k <- 0 
-        snowball.list <- list()
-
-     
-        for (pkgk in pkg)
-          {
-          k <- k+1
-          snowball.k  <- get.snowball(pkgk , date , include.suggests)
+        # Get unified snowball for all packages
+          snowball.all  <- get.snowball.set(pkg, date, include.suggests, force.install)
     
         #options
           #force source 
           # Do not force remote packages)
            if (force.source==TRUE) {
-             snowball.k$from      = ifelse(snowball.k$from %in% c('github','gitlab'), 
-                                           snowball.k$from , 
+             snowball.all$from      = ifelse(snowball.all$from %in% c('github','gitlab'), 
+                                           snowball.all$from , 
                                            'source')
            }
           
          #For source main  
-           if (force.source.main==TRUE)   snowball.k[snowball.k$pkg==pkg,]$from = 'source'
+           if (force.source.main==TRUE)   snowball.all[snowball.all$pkg %in% pkg,]$from = 'source'
         
-          #force install
-           if (force.install==TRUE)       snowball.k$installed = FALSE
-           if (force.install.main==TRUE)  snowball.k[snowball.k$pkg==pkg,]$installed = FALSE
+          #force install (force.install is already handled by get.snowball.set)
+           if (force.install.main==TRUE)  snowball.all[snowball.all$pkg %in% pkg,]$installed = FALSE
 
           #ignore deps (drop from snowball to avoid installing (and replacing locally)
           #note1: we already checked that they are active, so we know they will be available
@@ -332,17 +325,12 @@
           
            if (length(ignore.deps)>0)
            {
-             snowball.k <- snowball.k[!snowball.k$pkg %in% ignore.deps,]
+             snowball.all <- snowball.all[!snowball.all$pkg %in% ignore.deps,]
             }
           
-        #Add to snowball.all
-            if (k==1) snowball.all <- snowball.k
-            if (k> 1) snowball.all <- rbind(snowball.all, snowball.k)
-            
-        #Add to list
-            snowball.list[[k]] <- snowball.k
+        #Add to list (single unified snowball)
+            snowball.list <- list(snowball.all)
           
-         } #End loop over pkgs
         } #End of non-remote
         
       
@@ -540,8 +528,8 @@
 		} #End loop
           
       
-      #9.3 library()
-        for (pkgk in pkg) {
+      #9.3 library() - attach all requested packages
+        for (pkgk in pkg_full_request) {
           base.library(pkgk, character.only=TRUE)
         }
 #-------------------------------------------------------------------- 
@@ -642,16 +630,14 @@
       }#End of  #10
                  
      
-  #10.12 Add feedback on pkgs that were previously directly attached
+  #10.12 Add feedback on all requested packages
       attached = get.attached()
       
-    #What packages were attached directly? (only for non-remotes we use cache so skip for others)
+    #What packages were attached? (only for non-remotes we use cache so skip for others)
       if (n.remote==0 & force.install==FALSE & force.install.main==FALSE) 
         {
-        pkg_direct = pkg_full_request[!pkg_full_request %in% pkg]
-    
-    #Loop over them
-      for (pkgk in pkg_direct)
+    #Loop over all requested packages
+      for (pkgk in pkg_full_request)
           {
             pkgk_vrs = paste0(pkgk,"_",get.version(pkgk,date))
             
