@@ -85,13 +85,33 @@
               
     #5 Purge: pkgs to remove from local
     
-      #5.1 Pkgs in snowball, but the version of it in the local library  did not originate in a groundhog installation
-      # we know their pvs does not match (see #4.4 above, because they are !borrowed)
-                
-          ip.purge <- ip.local[(ip.local$Package %in% snowball$pkg[!borrowed]),]
+      #5.1 Pkgs in local that need to be purged:
+      #   a) Same Package name as in snowball but different version (pkg_vrs doesn't match)
+      #   b) Same Package name as in snowball but not borrowed (pvs doesn't match)
+      #   We need to remove any local package that has the same Package name but different pkg_vrs
+      #   than what's in the snowball, so the correct version can be borrowed
+      
+      #Get packages in local that have the same Package name as snowball packages
+      local_packages_in_snowball <- ip.local[ip.local$Package %in% snowball$pkg, ]
+      
+      #Of those, keep only ones where the pkg_vrs doesn't match what we want from snowball
+      #This includes both: packages not borrowed (different version) and packages with same name but different version
+      if (nrow(local_packages_in_snowball) > 0) {
+        #Get the pkg_vrs we want from snowball
+        snowball_pkg_vrs <- snowball$pkg_vrs
+        #Purge any local package with same Package name but different pkg_vrs
+        ip.purge <- local_packages_in_snowball[!local_packages_in_snowball$pkg_vrs %in% snowball_pkg_vrs, ]
+      } else {
+        ip.purge <- local_packages_in_snowball  #Empty dataframe with correct structure
+      }
           
           
       #5.2 Process purge, deleting or returning to groundhog depending on origin of pkg in local library now
+          #Debug: Show what we're loading and what we're purging
+          if (nrow(ip.purge) > 0) {
+            message("Loading packages: ", paste(snowball$pkg_vrs, collapse = ", "))
+            message("Purging from local (different versions): ", paste(ip.purge$pkg_vrs, collapse = ", "))
+          }
           
            purge.local(ip.purge , loans) #see Function 1 in interlibrary.functions.R
            

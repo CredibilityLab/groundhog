@@ -9,6 +9,9 @@
     #1 Drop repeat packages
       snowball<-snowball[!duplicated(snowball$pkg),]
       
+    #1.5 Track which packages need to be installed (before installation)
+      #We'll use this to update the cache only for packages that were actually installed
+      snowball.to_install <- snowball[snowball$installed == FALSE, ]
       
     #2 Install all binaries
       snowball.binaries <- install.binaries(snowball,cores)
@@ -26,10 +29,11 @@
         install.source(snowball, date, cores)
         
     #5 Update groundhog cache incrementally after installation
-        #Get installation paths for packages that were just installed
-        if (nrow(snowball) > 0 && "installation.path" %in% names(snowball)) {
-          #Get unique installation paths (these are the package directories like R-4.5/curl_6.2.3)
-          installed_paths <- unique(snowball$installation.path)
+        #Only update cache for packages that were actually installed (installed==FALSE before installation)
+        #install.source() and install.binaries() only install packages where installed==FALSE
+        if (nrow(snowball.to_install) > 0 && "installation.path" %in% names(snowball.to_install)) {
+          #Get unique installation paths for packages that were actually installed
+          installed_paths <- unique(snowball.to_install$installation.path)
           
           #Don't filter by file.exists() - compute.ip.for.paths() will handle missing paths
           #The path might not exist immediately after installation due to timing, but
