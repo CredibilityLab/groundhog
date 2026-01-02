@@ -14,18 +14,20 @@
     
       
     #2 Did target package attach 
+        # Note: Version checks and success messages are now done immediately after 
+        # attachment in groundhog.library() section 9.3, so we only do a safety check here
         
         #2.0 Get Attached packages info
           attached<-get.attached() #in get.active.R
          
             
-        #2.1 Pkg not attached
+        #2.1 Pkg not attached (safety check)
           if (!pkg %in% attached$pkg) {
               msg = paste0("groundhog says: FAILED to load '", pkg_vrs,"'")
               gstop(msg)
               }
     
-        #2.2 Unexpected version attached
+        #2.2 Unexpected version attached (safety check - should have been caught earlier)
                 if ((pkg %in% attached$pkg) & (!pkg_vrs %in% attached$pkg_vrs))
                       {
                       msg <- paste0("groundhog says: WARNING, loaded unexpected version of '", pkg, "'\n",
@@ -34,17 +36,7 @@
                       gstop(msg)
                       }
        
-        #2.3 Successfully attached pkg_vrs (if it is attached now, and was not attached before
-          #Already attached
-          if (pkg_vrs %in% attached$pkg_vrs & pkg_vrs %in% .pkgenv[['attached']]$pkg_vrs) #See groundhog.library #5
-              {
-              message1("Previously attached  '", pkg_vrs,"'")
-           } 
-          #Newly attached
-            if (pkg_vrs %in% attached$pkg_vrs & !pkg_vrs %in% .pkgenv[['attached']]$pkg_vrs) #See groundhog.library #5
-              {
-              message1("Successfully attached '", pkg_vrs,"'")
-              } 
+        #2.3 Success/status messages are now printed immediately after attachment in groundhog.library() 
 
     #3 Check if entire snowball is available 
      
