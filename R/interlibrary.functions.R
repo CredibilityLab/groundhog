@@ -22,14 +22,6 @@ purge.local <- function (ip.purge , loans)
       #2.1 Merge IP with loans() to get  groundhog location for pkgs in IP
         ip.return <- merge(ip.return, loans, by='md5')
         
-      #2.2 Debug: Show what packages are being returned
-        for (i in 1:nrow(ip.return)) {
-          pkg_vrs_old <- ip.return_pkg_vrs[i]
-          message("Returning package to groundhog:")
-          message("  Had in local: ", pkg_vrs_old)
-          message("  Sending back to groundhog folder: ", ip.return$groundhog_location[i])
-        }
-        
       #2.3 FROM/TO paths
         from.local_to_groundhog <- paste0(ip.return$LibPath, "/",ip.return$Package)
         to.local_to_groundhog   <- paste0(ip.return$groundhog_location, "/", ip.return$Package)
@@ -84,7 +76,6 @@ purge.local <- function (ip.purge , loans)
     #4 Update caches incrementally after purging (packages moved from local to groundhog/backup)
       #Remove all purged packages from local cache
       if (nrow(ip.purge) > 0) {
-        message("Removing from local cache: ", paste(ip.purge$pkg_vrs, collapse = ", "))
         remove.packages.from.ip.cache('local', ip.purge$pkg_vrs)
       }
       
@@ -107,12 +98,7 @@ purge.local <- function (ip.purge , loans)
         new_groundhog_ip <- all_return_ip[all_return_ip$pkg_vrs %in% return_pkg_vrs, ]
 
         if (nrow(new_groundhog_ip) > 0) {
-          message("Adding to groundhog cache: ", paste(new_groundhog_ip$pkg_vrs, collapse = ", "))
           add.packages.to.ip.cache('groundhog', new_groundhog_ip)
-        } else {
-          message("WARNING: Could not find returned packages in computed IP. Expected: ", paste(return_pkg_vrs, collapse = ", "))
-          message("  Package paths searched: ", paste(return_pkg_paths, collapse = ", "))
-          message("  Packages found in IP: ", paste(all_return_ip$pkg_vrs, collapse = ", "))
         }
       }
       

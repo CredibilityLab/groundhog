@@ -107,12 +107,6 @@
           
           
       #5.2 Process purge, deleting or returning to groundhog depending on origin of pkg in local library now
-          #Debug: Show what we're loading and what we're purging
-          if (nrow(ip.purge) > 0) {
-            message("Loading packages: ", paste(snowball$pkg_vrs, collapse = ", "))
-            message("Purging from local (different versions): ", paste(ip.purge$pkg_vrs, collapse = ", "))
-          }
-          
            purge.local(ip.purge , loans) #see Function 1 in interlibrary.functions.R
            
            #This is a separate function because it is used also with restore.library()

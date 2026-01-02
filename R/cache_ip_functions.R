@@ -183,25 +183,6 @@
       return(invisible(NULL))
     }
     
-    #Debug: message and save each row being added
-    for (i in 1:nrow(new_packages_df)) {
-      pkg_row <- new_packages_df[i, ]
-      message("Adding to cache [", location, "]: ", pkg_row$pkg_vrs)
-      
-      #Save individual row to temp folder for debugging
-      temp_dir <- "c:/temp"
-      dir.create(temp_dir, showWarnings = FALSE, recursive = TRUE)
-      timestamp <- format(Sys.time(), "%Y%m%d_%H%M%S_%OS3")
-      temp_filename <- paste0(pkg_row$pkg_vrs, "_", timestamp, ".rds")
-      temp_path <- file.path(temp_dir, temp_filename)
-      tryCatch({
-        saveRDS(pkg_row, temp_path, version = 2, compress = FALSE)
-        message("  Saved debug file: ", temp_path)
-      }, error = function(e) {
-        #Silently fail if can't save debug file
-      })
-    }
-    
     cache_path <- get.ip.cache_path()
     source_paths <- get.ip.source_paths(location)
     
