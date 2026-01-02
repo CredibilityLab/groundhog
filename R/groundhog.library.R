@@ -253,37 +253,14 @@
                 {
                   if (pkgk %in% cache$pkg)
                   {
-                    # Get attached state before attaching
-                    attached_before_cache <- get.attached()
                 
-                    #Attach it
+                  #Attach it
                     base.library(pkgk, character.only=TRUE)
-                    
-                    # Check version and print success message immediately
-                    attached_after_cache <- get.attached()
-                    
-                    # Check if wrong version was attached
-                    if (pkgk %in% attached_after_cache$pkg & !pkgk_vrs %in% attached_after_cache$pkg_vrs) {
-                      msg <- paste0("groundhog says: WARNING, loaded unexpected version of '", pkgk, "'\n",
-                             "expected: '", pkgk_vrs, "'\n",
-                             "loaded  : '", attached_after_cache$pkg_vrs[attached_after_cache$pkg == pkgk], "'\n")
-                      gstop(msg)
-                    }
-                    
-                    # Check if successfully attached (correct version)
-                    if (pkgk_vrs %in% attached_after_cache$pkg_vrs & !pkgk_vrs %in% attached_before_cache$pkg_vrs) {
-                      message1("Successfully attached '", pkgk_vrs, "'")
-                    }
-                    
-                    # Check if already was attached
-                    if (pkgk_vrs %in% attached_after_cache$pkg_vrs & pkgk_vrs %in% attached_before_cache$pkg_vrs) {
-                      message1("Previously attached  '", pkgk_vrs, "'")
-                    }
   
-                    #Drop this pkgk
+                  #Drop this pkgk
                     pkg = pkg[pkg != pkgk]
                     
-                    #Add to vector with attached.cache
+                  #Add to vector with attached.cache
                     pkg_vrs.attached_from_cache = c(pkg_vrs.attached_from_cache , pkgk_vrs) 
   
                   } #End if pkg foudn in cache
@@ -565,33 +542,7 @@
       
       #9.3 library()
         for (pkgk in pkg) {
-          # Get expected version before attaching
-          pkgk_vrs <- paste0(pkgk, "_", get.version(pkgk, date))
-          attached_before_pkg <- get.attached()
-          
-          # Attach the package (this will print startup messages)
           base.library(pkgk, character.only=TRUE)
-          
-          # Check version immediately after attachment
-          attached_after_pkg <- get.attached()
-          
-          # Check if wrong version was attached
-          if (pkgk %in% attached_after_pkg$pkg & !pkgk_vrs %in% attached_after_pkg$pkg_vrs) {
-            msg <- paste0("groundhog says: WARNING, loaded unexpected version of '", pkgk, "'\n",
-                   "expected: '", pkgk_vrs, "'\n",
-                   "loaded  : '", attached_after_pkg$pkg_vrs[attached_after_pkg$pkg == pkgk], "'\n")
-            gstop(msg)
-          }
-          
-          # Check if successfully attached (correct version)
-          if (pkgk_vrs %in% attached_after_pkg$pkg_vrs & !pkgk_vrs %in% attached_before_pkg$pkg_vrs) {
-            message1("Successfully attached '", pkgk_vrs, "'")
-          }
-          
-          # Check if already was attached
-          if (pkgk_vrs %in% attached_after_pkg$pkg_vrs & pkgk_vrs %in% attached_before_pkg$pkg_vrs) {
-            message1("Previously attached  '", pkgk_vrs, "'")
-          }
         }
 #-------------------------------------------------------------------- 
 
