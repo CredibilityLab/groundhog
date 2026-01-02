@@ -88,7 +88,6 @@
   #11 Reminder of copy-method if something was installed.
 #----------------------------------------------------------------------
 
-
  
   groundhog.library <- function(pkg, date,        quiet.install = TRUE,  
                             include.suggests = FALSE, ignore.deps=c(), 
@@ -99,6 +98,10 @@
     
     # Initialize flag to track if snowball note has been shown (reset for each call)
       .pkgenv[['snowball.note.shown']] <- FALSE
+    
+    # Initialize storage for suppressed startup messages
+      .pkgenv[['startup_messages']]   <- ""
+      .pkgenv[['startup_msg_count']] <- 0
     
 #--------------------------------------------------------------
 
@@ -255,7 +258,7 @@
                   {
                 
                   #Attach it
-                    base.library(pkgk, character.only=TRUE)
+                    capture_startup_messages(pkgk, pkgk_vrs)
   
                   #Drop this pkgk
                     pkg = pkg[pkg != pkgk]
@@ -281,6 +284,17 @@
             if (pkgk_vrs %in% attached$pkg_vrs & pkgk_vrs %in% attached_before$pkg_vrs)   message1("Had already  attached '",pkgk_vrs,"'")
             if (!pkgk_vrs %in% attached$pkg_vrs) message("Failed to attached '",pkgk_vrs,"'")
 
+          }
+          
+          # Show suppressed startup messages before returning
+          if (!is.null(.pkgenv[['startup_messages']]) && .pkgenv[['startup_messages']] != "") {
+            n_messages <- .pkgenv[['startup_msg_count']]
+            if (!is.null(.pkgenv[['supportsANSI']]) && .pkgenv[['supportsANSI']]) {
+              msg <- paste0("\033[31m", n_messages, " startup message(s) were suppressed, run show_startup() to see them", "\033[0m")
+              message(msg)
+            } else {
+              message1(n_messages, " startup message(s) were suppressed, run show_startup() to see them")
+            }
           }
           
           return(invisible(TRUE))
@@ -542,7 +556,8 @@
       
       #9.3 library()
         for (pkgk in pkg) {
-          base.library(pkgk, character.only=TRUE)
+          pkgk_vrs = paste0(pkgk, "_", get.version(pkgk, date))
+          capture_startup_messages(pkgk, pkgk_vrs)
         }
 #-------------------------------------------------------------------- 
 
@@ -662,6 +677,17 @@
 
           }
      
+      }
+  
+  #10.13 Show suppressed startup messages info
+      if (!is.null(.pkgenv[['startup_messages']]) && .pkgenv[['startup_messages']] != "") {
+        n_messages <- .pkgenv[['startup_msg_count']]
+        if (!is.null(.pkgenv[['supportsANSI']]) && .pkgenv[['supportsANSI']]) {
+          msg <- paste0("\033[31m", n_messages, " startup message(s) were suppressed, run show_startup() to see them", "\033[0m")
+          message(msg)
+        } else {
+          message1(n_messages, " startup message(s) were suppressed, run show_startup() to see them")
+        }
       }
 #----------------------------------
   #11 Reminder of copy-method if something was installed.

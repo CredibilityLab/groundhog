@@ -70,6 +70,9 @@
 #71 eval2()                    : evaluate a string as a function
 #72 already.all.attached
 #73 unzip2, untar2             : warnings instead of breakign errors when unzipping
+#74 capture_startup_messages() : Capture and suppress package startup messages when attaching packages
+#75 show_startup()              : Show suppressed startup messages with proper newlines
+#74 capture_startup_messages() : Capture and suppress package startup messages when attaching packages
 
 ####################################################################################
     
@@ -1607,6 +1610,103 @@ get.parallel.time<-function(times,cores)
     return(TRUE)
   }
 
+#74 capture_startup_messages() : Capture and suppress package startup messages when attaching packages
+  capture_startup_messages <- function(pkg, pkg_vrs) {
+    startup_msgs <- character(0)
+    
+    # Catch packageStartupMessage conditions and suppress them
+    withCallingHandlers(
+      base.library(pkg, character.only = TRUE),
+      packageStartupMessage = function(m) {
+        startup_msgs <<- c(startup_msgs, conditionMessage(m))
+        tryInvokeRestart("muffleMessage")
+      }
+    )
+    
+    # Append messages to session storage if any were captured
+    if (length(startup_msgs) > 0) {
+      msg_block <- paste0(pkg_vrs, "\n", paste0("  ", startup_msgs, collapse = "\n"))
+      current <- .pkgenv[['startup_messages']]
+      if (is.null(current) || current == "") {
+        .pkgenv[['startup_messages']] <- msg_block
+      } else {
+        .pkgenv[['startup_messages']] <- paste0(current, "\n\n", msg_block)
+      }
+      # Track message count (number of packages with suppressed messages)
+      if (is.null(.pkgenv[['startup_msg_count']])) {
+        .pkgenv[['startup_msg_count']] <- 0
+      }
+      .pkgenv[['startup_msg_count']] <- .pkgenv[['startup_msg_count']] + 1
+    }
+    
+    invisible(NULL)
+  }
+  
+  # Helper function to safely invoke restart
+  tryInvokeRestart <- function(restart, ...) {
+    if (!is.null(findRestart(restart))) {
+      invokeRestart(restart, ...)
+    }
+  }
+
+#75 show_startup() : Show suppressed startup messages with proper newlines
+  #' @export
+  show_startup <- function() {
+    msgs <- .pkgenv[['startup_messages']]
+    if (is.null(msgs) || msgs == "") {
+      message("No startup messages were suppressed.")
+      return(invisible(msgs))
+    }
+    
+    # Split into lines
+    all_lines <- strsplit(msgs, "\n")[[1]]
+    
+    # Find lines that are pkg_vrs (no leading space, contains underscore followed by version pattern)
+    # Pattern: starts with non-space, contains underscore, followed by version-like pattern
+    pkg_vrs_indices <- grep("^[^ ].*_[0-9]", all_lines)
+    
+    # Build formatted output with header
+    if (.pkgenv[["supportsANSI"]]) {
+      formatted <- paste0("\033[1m", "Suppressed startup messages in most recent groundhog call", "\033[0m", "\n\n\n")
+    } else {
+      formatted <- "Suppressed startup messages in most recent groundhog call\n\n\n"
+    }
+    
+    if (length(pkg_vrs_indices) > 0) {
+      for (k in 1:length(pkg_vrs_indices)) {
+        start_idx <- pkg_vrs_indices[k]
+        end_idx <- if (k < length(pkg_vrs_indices)) pkg_vrs_indices[k + 1] - 1 else length(all_lines)
+        
+        # Get pkg_vrs (first line of this block)
+        pkg_vrs <- all_lines[start_idx]
+        
+        # Add counter and package name (no newline after counter, just space)
+        if (.pkgenv[["supportsANSI"]]) {
+          formatted <- paste0(formatted, "\033[1m", k, ") ", pkg_vrs, "\033[0m", "\n")
+        } else {
+          formatted <- paste0(formatted, k, ") ", pkg_vrs, "\n")
+        }
+        
+        # Add the rest of the messages for this package
+        if (start_idx < end_idx) {
+          for (i in (start_idx + 1):end_idx) {
+            formatted <- paste0(formatted, all_lines[i], "\n")
+          }
+        }
+        
+        # Add separator (except after last package)
+        if (k < length(pkg_vrs_indices)) {
+          formatted <- paste0(formatted, "------------------------------\n")
+        }
+      }
+    } else {
+      # Fallback: just show messages as-is if we can't parse
+      formatted <- paste0(formatted, msgs)
+    }
+    
+    message(formatted)
+    invisible(msgs)
+  }
 
     
     
