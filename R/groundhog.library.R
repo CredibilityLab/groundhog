@@ -300,18 +300,16 @@
         if (n.remote==0)
         {
         
-        # Use batch processing for efficiency
-        batch_result <- get.snowballs.batch(pkg, date, include.suggests, force.install)
-        snowball.list <- batch_result$snowballs
-        snowball.all <- batch_result$all
-        
-        # Apply options to each snowball
-        for (k in 1:length(snowball.list))
+        k <- 0 
+        snowball.list <- list()
+
+     
+        for (pkgk in pkg)
           {
-          snowball.k <- snowball.list[[k]]
-          pkgk <- names(snowball.list)[k]
+          k <- k+1
+          snowball.k  <- get.snowball(pkgk , date , include.suggests)
     
-          #options
+        #options
           #force source 
           # Do not force remote packages)
            if (force.source==TRUE) {
@@ -321,11 +319,11 @@
            }
           
          #For source main  
-           if (force.source.main==TRUE)   snowball.k[snowball.k$pkg==pkgk,]$from = 'source'
+           if (force.source.main==TRUE)   snowball.k[snowball.k$pkg==pkg,]$from = 'source'
         
           #force install
            if (force.install==TRUE)       snowball.k$installed = FALSE
-           if (force.install.main==TRUE)  snowball.k[snowball.k$pkg==pkgk,]$installed = FALSE
+           if (force.install.main==TRUE)  snowball.k[snowball.k$pkg==pkg,]$installed = FALSE
 
           #ignore deps (drop from snowball to avoid installing (and replacing locally)
           #note1: we already checked that they are active, so we know they will be available
@@ -337,14 +335,14 @@
              snowball.k <- snowball.k[!snowball.k$pkg %in% ignore.deps,]
             }
           
-        #Update in list
+        #Add to snowball.all
+            if (k==1) snowball.all <- snowball.k
+            if (k> 1) snowball.all <- rbind(snowball.all, snowball.k)
+            
+        #Add to list
             snowball.list[[k]] <- snowball.k
           
-         } #End loop over snowballs to apply options
-         
-        # Re-merge snowballs after applying options
-        snowball.all <- merge.snowballs(snowball.list)
-        
+         } #End loop over pkgs
         } #End of non-remote
         
       
