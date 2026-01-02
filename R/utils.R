@@ -1154,6 +1154,12 @@ get.parallel.time<-function(times,cores)
 #59 get.ip
   get.ip <- function(location)
   {
+    #0 Check cache first
+      cached_ip <- read.ip.cache(location)
+      if (!is.null(cached_ip)) {
+        return(cached_ip)
+      }
+    
     #1 Get all subfolders for backup and groundhog
     
         #1.1 For groundhog. backup, all_local there is a folder with subfolders for each pkg, get all pkgs
@@ -1199,7 +1205,9 @@ get.parallel.time<-function(times,cores)
           
         if (nrow(ip)==0) ip$md5 <- character()
         
-    #6 End
+    #6 Save to cache and return
+        source_paths <- get.ip.source_paths(location)
+        save.ip.cache(location, ip, source_paths)
         return(ip)
     }
         
@@ -1239,6 +1247,9 @@ get.parallel.time<-function(times,cores)
      loans_path<-paste0(get.groundhog.folder(),"/loans/",get.r.majmin(),".rds")  
      dir.create(dirname(loans_path), showWarnings = FALSE,recursive = TRUE)
      saveRDS(loans,loans_path,version=2,compress=FALSE)
+     
+     #Note: Cache updates are handled in the calling functions (localize, purge.local)
+     #which know exactly which packages changed, allowing incremental updates
    }
 
    

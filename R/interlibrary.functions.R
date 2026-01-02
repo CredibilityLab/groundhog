@@ -71,5 +71,30 @@ purge.local <- function (ip.purge , loans)
          
     } #End 3
     
+    #4 Update caches incrementally after purging (packages moved from local to groundhog/backup)
+      #Remove all purged packages from local cache
+      if (nrow(ip.purge) > 0) {
+        remove.packages.from.ip.cache('local', ip.purge$pkg_vrs)
+      }
+      
+      #Add returned packages to groundhog cache
+      if (nrow(ip.return) > 0) {
+        #Get unique installation paths (library directories) for returned packages
+        return_paths <- unique(dirname(to.local_to_groundhog))
+        #Compute IP for those paths, then filter to just returned packages
+        all_return_ip <- compute.ip.for.paths(return_paths)
+        new_groundhog_ip <- all_return_ip[all_return_ip$pkg_vrs %in% ip.return$pkg_vrs, ]
+        add.packages.to.ip.cache('groundhog', new_groundhog_ip)
+      }
+      
+      #Add backed up packages to backup cache
+      if (nrow(ip.backup) > 0 && sum(new) > 0) {
+        #Get unique backup directory
+        backup.dir <- paste0(get.groundhog.folder(),"/restore_library/",get.r.majmin(),"/")
+        #Compute IP for backup directory, then filter to just backed up packages
+        all_backup_ip <- compute.ip.for.paths(backup.dir)
+        new_backup_ip <- all_backup_ip[all_backup_ip$pkg_vrs %in% ip.backup$pkg_vrs[new], ]
+        add.packages.to.ip.cache('backup', new_backup_ip)
+      }
         
   }

@@ -161,6 +161,20 @@
         
       #Update loans.rds
         save.loans(loans)   #utils #60
+        #Note: save.loans() already updates local cache
+        
+      #Update caches incrementally after borrowing (packages moved from groundhog to local)
+        #Get IP for packages in their new location (local library)
+        local.library <- .pkgenv[["orig_lib_paths"]][1]
+        #Compute IP for the local library, then filter to just the borrowed packages
+        all_local_ip <- compute.ip.for.paths(local.library)
+        new_local_ip <- all_local_ip[all_local_ip$pkg_vrs %in% snowball.lend$pkg_vrs, ]
+        
+        #Remove from groundhog cache
+        remove.packages.from.ip.cache('groundhog', snowball.lend$pkg_vrs)
+        
+        #Add to local cache
+        add.packages.to.ip.cache('local', new_local_ip)
         
       }
       
