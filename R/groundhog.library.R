@@ -290,7 +290,7 @@
           if (!is.null(.pkgenv[['startup_messages']]) && .pkgenv[['startup_messages']] != "") {
             n_messages <- .pkgenv[['startup_msg_count']]
             if (!is.null(.pkgenv[['supportsANSI']]) && .pkgenv[['supportsANSI']]) {
-              msg <- paste0("\033[31m", n_messages, " startup message(s) were suppressed, run show_startup() to see them", "\033[0m")
+              msg <- paste0("\033[34m", n_messages, " startup message(s) were suppressed, run show_startup() to see them", "\033[0m")
               message(msg)
             } else {
               message1(n_messages, " startup message(s) were suppressed, run show_startup() to see them")
@@ -683,7 +683,7 @@
       if (!is.null(.pkgenv[['startup_messages']]) && .pkgenv[['startup_messages']] != "") {
         n_messages <- .pkgenv[['startup_msg_count']]
         if (!is.null(.pkgenv[['supportsANSI']]) && .pkgenv[['supportsANSI']]) {
-          msg <- paste0("\033[31m", n_messages, " startup message(s) were suppressed, run show_startup() to see them", "\033[0m")
+          msg <- paste0("\033[34m", n_messages, " startup message(s) were suppressed, run show_startup() to see them", "\033[0m")
           message(msg)
         } else {
           message1(n_messages, " startup message(s) were suppressed, run show_startup() to see them")
