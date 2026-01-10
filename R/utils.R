@@ -70,6 +70,9 @@
 #71 eval2()                    : evaluate a string as a function
 #72 already.all.attached
 #73 unzip2, untar2             : warnings instead of breakign errors when unzipping
+#74 capture_startup_messages() : Capture and suppress package startup messages when attaching packages
+#75 show_startup()              : Show suppressed startup messages with proper newlines
+#74 capture_startup_messages() : Capture and suppress package startup messages when attaching packages
 
 ####################################################################################
     
@@ -1154,6 +1157,12 @@ get.parallel.time<-function(times,cores)
 #59 get.ip
   get.ip <- function(location)
   {
+    #0 Check cache first
+      cached_ip <- read.ip.cache(location)
+      if (!is.null(cached_ip)) {
+        return(cached_ip)
+      }
+    
     #1 Get all subfolders for backup and groundhog
     
         #1.1 For groundhog. backup, all_local there is a folder with subfolders for each pkg, get all pkgs
@@ -1199,7 +1208,9 @@ get.parallel.time<-function(times,cores)
           
         if (nrow(ip)==0) ip$md5 <- character()
         
-    #6 End
+    #6 Save to cache and return
+        source_paths <- get.ip.source_paths(location)
+        save.ip.cache(location, ip, source_paths)
         return(ip)
     }
         
@@ -1239,6 +1250,9 @@ get.parallel.time<-function(times,cores)
      loans_path<-paste0(get.groundhog.folder(),"/loans/",get.r.majmin(),".rds")  
      dir.create(dirname(loans_path), showWarnings = FALSE,recursive = TRUE)
      saveRDS(loans,loans_path,version=2,compress=FALSE)
+     
+     #Note: Cache updates are handled in the calling functions (localize, purge.local)
+     #which know exactly which packages changed, allowing incremental updates
    }
 
    
@@ -1596,6 +1610,43 @@ get.parallel.time<-function(times,cores)
     return(TRUE)
   }
 
-
+#74 capture_startup_messages() : Capture and suppress package startup messages when attaching packages
+  capture_startup_messages <- function(pkg, pkg_vrs) {
+    startup_msgs <- character(0)
     
+    # Catch packageStartupMessage conditions and suppress them
+    withCallingHandlers(
+      base.library(pkg, character.only = TRUE),
+      packageStartupMessage = function(m) {
+        startup_msgs <<- c(startup_msgs, conditionMessage(m))
+        tryInvokeRestart("muffleMessage")
+      }
+    )
+    
+    # Append messages to session storage if any were captured
+    if (length(startup_msgs) > 0) {
+      msg_block <- paste0(pkg_vrs, "\n", paste0("  ", startup_msgs, collapse = "\n"))
+      current <- .pkgenv[['startup_messages']]
+      if (is.null(current) || current == "") {
+        .pkgenv[['startup_messages']] <- msg_block
+      } else {
+        .pkgenv[['startup_messages']] <- paste0(current, "\n\n", msg_block)
+      }
+      # Track message count (number of packages with suppressed messages)
+      if (is.null(.pkgenv[['startup_msg_count']])) {
+        .pkgenv[['startup_msg_count']] <- 0
+      }
+      .pkgenv[['startup_msg_count']] <- .pkgenv[['startup_msg_count']] + 1
+    }
+    
+    invisible(NULL)
+  }
+  
+  # Helper function to safely invoke restart
+  tryInvokeRestart <- function(restart, ...) {
+    if (!is.null(findRestart(restart))) {
+      invokeRestart(restart, ...)
+    }
+  }
+
     

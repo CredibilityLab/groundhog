@@ -90,8 +90,9 @@
           packageStartupMessage ("Tips and troubleshooting: https://groundhogR.com")
 
       #While developing:
-         packageStartupMessage ("#######################################################\n",
-                              "This Version 2025 12 09 - 01.07PM\n" )
+        # packageStartupMessage ("#######################################################\n",
+         #                       "Testing Turbo Cache 2026\n",
+          #                    "This Version 2026 01 08 - 04.11PM\n" )
 
 
       

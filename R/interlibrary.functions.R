@@ -16,20 +16,22 @@ purge.local <- function (ip.purge , loans)
   #2 Carry out returns, if any
       if (nrow(ip.return)>0)
       {
+      #2.0 Save pkg_vrs before merge (merge may rename columns)
+        ip.return_pkg_vrs <- ip.return$pkg_vrs
        
       #2.1 Merge IP with loans() to get  groundhog location for pkgs in IP
         ip.return <- merge(ip.return, loans, by='md5')
         
-      #2.2 FROM/TO paths
+      #2.3 FROM/TO paths
         from.local_to_groundhog <- paste0(ip.return$LibPath, "/",ip.return$Package)
         to.local_to_groundhog   <- paste0(ip.return$groundhog_location, "/", ip.return$Package)
         
         
-    #2.4 Execute 
+    #2.5 Execute 
 		      file.rename.robust2(from.local_to_groundhog, to.local_to_groundhog)  #file.rename.robust2.R
 
            
-      #2.5 remove returned packages from loans
+      #2.6 remove returned packages from loans
         loans<-loans[!loans$md5 %in% ip.return$md5,]  
         save.loans(loans)  #update .rds (Utils #60.2)
         
@@ -71,5 +73,43 @@ purge.local <- function (ip.purge , loans)
          
     } #End 3
     
+    #4 Update caches incrementally after purging (packages moved from local to groundhog/backup)
+      #Remove all purged packages from local cache
+      if (nrow(ip.purge) > 0) {
+        remove.packages.from.ip.cache('local', ip.purge$pkg_vrs)
+      }
+      
+      #Add returned packages to groundhog cache
+      if (nrow(ip.return) > 0) {
+        #Use the package-version directories directly; they contain the pkg folder (e.g., .../curl_7.0.0/curl/DESCRIPTION)
+        return_pkg_paths <- unique(ip.return$groundhog_location)
+
+        #Use pkg_vrs from before merge (or from loans if available). Merge may rename columns.
+        return_pkg_vrs <- if ("pkg_vrs.y" %in% names(ip.return)) {
+          ip.return$pkg_vrs.y
+        } else if ("pkg_vrs" %in% names(ip.return)) {
+          ip.return$pkg_vrs
+        } else {
+          ip.return_pkg_vrs  # Fallback to saved value
+        }
+
+        #Compute IP for the package-version directories
+        all_return_ip <- compute.ip.for.paths(return_pkg_paths)
+        new_groundhog_ip <- all_return_ip[all_return_ip$pkg_vrs %in% return_pkg_vrs, ]
+
+        if (nrow(new_groundhog_ip) > 0) {
+          add.packages.to.ip.cache('groundhog', new_groundhog_ip)
+        }
+      }
+      
+      #Add backed up packages to backup cache
+      if (nrow(ip.backup) > 0 && sum(new) > 0) {
+        #Get unique backup directory
+        backup.dir <- paste0(get.groundhog.folder(),"/restore_library/",get.r.majmin(),"/")
+        #Compute IP for backup directory, then filter to just backed up packages
+        all_backup_ip <- compute.ip.for.paths(backup.dir)
+        new_backup_ip <- all_backup_ip[all_backup_ip$pkg_vrs %in% ip.backup$pkg_vrs[new], ]
+        add.packages.to.ip.cache('backup', new_backup_ip)
+      }
         
   }
