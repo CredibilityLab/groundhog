@@ -42,13 +42,20 @@
                 load.pkg_utility('git2r',datek)  
                 
             #Use the git2r_pull function with its new name
-                pull_result <- git2r::pull(clone_path) 
-
-            #Update catalog
-                save.clone_catalog_update(pkgk,remote_idk,usrk) #Function 2 below
+                pull_result <- try(git2r::pull(clone_path), silent = TRUE)
                 
-                
-                return(TRUE)
+            #Check if pull succeeded by verifying DESCRIPTION still exists
+                if (inherits(pull_result, "try-error") || !file.exists(description_path)) {
+                  # Pull failed, delete clone and force re-clone
+                  unlink(clone_path, recursive = TRUE, force = TRUE)
+                  local_git_exists <- FALSE
+                  # Continue to re-clone section below rather than returning
+                } else {
+                  #Update catalog (only if pull succeeded)
+                    save.clone_catalog_update(pkgk,remote_idk,usrk) #Function 2 below
+                    
+                    return(TRUE)
+                }
             }
             
           

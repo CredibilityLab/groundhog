@@ -38,6 +38,19 @@
        
           #This will include sha values and dependencies
        
+  #3.4 Verify baton contains valid data
+       if (is.null(baton$rows.toc) || nrow(baton$rows.toc) == 0) {
+         msg <- paste0("Failed to obtain package information for '", usr, "/", pkg, 
+                       "' from ", remote_id, ".\n",
+                       "This may be due to network issues, an invalid repository, or the repository\n",
+                       "not containing a valid R package with a DESCRIPTION file.\n",
+                       "Please check:\n",
+                       "  1. Your internet connection\n",
+                       "  2. The repository exists: https://", remote_id, ".com/", usr, "/", pkg, "\n",
+                       "  3. The repository contains an R package with a DESCRIPTION file")
+         gstop(msg) #utils #51
+       }
+       
   #3.5 Verify requested name of package was obtained
        if (!pkg %in% baton$rows.toc$Package) {
          
