@@ -9,6 +9,10 @@
 version](https://www.r-pkg.org/badges/version-ago/groundhog)](https://cran.r-project.org/package=groundhog)
 <!-- badges: end -->
 
+**Note on 2026 02 12:**
+If you are having issues with the Package 'cp11', (which is a dependency of the tidyverse, among many other packages) you just need to refresh the groundhog database. 
+Run `groundhog:::load.cran.toc(TRUE)` and the issue should be resolved.
+
 For information about groundhog, check out the blogpost announcing it (http://datacolada.org/95), announcing v2.0 (http://datacolada.org/100),  or groundhog's website (https://groundhogr.com)
 
 CRAN contains the officially released versions of groundhog. Here on github are the in development versions.  Almost nobody, or perhaps nobody, should rely on the version of groundhog available here.
