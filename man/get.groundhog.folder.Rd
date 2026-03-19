@@ -15,7 +15,9 @@ Get current local path to groundhog folder
 }
 \note{
 you can change the location of this folder with the command
-\code{set.groundhog.folder("path")}.
+\code{set.groundhog.folder("path")}. You may also set environment variable
+\code{GROUNDHOG_FOLDER}. If neither is set and \code{~/R_groundhog} is not writable,
+groundhog falls back to \code{./.groundhog}.
 }
 \examples{
 \dontrun{

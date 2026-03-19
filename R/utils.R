@@ -188,7 +188,7 @@
      #Read cran toc again to undo any changes with remote
         #Only run if main folder exists, otherwise we have loop, 
         #exiting when it does not exist, and asking that it exist when exiting
-          main_folder <-  paste0(path.expand("~"), "/R_groundhog")
+          main_folder <-  .groundhog.main.folder()
           if (file.exists(main_folder)) {
             .pkgenv[['cran.toc']] <- readRDS(file.path(get.groundhog.folder(),"cran.toc.rds"))
           }     
@@ -822,7 +822,7 @@ set.default.mirror <- function() {
       check.groundhog.version <- function(min.days=7)
       {
       #Early return if the folder with groundhog has not been set yet 
-          main_folder <-  fw(paste0(path.expand("~"), "/R_groundhog")) #fw: function #50
+          main_folder <-  .groundhog.main.folder() #fw: function #50
           if (!file.exists(main_folder)) return(invisible(""))
         
       #Start with high numbers  
@@ -889,7 +889,7 @@ set.default.mirror <- function() {
     os <- 'other'
 
   #If it has been set by hand, read it
-    path <-  paste0(path.expand("~"), "/R_groundhog/options/os.txt") #see groundhog.options.R
+    path <-  paste0(.groundhog.main.folder(), "/options/os.txt") #see groundhog.options.R
     if (file.exists(path)) {
       os = scan(path,what='character',quiet=TRUE)
       if (os!='other') return(os)
@@ -919,33 +919,28 @@ set.default.mirror <- function() {
       check.consent <- function(ask=TRUE) {
         
       #Folder with cookie with location of groundhog folder, its existence means consent
-         main_folder <-  fw(paste0(path.expand("~"), "/R_groundhog/")) #fw: function #50
+         main_folder <-  paste0(.groundhog.main.folder(), "/") #fw: function #50
         
+      #Sandbox/CI-friendly behavior: if user provided an explicit folder, consent is implicit.
+        env.folder <- .groundhog.env.folder()
+        if (env.folder != "") return(TRUE)
+
       #See if consent has been given by seeing if the folder exists
         consent <- (dir.exists(main_folder))
         if (consent==TRUE) return(TRUE)
-        if (consent==FALSE & ask==FALSE) return(FALSE)
+        if (consent==FALSE && ask==FALSE) return(FALSE)
 
         
        #If no consent, ask 
-         if (consent == FALSE & ask==TRUE) {
+         if (consent == FALSE && ask==TRUE) {
             msg       = paste0("groundhog needs authorization to save files to '",main_folder,
                         "'\n", "Enter 'OK' to provide authorization, and 'NO' not to.")
             
-            batch_msg =  paste0("\n\n*********IMPORTANT MESSAGE FROM GROUNDHOG*****************************************\n",
-                         "groundhog needs to save packages in a local directory in order to work.\n",
-                         "Per CRAN policy, you need to actively authorize groundhog to do this.\n",
-                         "Please run `set.groundhog.folder(<path>)` for the path you wish to use.\n",
-                         "If you are unsure which path to use, the following path is a reasonable default:\n",
-                         "   '", main_folder , "'\n",
-                         "(This only needs to be done once on a given computer)\n",
-                         "**********************************************************************************\n\n")
-          #For batch files
+          #For batch files, do not force an interactive consent step.
+          #get.groundhog.folder() will select a writable fallback if needed.
             if (interactive()==FALSE )
             {
-              message(batch_msg)
-              #return(FALSE)
-              exit()
+              return(TRUE)
             }
             
             

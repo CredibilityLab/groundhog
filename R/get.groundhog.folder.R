@@ -4,7 +4,9 @@
 #'   [groundhog.library()] downloads and stores packages that can be loaded 
 #'
 #' @note you can change the location of this folder with the command
-#'   `set.groundhog.folder("path")`.
+#'   `set.groundhog.folder("path")`. You may also set environment variable
+#'   `GROUNDHOG_FOLDER`. If neither is set and `~/R_groundhog` is not writable,
+#'   groundhog falls back to `./.groundhog`.
 #' 
 #' @examples
 #' \dontrun{
@@ -16,45 +18,90 @@
 #' @seealso [set.groundhog.folder()]
 #'
 
-# Function that gets the groundhog folder, or prompts user to create it.
-get.groundhog.folder <- function() {
-  
-  
-  #Verify folder with 'cookie files' and default for library exist. giving consent to save files
-    consent <- check.consent() 
-    if (consent==FALSE) {
-      message(' -- not authorized to save to folder necessary for groundhog to work --')
-      exit()
-      
-      }
-  
-  #Set main folder with 'cookie files' and default for library
-    main_folder <-  paste0(path.expand("~"), "/R_groundhog")
- 
-  #Create main folder 
-      dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
+# Internal helpers for folder resolution.
+.groundhog.main.folder <- function() {
+  fw(paste0(path.expand("~"), "/R_groundhog"))
+}
 
-  #Path to cookie file with location of folder
-    path_file_storing_groundhog_library_location <- paste0(main_folder ,"/current_groundhog_folder.txt")
-    
-  #If cookie file exists, use it, otherwise, use that same location for library
-      if (file.exists(path_file_storing_groundhog_library_location)) {
-        
-        #Read the 'cookie' file with the location of the library
-          f <- path_file_storing_groundhog_library_location
-          groundhog.folder <- readChar(f, file.info(f)$size)  #Reads full file into a string, fixes bug in groundhog 1.1.0
-        
-        } else {
-          
-        #This is the default
-          groundhog.folder <-paste0(main_folder, "/groundhog_library/")
-          
-        #Set it using function below
-          set.groundhog.folder(groundhog.folder) 
-          
-        } #End if cookie file does not exist
-    
-    return(groundhog.folder)
+.groundhog.cookie.path <- function() {
+  paste0(.groundhog.main.folder(), "/current_groundhog_folder.txt")
+}
+
+.groundhog.default.folder <- function() {
+  paste0(.groundhog.main.folder(), "/groundhog_library/")
+}
+
+.groundhog.workspace.fallback.folder <- function() {
+  fw(file.path(getwd(), ".groundhog"))
+}
+
+.groundhog.env.folder <- function() {
+  path <- trimws(Sys.getenv("GROUNDHOG_FOLDER", unset = ""))
+  if (path == "") return("")
+  fw(path)
+}
+
+.groundhog.path.writable <- function(path) {
+  path <- fw(path)
+  ok <- tryCatch({
+    dir.create(path, showWarnings = FALSE, recursive = TRUE)
+    probe <- file.path(path, paste0(".groundhog_write_probe_", Sys.getpid(), ".tmp"))
+    on.exit(if (file.exists(probe)) unlink(probe), add = TRUE)
+    writeLines("ok", probe)
+    file.exists(probe)
+  }, error = function(e) FALSE, warning = function(w) FALSE)
+  isTRUE(ok)
+}
+
+# Function that gets the groundhog folder, with a sandbox-safe fallback.
+get.groundhog.folder <- function() {
+  # 1) Explicit override (best for CI/sandboxed runs)
+  env.folder <- .groundhog.env.folder()
+  if (env.folder != "") {
+    if (.groundhog.path.writable(env.folder)) {
+      return(env.folder)
+    }
+    message1("GROUNDHOG_FOLDER was set to '", env.folder, "' but is not writable. Trying fallback locations.")
+  }
+
+  # 2) Normal behavior for standard R users (~ + cookie/default)
+  consent <- check.consent()
+  if (consent == FALSE) {
+    message(" -- not authorized to save to folder necessary for groundhog to work --")
+    exit()
+  }
+
+  main_folder <- .groundhog.main.folder()
+  if (.groundhog.path.writable(main_folder)) {
+    cookie_path <- .groundhog.cookie.path()
+
+    if (file.exists(cookie_path)) {
+      f <- cookie_path
+      groundhog.folder <- trimws(readChar(f, file.info(f)$size))
+      if (groundhog.folder != "" && .groundhog.path.writable(groundhog.folder)) {
+        return(fw(groundhog.folder))
+      }
+    }
+
+    groundhog.folder <- .groundhog.default.folder()
+    dir.create(groundhog.folder, showWarnings = FALSE, recursive = TRUE)
+    cat(groundhog.folder, file = cookie_path)
+    Sys.setenv(GROUNDHOG_FOLDER = groundhog.folder)
+    return(fw(groundhog.folder))
+  }
+
+  # 3) Automatic fallback for sandboxed/non-writable home folders
+  fallback <- .groundhog.workspace.fallback.folder()
+  if (.groundhog.path.writable(fallback)) {
+    Sys.setenv(GROUNDHOG_FOLDER = fallback)
+    if (is.null(.pkgenv[["fallback_folder_noted"]])) {
+      message1("Home groundhog folder is not writable; using fallback folder: '", fallback, "'")
+      .pkgenv[["fallback_folder_noted"]] <- TRUE
+    }
+    return(fallback)
+  }
+
+  gstop("Groundhog could not find any writable folder. Set GROUNDHOG_FOLDER to a writable path.")
 }
 
 #' Set groundhog folder location
@@ -125,7 +172,7 @@ set.groundhog.folder <- function(path) {
   #############################################################################
 
   #Set main folder with 'cookie files' and default for library
-    main_folder <-  paste0(path.expand("~"), "/R_groundhog/")
+    main_folder <-  paste0(.groundhog.main.folder(), "/")
     
   #Create main folder 
     dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
@@ -153,7 +200,7 @@ set.groundhog.folder <- function(path) {
     message2("\nGroundhog folder set to: '",path)
     
   #If path is the default, offer to change
-    if (dirname(path)== fw(paste0(path.expand("~"), "/R_groundhog"))) {  #fw: function #50
+    if (dirname(path)== .groundhog.main.folder()) {  #fw: function #50
       #Offer to change
        message2("\n--- You may change it with`set.groundhog.folder(<path>)`---\n")
     } else {

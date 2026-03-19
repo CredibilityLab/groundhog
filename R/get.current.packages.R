@@ -1,7 +1,8 @@
 get.current.packages <- function(type) {
   
-  #path to local copy of available packages
-    main_folder <-  paste0(path.expand("~"), "/R_groundhog/")
+  #path to local copy of available packages (must be writable in sandboxed runs)
+    main_folder <-  paste0(get.groundhog.folder(), "/options/available_packages/")
+    dir.create(main_folder, showWarnings = FALSE, recursive = TRUE)
     ap_file_path <- paste0(main_folder , "available_packages_" , type , "_" , get.rversion() , "_" , Sys.Date() , ".rds")
 
   #Delete  available.packages files older than 1 hour
@@ -11,7 +12,7 @@ get.current.packages <- function(type) {
       filek_path <- paste0(main_folder , filek)             #full path to file
       pos.ap_file <- regexpr('available_packages', filek)   #>0 if file contains the words available_packages
       age <- as.numeric(difftime(Sys.time() , file.info(filek_path)$mtime,units='mins'))
-      if (pos.ap_file>0 & age>60) unlink(filek_path)        #Delete available_package files older than 60 minutes
+      if (pos.ap_file>0 && age>60) unlink(filek_path)        #Delete available_package files older than 60 minutes
     }
     
 	#If file with today's and current R version, use it, bypassing slow available.packages() command

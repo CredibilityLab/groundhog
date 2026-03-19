@@ -139,12 +139,8 @@ get.snowball <- function(pkg, date, include.suggests=FALSE, force.install=FALSE)
       snowball.pkg <- c(indep, pkg)
 
 
-  # 4) Get the version of each package
-    #snowball.vrs <- vapply(snowball.pkg, get.version, date, FUN.VALUE = character(1)) 
-    snowball.vrs<-c()
-    for (k in 1:length(snowball.pkg)) {
-      snowball.vrs[k]=as.character(get.version(snowball.pkg[k],date=date))
-      }
+  # 4) Get the version of each package (batch lookup: one cran.toc subset)
+    snowball.vrs <- get_version_many(snowball.pkg, date)
     snowball.pkg_vrs <- paste0(snowball.pkg, "_", snowball.vrs)
 
     
