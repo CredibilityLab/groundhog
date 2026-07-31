@@ -60,7 +60,7 @@
             if (gran.filename!='')
               {
               if (!file.exists(gran.toc.path) | update.toc==TRUE) {
-                  message1("Downloading database will URLs for relevant binaries on GRAN")
+                  message1("Downloading database with URLs for relevant binaries on GRAN")
 
                 download.toc(gran.URL.g , gran.URL.w,  gran.toc.path)
                  }  #End download if it dooes not exist locally
