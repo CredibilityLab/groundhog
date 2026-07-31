@@ -27,7 +27,7 @@
 #'
 #' @details 
 #'When groundhog installs a package, it installs it into groundhog's library 
-#' (location of that library is obtainable with [get.groundhog.folder()]).
+#' (location of that library is obtainable with [groundhog::get.groundhog.folder()]).
 #'Groundhog then immediately moves the installed package(s) (and their dependencies) 
 #'to the default personal library (location of that library obtainable with: `.libPaths()[1]`). 
 #'Altering the packages in the local folder is necessary for groundhog to work properly for two main reasons. First,

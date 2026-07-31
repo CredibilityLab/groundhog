@@ -1,23 +1,3 @@
-#' Get current local path to groundhog folder
-#'
-#' @return the path to the groundhog folder, the meta-library where 
-#'   [groundhog.library()] downloads and stores packages that can be loaded 
-#'
-#' @note you can change the location of this folder with the command
-#'   `set.groundhog.folder("path")`. You may also set environment variable
-#'   `GROUNDHOG_FOLDER`. If neither is set and `~/R_groundhog` is not writable,
-#'   groundhog falls back to `./.groundhog`.
-#' 
-#' @examples
-#' \dontrun{
-#' get.groundhog.folder()
-#' }
-#'
-#' @export
-#'
-#' @seealso [set.groundhog.folder()]
-#'
-
 # Internal helpers for folder resolution.
 .groundhog.main.folder <- function() {
   fw(paste0(path.expand("~"), "/R_groundhog"))
@@ -53,6 +33,25 @@
   isTRUE(ok)
 }
 
+#' Get current local path to groundhog folder
+#'
+#' @return the path to the groundhog folder, the meta-library where
+#'   [groundhog.library()] downloads and stores packages that can be loaded
+#'
+#' @note you can change the location of this folder with the command
+#'   `set.groundhog.folder("path")`. You may also set environment variable
+#'   `GROUNDHOG_FOLDER`. If neither is set and `~/R_groundhog` is not writable,
+#'   groundhog falls back to `./.groundhog`.
+#'
+#' @examples
+#' \dontrun{
+#' get.groundhog.folder()
+#' }
+#'
+#' @export
+#'
+#' @seealso [set.groundhog.folder()]
+#'
 # Function that gets the groundhog folder, with a sandbox-safe fallback.
 get.groundhog.folder <- function() {
   # 1) Explicit override (best for CI/sandboxed runs)
@@ -125,7 +124,7 @@ get.groundhog.folder <- function() {
 #'
 #' @export
 #'
-#' @seealso [get.groundhog.folder()]
+#' @seealso [groundhog::get.groundhog.folder()]
 #'
 set.groundhog.folder <- function(path) {
   
